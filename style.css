@@ -1,0 +1,157 @@
+body                { font-family: Helvetica, Arial, FreeSans, sans-serif; font-size: 0.7em; }
+h1                  { font-size: 1.7em; text-align: center; margin-bottom: 1.2em; }
+a                   { text-decoration: none; color:#3465a4; }
+
+table               { border: 1px solid #555753; border-collapse: collapse; width: 100%;}
+tr:nth-child(odd)	{ background-color:#ddd; }
+tr:nth-child(even)	{ background-color:#fff; }
+
+#listing th, #listing td     { padding: 2px; border-left: 1px solid #555753; }
+#listing th         { background: #afdde8; text-align: center; border-bottom: 1px solid #555753; vertical-align: bottom;}
+#listing td         { text-align: left;}
+
+#detail table           { border-collapse: collapse; width: 100%; font-size: 0.5em;}
+#detail th, #detail td  { border-left: 5px solid #fff; border-right: 5px solid #fff; border-top: 0px; border-bottom: 0px; }
+#detail th { border-top: 5px solid #fff; }
+#detail td { border-bottom: 5px solid #fff; padding: 2px; }
+#detail h3 { font-size: 0.9em; margin-bottom:0px; margin-left:5px;}
+
+abbr, acronym { cursor: help; }
+
+input, textarea {border:1px solid #d3d7cf;}
+
+ul { padding-left: 20px; list-style-type: circle; margin-top: 3px;}
+
+fieldset {
+    padding: 0 2px 2px 2px;
+    border: 1px solid #AAAEA5;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+ }
+ 
+legend {
+ font-size: 1em; margin-bottom:0px; margin-left:5px; font-weight: bold; color:#2e3436;
+ }
+  
+input:focus, textarea:focus {
+    background-color:white;
+    border:1px solid #cc0000;
+}
+
+/*
+select {
+    border: 1px solid #a8a8a8;
+    background: #ffffff;
+}
+*/
+
+input {
+    display: inline-block;
+    vertical-align: baseline;
+}
+
+label {
+    display: inline-block;
+    vertical-align: baseline;
+    width: 120px;
+    text-align: right;
+    margin-right: 5px;
+}
+
+form, input {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+fieldset.subfield {
+    background: rgba(255, 255, 255, 0.6); 
+    border: 1px solid #fff;
+}
+
+legend.subfield {
+    color: #ce5c00;
+}
+
+li.inline {
+    list-style-type: none;
+    width: 48%;
+    float: left;
+}
+
+#bloc {
+    display: block;
+    background: #edd400;
+    float: left;
+    width: 400px;
+    /*max-width: 480px;*/
+    margin: 2px;
+    padding-bottom: 910px;
+    margin-bottom: -900px;
+}
+
+#bloc h1 {
+    padding: 5px;
+    text-transform: uppercase;
+    font-size: 1.1em;
+    background: RGBA(0, 0, 0, 0.28);
+    color: #fff;
+    margin-top: 0px;
+    border-top:3px solid #fff;
+}
+
+#bloc p {
+    margin-top: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#container {
+    overflow: hidden;
+    width: 1980px;
+}
+
+#linkbox {
+    color: #3465a4;
+    font-weight: bold;
+    border: 1px solid rgba(255, 255, 255, 0);
+}
+
+
+@media screen and (max-width: 2050px) {
+	#container {
+		width: 1620px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+@media screen and (max-width: 1650px) {
+	#container {
+        width: 1220px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+@media screen and (max-width: 1250px) {
+	#container {
+        width: 820px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+@media screen and (max-width: 850px) {
+	#container {
+		width: 420px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+	
+@media screen and (max-width: 450px) {
+	#container {
+		width: auto;
+		float: none;
+	}
+	
+	
