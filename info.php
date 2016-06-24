@@ -1,0 +1,882 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="fr" dir="ltr" xml:lang="fr" xmlns="http://www.w3.org/1999/xhtml">
+<!--
+██╗  ██╗███████╗ █████╗ ██████╗ 
+██║  ██║██╔════╝██╔══██╗██╔══██╗
+███████║█████╗  ███████║██║  ██║
+██╔══██║██╔══╝  ██╔══██║██║  ██║
+██║  ██║███████╗██║  ██║██████╔╝
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝ 
+-->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Informations détaillées</title>
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    
+    <!-- ascii : http://patorjk.com/software/taag/#p=display&h=2&v=0&f=ANSI%20Shadow&t= -->
+    
+    <!-- tinybox pour les popup layout -->
+    <script type="text/javascript" src="tinybox/tinybox.js"></script>
+    <link rel="stylesheet" href="tinybox/tinybox.css" />
+    
+    <!-- dropzone pour drag&drop uploader
+    <script src="dropzone/dropzone.js"></script>
+    <link rel="stylesheet" href="dropzone/dropzone.css">    -->
+    
+    <!-- Show/Hide form -->
+    <script type="text/javascript">
+        // <![CDATA[
+        function display(obj,id1,id2) {
+            txt = obj.options[obj.selectedIndex].value;
+            document.getElementById(id1).style.display = 'none';
+            document.getElementById(id2).style.display = 'none';
+            if ( txt.match(id1) ) { document.getElementById(id1).style.display = 'block'; }
+            if ( txt.match(id2) ) { document.getElementById(id2).style.display = 'block'; }
+        }
+        // ]]>
+    </script>
+
+</head>
+
+
+<!--
+██████╗  ██████╗ ██████╗ ██╗   ██╗
+██╔══██╗██╔═══██╗██╔══██╗╚██╗ ██╔╝
+██████╔╝██║   ██║██║  ██║ ╚████╔╝ 
+██╔══██╗██║   ██║██║  ██║  ╚██╔╝  
+██████╔╝╚██████╔╝██████╔╝   ██║   
+╚═════╝  ╚═════╝ ╚═════╝    ╚═╝   
+-->
+<body>
+
+<?php
+require_once("./connect.php");
+require_once("./tables_sql_commun.php");
+$i= isset($_GET["i"]) ? htmlentities($_GET["i"]) : "" ; // GET i
+require_once("./fonctions.php");
+
+
+/*
+ █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
+██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
+███████║██████╔╝██████╔╝███████║ ╚████╔╝ 
+██╔══██║██╔══██╗██╔══██╗██╔══██║  ╚██╔╝  
+██║  ██║██║  ██║██║  ██║██║  ██║   ██║   
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+*/
+
+/* ########### INFORMATIONS COMPOSANT ########### */
+$table = "SELECT * FROM base_optique WHERE base_index=$i ;";
+// Tous les résultats dans un array
+$query_table = mysql_query ($table);
+while ($l = mysql_fetch_row($query_table)) {
+    $data=array(
+        "base_index"=>$l[0],                  "lab_id"=>$l[1],                  "categorie"=>$l[2],
+        "serial_number"=>utf8_encode($l[3]),  "reference"=>utf8_encode($l[4]),  "designation"=>$l[5],
+        "utilisateur"=>$l[6],                 "localisation"=>$l[7],            "date_localisation"=>$l[8],
+        "tutelle"=>$l[9],                     "contrat"=>$l[10],                "num_inventaire"=>utf8_encode($l[11]),        
+        "vendeur"=>$l[12],                    "marque"=>$l[13],                 "date_achat"=>$l[14],
+        "responsable_achat"=>$l[15],          "garantie"=>$l[16],               "prix"=>$l[17],
+        "date_sortie"=>$l[18],                "sortie"=>$l[19],                 "raison_sortie"=>$l[20],
+        "integration"=>$l[21]
+    );
+}
+
+/* ########### tables ########### */
+
+// utilisateurs
+$table_utilisateur = "SELECT DISTINCT(utilisateur_index) utilisateur_index, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur WHERE utilisateur_index!=0 ORDER BY utilisateur_nom ASC ;";
+$query_table_utilisateur = mysql_query ($table_utilisateur);
+$utilisateurs = array();
+while ($utilisateur = mysql_fetch_row($query_table_utilisateur)) {
+    $utilisateurs[$utilisateur[0]]=array(   $utilisateur[0],                    utf8_encode($utilisateur[1]),
+                                            utf8_encode($utilisateur[2]),       $utilisateur[3],
+                                            $utilisateur[4]
+                                        );
+}
+
+// categories
+// $categories in tables_sql_commun.php
+
+// types de contrats
+// $types_contrats in tables_sql_commun.php
+
+// contrats
+$table_contrat = "SELECT * FROM contrat, contrat_type WHERE contrat_type!=0 AND contrat_index!=0 ORDER BY contrat_nom ASC ;";
+$query_table_contrat = mysql_query ($table_contrat);
+$contrats = array();
+while ($l = mysql_fetch_row($query_table_contrat)) {
+    $contrats[$l[0]]=array($l[0],utf8_encode($l[1]));
+}
+
+// localisation
+$table_localisation = "SELECT * FROM localisation WHERE localisation_index!=0 ORDER BY localisation_batiment ASC, localisation_piece ASC ;";
+$query_table_localisation = mysql_query ($table_localisation);
+$localisations = array();
+while ($l = mysql_fetch_row($query_table_localisation)) {
+    $localisations[$l[0]]=array($l[0],utf8_encode($l[1]),utf8_encode($l[2]));
+}
+
+// tutelles
+$table_tutelle = "SELECT * FROM tutelle WHERE tutelle_index!=0 ORDER BY tutelle_nom ASC ;";
+$query_table_tutelle = mysql_query ($table_tutelle);
+$tutelles = array();
+while ($l = mysql_fetch_row($query_table_tutelle)) {
+    $tutelles[$l[0]]=array($l[0],utf8_encode($l[1]));
+}
+
+// vendeur
+$table_vendeur = "SELECT * FROM vendeur WHERE vendeur_index!=0 ORDER BY vendeur_nom ASC ;";
+$query_table_vendeur = mysql_query ($table_vendeur);
+$vendeurs = array();
+while ($l = mysql_fetch_row($query_table_vendeur)) {
+    $vendeurs[$l[0]]=array($l[0],utf8_encode($l[1]),utf8_encode($l[2]),utf8_encode($l[3]));
+}
+
+// marque
+$table_marque = "SELECT * FROM marque WHERE marque_index!=0 ORDER BY marque_nom ASC ;";
+$query_table_marque = mysql_query ($table_marque);
+$marques = array();
+while ($l = mysql_fetch_row($query_table_marque)) {
+    $marques[$l[0]]=array($l[0],utf8_encode($l[1]));
+}
+
+
+// raison_sortie
+$table_raison_sortie = "SELECT * FROM raison_sortie WHERE raison_sortie_index!=0 ORDER BY raison_sortie_nom ASC  ;";
+$query_table_raison_sortie = mysql_query ($table_raison_sortie);
+$raison_sorties = array();
+while ($l = mysql_fetch_row($query_table_raison_sortie)) {
+    $raison_sorties[$l[0]]=array($l[0],utf8_encode($l[1]));
+}
+
+
+// caracteristiques
+$table_caracteristique = "SELECT * FROM caracteristiques WHERE carac!=0 ORDER BY nom_carac ASC ;";
+$query_table_caracteristique = mysql_query ($table_caracteristique);
+$caracteristiques = array();
+while ($l = mysql_fetch_row($query_table_caracteristique)) {
+    $caracteristiques[$l[0]]=array($l[0],utf8_encode($l[1]),utf8_encode($l[2]),utf8_encode($l[3]));
+}
+
+
+// caracs
+$table_carac="SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base_optique WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index=$i AND carac!=0 ORDER BY base_optique.base_index ASC, carac ASC";
+$caracs=array();
+$query_table_carac = mysql_query ($table_carac);
+while ($l = mysql_fetch_row($query_table_carac)) {
+    $caracs[$l[3]]=array($l[0],$l[1],utf8_encode($l[2]),$l[3],utf8_encode($l[4]),utf8_encode($l[5]),utf8_encode($l[6]) );
+}
+
+
+// tags_i
+$table_tag_i = "SELECT * FROM tags WHERE tags_id=$i ;";
+$query_table_tag_i = mysql_query ($table_tag_i);
+$tags_i = array();
+while ($l = mysql_fetch_row($query_table_tag_i)) {
+    $tags_i[$l[0]]=array($l[0],$l[1]);
+}
+
+// tous les lab_id
+$table_lab_id = "SELECT base_index, lab_id FROM base_optique WHERE base_index!=\"$i\" ORDER BY lab_id ASC ;";
+$query_table_lab_id = mysql_query ($table_lab_id);
+$lab_ids = array();
+while ($l = mysql_fetch_row($query_table_lab_id)) {
+    $lab_ids[$l[0]]=array($l[0],"#".$l[0]."", utf8_encode($l[1]));
+}
+
+// compatibilité
+$table_compatibilite = "SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\"  ;";
+$query_table_compatibilite = mysql_query ($table_compatibilite);
+$compatibilite = array();
+while ($l = mysql_fetch_row($query_table_compatibilite)) {
+    $num= ($l[1]==$i) ? $l[2] : $l[1] ;
+    $compatibilite[$l[0]]=array($l[0],$num);
+}
+
+
+
+/*
+██████╗ ██╗███████╗██████╗ ██╗      █████╗ ██╗   ██╗    ██████╗ ██╗      ██████╗  ██████╗███████╗
+██╔══██╗██║██╔════╝██╔══██╗██║     ██╔══██╗╚██╗ ██╔╝    ██╔══██╗██║     ██╔═══██╗██╔════╝██╔════╝
+██║  ██║██║███████╗██████╔╝██║     ███████║ ╚████╔╝     ██████╔╝██║     ██║   ██║██║     ███████╗
+██║  ██║██║╚════██║██╔═══╝ ██║     ██╔══██║  ╚██╔╝      ██╔══██╗██║     ██║   ██║██║     ╚════██║
+██████╔╝██║███████║██║     ███████╗██║  ██║   ██║       ██████╔╝███████╗╚██████╔╝╚██████╗███████║
+╚═════╝ ╚═╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝       ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝╚══════╝
+*/
+
+echo "<p>Informations #$i :</p>";
+
+echo "<div id=\"container\">";
+
+/*
+ █████╗ ██████╗ ███╗   ███╗██╗███╗   ██╗██╗███████╗████████╗██████╗  █████╗ ████████╗██╗███████╗
+██╔══██╗██╔══██╗████╗ ████║██║████╗  ██║██║██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝██║██╔════╝
+███████║██║  ██║██╔████╔██║██║██╔██╗ ██║██║███████╗   ██║   ██████╔╝███████║   ██║   ██║█████╗  
+██╔══██║██║  ██║██║╚██╔╝██║██║██║╚██╗██║██║╚════██║   ██║   ██╔══██╗██╔══██║   ██║   ██║██╔══╝  
+██║  ██║██████╔╝██║ ╚═╝ ██║██║██║ ╚████║██║███████║   ██║   ██║  ██║██║  ██║   ██║   ██║██║     
+╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝╚═╝     
+*/
+
+echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
+    
+    echo "<h1>Administratif</h1>";
+    
+    echo "<form method=\"post\" action=\"?i=$i\">";
+
+    echo "<fieldset><legend>Produit</legend>";
+
+        /* ########### designation ########### */
+        echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation :</label>\n";
+        echo "<textarea name=\"designation\" rows=\"4\" cols=\"33\" id=\"designation\">".$data["designation"]."</textarea><br/>";
+      
+        /* ########### vendeur ########### */
+        echo "<label for=\"vendeur\">Vendeur ";
+        echo " <a href=\"".$vendeurs[$data["vendeur"]][2]."\" title=\"site web\" target=\"_blank\"><strong>↗</strong></a> <strong><abbr title=\"".$vendeurs[$data["vendeur"]][3]."\"><strong>ⓘ</strong></abbr></strong>";
+        echo " :</label>\n";
+        echo "<select name=\"vendeur\" id=\"vendeur\" onchange=\"display(this,'plus_vendeur','plus_vendeur');\" >";
+        echo "<option value=\"0\" "; if ($data["vendeur"]=="0") echo "selected"; echo ">— Aucun vendeur spécifié —</option>"; 
+        option_selecteur($data["vendeur"], $vendeurs);
+        echo "<option value=\"plus_vendeur\" "; if ($data["vendeur"]=="plus_vendeur") echo "selected"; echo ">Nouveau vendeur :</option>";
+        echo "</select>";
+        echo "<br/>";
+
+
+        /* ########### + vendeur ########### */
+        echo "\n\n\n";
+        echo "<fieldset id=\"plus_vendeur\" class=\"subfield\" style=\"display: none;\"><legend  class=\"subfield\">Nouveau Vendeur</legend>";
+    
+            echo "<label for=\"plus_vendeur_nom\">Nom :</label>\n";
+            echo "<input value=\"\" name=\"plus_vendeur_nom\" type=\"text\">\n";
+        
+            echo "<label for=\"plus_vendeur_web\">Site web :</label>\n";
+            echo "<input value=\"\" name=\"plus_vendeur_web\" type=\"text\">\n";       
+        
+            echo "<label for=\"plus_vendeur_remarque\">Remarque :</label>\n";
+            echo "<input value=\"\" name=\"plus_vendeur_remarque\" type=\"text\">\n";        
+        
+        echo "</fieldset>";
+        echo "\n\n\n";
+
+        /* ########### prix ########### */
+        echo "<label for=\"prix\">Prix (€) : </label>\n";
+        echo "<input value=\"".$data["prix"]."\" name=\"prix\" type=\"text\" id=\"prix\"><br/>";
+
+    echo "</fieldset>";
+
+    echo "<fieldset><legend>Acheteur</legend>";
+
+        /* ########### contrat ########### */
+        echo "<label for=\"contrat\">Contrat : </label>\n";
+        echo "<select name=\"contrat\" onchange=\"display(this,'plus_contrat','plus_contrat');\" id=\"contrat\">";
+        echo "<option value=\"0\" "; if ($data["contrat"]=="0") echo "selected"; echo ">— Aucun contrat spécifié —</option>"; 
+        option_selecteur($data["contrat"], $contrats);
+        echo "<option value=\"plus_contrat\" "; if ($data["contrat"]=="plus_contrat") echo "selected"; echo ">Nouveau contrat :</option>";
+        echo "</select><br/>";
+
+        /* ########### + contrat ########### */
+        echo "\n\n\n";
+        echo "<fieldset id=\"plus_contrat\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau Contrat</legend>";
+    
+            echo "<label for=\"plus_contrat_nom\">Nom :</label>\n";
+            echo "<input value=\"\" name=\"plus_contrat_nom\" type=\"text\">\n";
+        
+            echo "<label for=\"plus_vendeur_type\">Type de contrat :</label>\n";
+               echo "<select name=\"contrat\" onchange=\"display(this,'plus_contrat_type','plus_contrat_type');\" id=\"contrat_type\">";
+                   echo "<option value=\"0\" selected >— Aucun type de contrat spécifié —</option>"; 
+                   option_selecteur("0", $types_contrats);
+                   echo "<option value=\"plus_contrat_type\" >Nouveau type de contrat :</option>";
+               echo "</select><br/>";
+
+                    /* ########### + type contrat ########### */
+                    echo "\n\n\n";
+                    echo "<fieldset id=\"plus_contrat_type\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau Type de contrat</legend>";
+                        echo "<label for=\"plus_contrat_type_nom\">Type :</label>\n";
+                        echo "<input value=\"\" name=\"plus_contrat_type_nom\" type=\"text\">\n";
+                    echo "</fieldset>";
+                    echo "\n\n\n";
+
+        echo "</fieldset>";
+        echo "\n\n\n";
+
+        /* ########### tutelle ########### */
+        echo "<label for=\"tutelle\">Tutelle : </label>\n";
+        echo "<select name=\"tutelle\" onchange=\"display(this,'plus_tutelle','plus_tutelle');\" id=\"tutelle\">";
+        echo "<option value=\"0\" "; if ($data["tutelle"]=="") echo "selected"; echo ">— Aucune tutelle spécifiée —</option>"; 
+        option_selecteur($data["tutelle"], $tutelles);
+        echo "<option value=\"plus_tutelle\" "; if ($data["tutelle"]=="plus_tutelle") echo "selected"; echo ">Nouvelle tutelle :</option>";
+        echo "</select><br/>";
+        
+            /* ########### + tutelle ########### */
+            echo "\n\n\n";
+            echo "<fieldset id=\"plus_tutelle\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle tutelle</legend>";
+                echo "<label for=\"plus_tutelle\">Tutelle :</label>\n";
+                echo "<input value=\"\" name=\"plus_tutelle\" type=\"text\">\n";
+            echo "</fieldset>";
+            echo "\n\n\n";
+        
+
+        /* ########### num_inventaire ########### */
+        echo "<label for=\"num_inventaire\">Numéro d’inventaire : </label>\n";
+        echo "<input value=\"".$data["num_inventaire"]."\" name=\"num_inventaire\" type=\"text\" id=\"num_inventaire\">";
+        echo "<br/>";
+
+        /* ########### responsable_achat ########### */
+        echo "<label for=\"responsable_achat\">Responsable de l’achat : </label>\n";
+        echo "<select name=\"responsable_achat\" onchange=\"display(this,'plus_responsable_achat','plus_responsable_achat');\" id=\"responsable_achat\">";
+        echo "<option value=\"0\" "; if ($data["responsable_achat"]=="0") echo "selected"; echo ">— Aucun responsable achat spécifié —</option>"; 
+        option_selecteur($data["responsable_achat"], $utilisateurs, "2");
+        echo "<option value=\"plus_responsable_achat\" "; if ($data["responsable_achat"]=="plus_responsable_achat") echo "selected"; echo ">Nouveau responsable achat :</option>";
+        echo "</select>";
+
+
+            /* ########### + responsable_achat ########### */
+            echo "\n\n\n";
+            echo "<fieldset id=\"plus_responsable_achat\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau responsable achat</legend>";
+                echo "<label for=\"plus_responsable_achat_prenom\">Prénom :</label>\n";
+                echo "<input value=\"\" name=\"plus_responsable_achat_prenom\" type=\"text\">\n";
+
+                echo "<label for=\"plus_responsable_achat_nom\">Nom :</label>\n";
+                echo "<input value=\"\" name=\"plus_responsable_achat_nom\" type=\"text\">\n";
+                
+                echo "<label for=\"plus_responsable_achat_mail\">Mail :</label>\n";
+                echo "<input value=\"\" name=\"plus_responsable_achat_mail\" type=\"text\">\n";
+                
+                echo "<label for=\"plus_responsable_achat_phone\">Téléphone :</label>\n";
+                echo "<input value=\"\" name=\"plus_responsable_achat_phone\" type=\"text\">\n";
+
+            echo "</fieldset>";
+            echo "\n\n\n";
+
+    echo "</fieldset>";
+
+    echo "<fieldset><legend>Dates</legend>";
+    
+        /* ########### date_achat ########### */
+        echo "<label for=\"achat\">Achat <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<input value=\"".dateformat($data["date_achat"],"fr")."\" name=\"date_achat\" type=\"date\" id=\"achat\"/>";
+        echo "<br/>";
+
+        /* ########### garantie ########### */
+        echo "<label for=\"garantie\">Fin de garantie <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<input value=\"".dateformat($data["garantie"],"fr")."\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
+        
+    
+    echo "</fieldset>";
+
+    echo "</form>";
+
+
+
+echo "</div>";
+
+/*
+████████╗███████╗ ██████╗██╗  ██╗███╗   ██╗██╗ ██████╗ ██╗   ██╗███████╗
+╚══██╔══╝██╔════╝██╔════╝██║  ██║████╗  ██║██║██╔═══██╗██║   ██║██╔════╝
+   ██║   █████╗  ██║     ███████║██╔██╗ ██║██║██║   ██║██║   ██║█████╗  
+   ██║   ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║██║▄▄ ██║██║   ██║██╔══╝  
+   ██║   ███████╗╚██████╗██║  ██║██║ ╚████║██║╚██████╔╝╚██████╔╝███████╗
+   ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝
+*/
+
+echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
+
+    echo "<h1>Technique</h1>";
+    
+    echo "<form method=\"post\" action=\"?i=$i\">";
+
+    echo "<fieldset><legend>Référence interne</legend>";
+
+        /* ########### categorie ########### */
+        echo "<label for=\"categorie\">Catégorie : </label>\n";
+        echo "<select name=\"categorie\" onchange=\"display(this,'plus_categorie','plus_categorie');\" id=\"categorie\">";
+        echo "<option value=\"0\" "; if ($data["categorie"]=="0") echo "selected"; echo ">— Aucune catégorie spécifiée —</option>"; 
+        option_selecteur($data["categorie"], $categories, "2");
+        echo "<option value=\"plus_categorie\" "; if ($data["categorie"]=="plus_categorie") echo "selected"; echo ">Nouvelle catégorie :</option>";
+        echo "</select><br/>";
+        
+            /* ########### + categorie ########### */
+            echo "\n\n\n";
+            echo "<fieldset id=\"plus_categorie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Catégorie</legend>";
+                echo "<label for=\"plus_categorie_nom\">Nom :</label>\n";
+                echo "<input value=\"\" name=\"plus_categorie\" type=\"text\">\n";
+                echo "<label for=\"plus_categorie_abbr\">Abbréviation :</label>\n";
+                echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\">\n";
+            echo "</fieldset>";
+            echo "\n\n\n";
+
+        /* ########### lab_id ########### */
+        echo "<label for=\"lab_id\">Identifiant labo : </label>\n";
+        echo "<input value=\"".$data["lab_id"]."\" name=\"lab_id\" type=\"text\" id=\"lab_id\">";
+        echo "<br/>";
+
+    echo "</fieldset>";
+
+
+    echo "<fieldset><legend>Références Constructeur</legend>";
+
+        /* ########### marque ########### */
+        echo "<label for=\"marque\">Marque : </label>\n";
+        echo "<select name=\"marque\" onchange=\"display(this,'plus_marque','plus_marque');\" id=\"marque\">";
+        echo "<option value=\"0\" "; if ($data["marque"]=="0") echo "selected"; echo ">— Aucune marque spécifiée —</option>"; 
+        option_selecteur($data["marque"], $marques);
+        echo "<option value=\"plus_marque\" "; if ($data["marque"]=="plus_marque") echo "selected"; echo ">Nouvelle marque :</option>";
+        echo "</select><br/>";
+        
+            /* ########### + marque ########### */
+            echo "\n\n\n";
+            echo "<fieldset id=\"plus_marque\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Marque</legend>";
+                echo "<label for=\"plus_marque_nom\">Nom :</label>\n";
+                echo "<input value=\"\" name=\"plus_marque_nom\" type=\"text\">\n";
+            echo "</fieldset>";
+            echo "\n\n\n";
+
+        /* ########### reference ########### */
+        echo "<label for=\"reference\">Référence : </label>\n";
+        echo "<input value=\"".$data["reference"]."\" name=\"reference\" type=\"text\" id=\"reference\">";
+        echo "<br/>";
+
+        /* ########### serial_number ########### */
+        echo "<label for=\"serial_number\">Numéro de série : </label>\n";
+        echo "<input value=\"".$data["serial_number"]."\" name=\"serial_number\" type=\"text\" id=\"serial_number\"><br/>";
+
+    echo "</fieldset>";
+
+
+    echo "<fieldset><legend>Caractéristiques</legend>";
+
+        // TODO il serait intéressant d’afficher toutes les caractéristiques que des éléments ont rempli dans la même catégorie même si pour l’élément en question c’est vide.
+
+        foreach ($caracs as $c) {
+        
+            echo "<label for=\"carac".$c[3]."\">";
+            echo "<abbr title=\"$c[4]\" >".$c[6]."</abbr>";        
+        
+            if ($c[5]=="bool") {
+                echo " : </label>\n";
+                echo "<select name=\"carac".$c[3]."\" onchange=\"submit();\" id=\"carac".$c[3]."\">";
+                    echo "<option value=\"1\" "; if ($c[2]=="1") echo "selected"; echo ">Oui</option>"; 
+                    echo "<option value=\"0\" "; if ($c[2]=="0") echo "selected"; echo ">Non</option>";
+                echo "</select>";
+            }
+            else {
+                echo " (".$c[5].") : </label>\n"; 
+                echo "<input value=\"".$c[2]."\" name=\"carac".$c[3]."\" type=\"text\" id=\"carac".$c[3]."\">";
+            }
+            echo "<br/>";
+        }
+        
+    echo "<a href=\"\">➕</a>";
+        
+    echo "</fieldset>";
+
+
+    echo "<fieldset><legend>Compatibilité</legend>";
+        echo "<ul>";
+
+    if (!$compatibilite) echo "Aucune compatibilité renseignée.<br/>";
+    else {
+        foreach ($compatibilite as $c) {
+            echo "<li class=\"inline\">";
+            echo "<input type=\"checkbox\" id=\"comp".$c[0]."\" value=\"".$c[0]."\" checked > ";
+            echo "<a href=\"info.php?i=".$c[1]."\" target=\"_blank\">".$lab_ids[$c[1]][1]." ".$lab_ids[$c[1]][2]."</a>";
+            echo "</li>";
+            
+            }
+        echo "</ul><br/>";
+    }
+        echo "<a href=\"\">➕</a>";
+        
+    echo "</fieldset>";
+    
+    echo "</form>";
+
+echo "</div>";
+
+
+/*
+██████╗  ██████╗  ██████╗██╗   ██╗███╗   ███╗███████╗███╗   ██╗████████╗███████╗
+██╔══██╗██╔═══██╗██╔════╝██║   ██║████╗ ████║██╔════╝████╗  ██║╚══██╔══╝██╔════╝
+██║  ██║██║   ██║██║     ██║   ██║██╔████╔██║█████╗  ██╔██╗ ██║   ██║   ███████╗
+██║  ██║██║   ██║██║     ██║   ██║██║╚██╔╝██║██╔══╝  ██║╚██╗██║   ██║   ╚════██║
+██████╔╝╚██████╔╝╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗██║ ╚████║   ██║   ███████║
+╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝
+*/
+
+// liste des extensions autorisées pour l’envoi de fichiers
+$extensions= array("pdf","jpg","png","svg");
+$max_size=file_upload_max_size();
+$racine="/var/www/";
+$dossierdesfichiers="".$racine."files/";
+$trash="".$dossierdesfichiers."trash/";
+/* ########### POST ########### */
+$arr = array("del_f_confirm","f");
+foreach ($arr as &$value) {
+    $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+}
+
+/* ########### Suppression d’un fichier ########### */
+if ($del_f_confirm=="Confirmer la suppression") {
+    // Si le dossier trash n’existe pas, on le crée
+    if (!file_exists("$trash")) mkdir("$trash", 0775);
+    // Si le dossier trash/$i n’existe pas, on le crée
+    if (!file_exists("$trash$i")) mkdir("$trash$i", 0775);
+    // unlink("/var/www/files/$i/$f"); // Supprimer un fichier ainsi est un peu violent, préférons le déplacer dans un dossier trash
+    rename("$dossierdesfichiers$i/$f","$trash$i/$f");
+}
+
+
+echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top;\">";
+
+    echo "<h1>Documents</h1>";
+
+    echo "<fieldset><legend>Ajouter un fichier</legend>";
+        echo "<form method=\"post\" action=\"?i=$i\" enctype=\"multipart/form-data\">";
+        echo "<input value=\"".$data["base_index"]."\" name=\"i\" type=\"hidden\">\n";
+        /* echo "<form action=\"$racine$dir\" class=\"dropzone\"></form>";*/
+        echo "<p>Extensions autorisées : ";
+        foreach ($extensions as $e) echo "$e ";
+        echo "<br/>";
+        echo "Taille maximum : ".formatBytes($max_size)."o.<br/>";
+        
+        echo "<input type=\"file\" name=\"fichier\" style=\"border:0px solid #cc0000;\"/>";
+        echo "</p>";
+        
+        /* ########### Ajout d’un fichier ########### */
+        if(isset($_FILES['fichier'])){
+            $errors= array();
+            $file_name = $_FILES['fichier']['name'];
+            $file_size =$_FILES['fichier']['size'];
+            $file_tmp =$_FILES['fichier']['tmp_name'];
+            $file_type=$_FILES['fichier']['type'];
+            $file_ext=strtolower(end(explode('.',$_FILES['fichier']['name'])));
+
+            if(in_array($file_ext,$extensions)=== false){
+                $errors[]="Extension non permise.";
+            }
+
+            if ( ($file_size > $max_size)|| ($file_size == 0) ) {
+                $errors[]="La taille du fichier doit être au maximum de ".formatBytes($max_size)."o.";
+            }
+
+            if(empty($errors)==true) {
+                move_uploaded_file($file_tmp,"/var/www/files/$i/".$file_name);
+                echo "Fichier envoyé avec succès.<br/>";
+            }
+            else foreach ($errors as $e) echo "<p><strong>$e</strong></p>";
+        }
+        /* ########### END Ajout d’un fichier ########### */
+
+
+        echo "<input name='Valider' value='Envoyer' type='submit'\">";
+        echo "</form>";
+
+    echo "</fieldset>";
+
+
+    echo "<fieldset><legend>Fichiers</legend>";
+        displayDir("files/$i/", $del=TRUE);
+    echo "</fieldset>";
+
+
+    // Array references_similaires
+    $table_reference_similaire = "SELECT base_index, lab_id FROM base_optique WHERE reference=\"".$data["reference"]."\" AND marque=".$data["marque"]." AND categorie=".$data["categorie"]." AND base_index!=$i ORDER BY base_index ASC ;";
+    $query_table_reference_similaire = mysql_query ($table_reference_similaire);
+    $references_similaires = array();
+    while ($l = mysql_fetch_row($query_table_reference_similaire)) {
+        $references_similaires[$l[0]]=array($l[0], utf8_encode($l[1]));
+    }
+
+    echo "<fieldset><legend>Fichiers de référence similaire</legend>";
+    
+    if (!$references_similaires) echo "Aucune référence correspondante trouvée";
+    else {
+        foreach ($references_similaires as $rs) {
+            echo "<a href=\"info.php?i=".$rs[0]."\" target=\"_blank\">#".$rs[0]." (".$rs[1].")</a>&nbsp;: ";
+            displayDir("files/".$rs[0]."/");
+        }
+    }
+
+    echo "</fieldset>";
+    
+    
+echo "</div>";
+
+
+/*
+██╗   ██╗████████╗██╗██╗     ██╗███████╗ █████╗ ████████╗██╗ ██████╗ ███╗   ██╗
+██║   ██║╚══██╔══╝██║██║     ██║██╔════╝██╔══██╗╚══██╔══╝██║██╔═══██╗████╗  ██║
+██║   ██║   ██║   ██║██║     ██║███████╗███████║   ██║   ██║██║   ██║██╔██╗ ██║
+██║   ██║   ██║   ██║██║     ██║╚════██║██╔══██║   ██║   ██║██║   ██║██║╚██╗██║
+╚██████╔╝   ██║   ██║███████╗██║███████║██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║
+ ╚═════╝    ╚═╝   ╚═╝╚══════╝╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+*/
+
+echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
+
+    echo "<h1>Utilisation</h1>";
+
+    echo "<form method=\"post\" action=\"?i=$i\">";
+
+    echo "<fieldset><legend>Utilisation</legend>";
+
+        /* ########### utilisateur ########### */
+        echo "<label for=\"utilisateur\">Utilisateur : </label>\n";
+        echo "<select name=\"utilisateur\" onchange=\"display(this,'plus_utilisateur','plus_utilisateur');\" id=\"utilisateur\">";
+        echo "<option value=\"0\" "; if ($data["utilisateur"]=="0") echo "selected"; echo ">— Aucun utilisateur spécifié —</option>"; 
+        option_selecteur($data["utilisateur"], $utilisateurs, "2");
+        echo "<option value=\"plus_utilisateur\" "; if ($data["utilisateur"]=="plus_utilisateur") echo "selected"; echo ">Nouvel utilisateur :</option>";
+        echo "</select><br/>";
+        
+        
+               
+            /* ########### + utilisateur ########### */
+            echo "\n\n\n";
+            echo "<fieldset id=\"plus_utilisateur\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvel utilisateur</legend>";
+                echo "<label for=\"plus_utilisateur_prenom\">Prénom :</label>\n";
+                echo "<input value=\"\" name=\"plus_utilisateur_prenom\" type=\"text\">\n";
+
+                echo "<label for=\"plus_utilisateur_nom\">Nom :</label>\n";
+                echo "<input value=\"\" name=\"plus_utilisateur_nom\" type=\"text\">\n";
+                
+                echo "<label for=\"plus_utilisateur_mail\">Mail :</label>\n";
+                echo "<input value=\"\" name=\"plus_utilisateur_mail\" type=\"text\">\n";
+                
+                echo "<label for=\"plus_utilisateur_phone\">Téléphone :</label>\n";
+                echo "<input value=\"\" name=\"plus_utilisateur_phone\" type=\"text\">\n";
+
+            echo "</fieldset>";
+            echo "\n\n\n";
+            
+
+        /* ########### localisation ########### */
+        echo "<label for=\"localisation\">Localisation : </label>\n";
+        echo "<select name=\"localisation\" onchange=\"display(this,'plus_localisation','plus_localisation');\" > id=\"localisation\"";
+        echo "<option value=\"0\" "; if ($data["localisation"]=="0") echo "selected"; echo ">— Aucune localisation spécifiée —</option>"; 
+        option_selecteur($data["localisation"], $localisations, "2");
+        echo "<option value=\"plus_localisation\" "; if ($data["localisation"]=="plus_localisation") echo "selected"; echo ">Nouvelle localisation :</option>";
+        echo "</select>";
+
+        echo " <abbr title=\"le ".dateformat($data["date_localisation"],"fr")."\"><strong>ⓘ</strong></abbr>";
+
+
+            /* ########### + localisation ########### */
+            echo "\n\n\n";
+            echo "<fieldset id=\"plus_localisation\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle localisation</legend>";
+                echo "<label for=\"plus_localisation_bat\">Bâtiment :</label>\n";
+                echo "<input value=\"\" name=\"plus_localisation_bat\" type=\"text\">\n";
+                echo "<label for=\"plus_localisation_bat\">Pièce :</label>\n";
+                echo "<input value=\"\" name=\"plus_localisation_bat\" type=\"text\">\n";
+            echo "</fieldset>";
+            echo "\n\n\n";
+
+
+    echo "</fieldset>";
+
+
+    echo "<fieldset><legend>Inventaire</legend>";
+
+        /* ########### sortie ########### */
+        echo "<label for=\"etat\">État : </label>\n";
+        echo "<select name=\"etat\" id=\"etat\">";
+            echo "<option value=\"0\" "; if ($data["sortie"]=="") echo "selected"; echo ">Inventorié</option>";
+            echo "<option value=\"1\" "; if ($data["sortie"]=="1") echo "selected"; echo ">Sortie définitive d’inventaire</option>";
+            echo "<option value=\"2\" "; if ($data["sortie"]=="2") echo "selected"; echo ">Sortie temporaire d’inventaire</option>";
+        echo "</select>";
+        
+        if ($data["sortie"]!="0") echo " <abbr title=\"le ".dateformat($data["date_sortie"],"fr")."\"><strong>ⓘ</strong></abbr>"; /* seulement si sortie… !!! */
+
+        /* ########### raison_sortie ########### */
+        echo "<label for=\"raison_sortie\">Raison de sortie : </label>\n"; /* seulement si sortie… !!! */
+        echo "<select name=\"raison_sortie\" onchange=\"display(this,'plus_raison_sortie','plus_raison_sortie');\" id=\"raison_sortie\">";
+        echo "<option value=\"0\" "; if ($data["raison_sortie"]=="0") echo "selected"; echo ">— Aucune raison spécifiée —</option>"; 
+        option_selecteur($data["raison_sortie"], $raison_sorties);
+        echo "<option value=\"plus_raison_sortie\" "; if ($data["raison_sortie"]=="plus_raison_sortie") echo "selected"; echo ">Nouvelle raison :</option>";
+        echo "</select>";   
+                 
+                    /* ########### + raison_sortie ########### */
+                    echo "\n\n\n";
+                    echo "<fieldset id=\"plus_raison_sortie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvellle raison de sortie</legend>";
+                        echo "<label for=\"plus_raison_sortie_nom\">Raison :</label>\n";
+                        echo "<input value=\"\" name=\"plus_raison_sortie_nom\" type=\"text\">\n";
+                    echo "</fieldset>";
+                    echo "\n\n\n";
+                 
+     echo "</fieldset>";   
+     
+     
+     
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+    echo "<fieldset><legend>Intégration (si le composant est intégré à un autre)</legend>";
+
+        echo "<label for=\"integration\">Intégré dans :</label>\n";
+
+        echo "<select name=\"integration\" id=\"integration\" >";
+        echo "<option value=\"0\" "; if ($data["integration"]=="0") echo "selected"; echo ">— Aucune intégration spécifiée —</option>"; 
+        option_selecteur($data["integration"], $lab_ids, "2");
+        echo "</select>";
+
+        if ($data["integration"]!="0") echo " <a href=\"info.php?i=".$data["integration"]."\"><strong>↗</strong></a>";
+ 
+
+
+    echo "</fieldset>";
+
+
+    
+    echo "</form>";
+
+echo "</div>";
+
+
+/*
+     ██╗ ██████╗ ██╗   ██╗██████╗ ███╗   ██╗ █████╗ ██╗     
+     ██║██╔═══██╗██║   ██║██╔══██╗████╗  ██║██╔══██╗██║     
+     ██║██║   ██║██║   ██║██████╔╝██╔██╗ ██║███████║██║     
+██   ██║██║   ██║██║   ██║██╔══██╗██║╚██╗██║██╔══██║██║     
+╚█████╔╝╚██████╔╝╚██████╔╝██║  ██║██║ ╚████║██║  ██║███████╗
+ ╚════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝
+*/
+
+/* ########### POST ########### */
+$arr = array("add_historique","del_h_confirm","h");
+foreach ($arr as &$value) {
+    $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+}
+
+
+/* ########### Modifications SQL ########### */
+
+// ajout d’une entrée dans l’historique
+if ($add_historique=="Ajouter") {
+    $arr = array("date_info", "histo");
+    foreach ($arr as &$value) {
+        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+    }
+    $do_i_insert_histo="SELECT historique_index FROM historique WHERE historique_date=\"".dateformat($date_info,"en")."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";" ;
+    $query_do_i_insert_histo = mysql_query ($do_i_insert_histo);
+    if (!isset(mysql_fetch_row($query_do_i_insert_histo)[0]) ) {
+        $insert_histo= "INSERT INTO optique.historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".dateformat($date_info,"en")."\", \"".$histo."\", \"".$i."\"); ";
+        mysql_query ($insert_histo);
+    }
+}
+
+// Suppression d’une entrée dans l’historique
+if ($del_h_confirm=="Confirmer la suppression") {
+    $del_histo="DELETE FROM optique.historique WHERE historique_index=$h AND historique_id=$i;" ;
+    $query_do_i_insert_histo = mysql_query ($del_histo);
+    // TODO ajouter l’information effacée dans un fichier texte dans trash ? avec l’ip et l’heure ?
+}
+
+
+// Array historique
+$table_historique = "SELECT * FROM historique WHERE historique_id=$i ORDER BY historique_date DESC, historique_index DESC ;";
+$query_table_historique = mysql_query ($table_historique);
+$historique = array();
+while ($l = mysql_fetch_row($query_table_historique)) {
+    $historique[$l[0]]=array($l[0],$l[1],utf8_encode($l[2]));
+}
+
+
+echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
+
+    echo "<h1>Journal</h1>";
+    
+    echo "<form method=\"post\" action=\"?i=$i\">";
+
+    echo "<fieldset><legend>Nouvelle information</legend>";
+
+        echo "<label for=\"date_info\">Date <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr>:</label>\n";
+        echo "<input value=\"".date("d/m/Y")."\" name=\"date_info\" type=\"date\" id=\"date_info\"/>";
+        
+        echo "<label for=\"histo\" style=\"vertical-align: top;\"> Information :</label>\n";
+        echo "<textarea name=\"histo\" rows=\"4\" cols=\"33\"></textarea><br/>";
+        echo "<input name='add_historique' value='Ajouter' type='submit'\">";
+
+    echo "</fieldset>";
+
+
+    echo "<fieldset><legend>Historique</legend>";
+
+    echo "<table style=\"border:none;\">";
+    foreach ($historique as $h) {
+        echo "<tr>";
+        echo "<td style=\"padding-right: 10px; vertical-align: top;\"><strong>".dateformat($h[1],"fr")."</strong></td>";
+        echo "<td>".$h[2]."</td>";
+        echo "<td style=\"text-align:right;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'del_confirm.php?i=$i&h=".$h[0]."',width:280,height:110})\" title=\"supprimer cette entrée (".$h[0].") du journal\">×<span></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    
+    
+    echo "</fieldset>";
+
+    echo "</form>";
+
+echo "</div>";
+
+
+/*
+████████╗ █████╗  ██████╗ ███████╗
+╚══██╔══╝██╔══██╗██╔════╝ ██╔════╝
+   ██║   ███████║██║  ███╗███████╗
+   ██║   ██╔══██║██║   ██║╚════██║
+   ██║   ██║  ██║╚██████╔╝███████║
+   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+*/
+
+echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
+
+    echo "<h1>Tags</h1>";
+    
+    echo "<form method=\"post\" action=\"?i=$i\">";
+    
+    echo "<fieldset id=\"tags\"><legend>Tags</legend>";
+
+    echo "<ul>";
+        foreach ($tags as $t) {
+            echo "<li class=\"inline\">";
+            echo "<input type=\"checkbox\" id=\"tag".$t[0]."\" value=\"".$t[0]."\"";
+            if (isset($tags_i[$t[0]])) echo " checked ";
+            echo "> ".$t[1]."";
+            echo "</li>";
+            
+        }
+    echo "</ul>";
+
+    echo "</fieldset>";
+    /* ########### + tags ########### */
+    echo "\n\n\n";
+    echo "<fieldset id=\"plus_tags\"><legend>Tags supplémentaires</legend>";
+        echo "<label for=\"plus_tags\">Nouveaux tags <abbr title=\"séparés d’une virgule\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<input value=\"\" name=\"plus_tags\" type=\"text\">\n";
+    echo "</fieldset>";
+    echo "\n\n\n";
+
+    echo "</form>";
+
+echo "</div>";
+
+
+// end container
+echo "</div>";
+
+?>
+
+
+</body>
+</html>
