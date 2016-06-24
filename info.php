@@ -400,7 +400,8 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
         /* ########### lab_id ########### */
         echo "<label for=\"lab_id\">Identifiant labo : </label>\n";
-        echo "<input value=\"".$data["lab_id"]."\" name=\"lab_id\" type=\"text\" id=\"lab_id\">";
+        //echo "<input value=\"".$data["lab_id"]."\" name=\"lab_id\" type=\"text\" id=\"lab_id\">";
+        echo "<strong>".$data["lab_id"]."</strong>"; // TODO Ajouter un bouton pour manuel (via tinybox ?)
         echo "<br/>";
 
     echo "</fieldset>";
@@ -871,11 +872,29 @@ echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
     echo "</fieldset>";
     echo "\n\n\n";
 
-    echo "<input name='tags_save' value='Enregistrer les modifications de tags' type='submit'\">";
+    echo "<p><input name='tags_save' value='Enregistrer les modifications de tags' type='submit'\"></p>"; // TODO Ajouter un bouton réinitialiser
 
     echo "</form>";
 
 echo "</div>";
+
+
+
+/*
+
+<input id="tag2" value="1" type="checkbox"> fabrication labo</li>
+<input id="tag1" value="1" checked="" type="checkbox"> protection</li></ul></fieldset>
+<input value="" name="plus_tags" type="text">
+<input name="tags_save" value="Enregistrer les modifications de tags" "="" type="submit">
+
+$arr = array("add_historique","del_h_confirm","h");
+foreach ($tags as &$t) {
+    $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+}
+
+*/
+
+
 
 
 // end container
