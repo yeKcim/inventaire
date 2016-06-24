@@ -472,7 +472,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
     else {
         foreach ($compatibilite as $c) {
             echo "<li class=\"inline\">";
-            echo "<input type=\"checkbox\" id=\"comp".$c[0]."\" value=\"".$c[0]."\" checked > ";
+            echo "<input type=\"checkbox\" name=\"comp".$c[0]."\" value=\"".$c[0]."\" checked > ";
             echo "<a href=\"info.php?i=".$c[1]."\" target=\"_blank\">".$lab_ids[$c[1]][1]." ".$lab_ids[$c[1]][2]."</a>";
             echo "</li>";
             
@@ -843,15 +843,16 @@ foreach ($arr as &$value) {
 }
 
 
-/* ########### Modifications BDD ########### */
+/* ########### Modifications SQL ########### */
+
+/* ########### Cases cochées ########### */
 if ($tags_save=="Enregistrer les modifications de tags") {
     // Supprimer tous les tags de cette entrée
-    mysql_query ("DELETE FROM `tags` WHERE `tags_id`=$i;");
-
+    mysql_query ("DELETE FROM tags WHERE tags_id=$i;");
     // ajouter tous les tags cochés de cette entrée
-    $alltags.="";
+    $alltags="";
     foreach ($tags as &$t) {
-        $alltags.= isset($_POST["tag$t"]) ? htmlentities("(".$_POST["tag$t"].",$i),") : "" ;
+        $alltags.= (isset($_POST["tag".$t[0].""])) ? htmlentities("(".$t[0].",$i),") : "" ;
     }
     $alltags=substr($alltags, 0, -1); // suppression du dernier caractère
     mysql_query ("INSERT INTO optique.tags (tags_index, tags_id) VALUES $alltags ; ");
@@ -876,13 +877,12 @@ echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
     echo "<fieldset id=\"tags\"><legend>Tags</legend>";
 
     echo "<ul>";
-        foreach ($tags as $t) {
+        foreach ($tags as $v) {
             echo "<li class=\"inline\">";
-            echo "<input type=\"checkbox\" id=\"tag".$t[0]."\" value=\"1\"";
-            if (isset($tags_i[$t[0]])) echo " checked ";
-            echo "> ".$t[1]."";
+            echo "<input type=\"checkbox\" name=\"tag".$v[0]."\" value=\"1\"";
+            if (isset($tags_i[$v[0]])) echo " checked ";
+            echo "> ".$v[1]."";
             echo "</li>";
-            
         }
     echo "</ul>";
 
