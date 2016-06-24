@@ -835,6 +835,29 @@ echo "</div>";
 // liste complète des tags
 // $tags in tables_sql_commun.php
 
+
+/* ########### POST ########### */
+$arr = array("plus_tags","tags_save");
+foreach ($arr as &$value) {
+    $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+}
+
+
+/* ########### Modifications BDD ########### */
+if ($tags_save=="Enregistrer les modifications de tags") {
+    // Supprimer tous les tags de cette entrée
+    mysql_query ("DELETE FROM `tags` WHERE `tags_id`=$i;");
+
+    // ajouter tous les tags cochés de cette entrée
+    $alltags.="";
+    foreach ($tags as &$t) {
+        $alltags.= isset($_POST["tag$t"]) ? htmlentities("(".$_POST["tag$t"].",$i),") : "" ;
+    }
+    $alltags=substr($alltags, 0, -1); // suppression du dernier caractère
+    mysql_query ("INSERT INTO optique.tags (tags_index, tags_id) VALUES $alltags ; ");
+}
+
+
 // tags_i les tags de $i
 $table_tag_i = "SELECT * FROM tags WHERE tags_id=$i ;";
 $query_table_tag_i = mysql_query ($table_tag_i);
@@ -872,7 +895,7 @@ echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
     echo "</fieldset>";
     echo "\n\n\n";
 
-    echo "<p><input name='tags_save' value='Enregistrer les modifications de tags' type='submit'\"></p>"; // TODO Ajouter un bouton réinitialiser
+    echo "<p style=\"text-align:center;\"><input name='tags_save' value='Enregistrer les modifications de tags' type='submit'\"></p>"; // TODO Ajouter un bouton réinitialiser
 
     echo "</form>";
 
@@ -881,16 +904,54 @@ echo "</div>";
 
 
 /*
-
 <input id="tag2" value="1" type="checkbox"> fabrication labo</li>
 <input id="tag1" value="1" checked="" type="checkbox"> protection</li></ul></fieldset>
 <input value="" name="plus_tags" type="text">
 <input name="tags_save" value="Enregistrer les modifications de tags" "="" type="submit">
+*/
 
-$arr = array("add_historique","del_h_confirm","h");
-foreach ($tags as &$t) {
-    $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+
+
+
+
+/*
+
+
+
+
+
+
+
+
+
+// ajout d’une entrée dans l’historique
+if ($add_historique=="Ajouter") {
+    $arr = array("date_info", "histo");
+    foreach ($arr as &$value) {
+        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+    }
+    $do_i_insert_histo="SELECT historique_index FROM historique WHERE historique_date=\"".dateformat($date_info,"en")."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";" ;
+    $query_do_i_insert_histo = mysql_query ($do_i_insert_histo);
+    if (!isset(mysql_fetch_row($query_do_i_insert_histo)[0]) ) {
+        $insert_histo= "INSERT INTO optique.historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".dateformat($date_info,"en")."\", \"".$histo."\", \"".$i."\"); ";
+        mysql_query ($insert_histo);
+    }
 }
+
+// Suppression d’une entrée dans l’historique
+if ($del_h_confirm=="Confirmer la suppression") {
+    $del_histo="DELETE FROM optique.historique WHERE historique_index=$h AND historique_id=$i;" ;
+    $query_do_i_insert_histo = mysql_query ($del_histo);
+    // TODO ajouter l’information effacée dans un fichier texte dans trash ? avec l’ip et l’heure ?
+}
+
+
+
+
+
+
+
+
 
 */
 
