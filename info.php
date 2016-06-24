@@ -170,14 +170,6 @@ while ($l = mysql_fetch_row($query_table_carac)) {
 }
 
 
-// tags_i
-$table_tag_i = "SELECT * FROM tags WHERE tags_id=$i ;";
-$query_table_tag_i = mysql_query ($table_tag_i);
-$tags_i = array();
-while ($l = mysql_fetch_row($query_table_tag_i)) {
-    $tags_i[$l[0]]=array($l[0],$l[1]);
-}
-
 // tous les lab_id
 $table_lab_id = "SELECT base_index, lab_id FROM base_optique WHERE base_index!=\"$i\" ORDER BY lab_id ASC ;";
 $query_table_lab_id = mysql_query ($table_lab_id);
@@ -839,6 +831,18 @@ echo "</div>";
    ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
 */
 
+// liste complète des tags
+// $tags in tables_sql_commun.php
+
+// tags_i les tags de $i
+$table_tag_i = "SELECT * FROM tags WHERE tags_id=$i ;";
+$query_table_tag_i = mysql_query ($table_tag_i);
+$tags_i = array();
+while ($l = mysql_fetch_row($query_table_tag_i)) {
+    $tags_i[$l[0]]=array($l[0],$l[1]);
+}
+
+
 echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
 
     echo "<h1>Tags</h1>";
@@ -850,7 +854,7 @@ echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
     echo "<ul>";
         foreach ($tags as $t) {
             echo "<li class=\"inline\">";
-            echo "<input type=\"checkbox\" id=\"tag".$t[0]."\" value=\"".$t[0]."\"";
+            echo "<input type=\"checkbox\" id=\"tag".$t[0]."\" value=\"1\"";
             if (isset($tags_i[$t[0]])) echo " checked ";
             echo "> ".$t[1]."";
             echo "</li>";
@@ -866,6 +870,8 @@ echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
         echo "<input value=\"\" name=\"plus_tags\" type=\"text\">\n";
     echo "</fieldset>";
     echo "\n\n\n";
+
+    echo "<input name='tags_save' value='Enregistrer les modifications de tags' type='submit'\">";
 
     echo "</form>";
 
