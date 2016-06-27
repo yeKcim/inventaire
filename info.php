@@ -67,9 +67,8 @@ require_once("./fonctions.php");
 */
 
 /* ########### INFORMATIONS COMPOSANT ########### */
-$table = "SELECT * FROM base_optique WHERE base_index=$i ;";
 // Tous les résultats dans un array
-$query_table = mysql_query ($table);
+$query_table = mysql_query ("SELECT * FROM base_optique WHERE base_index=$i ;");
 while ($l = mysql_fetch_row($query_table)) {
     $data=array(
         "base_index"=>$l[0],                  "lab_id"=>$l[1],                  "categorie"=>$l[2],
@@ -86,8 +85,7 @@ while ($l = mysql_fetch_row($query_table)) {
 /* ########### tables ########### */
 
 // utilisateurs
-$table_utilisateur = "SELECT DISTINCT(utilisateur_index) utilisateur_index, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur WHERE utilisateur_index!=0 ORDER BY utilisateur_nom ASC ;";
-$query_table_utilisateur = mysql_query ($table_utilisateur);
+$query_table_utilisateur = mysql_query ("SELECT DISTINCT(utilisateur_index) utilisateur_index, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur WHERE utilisateur_index!=0 ORDER BY utilisateur_nom ASC ;");
 $utilisateurs = array();
 while ($utilisateur = mysql_fetch_row($query_table_utilisateur)) {
     $utilisateurs[$utilisateur[0]]=array(   $utilisateur[0],                    utf8_encode($utilisateur[1]),
@@ -103,40 +101,35 @@ while ($utilisateur = mysql_fetch_row($query_table_utilisateur)) {
 // $types_contrats in tables_sql_commun.php
 
 // contrats
-$table_contrat = "SELECT * FROM contrat, contrat_type WHERE contrat_type!=0 AND contrat_index!=0 ORDER BY contrat_nom ASC ;";
-$query_table_contrat = mysql_query ($table_contrat);
+$query_table_contrat = mysql_query ("SELECT * FROM contrat, contrat_type WHERE contrat_type!=0 AND contrat_index!=0 ORDER BY contrat_nom ASC ;");
 $contrats = array();
 while ($l = mysql_fetch_row($query_table_contrat)) {
     $contrats[$l[0]]=array($l[0],utf8_encode($l[1]));
 }
 
 // localisation
-$table_localisation = "SELECT * FROM localisation WHERE localisation_index!=0 ORDER BY localisation_batiment ASC, localisation_piece ASC ;";
-$query_table_localisation = mysql_query ($table_localisation);
+$query_table_localisation = mysql_query ("SELECT * FROM localisation WHERE localisation_index!=0 ORDER BY localisation_batiment ASC, localisation_piece ASC ;");
 $localisations = array();
 while ($l = mysql_fetch_row($query_table_localisation)) {
     $localisations[$l[0]]=array($l[0],utf8_encode($l[1]),utf8_encode($l[2]));
 }
 
 // tutelles
-$table_tutelle = "SELECT * FROM tutelle WHERE tutelle_index!=0 ORDER BY tutelle_nom ASC ;";
-$query_table_tutelle = mysql_query ($table_tutelle);
+$query_table_tutelle = mysql_query ("SELECT * FROM tutelle WHERE tutelle_index!=0 ORDER BY tutelle_nom ASC ;");
 $tutelles = array();
 while ($l = mysql_fetch_row($query_table_tutelle)) {
     $tutelles[$l[0]]=array($l[0],utf8_encode($l[1]));
 }
 
 // vendeur
-$table_vendeur = "SELECT * FROM vendeur WHERE vendeur_index!=0 ORDER BY vendeur_nom ASC ;";
-$query_table_vendeur = mysql_query ($table_vendeur);
+$query_table_vendeur = mysql_query ("SELECT * FROM vendeur WHERE vendeur_index!=0 ORDER BY vendeur_nom ASC ;");
 $vendeurs = array();
 while ($l = mysql_fetch_row($query_table_vendeur)) {
     $vendeurs[$l[0]]=array($l[0],utf8_encode($l[1]),utf8_encode($l[2]),utf8_encode($l[3]));
 }
 
 // marque
-$table_marque = "SELECT * FROM marque WHERE marque_index!=0 ORDER BY marque_nom ASC ;";
-$query_table_marque = mysql_query ($table_marque);
+$query_table_marque = mysql_query ("SELECT * FROM marque WHERE marque_index!=0 ORDER BY marque_nom ASC ;");
 $marques = array();
 while ($l = mysql_fetch_row($query_table_marque)) {
     $marques[$l[0]]=array($l[0],utf8_encode($l[1]));
@@ -144,8 +137,7 @@ while ($l = mysql_fetch_row($query_table_marque)) {
 
 
 // raison_sortie
-$table_raison_sortie = "SELECT * FROM raison_sortie WHERE raison_sortie_index!=0 ORDER BY raison_sortie_nom ASC  ;";
-$query_table_raison_sortie = mysql_query ($table_raison_sortie);
+$query_table_raison_sortie = mysql_query ("SELECT * FROM raison_sortie WHERE raison_sortie_index!=0 ORDER BY raison_sortie_nom ASC  ;");
 $raison_sorties = array();
 while ($l = mysql_fetch_row($query_table_raison_sortie)) {
     $raison_sorties[$l[0]]=array($l[0],utf8_encode($l[1]));
@@ -153,8 +145,7 @@ while ($l = mysql_fetch_row($query_table_raison_sortie)) {
 
 
 // caracteristiques
-$table_caracteristique = "SELECT * FROM caracteristiques WHERE carac!=0 ORDER BY nom_carac ASC ;";
-$query_table_caracteristique = mysql_query ($table_caracteristique);
+$query_table_caracteristique = mysql_query ("SELECT * FROM caracteristiques WHERE carac!=0 ORDER BY nom_carac ASC ;");
 $caracteristiques = array();
 while ($l = mysql_fetch_row($query_table_caracteristique)) {
     $caracteristiques[$l[0]]=array($l[0],utf8_encode($l[1]),utf8_encode($l[2]),utf8_encode($l[3]));
@@ -162,25 +153,22 @@ while ($l = mysql_fetch_row($query_table_caracteristique)) {
 
 
 // caracs
-$table_carac="SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base_optique WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index=$i AND carac!=0 ORDER BY base_optique.base_index ASC, carac ASC";
 $caracs=array();
-$query_table_carac = mysql_query ($table_carac);
+$query_table_carac = mysql_query ("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base_optique WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index=$i AND carac!=0 ORDER BY base_optique.base_index ASC, carac ASC");
 while ($l = mysql_fetch_row($query_table_carac)) {
     $caracs[$l[3]]=array($l[0],$l[1],utf8_encode($l[2]),$l[3],utf8_encode($l[4]),utf8_encode($l[5]),utf8_encode($l[6]) );
 }
 
 
 // tous les lab_id
-$table_lab_id = "SELECT base_index, lab_id FROM base_optique WHERE base_index!=\"$i\" ORDER BY lab_id ASC ;";
-$query_table_lab_id = mysql_query ($table_lab_id);
+$query_table_lab_id = mysql_query ("SELECT base_index, lab_id FROM base_optique WHERE base_index!=\"$i\" ORDER BY lab_id ASC ;");
 $lab_ids = array();
 while ($l = mysql_fetch_row($query_table_lab_id)) {
     $lab_ids[$l[0]]=array($l[0],"#".$l[0]."", utf8_encode($l[1]));
 }
 
 // compatibilité
-$table_compatibilite = "SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\"  ;";
-$query_table_compatibilite = mysql_query ($table_compatibilite);
+$query_table_compatibilite = mysql_query ("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\"  ;");
 $compatibilite = array();
 while ($l = mysql_fetch_row($query_table_compatibilite)) {
     $num= ($l[1]==$i) ? $l[2] : $l[1] ;
@@ -574,8 +562,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 
 
     // Array references_similaires
-    $table_reference_similaire = "SELECT base_index, lab_id FROM base_optique WHERE reference=\"".$data["reference"]."\" AND marque=".$data["marque"]." AND categorie=".$data["categorie"]." AND base_index!=$i ORDER BY base_index ASC ;";
-    $query_table_reference_similaire = mysql_query ($table_reference_similaire);
+    $query_table_reference_similaire = mysql_query ("SELECT base_index, lab_id FROM base_optique WHERE reference=\"".$data["reference"]."\" AND marque=".$data["marque"]." AND categorie=".$data["categorie"]." AND base_index!=$i ORDER BY base_index ASC ;");
     $references_similaires = array();
     while ($l = mysql_fetch_row($query_table_reference_similaire)) {
         $references_similaires[$l[0]]=array($l[0], utf8_encode($l[1]));
@@ -760,25 +747,21 @@ if ($add_historique=="Ajouter") {
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
-    $do_i_insert_histo="SELECT historique_index FROM historique WHERE historique_date=\"".dateformat($date_info,"en")."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";" ;
-    $query_do_i_insert_histo = mysql_query ($do_i_insert_histo);
+    $query_do_i_insert_histo = mysql_query ("SELECT historique_index FROM historique WHERE historique_date=\"".dateformat($date_info,"en")."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";");
     if (!isset(mysql_fetch_row($query_do_i_insert_histo)[0]) ) {
-        $insert_histo= "INSERT INTO optique.historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".dateformat($date_info,"en")."\", \"".$histo."\", \"".$i."\"); ";
-        mysql_query ($insert_histo);
+        mysql_query ("INSERT INTO optique.historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".dateformat($date_info,"en")."\", \"".$histo."\", \"".$i."\"); ");
     }
 }
 
 // Suppression d’une entrée dans l’historique
 if ($del_h_confirm=="Confirmer la suppression") {
-    $del_histo="DELETE FROM optique.historique WHERE historique_index=$h AND historique_id=$i;" ;
-    $query_do_i_insert_histo = mysql_query ($del_histo);
+    mysql_query ("DELETE FROM optique.historique WHERE historique_index=$h AND historique_id=$i;");
     // TODO ajouter l’information effacée dans un fichier texte dans trash ? avec l’ip et l’heure ?
 }
 
 
 // Array historique
-$table_historique = "SELECT * FROM historique WHERE historique_id=$i ORDER BY historique_date DESC, historique_index DESC ;";
-$query_table_historique = mysql_query ($table_historique);
+$query_table_historique = mysql_query ("SELECT * FROM historique WHERE historique_id=$i ORDER BY historique_date DESC, historique_index DESC ;");
 $historique = array();
 while ($l = mysql_fetch_row($query_table_historique)) {
     $historique[$l[0]]=array($l[0],$l[1],utf8_encode($l[2]));
@@ -832,10 +815,6 @@ echo "</div>";
    ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
 */
 
-// liste complète des tags
-// $tags in tables_sql_commun.php
-
-
 /* ########### POST ########### */
 $arr = array("plus_tags","tags_save");
 foreach ($arr as &$value) {
@@ -843,28 +822,67 @@ foreach ($arr as &$value) {
 }
 
 
-/* ########### Modifications SQL ########### */
-
-/* ########### Cases cochées ########### */
-if ($tags_save=="Enregistrer les modifications de tags") {
-    // Supprimer tous les tags de cette entrée
-    mysql_query ("DELETE FROM tags WHERE tags_id=$i;");
-    // ajouter tous les tags cochés de cette entrée
-    $alltags="";
-    foreach ($tags as &$t) {
-        $alltags.= (isset($_POST["tag".$t[0].""])) ? htmlentities("(".$t[0].",$i),") : "" ;
-    }
-    $alltags=substr($alltags, 0, -1); // suppression du dernier caractère
-    mysql_query ("INSERT INTO optique.tags (tags_index, tags_id) VALUES $alltags ; ");
+/* ########### Array ########### */
+// $tags_list
+$table_tags_list = "SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;";
+$query_table_tags_list = mysql_query ($table_tags_list);
+$tags = array();
+while ($l = mysql_fetch_row($query_table_tags_list)) {
+    $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
 }
-
-
 // tags_i les tags de $i
-$table_tag_i = "SELECT * FROM tags WHERE tags_id=$i ;";
-$query_table_tag_i = mysql_query ($table_tag_i);
+$query_table_tag_i = mysql_query ("SELECT * FROM tags WHERE tags_id=$i ;");
 $tags_i = array();
 while ($l = mysql_fetch_row($query_table_tag_i)) {
     $tags_i[$l[0]]=array($l[0],$l[1]);
+}
+
+
+
+
+
+
+
+
+
+/* ########### Modifications SQL ########### */
+if ($tags_save=="Enregistrer les modifications de tags") {
+    // Supprimer tous les tags de cette entrée pour réinitialiser
+    mysql_query ("DELETE FROM tags WHERE tags_id=$i;");
+
+
+    // Cases cochées
+    if ($tags_save=="Enregistrer les modifications de tags") {
+        // ajouter tous les tags cochés de cette entrée
+        $alltags="";
+        foreach ($tags as &$t) {
+            $alltags.= (isset($_POST["tag".$t[0].""])) ? htmlentities("(".$t[0].",$i),") : "" ;
+        }
+        $alltags=substr($alltags, 0, -1); // suppression du dernier caractère
+        mysql_query ("INSERT INTO optique.tags (tags_index, tags_id) VALUES $alltags ; ");
+    }
+
+
+
+
+
+    /* ########### Avant d’afficher les cases on refait la requête sql car il y a peut-être eu des modifs… ########### */
+    /* ########### Array ########### */
+    // $tags_list
+    $table_tags_list = "SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;";
+    $query_table_tags_list = mysql_query ($table_tags_list);
+    $tags = array();
+    while ($l = mysql_fetch_row($query_table_tags_list)) {
+        $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
+    }
+    // tags_i les tags de $i
+    $query_table_tag_i = mysql_query ("SELECT * FROM tags WHERE tags_id=$i ;");
+    $tags_i = array();
+    while ($l = mysql_fetch_row($query_table_tag_i)) {
+        $tags_i[$l[0]]=array($l[0],$l[1]);
+    }
+
+
 }
 
 
@@ -900,62 +918,6 @@ echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
     echo "</form>";
 
 echo "</div>";
-
-
-
-/*
-<input id="tag2" value="1" type="checkbox"> fabrication labo</li>
-<input id="tag1" value="1" checked="" type="checkbox"> protection</li></ul></fieldset>
-<input value="" name="plus_tags" type="text">
-<input name="tags_save" value="Enregistrer les modifications de tags" "="" type="submit">
-*/
-
-
-
-
-
-/*
-
-
-
-
-
-
-
-
-
-// ajout d’une entrée dans l’historique
-if ($add_historique=="Ajouter") {
-    $arr = array("date_info", "histo");
-    foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
-    }
-    $do_i_insert_histo="SELECT historique_index FROM historique WHERE historique_date=\"".dateformat($date_info,"en")."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";" ;
-    $query_do_i_insert_histo = mysql_query ($do_i_insert_histo);
-    if (!isset(mysql_fetch_row($query_do_i_insert_histo)[0]) ) {
-        $insert_histo= "INSERT INTO optique.historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".dateformat($date_info,"en")."\", \"".$histo."\", \"".$i."\"); ";
-        mysql_query ($insert_histo);
-    }
-}
-
-// Suppression d’une entrée dans l’historique
-if ($del_h_confirm=="Confirmer la suppression") {
-    $del_histo="DELETE FROM optique.historique WHERE historique_index=$h AND historique_id=$i;" ;
-    $query_do_i_insert_histo = mysql_query ($del_histo);
-    // TODO ajouter l’information effacée dans un fichier texte dans trash ? avec l’ip et l’heure ?
-}
-
-
-
-
-
-
-
-
-
-*/
-
-
 
 
 // end container
