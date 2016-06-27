@@ -88,7 +88,7 @@ $SEA=utf8_encode($SEA);
 $SEA_CMD= ($SEA!="") ? "AND (lab_id LIKE '%$SEA%' OR categorie LIKE '%$SEA%' OR reference LIKE '%$SEA%' OR designation LIKE '%$SEA%' OR marque_nom LIKE '%$SEA%' OR vendeur_nom LIKE '%$SEA%' OR serial_number LIKE '%$SEA%')" : "";
 
 
-
+// TODO tags
 
 echo "<br/><br/>";
 echo "</form>";

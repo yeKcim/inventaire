@@ -18,13 +18,6 @@ while ($l = mysql_fetch_row($query_table_type_contrat)) {
 }
 
 
-// $tags_list
-$table_tags_list = "SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;";
-$query_table_tags_list = mysql_query ($table_tags_list);
-$tags = array();
-while ($l = mysql_fetch_row($query_table_tags_list)) {
-    $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
-}
 
 
 ?>
