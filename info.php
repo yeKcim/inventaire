@@ -866,6 +866,49 @@ if ($tags_save=="Enregistrer les modifications de tags") {
 
 
 
+    if ($plus_tags!="") {
+        // Nouveaux tags dans tags_list
+        $new_tag = explode(',',$plus_tags);
+        $allnewtags=""; $allnewtagscomma="";
+        foreach ($new_tag as &$nt) {
+            $nt= ($nt[0]!=" ") ? $nt : substr($nt,1) ; // suppression du premier caractère si c’est un espace.
+            $allnewtags.= htmlentities("(NULL,'$nt'),");
+            $allnewtagscomma.= htmlentities("'$nt',");
+        }
+        $allnewtags=substr($allnewtags, 0, -1); // suppression du dernier caractère
+        mysql_query("INSERT INTO optique.tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;");
+        
+        // Nouveaux tags dans tags de $i
+        $allnewtagscomma=substr($allnewtagscomma, 0, -1); // suppression du dernier caractère
+        // tagnew_i les tags de $i
+        $query_table_tagnew_i = mysql_query ("SELECT tags_list_index FROM tags_list WHERE tags_list_nom IN ($allnewtagscomma) ;");
+
+        $allnewtags_index="";
+        while ($nti = mysql_fetch_row($query_table_tagnew_i)) {
+            $allnewtags_index.= "(NULL,'".$nti[0]."')," ;
+        }
+        $allnewtags_index=substr($allnewtags_index, 0, -1); // suppression du dernier caractère
+        mysql_query ("INSERT INTO optique.tags (tags_index, tags_id) VALUES $allnewtags_index ; ");
+
+    // TODO : si le tag existe déjà ne pas le recrer mais ajouter quand même l’entrée
+    // TODO : une page administration permettant de supprimer des tags ou d’en fusionner,…
+    
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /* ########### Avant d’afficher les cases on refait la requête sql car il y a peut-être eu des modifs… ########### */
     /* ########### Array ########### */
     // $tags_list
