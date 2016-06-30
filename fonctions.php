@@ -21,6 +21,11 @@ function formatBytes($size, $precision = 2)
 }
 
 
+// in_array only operates on a one dimensional array
+function in_array_r($item , $array){
+    return preg_match('/"'.$item.'"/i' , json_encode($array));
+}
+
 
 /*
 ███████╗███████╗██╗     ███████╗ ██████╗████████╗

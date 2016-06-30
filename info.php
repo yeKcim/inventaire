@@ -867,32 +867,47 @@ if ($tags_save=="Enregistrer les modifications de tags") {
 
 
     if ($plus_tags!="") {
+    // TODO : une page administration permettant de supprimer des tags ou d’en fusionner,…
+        
         // Nouveaux tags dans tags_list
         $new_tag = explode(',',$plus_tags);
         $allnewtags=""; $allnewtagscomma="";
+
         foreach ($new_tag as &$nt) {
-            $nt= ($nt[0]!=" ") ? $nt : substr($nt,1) ; // suppression du premier caractère si c’est un espace.
-            $allnewtags.= htmlentities("(NULL,'$nt'),");
-            $allnewtagscomma.= htmlentities("'$nt',");
+            $nt= ($nt[0]!=" ") ? $nt : substr($nt,1) ; // suppression du premier caractère si c’est un espace
+            
+            if ( in_array_r($nt,$tags) ) { // Recherche si le tag est déjà dans $tags
+                $allnewtagscomma.= "'$nt',";
+            }
+            else { // si le tag n’existe pas déjà, on l’ajoute dans la liste des tags à créer
+                $allnewtags.= "(NULL,'$nt'),";
+                $allnewtagscomma.= "'$nt',";
+            }
         }
-        $allnewtags=substr($allnewtags, 0, -1); // suppression du dernier caractère
-        mysql_query("INSERT INTO optique.tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;");
         
-        // Nouveaux tags dans tags de $i
+        $allnewtags=substr($allnewtags, 0, -1); // suppression du dernier caractère
         $allnewtagscomma=substr($allnewtagscomma, 0, -1); // suppression du dernier caractère
-        // tagnew_i les tags de $i
-        $query_table_tagnew_i = mysql_query ("SELECT tags_list_index FROM tags_list WHERE tags_list_nom IN ($allnewtagscomma) ;");
+        
+        if ($allnewtagscomma!="") {
+            mysql_query("INSERT INTO optique.tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;");
+            
+            // Nouveaux tags dans tags de $i
 
-        $allnewtags_index="";
-        while ($nti = mysql_fetch_row($query_table_tagnew_i)) {
-            $allnewtags_index.= "(NULL,'".$nti[0]."')," ;
+            $allnewtags_index="";
+            // tagnew_i les tags de $i
+            $query_table_tagnew_i = mysql_query ("SELECT tags_list_index FROM tags_list WHERE tags_list_nom IN ($allnewtagscomma) ;");
+            
+
+            echo "INSERT INTO optique.tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;<br/>";
+            echo "SELECT tags_list_index FROM tags_list WHERE tags_list_nom IN ($allnewtagscomma) ;<br/>";
+
+            while ($nti = mysql_fetch_row($query_table_tagnew_i)) {
+                $allnewtags_index.= "('".$nti[0]."','$i')," ;
+            }
+            $allnewtags_index=substr($allnewtags_index, 0, -1); // suppression du dernier caractère
+            mysql_query ("INSERT INTO optique.tags (tags_index, tags_id) VALUES $allnewtags_index ; ");
         }
-        $allnewtags_index=substr($allnewtags_index, 0, -1); // suppression du dernier caractère
-        mysql_query ("INSERT INTO optique.tags (tags_index, tags_id) VALUES $allnewtags_index ; ");
 
-    // TODO : si le tag existe déjà ne pas le recrer mais ajouter quand même l’entrée
-    // TODO : une page administration permettant de supprimer des tags ou d’en fusionner,…
-    
     }
 
 
