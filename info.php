@@ -892,15 +892,10 @@ if ($tags_save=="Enregistrer les modifications de tags") {
             mysql_query("INSERT INTO optique.tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;");
             
             // Nouveaux tags dans tags de $i
-
             $allnewtags_index="";
             // tagnew_i les tags de $i
             $query_table_tagnew_i = mysql_query ("SELECT tags_list_index FROM tags_list WHERE tags_list_nom IN ($allnewtagscomma) ;");
             
-
-            echo "INSERT INTO optique.tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;<br/>";
-            echo "SELECT tags_list_index FROM tags_list WHERE tags_list_nom IN ($allnewtagscomma) ;<br/>";
-
             while ($nti = mysql_fetch_row($query_table_tagnew_i)) {
                 $allnewtags_index.= "('".$nti[0]."','$i')," ;
             }
