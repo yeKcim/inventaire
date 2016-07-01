@@ -199,6 +199,77 @@ echo "<div id=\"container\">";
 ╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝╚═╝     
 */
 
+
+/* ########### Si des modifications dans la partie administrative ########### */
+if ( isset($_POST["administratif_valid"]) ) {
+
+    $arr = array("designation","vendeur","plus_vendeur_nom","plus_vendeur_web","plus_vendeur_remarque","prix","contrat","plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie");
+    foreach ($arr as &$value) {
+        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+    }
+
+
+    /* ########### Ajout d’un nouveau vendeur ########### */
+    if ($vendeur=="plus_vendeur") {
+        mysql_query ("INSERT INTO optique.vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ; ");
+        
+        /* TODO : prévoir le cas où le vendeur existe déjà */
+        $query_table_vendeurnew = mysql_query ("SELECT vendeur_index FROM vendeur WHERE vendeur_nom=\"".$plus_vendeur_nom."\" AND vendeur_web=\"".$plus_vendeur_web."\" AND vendeur_remarques=\"".$plus_vendeur_remarque."\" ;");
+        while ($l = mysql_fetch_row($query_table_vendeurnew)) $vendeur=$l[0];
+        
+        // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
+        $vendeurs[$vendeur]=array($vendeur,utf8_encode($plus_vendeur_nom),utf8_encode($plus_vendeur_web),utf8_encode($plus_vendeur_remarque));
+    }
+
+
+    if ($contrat=="plus_contrat_type") {
+        mysql_query ("INSERT INTO optique.contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ; ");
+        /* TODO : prévoir le cas où le type de contrat existe déjà */
+        $query_table_contrattypenew = mysql_query ("SELECT contrat_type_index FROM contrat_type WHERE contrat_type_cat='".$plus_contrat_type_nom."' ;");
+        while ($l = mysql_fetch_row($query_table_contrattypenew)) $contrat_type=$l[0];
+    }
+
+
+    if ($contrat=="plus_contrat") {
+        mysql_query ("INSERT INTO optique.contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ; ");
+        /* TODO : prévoir le cas où le contrat existe déjà */
+        $query_table_contratnew = mysql_query ("SELECT contrat_index FROM contrat WHERE contrat_nom='".$plus_contrat_nom."' AND contrat_type='".$contrat_type."' ;");
+        while ($l = mysql_fetch_row($query_table_vendeurnew)) $contrat=$l[0];
+    }
+
+
+
+
+    mysql_query ("UPDATE optique.base_optique SET designation='".$designation."', vendeur='".$vendeur."', prix='".$prix."', contrat='".$contrat."', date_achat='".dateformat($date_achat,"en")."', garantie='".dateformat($garantie,"en")."', num_inventaire='".$num_inventaire."' WHERE base_optique.base_index = $i;" );
+
+// TODO :"tutelle", "plus_tutelle", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone"
+
+
+
+
+
+    // TODO : Avant d’afficher on doit refaire les array concernés…
+    // TODO : Il faut aussi refaire les select selon les cas…
+    $data["designation"]=$designation;
+    $data["vendeur"]=$vendeur;
+    $data["prix"]=$prix;
+    $data["contrat"]=$contrat;
+    $data["date_achat"]=dateformat($date_achat,"en");
+    $data["garantie"]=dateformat($garantie,"en");
+    $data["num_inventaire"]=$num_inventaire;
+    /*
+    $data[""]=$;
+    $data[""]=$;
+    $data[""]=$;
+    $data[""]=$;
+    $data[""]=$;
+    $data[""]=$;
+    */
+
+}
+
+
+
 echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     
     echo "<h1>Administratif</h1>";
@@ -263,7 +334,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
             echo "<input value=\"\" name=\"plus_contrat_nom\" type=\"text\">\n";
         
             echo "<label for=\"plus_vendeur_type\">Type de contrat :</label>\n";
-               echo "<select name=\"contrat\" onchange=\"display(this,'plus_contrat_type','plus_contrat_type');\" id=\"contrat_type\">";
+               echo "<select name=\"contrat_type\" onchange=\"display(this,'plus_contrat_type','plus_contrat_type');\" id=\"contrat_type\">";
                    echo "<option value=\"0\" selected >— Aucun type de contrat spécifié —</option>"; 
                    option_selecteur("0", $types_contrats);
                    echo "<option value=\"plus_contrat_type\" >Nouveau type de contrat :</option>";
@@ -345,6 +416,8 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     
     echo "</fieldset>";
 
+    echo "<p style=\"text-align:center;\"><input name='administratif_valid' value='Enregistrer' type='submit'\"></p>"; // TODO Ajouter un bouton réinitialiser
+
     echo "</form>";
 
 
@@ -389,7 +462,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         /* ########### lab_id ########### */
         echo "<label for=\"lab_id\">Identifiant labo : </label>\n";
         //echo "<input value=\"".$data["lab_id"]."\" name=\"lab_id\" type=\"text\" id=\"lab_id\">";
-        echo "<strong>".$data["lab_id"]."</strong>"; // TODO Ajouter un bouton pour manuel (via tinybox ?)
+        echo "<strong>".$data["lab_id"]."</strong>"; // TODO Ajouter un bouton pour choiser cette entrée manuellement (via tinybox ?)
         echo "<br/>";
 
     echo "</fieldset>";
@@ -484,6 +557,8 @@ echo "</div>";
 ██████╔╝╚██████╔╝╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗██║ ╚████║   ██║   ███████║
 ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝
 */
+
+/* TODO : Ajouter la possibilité d’avoir des fichiers liés à fabricant-référence en plus de #n pour les data-sheet par exemple */
 
 // liste des extensions autorisées pour l’envoi de fichiers
 $extensions= array("pdf","jpg","png","svg");
@@ -756,7 +831,7 @@ if ($add_historique=="Ajouter") {
 // Suppression d’une entrée dans l’historique
 if ($del_h_confirm=="Confirmer la suppression") {
     mysql_query ("DELETE FROM optique.historique WHERE historique_index=$h AND historique_id=$i;");
-    // TODO ajouter l’information effacée dans un fichier texte dans trash ? avec l’ip et l’heure ?
+    // TODO ajouter l’information effacée dans trash ? avec l’ip et l’heure ?
 }
 
 
@@ -824,8 +899,7 @@ foreach ($arr as &$value) {
 
 /* ########### Array ########### */
 // $tags_list
-$table_tags_list = "SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;";
-$query_table_tags_list = mysql_query ($table_tags_list);
+$query_table_tags_list = mysql_query ("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
 $tags = array();
 while ($l = mysql_fetch_row($query_table_tags_list)) {
     $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
@@ -906,24 +980,13 @@ if ($tags_save=="Enregistrer les modifications de tags") {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     /* ########### Avant d’afficher les cases on refait la requête sql car il y a peut-être eu des modifs… ########### */
+    
+    // TODO : plutot que refaire les array il suffit de rajouter les nouveaux dedans avec array_push
+    
     /* ########### Array ########### */
     // $tags_list
-    $table_tags_list = "SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;";
-    $query_table_tags_list = mysql_query ($table_tags_list);
+    $query_table_tags_list = mysql_query ("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
     $tags = array();
     while ($l = mysql_fetch_row($query_table_tags_list)) {
         $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
@@ -937,7 +1000,6 @@ if ($tags_save=="Enregistrer les modifications de tags") {
 
 
 }
-
 
 echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
 
