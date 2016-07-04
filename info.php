@@ -68,7 +68,7 @@ require_once("./fonctions.php");
 
 /* ########### INFORMATIONS COMPOSANT ########### */
 // Tous les résultats dans un array
-$query_table = mysql_query ("SELECT * FROM base_optique WHERE base_index=$i ;");
+$query_table = mysql_query ("SELECT * FROM base WHERE base_index=$i ;");
 while ($l = mysql_fetch_row($query_table)) {
     $data=array(
         "base_index"=>$l[0],                  "lab_id"=>$l[1],                  "categorie"=>$l[2],
@@ -154,14 +154,14 @@ while ($l = mysql_fetch_row($query_table_caracteristique)) {
 
 // caracs
 $caracs=array();
-$query_table_carac = mysql_query ("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base_optique WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index=$i AND carac!=0 ORDER BY base_optique.base_index ASC, carac ASC");
+$query_table_carac = mysql_query ("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index=$i AND carac!=0 ORDER BY base.base_index ASC, carac ASC");
 while ($l = mysql_fetch_row($query_table_carac)) {
     $caracs[$l[3]]=array($l[0],$l[1],utf8_encode($l[2]),$l[3],utf8_encode($l[4]),utf8_encode($l[5]),utf8_encode($l[6]) );
 }
 
 
 // tous les lab_id
-$query_table_lab_id = mysql_query ("SELECT base_index, lab_id FROM base_optique WHERE base_index!=\"$i\" ORDER BY lab_id ASC ;");
+$query_table_lab_id = mysql_query ("SELECT base_index, lab_id FROM base WHERE base_index!=\"$i\" ORDER BY lab_id ASC ;");
 $lab_ids = array();
 while ($l = mysql_fetch_row($query_table_lab_id)) {
     $lab_ids[$l[0]]=array($l[0],"#".$l[0]."", utf8_encode($l[1]));
@@ -211,7 +211,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
     /* ########### Ajout d’un nouveau vendeur ########### */
     if ($vendeur=="plus_vendeur") {
-        mysql_query ("INSERT INTO optique.vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ; ");
+        mysql_query ("INSERT INTO $database.vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ; ");
         
         /* TODO : prévoir le cas où le vendeur existe déjà */
         $query_table_vendeurnew = mysql_query ("SELECT vendeur_index FROM vendeur ORDER BY vendeur_index DESC LIMIT 1 ;");
@@ -223,7 +223,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
 
     if ($contrat_type=="plus_contrat_type") {
-        mysql_query ("INSERT INTO optique.contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ; ");
+        mysql_query ("INSERT INTO $database.contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ; ");
         
         /* TODO : prévoir le cas où le type de contrat existe déjà */
         $query_table_contrattypenew = mysql_query ("SELECT contrat_type_index FROM contrat_type ORDER BY contrat_type_index DESC LIMIT 1 ;");
@@ -235,7 +235,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
 
     if ($contrat=="plus_contrat") {
-        mysql_query ("INSERT INTO optique.contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ; ");
+        mysql_query ("INSERT INTO $database.contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_contratnew = mysql_query ("SELECT contrat_index FROM contrat ORDER BY contrat_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_contratnew)) $contrat=$l[0];
@@ -246,7 +246,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
 
     if ($tutelle=="plus_tutelle") {
-        mysql_query ("INSERT INTO optique.tutelle (tutelle_nom) VALUES ('".$plus_tutelle."') ; ");
+        mysql_query ("INSERT INTO $database.tutelle (tutelle_nom) VALUES ('".$plus_tutelle."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_tutellenew = mysql_query ("SELECT tutelle_index FROM tutelle ORDER BY tutelle_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_tutellenew)) $tutelle=$l[0];
@@ -258,7 +258,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
 
     if ($responsable_achat=="plus_responsable_achat") {
-        mysql_query ("INSERT INTO optique.utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; ");
+        mysql_query ("INSERT INTO $database.utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_utilisateurnew)) $responsable_achat=$l[0];
@@ -271,7 +271,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
 
 
-    mysql_query ("UPDATE optique.base_optique SET designation='".$designation."', vendeur='".$vendeur."', prix='".$prix."', contrat='".$contrat."', date_achat='".dateformat($date_achat,"en")."', garantie='".dateformat($garantie,"en")."', num_inventaire='".$num_inventaire."', tutelle='".$tutelle."', responsable_achat='".$responsable_achat."' WHERE base_optique.base_index = $i;" );
+    mysql_query ("UPDATE $database.base SET designation='".$designation."', vendeur='".$vendeur."', prix='".$prix."', contrat='".$contrat."', date_achat='".dateformat($date_achat,"en")."', garantie='".dateformat($garantie,"en")."', num_inventaire='".$num_inventaire."', tutelle='".$tutelle."', responsable_achat='".$responsable_achat."' WHERE base.base_index = $i;" );
 
 
 
@@ -664,7 +664,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 
 
     // Array references_similaires
-    $query_table_reference_similaire = mysql_query ("SELECT base_index, lab_id FROM base_optique WHERE reference=\"".$data["reference"]."\" AND marque=".$data["marque"]." AND categorie=".$data["categorie"]." AND base_index!=$i ORDER BY base_index ASC ;");
+    $query_table_reference_similaire = mysql_query ("SELECT base_index, lab_id FROM base WHERE reference=\"".$data["reference"]."\" AND marque=".$data["marque"]." AND categorie=".$data["categorie"]." AND base_index!=$i ORDER BY base_index ASC ;");
     $references_similaires = array();
     while ($l = mysql_fetch_row($query_table_reference_similaire)) {
         $references_similaires[$l[0]]=array($l[0], utf8_encode($l[1]));
@@ -851,13 +851,13 @@ if ($add_historique=="Ajouter") {
     }
     $query_do_i_insert_histo = mysql_query ("SELECT historique_index FROM historique WHERE historique_date=\"".dateformat($date_info,"en")."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";");
     if (!isset(mysql_fetch_row($query_do_i_insert_histo)[0]) ) {
-        mysql_query ("INSERT INTO optique.historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".dateformat($date_info,"en")."\", \"".$histo."\", \"".$i."\"); ");
+        mysql_query ("INSERT INTO $database.historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".dateformat($date_info,"en")."\", \"".$histo."\", \"".$i."\"); ");
     }
 }
 
 // Suppression d’une entrée dans l’historique
 if ($del_h_confirm=="Confirmer la suppression") {
-    mysql_query ("DELETE FROM optique.historique WHERE historique_index=$h AND historique_id=$i;");
+    mysql_query ("DELETE FROM $database.historique WHERE historique_index=$h AND historique_id=$i;");
     // TODO ajouter l’information effacée dans trash ? avec l’ip et l’heure ?
 }
 
@@ -954,7 +954,7 @@ if ($tags_save=="Enregistrer les modifications de tags") {
             $alltags.= (isset($_POST["tag".$t[0].""])) ? htmlentities("(".$t[0].",$i),") : "" ;
         }
         $alltags=substr($alltags, 0, -1); // suppression du dernier caractère
-        mysql_query ("INSERT INTO optique.tags (tags_index, tags_id) VALUES $alltags ; ");
+        mysql_query ("INSERT INTO $database.tags (tags_index, tags_id) VALUES $alltags ; ");
     }
 
 
@@ -982,7 +982,7 @@ if ($tags_save=="Enregistrer les modifications de tags") {
         $allnewtagscomma=substr($allnewtagscomma, 0, -1); // suppression du dernier caractère
         
         if ($allnewtagscomma!="") {
-            mysql_query("INSERT INTO optique.tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;");
+            mysql_query("INSERT INTO $database.tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;");
             
             // Nouveaux tags dans tags de $i
             $allnewtags_index="";
@@ -993,7 +993,7 @@ if ($tags_save=="Enregistrer les modifications de tags") {
                 $allnewtags_index.= "('".$nti[0]."','$i')," ;
             }
             $allnewtags_index=substr($allnewtags_index, 0, -1); // suppression du dernier caractère
-            mysql_query ("INSERT INTO optique.tags (tags_index, tags_id) VALUES $allnewtags_index ; ");
+            mysql_query ("INSERT INTO $database.tags (tags_index, tags_id) VALUES $allnewtags_index ; ");
         }
 
     }

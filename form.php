@@ -57,7 +57,7 @@ $CON_CMD= ($CON!="") ? "AND contrat_index=$CON" : "" ;
 #########################################################################
 #                      RES : Responsable achat                          #
 #########################################################################
-$table_responsable = "SELECT DISTINCT (utilisateur_index) responsable_achat, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur, base_optique WHERE responsable_achat=utilisateur_index AND utilisateur_index!=0 ORDER BY utilisateur_nom,utilisateur_prenom ASC ;";
+$table_responsable = "SELECT DISTINCT (utilisateur_index) responsable_achat, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur, base WHERE responsable_achat=utilisateur_index AND utilisateur_index!=0 ORDER BY utilisateur_nom,utilisateur_prenom ASC ;";
 $query_table_responsable = mysql_query ($table_responsable);
 $responsables = array();
 while ($responsable = mysql_fetch_row($query_table_responsable)) {
@@ -69,7 +69,7 @@ $RES_CMD= ($RES!="") ? "AND responsable_achat=$RES" : "" ;
 #########################################################################
 #                         UTL : Utilisateur                             #
 #########################################################################
-$table_utilisateur = "SELECT DISTINCT(utilisateur_index) utilisateur_index, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur, base_optique WHERE utilisateur=utilisateur_index AND utilisateur_index!=0 ORDER BY utilisateur_nom ASC ;";
+$table_utilisateur = "SELECT DISTINCT(utilisateur_index) utilisateur_index, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur, base WHERE utilisateur=utilisateur_index AND utilisateur_index!=0 ORDER BY utilisateur_nom ASC ;";
 $query_table_utilisateur = mysql_query ($table_utilisateur);
 $utilisateurs = array();
 while ($utilisateur = mysql_fetch_row($query_table_utilisateur)) {

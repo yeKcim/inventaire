@@ -10,7 +10,7 @@
 */
 
 $table = "SELECT base_index, lab_id, categorie, categorie_nom, reference, designation, marque, marque_nom, vendeur, vendeur_nom, vendeur_web, vendeur_remarques, serial_number, localisation, localisation_batiment, localisation_piece, date_localisation, vendeur_nom, marque_nom, raison_sortie, utilisateur, responsable_achat, date_achat, prix, contrat
-FROM base_optique, categorie, marque, vendeur, localisation, contrat, contrat_type
+FROM base, categorie, marque, vendeur, localisation, contrat, contrat_type
 WHERE categorie=categorie_index AND marque=marque_index AND vendeur=vendeur_index AND localisation=localisation_index
 AND contrat_index=contrat AND contrat_type=contrat_type_index
 $IOT_CMD $CAT_CMD $TYC_CMD $CON_CMD $SEA_CMD $RES_CMD $UTL_CMD
@@ -36,7 +36,7 @@ $b_i="";
 foreach ($tableau as &$t) { $b_i.="".$t["base_index"].","; }
 $b_i=substr($b_i, 0, -1); // suppression du dernier caractère
 
-$table_carac="SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base_optique WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base_optique.base_index ASC, carac ASC";
+$table_carac="SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC";
 
 $tableau_carac=array();
 $query_table_carac = mysql_query ($table_carac);
