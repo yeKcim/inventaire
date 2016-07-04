@@ -258,13 +258,17 @@ if ( isset($_POST["administratif_valid"]) ) {
 
 
     if ($responsable_achat=="plus_responsable_achat") {
+    
+        $plus_responsable_achat_nom=mb_strtoupper($plus_responsable_achat_nom);
+        $plus_responsable_achat_phone=phone_display("$plus_responsable_achat_phone","");
+        
         mysql_query ("INSERT INTO $database.utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_utilisateurnew)) $responsable_achat=$l[0];
         
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-        $utilisateurs[$responsable_achat]=array( $responsable_achat, utf8_encode($plus_responsable_achat_nom), utf8_encode($plus_responsable_achat_prenom), utf8_encode($plus_responsable_achat_mail), $plus_responsable_achat_phone );
+        $utilisateurs[$responsable_achat]=array( $responsable_achat, utf8_encode($plus_responsable_achat_nom), utf8_encode($plus_responsable_achat_prenom), utf8_encode($plus_responsable_achat_mail), phone_display("$plus_responsable_achat_phone",".") );
 
     }
     
@@ -287,10 +291,6 @@ if ( isset($_POST["administratif_valid"]) ) {
     $data["tutelle"]=$tutelle;
     $data["plus_tutelle"]=$plus_tutelle;
     $data["responsable_achat"]=$responsable_achat;
-    $data["plus_responsable_achat_nom"]=$plus_responsable_achat_nom;
-    $data["plus_responsable_achat_prenom"]=$plus_responsable_achat_prenom;
-    $data["plus_responsable_achat_mail"]=$plus_responsable_achat_mail;
-    $data["plus_responsable_achat_phone"]=$plus_responsable_achat_phone;
 
 
 }
@@ -401,7 +401,12 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<br/>";
 
         /* ########### responsable_achat ########### */
-        echo "<label for=\"responsable_achat\">Responsable de l’achat : </label>\n";
+        echo "<label for=\"responsable_achat\">Acheteur ";
+
+        echo "<a href=\"mailto:".$utilisateurs[$data["responsable_achat"]][3]."\" title=\"".$utilisateurs[$data["responsable_achat"]][3]."\"><strong>✉</strong></a> ";
+echo "<abbr title=\"".phone_display("".$utilisateurs[$data["responsable_achat"]][4]."",".")."\"><strong>☏</strong></abbr>";
+        
+        echo ": </label>\n";
         echo "<select name=\"responsable_achat\" onchange=\"display(this,'plus_responsable_achat','plus_responsable_achat');\" id=\"responsable_achat\">";
         echo "<option value=\"0\" "; if ($data["responsable_achat"]=="0") echo "selected"; echo ">— Aucun responsable achat spécifié —</option>"; 
         option_selecteur($data["responsable_achat"], $utilisateurs, "2");

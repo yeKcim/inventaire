@@ -26,6 +26,13 @@ function in_array_r($item , $array){
     return preg_match('/"'.$item.'"/i' , json_encode($array));
 }
 
+function phone_display($n, $display) {
+    $char = array(" ", "&nbsp;", ".", "-", ",");
+    if ($display=="") $n = str_replace($char, "", $n);
+    else $n = wordwrap($n, 2, $display,1);
+    return "$n";
+    
+}
 
 /*
 ███████╗███████╗██╗     ███████╗ ██████╗████████╗
