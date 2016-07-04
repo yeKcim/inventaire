@@ -11,4 +11,4 @@ Les parties administrative et technique sont clairement différenciées pour per
 
 ## Aperçu
 
-![Preview](./preview.png =550x)
+![Preview](./preview.png)
