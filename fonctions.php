@@ -27,7 +27,7 @@ function in_array_r($item , $array){
 }
 
 function phone_display($n, $display) {
-    $char = array(" ", "&nbsp;", ".", "-", ",");
+    $char = array(" ", "&nbsp;", ".", "-", ",", " ", "_");
     if ($display=="") $n = str_replace($char, "", $n);
     else $n = wordwrap($n, 2, $display,1);
     return "$n";
