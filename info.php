@@ -239,7 +239,6 @@ if ( isset($_POST["administratif_valid"]) ) {
         mysql_query ("INSERT INTO optique.contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_contratnew = mysql_query ("SELECT contrat_index FROM contrat ORDER BY contrat_index DESC LIMIT 1 ;");
-        
         while ($l = mysql_fetch_row($query_table_contratnew)) $contrat=$l[0];
         
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
@@ -248,9 +247,24 @@ if ( isset($_POST["administratif_valid"]) ) {
     }
 
 
-    mysql_query ("UPDATE optique.base_optique SET designation='".$designation."', vendeur='".$vendeur."', prix='".$prix."', contrat='".$contrat."', date_achat='".dateformat($date_achat,"en")."', garantie='".dateformat($garantie,"en")."', num_inventaire='".$num_inventaire."' WHERE base_optique.base_index = $i;" );
+    if ($tutelle=="plus_tutelle") {
+        mysql_query ("INSERT INTO optique.tutelle (tutelle_nom) VALUES ('".$plus_tutelle."') ; ");
+        /* TODO : prévoir le cas où le contrat existe déjà */
+        $query_table_tutellenew = mysql_query ("SELECT tutelle_index FROM tutelle ORDER BY tutelle_index DESC LIMIT 1 ;");
+        while ($l = mysql_fetch_row($query_table_tutellenew)) $tutelle=$l[0];
+        
+        // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+        $tutelles[$tutelle]=array( $tutelle, utf8_encode($plus_tutelle) );
 
-// TODO :"tutelle", "plus_tutelle", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone"
+    }
+
+
+
+
+
+    mysql_query ("UPDATE optique.base_optique SET designation='".$designation."', vendeur='".$vendeur."', prix='".$prix."', contrat='".$contrat."', date_achat='".dateformat($date_achat,"en")."', garantie='".dateformat($garantie,"en")."', num_inventaire='".$num_inventaire."', tutelle='".$tutelle."' WHERE base_optique.base_index = $i;" );
+
+// TODO :"responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone"
 
 
     // TODO : Avant d’afficher on doit refaire les array concernés…
@@ -262,10 +276,11 @@ if ( isset($_POST["administratif_valid"]) ) {
     $data["date_achat"]=dateformat($date_achat,"en");
     $data["garantie"]=dateformat($garantie,"en");
     $data["num_inventaire"]=$num_inventaire;
+    $data["tutelle"]=$tutelle;
+    $data["plus_tutelle"]=$plus_tutelle;
+
+
     /*
-    
-    
-    $data[""]=$;
     $data[""]=$;
     $data[""]=$;
     $data[""]=$;
