@@ -229,7 +229,6 @@ if ( isset($_POST["administratif_valid"]) ) {
         $query_table_contrattypenew = mysql_query ("SELECT contrat_type_index FROM contrat_type ORDER BY contrat_type_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_contrattypenew)) $contrat_type=$l[0];
         
-        
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
         $types_contrats[$contrat_type]=array( $contrat_type, utf8_encode($plus_contrat_type_nom) );
     }
@@ -243,7 +242,6 @@ if ( isset($_POST["administratif_valid"]) ) {
         
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
         $contrats[$contrat]=array( $contrat, utf8_encode($plus_contrat_nom), $contrat_type );
-
     }
 
 
@@ -255,20 +253,30 @@ if ( isset($_POST["administratif_valid"]) ) {
         
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
         $tutelles[$tutelle]=array( $tutelle, utf8_encode($plus_tutelle) );
-
     }
 
 
 
+    if ($responsable_achat=="plus_responsable_achat") {
+        mysql_query ("INSERT INTO optique.utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; ");
+        /* TODO : prévoir le cas où le contrat existe déjà */
+        $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
+        while ($l = mysql_fetch_row($query_table_utilisateurnew)) $responsable_achat=$l[0];
+        
+        // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+        $utilisateurs[$responsable_achat]=array( $responsable_achat, utf8_encode($plus_responsable_achat_nom), utf8_encode($plus_responsable_achat_prenom), utf8_encode($plus_responsable_achat_mail), $plus_responsable_achat_phone );
+
+    }
+    
 
 
-    mysql_query ("UPDATE optique.base_optique SET designation='".$designation."', vendeur='".$vendeur."', prix='".$prix."', contrat='".$contrat."', date_achat='".dateformat($date_achat,"en")."', garantie='".dateformat($garantie,"en")."', num_inventaire='".$num_inventaire."', tutelle='".$tutelle."' WHERE base_optique.base_index = $i;" );
 
-// TODO :"responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone"
+    mysql_query ("UPDATE optique.base_optique SET designation='".$designation."', vendeur='".$vendeur."', prix='".$prix."', contrat='".$contrat."', date_achat='".dateformat($date_achat,"en")."', garantie='".dateformat($garantie,"en")."', num_inventaire='".$num_inventaire."', tutelle='".$tutelle."', responsable_achat='".$responsable_achat."' WHERE base_optique.base_index = $i;" );
 
 
-    // TODO : Avant d’afficher on doit refaire les array concernés…
-    // TODO : Il faut aussi refaire les select selon les cas…
+
+
+    // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data["designation"]=$designation;
     $data["vendeur"]=$vendeur;
     $data["prix"]=$prix;
@@ -278,15 +286,12 @@ if ( isset($_POST["administratif_valid"]) ) {
     $data["num_inventaire"]=$num_inventaire;
     $data["tutelle"]=$tutelle;
     $data["plus_tutelle"]=$plus_tutelle;
+    $data["responsable_achat"]=$responsable_achat;
+    $data["plus_responsable_achat_nom"]=$plus_responsable_achat_nom;
+    $data["plus_responsable_achat_prenom"]=$plus_responsable_achat_prenom;
+    $data["plus_responsable_achat_mail"]=$plus_responsable_achat_mail;
+    $data["plus_responsable_achat_phone"]=$plus_responsable_achat_phone;
 
-
-    /*
-    $data[""]=$;
-    $data[""]=$;
-    $data[""]=$;
-    $data[""]=$;
-    $data[""]=$;
-    */
 
 }
 
