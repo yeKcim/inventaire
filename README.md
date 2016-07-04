@@ -10,3 +10,5 @@ L’outil tente d’être le plus universel possible :
 Les parties administrative et technique sont clairement différenciées pour permettre de remplir uniquement une partie si on le souhaite
 
 ## Aperçu
+
+![Preview](./preview.png =550x)
