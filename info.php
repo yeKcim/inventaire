@@ -214,7 +214,7 @@ if ( isset($_POST["administratif_valid"]) ) {
         mysql_query ("INSERT INTO optique.vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ; ");
         
         /* TODO : prévoir le cas où le vendeur existe déjà */
-        $query_table_vendeurnew = mysql_query ("SELECT vendeur_index FROM vendeur WHERE vendeur_nom=\"".$plus_vendeur_nom."\" AND vendeur_web=\"".$plus_vendeur_web."\" AND vendeur_remarques=\"".$plus_vendeur_remarque."\" ;");
+        $query_table_vendeurnew = mysql_query ("SELECT vendeur_index FROM vendeur ORDER BY vendeur_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_vendeurnew)) $vendeur=$l[0];
         
         // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
@@ -222,30 +222,35 @@ if ( isset($_POST["administratif_valid"]) ) {
     }
 
 
-    if ($contrat=="plus_contrat_type") {
+    if ($contrat_type=="plus_contrat_type") {
         mysql_query ("INSERT INTO optique.contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ; ");
+        
         /* TODO : prévoir le cas où le type de contrat existe déjà */
-        $query_table_contrattypenew = mysql_query ("SELECT contrat_type_index FROM contrat_type WHERE contrat_type_cat='".$plus_contrat_type_nom."' ;");
+        $query_table_contrattypenew = mysql_query ("SELECT contrat_type_index FROM contrat_type ORDER BY contrat_type_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_contrattypenew)) $contrat_type=$l[0];
+        
+        
+        // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+        $types_contrats[$contrat_type]=array( $contrat_type, utf8_encode($plus_contrat_type_nom) );
     }
 
 
     if ($contrat=="plus_contrat") {
         mysql_query ("INSERT INTO optique.contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
-        $query_table_contratnew = mysql_query ("SELECT contrat_index FROM contrat WHERE contrat_nom='".$plus_contrat_nom."' AND contrat_type='".$contrat_type."' ;");
-        while ($l = mysql_fetch_row($query_table_vendeurnew)) $contrat=$l[0];
+        $query_table_contratnew = mysql_query ("SELECT contrat_index FROM contrat ORDER BY contrat_index DESC LIMIT 1 ;");
+        
+        while ($l = mysql_fetch_row($query_table_contratnew)) $contrat=$l[0];
+        
+        // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+        $contrats[$contrat]=array( $contrat, utf8_encode($plus_contrat_nom), $contrat_type );
+
     }
-
-
 
 
     mysql_query ("UPDATE optique.base_optique SET designation='".$designation."', vendeur='".$vendeur."', prix='".$prix."', contrat='".$contrat."', date_achat='".dateformat($date_achat,"en")."', garantie='".dateformat($garantie,"en")."', num_inventaire='".$num_inventaire."' WHERE base_optique.base_index = $i;" );
 
 // TODO :"tutelle", "plus_tutelle", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone"
-
-
-
 
 
     // TODO : Avant d’afficher on doit refaire les array concernés…
@@ -258,6 +263,8 @@ if ( isset($_POST["administratif_valid"]) ) {
     $data["garantie"]=dateformat($garantie,"en");
     $data["num_inventaire"]=$num_inventaire;
     /*
+    
+    
     $data[""]=$;
     $data[""]=$;
     $data[""]=$;
@@ -333,7 +340,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
             echo "<label for=\"plus_contrat_nom\">Nom :</label>\n";
             echo "<input value=\"\" name=\"plus_contrat_nom\" type=\"text\">\n";
         
-            echo "<label for=\"plus_vendeur_type\">Type de contrat :</label>\n";
+            echo "<label for=\"contrat_type\">Type de contrat :</label>\n";
                echo "<select name=\"contrat_type\" onchange=\"display(this,'plus_contrat_type','plus_contrat_type');\" id=\"contrat_type\">";
                    echo "<option value=\"0\" selected >— Aucun type de contrat spécifié —</option>"; 
                    option_selecteur("0", $types_contrats);
@@ -913,12 +920,6 @@ while ($l = mysql_fetch_row($query_table_tag_i)) {
 
 
 
-
-
-
-
-
-
 /* ########### Modifications SQL ########### */
 if ($tags_save=="Enregistrer les modifications de tags") {
     // Supprimer tous les tags de cette entrée pour réinitialiser
@@ -935,8 +936,6 @@ if ($tags_save=="Enregistrer les modifications de tags") {
         $alltags=substr($alltags, 0, -1); // suppression du dernier caractère
         mysql_query ("INSERT INTO optique.tags (tags_index, tags_id) VALUES $alltags ; ");
     }
-
-
 
 
 
