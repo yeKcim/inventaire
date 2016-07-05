@@ -843,7 +843,7 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
 
         /* ########### sortie ########### */
         echo "<label for=\"sortie\">État : </label>\n";
-        echo "<select name=\"sortie\" id=\"etat\">";
+        echo "<select name=\"sortie\" id=\"etat\" onchange=\"display(this,'1','2');\">";
             echo "<option value=\"0\" "; if ($data["sortie"]=="") echo "selected"; echo ">Inventorié</option>";
             echo "<option value=\"1\" "; if ($data["sortie"]=="1") echo "selected"; echo ">Sortie définitive d’inventaire</option>";
             echo "<option value=\"2\" "; if ($data["sortie"]=="2") echo "selected"; echo ">Sortie temporaire d’inventaire</option>";
@@ -852,13 +852,29 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
         if ($data["sortie"]!="0") echo " <abbr title=\"le ".dateformat($data["date_sortie"],"fr")."\"><strong>ⓘ</strong></abbr>"; /* seulement si sortie… !!! */
 
         /* ########### raison_sortie ########### */
+
+
+    foreach( array(1,2) as $r) {
+
+        $display= ( $data["sortie"]!="0" ) ? "block" : "none" ;
+        $display= ( $r=="2" ) ? "none" : $display ;
+
+        echo "<span id=\"$r\" style=\"display: $display;\">";
         echo "<label for=\"raison_sortie\">Raison de sortie : </label>\n"; /* seulement si sortie… !!! */
         echo "<select name=\"raison_sortie\" onchange=\"display(this,'plus_raison_sortie','plus_raison_sortie');\" id=\"raison_sortie\">";
         echo "<option value=\"0\" "; if ($data["raison_sortie"]=="0") echo "selected"; echo ">— Aucune raison spécifiée —</option>"; 
         option_selecteur($data["raison_sortie"], $raison_sorties);
         echo "<option value=\"plus_raison_sortie\" "; if ($data["raison_sortie"]=="plus_raison_sortie") echo "selected"; echo ">Nouvelle raison :</option>";
         echo "</select>";   
-                 
+        echo "</span>";
+    }
+
+
+
+
+
+
+
                     /* ########### + raison_sortie ########### */
                     echo "\n\n\n";
                     echo "<fieldset id=\"plus_raison_sortie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvellle raison de sortie</legend>";
