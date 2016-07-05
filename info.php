@@ -258,7 +258,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
 
     if ($responsable_achat=="plus_responsable_achat") {
-    
+
         $plus_responsable_achat_nom=mb_strtoupper($plus_responsable_achat_nom);
         $plus_responsable_achat_phone=phone_display("$plus_responsable_achat_phone","");
         
@@ -271,7 +271,7 @@ if ( isset($_POST["administratif_valid"]) ) {
         $utilisateurs[$responsable_achat]=array( $responsable_achat, utf8_encode($plus_responsable_achat_nom), utf8_encode($plus_responsable_achat_prenom), utf8_encode($plus_responsable_achat_mail), phone_display("$plus_responsable_achat_phone",".") );
 
     }
-    
+
 
 
 
@@ -700,6 +700,83 @@ echo "</div>";
  ╚═════╝    ╚═╝   ╚═╝╚══════╝╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
 */
 
+
+
+
+
+/* ########### Si des modifications dans la partie administrative ########### */
+if ( isset($_POST["utilisation_valid"]) ) {
+
+    $arr = array("utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
+    foreach ($arr as &$value) {
+        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+    }
+
+
+
+
+
+
+    if ($utilisateur=="plus_utilisateur") {
+
+        $plus_utilisateur_nom=mb_strtoupper($plus_utilisateur_nom);
+        $plus_utilisateur_phone=phone_display("$plus_utilisateur_phone","");
+        
+        mysql_query ("INSERT INTO $database.utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_utilisateur_nom."', '".$plus_utilisateur_prenom."','".$plus_utilisateur_mail."','".$plus_utilisateur_phone."') ; ");
+        /* TODO : prévoir le cas où le contrat existe déjà */
+        $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
+        while ($l = mysql_fetch_row($query_table_utilisateurnew)) $utilisateur=$l[0];
+        
+        // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
+        $utilisateurs[$utilisateur]=array( $utilisateur, utf8_encode($plus_utilisateur_nom), utf8_encode($plus_utilisateur_prenom), utf8_encode($plus_utilisateur_mail), phone_display("$plus_utilisateur_phone",".") );
+
+    }
+
+
+
+
+
+
+    if ($localisation=="plus_localisation") {
+
+        mysql_query ("INSERT INTO $database.localisation (localisation_batiment, localisation_piece) VALUES ('".$plus_localisation_bat."', '".$plus_localisation_piece."' ); ");
+        
+        
+        /* TODO : prévoir le cas où le contrat existe déjà */
+        $query_table_localisationnew = mysql_query ("SELECT localisation_index FROM localisation ORDER BY localisation_index DESC LIMIT 1 ;");
+        while ($l = mysql_fetch_row($query_table_localisationnew)) $localisation=$l[0];
+        
+        // on ajoute cette entrée dans le tableau des localisations (utilisé pour le select)
+        $localisations[$localisation]=array( $localisation, utf8_encode($plus_localisation_bat), utf8_encode($plus_localisation_piece) );
+
+    }
+
+
+
+
+
+
+    mysql_query ("UPDATE $database.base SET utilisateur='".$utilisateur."', localisation='".$localisation."', sortie='".$sortie."' WHERE base.base_index = $i;" );
+
+    // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
+    $data["utilisateur"]=$utilisateur;
+    $data["localisation"]=$localisation;
+    $data["sortie"]=$sortie;
+
+/*
+"raison_sortie", "plus_raison_sortie_nom", "integration"
+    $data[""]=$;
+*/
+
+}
+
+
+
+
+
+
+
+
 echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
 
     echo "<h1>Utilisation</h1>";
@@ -753,8 +830,8 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
             echo "<fieldset id=\"plus_localisation\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle localisation</legend>";
                 echo "<label for=\"plus_localisation_bat\">Bâtiment :</label>\n";
                 echo "<input value=\"\" name=\"plus_localisation_bat\" type=\"text\">\n";
-                echo "<label for=\"plus_localisation_bat\">Pièce :</label>\n";
-                echo "<input value=\"\" name=\"plus_localisation_bat\" type=\"text\">\n";
+                echo "<label for=\"plus_localisation_piece\">Pièce :</label>\n";
+                echo "<input value=\"\" name=\"plus_localisation_piece\" type=\"text\">\n";
             echo "</fieldset>";
             echo "\n\n\n";
 
@@ -765,8 +842,8 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
     echo "<fieldset><legend>Inventaire</legend>";
 
         /* ########### sortie ########### */
-        echo "<label for=\"etat\">État : </label>\n";
-        echo "<select name=\"etat\" id=\"etat\">";
+        echo "<label for=\"sortie\">État : </label>\n";
+        echo "<select name=\"sortie\" id=\"etat\">";
             echo "<option value=\"0\" "; if ($data["sortie"]=="") echo "selected"; echo ">Inventorié</option>";
             echo "<option value=\"1\" "; if ($data["sortie"]=="1") echo "selected"; echo ">Sortie définitive d’inventaire</option>";
             echo "<option value=\"2\" "; if ($data["sortie"]=="2") echo "selected"; echo ">Sortie temporaire d’inventaire</option>";
@@ -790,22 +867,8 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
                     echo "</fieldset>";
                     echo "\n\n\n";
                  
-     echo "</fieldset>";   
-     
-     
-     
+    echo "</fieldset>";   
 
-
-
-
-
-
-
-
-
-
-
-    
 
 
     echo "<fieldset><legend>Intégration (si le composant est intégré à un autre)</legend>";
@@ -818,13 +881,11 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
         echo "</select>";
 
         if ($data["integration"]!="0") echo " <a href=\"info.php?i=".$data["integration"]."\"><strong>↗</strong></a>";
- 
-
 
     echo "</fieldset>";
 
+    echo "<p style=\"text-align:center;\"><input name='utilisation_valid' value='Enregistrer' type='submit'\"></p>"; // TODO Ajouter un bouton réinitialiser
 
-    
     echo "</form>";
 
 echo "</div>";
