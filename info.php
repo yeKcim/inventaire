@@ -756,15 +756,17 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
 
 
-    mysql_query ("UPDATE $database.base SET utilisateur='".$utilisateur."', localisation='".$localisation."', sortie='".$sortie."' WHERE base.base_index = $i;" );
+    mysql_query ("UPDATE $database.base SET utilisateur='".$utilisateur."', localisation='".$localisation."', sortie='".$sortie."', integration='".$integration."' WHERE base.base_index = $i;" );
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data["utilisateur"]=$utilisateur;
     $data["localisation"]=$localisation;
     $data["sortie"]=$sortie;
-
-/*
-"raison_sortie", "plus_raison_sortie_nom", "integration"
+    $data["integration"]=$integration;
+    
+    
+/* TODO
+"raison_sortie", "plus_raison_sortie_nom",
     $data[""]=$;
 */
 
