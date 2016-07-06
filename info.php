@@ -497,16 +497,8 @@ if ( isset($_POST["technique_valid"]) ) {
         while ($l = mysql_fetch_row($query_table_categorienew)) $categorie=$l[0];
         // on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
         $categories[$categorie]=array( $categorie,utf8_encode($plus_categorie_nom),utf8_encode($plus_categorie_abbr) );
+        // TODO Attetion l’abréviation ne doit contenir que des lettres !
     }
-
-
-
-
-    // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-    // ########## en fonction de la catégorie, l’identifiant doit changer !!!
-    // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
-
-
 
 
     /* ########### Ajout d’une nouvelle marque ########### */
@@ -519,16 +511,37 @@ if ( isset($_POST["technique_valid"]) ) {
         $marques[$marque]=array( $marque, utf8_encode($plus_marque_nom) );
     }
 
-    mysql_query ("UPDATE $database.base SET marque='".$marque."', categorie='".$categorie."', reference='".$reference."', serial_number='".$serial_number."' WHERE base.base_index = $i;" );
 
+    // Si on change la catégorie, il est nécessaire de changer également le lab_id !
+    if ($data["categorie"]!=$categorie) {
+        // quelle est l’abbréviation de la catégorie ?
+        $query_table_abbr = mysql_query ("SELECT categorie_lettres FROM categorie WHERE categorie_index='".$categorie."' ;");
+        while ($l = mysql_fetch_row($query_table_abbr)) $abbr=$l[0];
+
+        // recherche du labid max
+        $allid=array();
+        $query_table_labid = mysql_query ("SELECT lab_id FROM base WHERE categorie='".$categorie."' ORDER BY lab_id ASC ;");
+        while ($lid = mysql_fetch_row($query_table_labid)) {
+            // on supprime les lettres des lab_id, on met les chiffres dans un tableau
+            array_push ( $allid, preg_replace('`[^0-9]`', '', $lid[0]) );
+        }
+        $newid=max($allid)+1;
+        $data["lab_id"]="".$abbr."".$newid."";
+        // TODO : Vérifier avant qu’aucune autre entrée ainsi nommée n’existe ! dans le cas d’un nommage manuel
+    }
+
+
+
+
+    $data["lab_id"] = ($categorie==0) ? "" : $data["lab_id"];
+
+    mysql_query ("UPDATE $database.base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$data["lab_id"]."' WHERE base.base_index = $i;" );
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data["marque"]=$marque;
-    $data["categorie"]=$categorie;
     $data["serial_number"]=$serial_number;
     $data["reference"]=$reference;
-
-    //    $data[""]=$;
+    $data["categorie"]=$categorie;
 
 }
 
@@ -562,7 +575,6 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
         /* ########### lab_id ########### */
         echo "<label for=\"lab_id\">Identifiant labo : </label>\n";
-        //echo "<input value=\"".$data["lab_id"]."\" name=\"lab_id\" type=\"text\" id=\"lab_id\">";
         echo "<strong>".$data["lab_id"]."</strong>"; // TODO Ajouter un bouton pour choiser cette entrée manuellement (via tinybox ?)
         echo "<br/>";
 
