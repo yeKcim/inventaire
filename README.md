@@ -26,4 +26,5 @@ Les parties administrative et technique sont clairement différenciées pour per
 * **Division cellulaire** : Que faire si l’on casse un élément et qu’il devient 2 ou 3 (cas déjà arrivé pour un milieu actif…).
 * **Suppression sécurisée** : Un historique des modifications ? Avec nom et date ?
 * **Traduction** : Supporter plusieurs langues ?
+* **Intégration** : cacher ce fieldset si l’élément n’est pas intégré.
 
