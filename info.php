@@ -224,7 +224,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
     /* ########### Ajout d’un nouveau vendeur ########### */
     if ($vendeur=="plus_vendeur") {
-        mysql_query ("INSERT INTO $database.vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ; ");
+        mysql_query ("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ; ");
         
         /* TODO : prévoir le cas où le vendeur existe déjà */
         $query_table_vendeurnew = mysql_query ("SELECT vendeur_index FROM vendeur ORDER BY vendeur_index DESC LIMIT 1 ;");
@@ -236,7 +236,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
 
     if ($contrat_type=="plus_contrat_type") {
-        mysql_query ("INSERT INTO $database.contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ; ");
+        mysql_query ("INSERT INTO contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ; ");
         
         /* TODO : prévoir le cas où le type de contrat existe déjà */
         $query_table_contrattypenew = mysql_query ("SELECT contrat_type_index FROM contrat_type ORDER BY contrat_type_index DESC LIMIT 1 ;");
@@ -248,7 +248,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
 
     if ($contrat=="plus_contrat") {
-        mysql_query ("INSERT INTO $database.contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ; ");
+        mysql_query ("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_contratnew = mysql_query ("SELECT contrat_index FROM contrat ORDER BY contrat_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_contratnew)) $contrat=$l[0];
@@ -259,7 +259,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
 
     if ($tutelle=="plus_tutelle") {
-        mysql_query ("INSERT INTO $database.tutelle (tutelle_nom) VALUES ('".$plus_tutelle."') ; ");
+        mysql_query ("INSERT INTO tutelle (tutelle_nom) VALUES ('".$plus_tutelle."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_tutellenew = mysql_query ("SELECT tutelle_index FROM tutelle ORDER BY tutelle_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_tutellenew)) $tutelle=$l[0];
@@ -275,7 +275,7 @@ if ( isset($_POST["administratif_valid"]) ) {
         $plus_responsable_achat_nom=mb_strtoupper($plus_responsable_achat_nom);
         $plus_responsable_achat_phone=phone_display("$plus_responsable_achat_phone","");
         
-        mysql_query ("INSERT INTO $database.utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; ");
+        mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_utilisateurnew)) $responsable_achat=$l[0];
@@ -288,7 +288,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
 
 
-    mysql_query ("UPDATE $database.base SET designation='".$designation."', vendeur='".$vendeur."', prix='".$prix."', contrat='".$contrat."', date_achat='".dateformat($date_achat,"en")."', garantie='".dateformat($garantie,"en")."', num_inventaire='".$num_inventaire."', tutelle='".$tutelle."', responsable_achat='".$responsable_achat."' WHERE base.base_index = $i;" );
+    mysql_query ("UPDATE base SET designation='".$designation."', vendeur='".$vendeur."', prix='".$prix."', contrat='".$contrat."', date_achat='".dateformat($date_achat,"en")."', garantie='".dateformat($garantie,"en")."', num_inventaire='".$num_inventaire."', tutelle='".$tutelle."', responsable_achat='".$responsable_achat."' WHERE base.base_index = $i;" );
 
 
 
@@ -490,7 +490,7 @@ if ( isset($_POST["technique_valid"]) ) {
 
     /* ########### Ajout d’une nouvelle catégorie ########### */
     if ($categorie=="plus_categorie") {
-        mysql_query ("INSERT INTO $database.categorie (categorie_lettres, categorie_nom) VALUES (\"".$plus_categorie_abbr."\",\"".$plus_categorie_nom."\") ; ");
+        mysql_query ("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$plus_categorie_abbr."\",\"".$plus_categorie_nom."\") ; ");
         
         /* TODO : prévoir le cas où le vendeur existe déjà */
         $query_table_categorienew = mysql_query ("SELECT categorie_index FROM categorie ORDER BY categorie_index DESC LIMIT 1 ;");
@@ -503,7 +503,7 @@ if ( isset($_POST["technique_valid"]) ) {
 
     /* ########### Ajout d’une nouvelle marque ########### */
     if ($marque=="plus_marque") {
-        mysql_query ("INSERT INTO $database.marque (marque_nom) VALUES ('".$plus_marque_nom."') ; ");
+        mysql_query ("INSERT INTO marque (marque_nom) VALUES ('".$plus_marque_nom."') ; ");
         /* TODO : prévoir le cas où la marque existe déjà */
         $query_table_marquenew = mysql_query ("SELECT marque_index FROM marque ORDER BY marque_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_marquenew)) $marque=$l[0];
@@ -530,12 +530,9 @@ if ( isset($_POST["technique_valid"]) ) {
         // TODO : Vérifier avant qu’aucune autre entrée ainsi nommée n’existe ! dans le cas d’un nommage manuel
     }
 
-
-
-
     $data["lab_id"] = ($categorie==0) ? "" : $data["lab_id"];
 
-    mysql_query ("UPDATE $database.base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$data["lab_id"]."' WHERE base.base_index = $i;" );
+    mysql_query ("UPDATE base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$data["lab_id"]."' WHERE base.base_index = $i;" );
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data["marque"]=$marque;
@@ -675,12 +672,9 @@ echo "</div>";
 
 /* TODO : Ajouter la possibilité d’avoir des fichiers liés à fabricant-référence en plus de #n pour les data-sheet par exemple */
 
-// liste des extensions autorisées pour l’envoi de fichiers
-$extensions= array("pdf","jpg","png","svg");
+require_once("./config.php");
+
 $max_size=file_upload_max_size();
-$racine="/var/www/";
-$dossierdesfichiers="".$racine."files/";
-$trash="".$dossierdesfichiers."trash/";
 /* ########### POST ########### */
 $arr = array("del_f_confirm","f");
 foreach ($arr as &$value) {
@@ -799,7 +793,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
     if ($utilisateur=="plus_utilisateur") {
         $plus_utilisateur_nom=mb_strtoupper($plus_utilisateur_nom);
         $plus_utilisateur_phone=phone_display("$plus_utilisateur_phone","");
-        mysql_query ("INSERT INTO $database.utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_utilisateur_nom."', '".$plus_utilisateur_prenom."','".$plus_utilisateur_mail."','".$plus_utilisateur_phone."') ; ");
+        mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_utilisateur_nom."', '".$plus_utilisateur_prenom."','".$plus_utilisateur_mail."','".$plus_utilisateur_phone."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_utilisateurnew)) $utilisateur=$l[0];
@@ -809,7 +803,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
 
     if ($localisation=="plus_localisation") {
-        mysql_query ("INSERT INTO $database.localisation (localisation_batiment, localisation_piece) VALUES ('".$plus_localisation_bat."', '".$plus_localisation_piece."' ); ");
+        mysql_query ("INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES ('".$plus_localisation_bat."', '".$plus_localisation_piece."' ); ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_localisationnew = mysql_query ("SELECT localisation_index FROM localisation ORDER BY localisation_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_localisationnew)) $localisation=$l[0];
@@ -819,7 +813,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
 
     if ($raison_sortie=="plus_raison_sortie") {
-        mysql_query ("INSERT INTO $database.raison_sortie (raison_sortie_nom) VALUES ('".$plus_raison_sortie_nom."'); ");
+        mysql_query ("INSERT INTO raison_sortie (raison_sortie_nom) VALUES ('".$plus_raison_sortie_nom."'); ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_raisonnew = mysql_query ("SELECT raison_sortie_index FROM raison_sortie ORDER BY raison_sortie_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_raisonnew)) $raison_sortie=$l[0];
@@ -831,7 +825,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
 $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 
 
-    mysql_query ("UPDATE $database.base SET utilisateur='".$utilisateur."', localisation='".$localisation."', sortie='".$sortie."', integration='".$integration."', raison_sortie='".$raison_sortie."' WHERE base.base_index = $i;" );
+    mysql_query ("UPDATE base SET utilisateur='".$utilisateur."', localisation='".$localisation."', sortie='".$sortie."', integration='".$integration."', raison_sortie='".$raison_sortie."' WHERE base.base_index = $i;" );
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data["utilisateur"]=$utilisateur;
@@ -997,13 +991,13 @@ if ($add_historique=="Ajouter") {
     }
     $query_do_i_insert_histo = mysql_query ("SELECT historique_index FROM historique WHERE historique_date=\"".dateformat($date_info,"en")."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";");
     if (!isset(mysql_fetch_row($query_do_i_insert_histo)[0]) ) {
-        mysql_query ("INSERT INTO $database.historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".dateformat($date_info,"en")."\", \"".$histo."\", \"".$i."\"); ");
+        mysql_query ("INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".dateformat($date_info,"en")."\", \"".$histo."\", \"".$i."\"); ");
     }
 }
 
 // Suppression d’une entrée dans l’historique
 if ($del_h_confirm=="Confirmer la suppression") {
-    mysql_query ("DELETE FROM $database.historique WHERE historique_index=$h AND historique_id=$i;");
+    mysql_query ("DELETE FROM historique WHERE historique_index=$h AND historique_id=$i;");
     // TODO ajouter l’information effacée dans trash ? avec l’ip et l’heure ?
 }
 
@@ -1100,7 +1094,7 @@ if ($tags_save=="Enregistrer les modifications de tags") {
             $alltags.= (isset($_POST["tag".$t[0].""])) ? htmlentities("(".$t[0].",$i),") : "" ;
         }
         $alltags=substr($alltags, 0, -1); // suppression du dernier caractère
-        mysql_query ("INSERT INTO $database.tags (tags_index, tags_id) VALUES $alltags ; ");
+        mysql_query ("INSERT INTO tags (tags_index, tags_id) VALUES $alltags ; ");
     }
 
 
@@ -1128,7 +1122,7 @@ if ($tags_save=="Enregistrer les modifications de tags") {
         $allnewtagscomma=substr($allnewtagscomma, 0, -1); // suppression du dernier caractère
         
         if ($allnewtagscomma!="") {
-            mysql_query("INSERT INTO $database.tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;");
+            mysql_query("INSERT INTO tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;");
             
             // Nouveaux tags dans tags de $i
             $allnewtags_index="";
@@ -1139,7 +1133,7 @@ if ($tags_save=="Enregistrer les modifications de tags") {
                 $allnewtags_index.= "('".$nti[0]."','$i')," ;
             }
             $allnewtags_index=substr($allnewtags_index, 0, -1); // suppression du dernier caractère
-            mysql_query ("INSERT INTO $database.tags (tags_index, tags_id) VALUES $allnewtags_index ; ");
+            mysql_query ("INSERT INTO tags (tags_index, tags_id) VALUES $allnewtags_index ; ");
         }
 
     }
