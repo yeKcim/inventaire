@@ -37,6 +37,19 @@
         // ]]>
     </script>
 
+    <script type="text/javascript">
+        // <![CDATA[
+        function hide(obj,id1,id2) {
+            txt = obj.options[obj.selectedIndex].value;
+            document.getElementById(id1).style.display = 'block';
+            document.getElementById(id2).style.display = 'block';
+            if ( txt.match(id1) ) { document.getElementById(id1).style.display = 'none'; }
+            if ( txt.match(id2) ) { document.getElementById(id2).style.display = 'none'; }
+        }
+        // ]]>
+    </script>
+
+
 </head>
 
 
@@ -713,62 +726,49 @@ if ( isset($_POST["utilisation_valid"]) ) {
     }
 
 
-
-
-
-
     if ($utilisateur=="plus_utilisateur") {
-
         $plus_utilisateur_nom=mb_strtoupper($plus_utilisateur_nom);
         $plus_utilisateur_phone=phone_display("$plus_utilisateur_phone","");
-        
         mysql_query ("INSERT INTO $database.utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_utilisateur_nom."', '".$plus_utilisateur_prenom."','".$plus_utilisateur_mail."','".$plus_utilisateur_phone."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_utilisateurnew)) $utilisateur=$l[0];
-        
         // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
         $utilisateurs[$utilisateur]=array( $utilisateur, utf8_encode($plus_utilisateur_nom), utf8_encode($plus_utilisateur_prenom), utf8_encode($plus_utilisateur_mail), phone_display("$plus_utilisateur_phone",".") );
-
     }
-
-
-
-
 
 
     if ($localisation=="plus_localisation") {
-
         mysql_query ("INSERT INTO $database.localisation (localisation_batiment, localisation_piece) VALUES ('".$plus_localisation_bat."', '".$plus_localisation_piece."' ); ");
-        
-        
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_localisationnew = mysql_query ("SELECT localisation_index FROM localisation ORDER BY localisation_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_localisationnew)) $localisation=$l[0];
-        
         // on ajoute cette entrée dans le tableau des localisations (utilisé pour le select)
         $localisations[$localisation]=array( $localisation, utf8_encode($plus_localisation_bat), utf8_encode($plus_localisation_piece) );
-
     }
 
 
+    if ($raison_sortie=="plus_raison_sortie") {
+        mysql_query ("INSERT INTO $database.raison_sortie (raison_sortie_nom) VALUES ('".$plus_raison_sortie_nom."'); ");
+        /* TODO : prévoir le cas où le contrat existe déjà */
+        $query_table_raisonnew = mysql_query ("SELECT raison_sortie_index FROM raison_sortie ORDER BY raison_sortie_index DESC LIMIT 1 ;");
+        while ($l = mysql_fetch_row($query_table_raisonnew)) $raison_sortie=$l[0];
+        // on ajoute cette entrée dans le tableau des raisons de sortie (utilisé pour le select)
+        $raison_sorties[$raison_sortie]=array($raison_sortie,utf8_encode($plus_raison_sortie_nom));
+
+    }
+
+$raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 
 
-
-
-    mysql_query ("UPDATE $database.base SET utilisateur='".$utilisateur."', localisation='".$localisation."', sortie='".$sortie."', integration='".$integration."' WHERE base.base_index = $i;" );
+    mysql_query ("UPDATE $database.base SET utilisateur='".$utilisateur."', localisation='".$localisation."', sortie='".$sortie."', integration='".$integration."', raison_sortie='".$raison_sortie."' WHERE base.base_index = $i;" );
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data["utilisateur"]=$utilisateur;
     $data["localisation"]=$localisation;
     $data["sortie"]=$sortie;
+    $data["raison_sortie"] = $raison_sortie ;
     $data["integration"]=$integration;
-    
-    
-/* TODO
-"raison_sortie", "plus_raison_sortie_nom",
-    $data[""]=$;
-*/
 
 }
 
@@ -845,7 +845,7 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
 
         /* ########### sortie ########### */
         echo "<label for=\"sortie\">État : </label>\n";
-        echo "<select name=\"sortie\" id=\"etat\" onchange=\"display(this,'1','2');\">";
+        echo "<select name=\"sortie\" id=\"etat\" onchange=\"hide(this,'0','0');\">";
             echo "<option value=\"0\" "; if ($data["sortie"]=="") echo "selected"; echo ">Inventorié</option>";
             echo "<option value=\"1\" "; if ($data["sortie"]=="1") echo "selected"; echo ">Sortie définitive d’inventaire</option>";
             echo "<option value=\"2\" "; if ($data["sortie"]=="2") echo "selected"; echo ">Sortie temporaire d’inventaire</option>";
@@ -853,15 +853,12 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
         
         if ($data["sortie"]!="0") echo " <abbr title=\"le ".dateformat($data["date_sortie"],"fr")."\"><strong>ⓘ</strong></abbr>"; /* seulement si sortie… !!! */
 
+
         /* ########### raison_sortie ########### */
-
-
-    foreach( array(1,2) as $r) {
-
-        $display= ( $data["sortie"]!="0" ) ? "block" : "none" ;
-        $display= ( $r=="2" ) ? "none" : $display ;
-
-        echo "<span id=\"$r\" style=\"display: $display;\">";
+        
+        $disp= ($data["sortie"]=="0") ? "none" : "block";
+        
+        echo "<span id=\"0\" style=\"display:$disp;\">";
         echo "<label for=\"raison_sortie\">Raison de sortie : </label>\n"; /* seulement si sortie… !!! */
         echo "<select name=\"raison_sortie\" onchange=\"display(this,'plus_raison_sortie','plus_raison_sortie');\" id=\"raison_sortie\">";
         echo "<option value=\"0\" "; if ($data["raison_sortie"]=="0") echo "selected"; echo ">— Aucune raison spécifiée —</option>"; 
@@ -869,11 +866,6 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
         echo "<option value=\"plus_raison_sortie\" "; if ($data["raison_sortie"]=="plus_raison_sortie") echo "selected"; echo ">Nouvelle raison :</option>";
         echo "</select>";   
         echo "</span>";
-    }
-
-
-
-
 
 
 
