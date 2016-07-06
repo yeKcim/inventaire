@@ -478,6 +478,62 @@ echo "</div>";
    ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝
 */
 
+
+/* ########### Si des modifications dans la partie Technique ########### */
+if ( isset($_POST["technique_valid"]) ) {
+
+    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque", "plus_marque_nom", "reference", "serial_number");
+    foreach ($arr as &$value) {
+        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+    }
+
+
+    /* ########### Ajout d’une nouvelle catégorie ########### */
+    if ($categorie=="plus_categorie") {
+        mysql_query ("INSERT INTO $database.categorie (categorie_lettres, categorie_nom) VALUES (\"".$plus_categorie_abbr."\",\"".$plus_categorie_nom."\") ; ");
+        
+        /* TODO : prévoir le cas où le vendeur existe déjà */
+        $query_table_categorienew = mysql_query ("SELECT categorie_index FROM categorie ORDER BY categorie_index DESC LIMIT 1 ;");
+        while ($l = mysql_fetch_row($query_table_categorienew)) $categorie=$l[0];
+        // on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
+        $categories[$categorie]=array( $categorie,utf8_encode($plus_categorie_nom),utf8_encode($plus_categorie_abbr) );
+    }
+
+
+
+
+    // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+    // ########## en fonction de la catégorie, l’identifiant doit changer !!!
+    // TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO 
+
+
+
+
+    /* ########### Ajout d’une nouvelle marque ########### */
+    if ($marque=="plus_marque") {
+        mysql_query ("INSERT INTO $database.marque (marque_nom) VALUES ('".$plus_marque_nom."') ; ");
+        /* TODO : prévoir le cas où la marque existe déjà */
+        $query_table_marquenew = mysql_query ("SELECT marque_index FROM marque ORDER BY marque_index DESC LIMIT 1 ;");
+        while ($l = mysql_fetch_row($query_table_marquenew)) $marque=$l[0];
+        // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+        $marques[$marque]=array( $marque, utf8_encode($plus_marque_nom) );
+    }
+
+    mysql_query ("UPDATE $database.base SET marque='".$marque."', categorie='".$categorie."', reference='".$reference."', serial_number='".$serial_number."' WHERE base.base_index = $i;" );
+
+
+    // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
+    $data["marque"]=$marque;
+    $data["categorie"]=$categorie;
+    $data["serial_number"]=$serial_number;
+    $data["reference"]=$reference;
+
+    //    $data[""]=$;
+
+}
+
+
+
 echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
     echo "<h1>Technique</h1>";
@@ -498,9 +554,9 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             echo "\n\n\n";
             echo "<fieldset id=\"plus_categorie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Catégorie</legend>";
                 echo "<label for=\"plus_categorie_nom\">Nom :</label>\n";
-                echo "<input value=\"\" name=\"plus_categorie\" type=\"text\">\n";
+                echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\">\n";
                 echo "<label for=\"plus_categorie_abbr\">Abbréviation :</label>\n";
-                echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\">\n";
+                echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\">\n";
             echo "</fieldset>";
             echo "\n\n\n";
 
@@ -588,7 +644,9 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "<a href=\"\">➕</a>";
         
     echo "</fieldset>";
-    
+
+    echo "<p style=\"text-align:center;\"><input name='technique_valid' value='Enregistrer' type='submit'\"></p>"; // TODO Ajouter un bouton réinitialiser
+
     echo "</form>";
 
 echo "</div>";
@@ -717,7 +775,7 @@ echo "</div>";
 
 
 
-/* ########### Si des modifications dans la partie administrative ########### */
+/* ########### Si des modifications dans la partie Utilisation ########### */
 if ( isset($_POST["utilisation_valid"]) ) {
 
     $arr = array("utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
