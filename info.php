@@ -461,7 +461,7 @@ echo "<abbr title=\"".phone_display("".$utilisateurs[$data["responsable_achat"]]
     
     echo "</fieldset>";
 
-    echo "<p style=\"text-align:center;\"><input name='administratif_valid' value='Enregistrer' type='submit'\"></p>"; // TODO Ajouter un bouton réinitialiser
+    echo "<p style=\"text-align:center;\"><input name='administratif_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
 
     echo "</form>";
 
@@ -654,7 +654,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         
     echo "</fieldset>";
 
-    echo "<p style=\"text-align:center;\"><input name='technique_valid' value='Enregistrer' type='submit'\"></p>"; // TODO Ajouter un bouton réinitialiser
+    echo "<p style=\"text-align:center;\"><input name='technique_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
 
     echo "</form>";
 
@@ -734,7 +734,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
         /* ########### END Ajout d’un fichier ########### */
 
 
-        echo "<input name='Valider' value='Envoyer' type='submit'\">";
+        echo "<input name='Valider' value='Envoyer' type='submit'>";
         echo "</form>";
 
     echo "</fieldset>";
@@ -958,7 +958,7 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
 
     echo "</fieldset>";
 
-    echo "<p style=\"text-align:center;\"><input name='utilisation_valid' value='Enregistrer' type='submit'\"></p>"; // TODO Ajouter un bouton réinitialiser
+    echo "<p style=\"text-align:center;\"><input name='utilisation_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
 
     echo "</form>";
 
@@ -1023,7 +1023,7 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
         
         echo "<label for=\"histo\" style=\"vertical-align: top;\"> Information :</label>\n";
         echo "<textarea name=\"histo\" rows=\"4\" cols=\"33\"></textarea><br/>";
-        echo "<input name='add_historique' value='Ajouter' type='submit'\">";
+        echo "<input name='add_historique' value='Ajouter' type='submit'>";
 
     echo "</fieldset>";
 
@@ -1187,7 +1187,7 @@ echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
     echo "</fieldset>";
     echo "\n\n\n";
 
-    echo "<p style=\"text-align:center;\"><input name='tags_save' value='Enregistrer les modifications de tags' type='submit'\"></p>"; // TODO Ajouter un bouton réinitialiser
+    echo "<p style=\"text-align:center;\"><input name='tags_save' value='Enregistrer les modifications de tags' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
 
     echo "</form>";
 
