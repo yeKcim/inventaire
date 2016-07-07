@@ -182,7 +182,6 @@ while ($l = mysql_fetch_row($query_table_lab_id)) {
 }
 
 
-
 // tous les lab_id classé par catégorie
 $query_table_labid_cat = mysql_query ("SELECT base_index, lab_id, categorie, categorie_lettres, categorie_nom FROM base, categorie WHERE categorie=categorie_index ORDER BY categorie_nom ASC ;");
 $labids_cat = array();
@@ -191,17 +190,12 @@ while ($l = mysql_fetch_row($query_table_labid_cat)) {
 }
 
 
-
-
-
-// compatibilité
+// compatibilité de $i
 $query_table_compatibilite = mysql_query ("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
 $compatibilite = array();
 while ($l = mysql_fetch_row($query_table_compatibilite)) {
-    $num= ($l[1]==$i) ? $l[2] : $l[1] ;
-    $compatibilite[$l[0]]=array($l[0],$num);
+    $compatibilite[]= ($l[1]==$i) ? $l[2] : $l[1] ;
 }
-
 
 
 /*
@@ -502,6 +496,29 @@ if ( isset($_POST["technique_valid"]) ) {
     }
 
 
+
+
+
+
+    // Supprimer tous les tags de cette entrée pour réinitialiser
+    mysql_query ("DELETE FROM compatibilite WHERE compatib_id1=$i OR compatib_id2=$i ;");
+
+    // Ajout des compatibilités
+    if (isset($_POST["compatibilite"])) {
+        $allc="";
+        foreach ($_POST["compatibilite"] as $c) $allc.= "(".$c[0].",$i),";
+        $allc=substr($allc, 0, -1); // suppression du dernier caractère
+        mysql_query ("INSERT INTO compatibilite (compatib_id1, compatib_id2) VALUES $allc ; ");
+    }
+
+    // refaire compatibilité de $i
+    $query_table_compatibilite = mysql_query ("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
+    $compatibilite = array();
+    while ($l = mysql_fetch_row($query_table_compatibilite)) {
+        $compatibilite[]= ($l[1]==$i) ? $l[2] : $l[1] ;
+    }
+
+
     /* ########### Ajout d’une nouvelle catégorie ########### */
     if ($categorie=="plus_categorie") {
         mysql_query ("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$plus_categorie_abbr."\",\"".$plus_categorie_nom."\") ; ");
@@ -658,16 +675,17 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
     echo "<option value=\"\"></option>";
     
     $cat="";
-        foreach ($labids_cat as $li) {
-            if ( ($cat!=$li[2])&&($cat!="") ) echo "</optgroup>";
-            if ($cat!=$li[2]) echo "<optgroup label=\"".$li[4]."\">";
+    foreach ($labids_cat as $li) {
+        if ( ($cat!=$li[2])&&($cat!="") ) echo "</optgroup>";
+        if ($cat!=$li[2]) echo "<optgroup label=\"".$li[4]."\">";
 
-            if ( (isset($compatibilite[$li[0]])) || ($compatibilite[$i][1]==$li[0]) || ($compatibilite[$i][2]==$li[0]) ) $select=" selected=\"selected\"";
-            else $select="";
-            
-            if ($li[0]!=$i) echo "<option value=\"".$li[0]."\" $select>".$li[1]." #".$li[0]."</option>";
-            $cat=$li[2];
-        }
+
+        if (in_array($li[0], $compatibilite)) $select=" selected=\"selected\"";
+        else $select="";
+
+        if ($li[0]!=$i) echo "<option value=\"".$li[0]."\" $select>".$li[1]." #".$li[0]."</option>";
+        $cat=$li[2];
+    }
     echo "</select>";
 
 
