@@ -12,6 +12,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="robots" content="noindex,nofollow" />
     <title>Informations détaillées</title>
+    <link rel="stylesheet" href="chosen/chosen.css">
     <link rel="stylesheet" type="text/css" href="./style.css">
     
     <!-- ascii : http://patorjk.com/software/taag/#p=display&h=2&v=0&f=ANSI%20Shadow&t= -->
@@ -173,15 +174,28 @@ while ($l = mysql_fetch_row($query_table_carac)) {
 }
 
 
-// tous les lab_id
+// tous les lab_id (utilisé uniquement pour intégration, TODO à supprimer)
 $query_table_lab_id = mysql_query ("SELECT base_index, lab_id FROM base WHERE base_index!=\"$i\" ORDER BY lab_id ASC ;");
 $lab_ids = array();
 while ($l = mysql_fetch_row($query_table_lab_id)) {
     $lab_ids[$l[0]]=array($l[0],"#".$l[0]."", utf8_encode($l[1]));
 }
 
+
+
+// tous les lab_id classé par catégorie
+$query_table_labid_cat = mysql_query ("SELECT base_index, lab_id, categorie, categorie_lettres, categorie_nom FROM base, categorie WHERE categorie=categorie_index ORDER BY categorie_nom ASC ;");
+$labids_cat = array();
+while ($l = mysql_fetch_row($query_table_labid_cat)) {
+    $labids_cat[$l[0]]=array( $l[0], utf8_encode($l[1]), $l[2], utf8_encode($l[3]), utf8_encode($l[4]) );
+}
+
+
+
+
+
 // compatibilité
-$query_table_compatibilite = mysql_query ("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\"  ;");
+$query_table_compatibilite = mysql_query ("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
 $compatibilite = array();
 while ($l = mysql_fetch_row($query_table_compatibilite)) {
     $num= ($l[1]==$i) ? $l[2] : $l[1] ;
@@ -637,24 +651,55 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
 
     echo "<fieldset><legend>Compatibilité</legend>";
-        echo "<ul>";
 
-    if (!$compatibilite) echo "Aucune compatibilité renseignée.<br/>";
-    else {
-        foreach ($compatibilite as $c) {
-            echo "<li class=\"inline\">";
-            echo "<input type=\"checkbox\" name=\"comp".$c[0]."\" value=\"".$c[0]."\" checked > ";
-            echo "<a href=\"info.php?i=".$c[1]."\" target=\"_blank\">".$lab_ids[$c[1]][1]." ".$lab_ids[$c[1]][2]."</a>";
-            echo "</li>";
+        echo "<label for=\"compatibilite[]\">Élements compatibles : </label>\n";
+
+    echo "<select data-placeholder=\"Aucune compatibilité renseignée\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"compatibilite[]\">";
+    echo "<option value=\"\"></option>";
+    
+    $cat="";
+        foreach ($labids_cat as $li) {
+            if ( ($cat!=$li[2])&&($cat!="") ) echo "</optgroup>";
+            if ($cat!=$li[2]) echo "<optgroup label=\"".$li[4]."\">";
+
+            if ( (isset($compatibilite[$li[0]])) || ($compatibilite[$i][1]==$li[0]) || ($compatibilite[$i][2]==$li[0]) ) $select=" selected=\"selected\"";
+            else $select="";
             
-            }
-        echo "</ul><br/>";
-    }
-        echo "<a href=\"\">➕</a>";
+            if ($li[0]!=$i) echo "<option value=\"".$li[0]."\" $select>".$li[1]." #".$li[0]."</option>";
+            $cat=$li[2];
+        }
+    echo "</select>";
+
+
+
+
+
         
     echo "</fieldset>";
+    
+    
+
 
     echo "<p style=\"text-align:center;\"><input name='technique_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
+
+
+
+echo "
+  <script src=\"chosen/jquery.min.js\" type=\"text/javascript\"></script>
+  <script src=\"chosen/chosen.jquery.js\" type=\"text/javascript\"></script>
+
+  <script type=\"text/javascript\">
+    var config = {
+      '.chosen-select'           : {no_results_text:'Oops, nothing found!'},
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+  </script>";
+
+
+
+
 
     echo "</form>";
 
