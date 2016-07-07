@@ -500,7 +500,7 @@ if ( isset($_POST["technique_valid"]) ) {
 
 
 
-    // Supprimer tous les tags de cette entrée pour réinitialiser
+    // Supprimer tous les compatibilités de cette entrée pour réinitialiser
     mysql_query ("DELETE FROM compatibilite WHERE compatib_id1=$i OR compatib_id2=$i ;");
 
     // Ajout des compatibilités
@@ -1134,12 +1134,15 @@ $tags = array();
 while ($l = mysql_fetch_row($query_table_tags_list)) {
     $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
 }
+
 // tags_i les tags de $i
-$query_table_tag_i = mysql_query ("SELECT * FROM tags WHERE tags_id=$i ;");
+$query_table_tag_i = mysql_query ("SELECT tags_index FROM tags WHERE tags_id=$i ;");
 $tags_i = array();
 while ($l = mysql_fetch_row($query_table_tag_i)) {
-    $tags_i[$l[0]]=array($l[0],$l[1]);
+    $tags_i[]=$l[0];
 }
+
+
 
 
 
@@ -1204,7 +1207,6 @@ if ($tags_save=="Enregistrer les modifications de tags") {
 
     /* ########### Avant d’afficher les cases on refait la requête sql car il y a peut-être eu des modifs… ########### */
     
-    // TODO : plutot que refaire les array il suffit de rajouter les nouveaux dedans avec array_push
     
     /* ########### Array ########### */
     // $tags_list
@@ -1214,14 +1216,17 @@ if ($tags_save=="Enregistrer les modifications de tags") {
         $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
     }
     // tags_i les tags de $i
-    $query_table_tag_i = mysql_query ("SELECT * FROM tags WHERE tags_id=$i ;");
+    $query_table_tag_i = mysql_query ("SELECT tags_index FROM tags WHERE tags_id=$i ;");
     $tags_i = array();
     while ($l = mysql_fetch_row($query_table_tag_i)) {
-        $tags_i[$l[0]]=array($l[0],$l[1]);
+        $tags_i[]=$l[0];
     }
 
-
 }
+
+
+
+
 
 echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
 
@@ -1235,7 +1240,7 @@ echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
         foreach ($tags as $v) {
             echo "<li class=\"inline\">";
             echo "<input type=\"checkbox\" name=\"tag".$v[0]."\" value=\"1\"";
-            if (isset($tags_i[$v[0]])) echo " checked ";
+            if (in_array($v[0],$tags_i)) echo " checked ";
             echo "> ".$v[1]."";
             echo "</li>";
         }
