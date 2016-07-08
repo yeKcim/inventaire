@@ -18,6 +18,16 @@ while ($l = mysql_fetch_row($query_table_type_contrat)) {
 }
 
 
+// utilisateurs
+$query_table_utilisateur = mysql_query ("SELECT DISTINCT(utilisateur_index) utilisateur_index, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur WHERE utilisateur_index!=0 ORDER BY utilisateur_nom ASC ;");
+$utilisateurs = array();
+while ($utilisateur = mysql_fetch_row($query_table_utilisateur)) {
+    $utilisateurs[$utilisateur[0]]=array(   $utilisateur[0],                    utf8_encode($utilisateur[1]),
+                                            utf8_encode($utilisateur[2]),       $utilisateur[3],
+                                            $utilisateur[4]
+                                        );
+}
+
 
 
 ?>
