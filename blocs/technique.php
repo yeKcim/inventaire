@@ -46,12 +46,6 @@ while ($l = mysql_fetch_row($query_table_labid_cat)) {
     $labids_cat[$l[0]]=array( $l[0], utf8_encode($l[1]), $l[2], utf8_encode($l[3]), utf8_encode($l[4]) );
 }
 
-// caracs
-$caracs=array();
-$query_table_carac = mysql_query ("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index=$i AND carac!=0 ORDER BY base.base_index ASC, carac ASC");
-while ($l = mysql_fetch_row($query_table_carac)) {
-    $caracs[$l[3]]=array($l[0],$l[1],utf8_encode($l[2]),$l[3],utf8_encode($l[4]),utf8_encode($l[5]),utf8_encode($l[6]) );
-}
 
 // marque
 $query_table_marque = mysql_query ("SELECT * FROM marque WHERE marque_index!=0 ORDER BY marque_nom ASC ;");
@@ -302,36 +296,6 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "<label for=\"serial_number\">Numéro de série : </label>\n";
         echo "<input value=\"".$data["serial_number"]."\" name=\"serial_number\" type=\"text\" id=\"serial_number\"><br/>";
 
-    echo "</fieldset>";
-
-/*  ╔═╗╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗╦═╗╦╔═╗╔╦╗╦╔═╗ ╦ ╦╔═╗╔═╗
-    ║  ╠═╣╠╦╝╠═╣║   ║ ║╣ ╠╦╝║╚═╗ ║ ║║═╬╗║ ║║╣ ╚═╗
-    ╚═╝╩ ╩╩╚═╩ ╩╚═╝ ╩ ╚═╝╩╚═╩╚═╝ ╩ ╩╚═╝╚╚═╝╚═╝╚═╝   */
-    echo "<fieldset><legend>Caractéristiques</legend>";
-
-        // TODO il serait intéressant d’afficher toutes les caractéristiques que des éléments ont rempli dans la même catégorie même si pour l’élément en question c’est vide.
-
-        foreach ($caracs as $c) {
-        
-            echo "<label for=\"carac".$c[3]."\">";
-            echo "<abbr title=\"$c[4]\" >".$c[6]."</abbr>";        
-        
-            if ($c[5]=="bool") {
-                echo " : </label>\n";
-                echo "<select name=\"carac".$c[3]."\" onchange=\"submit();\" id=\"carac".$c[3]."\">";
-                    echo "<option value=\"1\" "; if ($c[2]=="1") echo "selected"; echo ">Oui</option>"; 
-                    echo "<option value=\"0\" "; if ($c[2]=="0") echo "selected"; echo ">Non</option>";
-                echo "</select>";
-            }
-            else {
-                echo " (".$c[5].") : </label>\n"; 
-                echo "<input value=\"".$c[2]."\" name=\"carac".$c[3]."\" type=\"text\" id=\"carac".$c[3]."\">";
-            }
-            echo "<br/>";
-        }
-        
-    echo "<a href=\"\">➕</a>";
-        
     echo "</fieldset>";
 
 

@@ -129,6 +129,7 @@ echo "<p>Informations #$i :</p>";
 echo "<div id=\"container\">";
     require_once("./blocs/administratif.php");
     require_once("./blocs/technique.php");
+    require_once("./blocs/caracteristiques.php");
     require_once("./blocs/documents.php");
     require_once("./blocs/utilisation.php");
     require_once("./blocs/journal.php");
