@@ -16,6 +16,11 @@
     
     <!-- ascii : http://patorjk.com/software/taag/#p=display&h=2&v=0&f=ANSI%20Shadow&t= -->
     
+<!-- ╦╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
+     ║║═╬╗║ ║║╣ ╠╦╝╚╦╝
+    ╚╝╚═╝╚╚═╝╚═╝╩╚═ ╩   -->
+    <script src="jquery.min.js" type="text/javascript"></script>
+    
 <!--╔╦╗╦╔╗╔╦ ╦╔╗ ╔═╗═╗ ╦
      ║ ║║║║╚╦╝╠╩╗║ ║╔╩╦╝
      ╩ ╩╝╚╝ ╩ ╚═╝╚═╝╩ ╚═
@@ -61,7 +66,6 @@
 <!--╔═╗╦ ╦╔═╗╔═╗╔═╗╔═╗╔╗╔     ╔╦╗╦ ╦╦ ╔╦╗╦  ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗
     ║  ╠═╣║ ║║ ║╚═╗║╣ ║║║  o  ║║║║ ║║  ║ ║  ╚═╗║╣ ║  ║╣ ║   ║ 
     ╚═╝╩ ╩╚═╝╚═╝╚═╝╚═╝╝╚╝  o  ╩ ╩╚═╝╩═╝╩ ╩  ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩   -->
-    <script src="chosen/jquery.min.js" type="text/javascript"></script>
     <script src="chosen/chosen.jquery.js" type="text/javascript"></script>
     <link rel="stylesheet" href="chosen/chosen.css">
 
