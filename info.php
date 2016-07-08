@@ -197,6 +197,20 @@ while ($l = mysql_fetch_row($query_table_compatibilite)) {
     $compatibilite[]= ($l[1]==$i) ? $l[2] : $l[1] ;
 }
 
+// $tags_list
+$query_table_tags_list = mysql_query ("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
+$tags = array();
+while ($l = mysql_fetch_row($query_table_tags_list)) {
+    $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
+}
+
+// tags_i les tags de $i
+$query_table_tag_i = mysql_query ("SELECT tags_index FROM tags WHERE tags_id=$i ;");
+$tags_i = array();
+while ($l = mysql_fetch_row($query_table_tag_i)) {
+    $tags_i[]=$l[0];
+}
+
 
 /*
 ██████╗ ██╗███████╗██████╗ ██╗      █████╗ ██╗   ██╗    ██████╗ ██╗      ██████╗  ██████╗███████╗
@@ -490,16 +504,18 @@ echo "</div>";
 /* ########### Si des modifications dans la partie Technique ########### */
 if ( isset($_POST["technique_valid"]) ) {
 
-    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque", "plus_marque_nom", "reference", "serial_number");
+    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque", "plus_marque_nom", "reference", "serial_number", "plus_tags");
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
 
 
 
-
-
-
+/*
+╔═╗╔═╗╔╦╗╔═╗╔═╗╔╦╗╦╔╗ ╦  ╦╔╦╗╔═╗╔═╗
+║  ║ ║║║║╠═╝╠═╣ ║ ║╠╩╗║  ║ ║ ║╣ ╚═╗
+╚═╝╚═╝╩ ╩╩  ╩ ╩ ╩ ╩╚═╝╩═╝╩ ╩ ╚═╝╚═╝
+*/
     // Supprimer tous les compatibilités de cette entrée pour réinitialiser
     mysql_query ("DELETE FROM compatibilite WHERE compatib_id1=$i OR compatib_id2=$i ;");
 
@@ -510,13 +526,81 @@ if ( isset($_POST["technique_valid"]) ) {
         $allc=substr($allc, 0, -1); // suppression du dernier caractère
         mysql_query ("INSERT INTO compatibilite (compatib_id1, compatib_id2) VALUES $allc ; ");
     }
-
     // refaire compatibilité de $i
     $query_table_compatibilite = mysql_query ("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
     $compatibilite = array();
     while ($l = mysql_fetch_row($query_table_compatibilite)) {
         $compatibilite[]= ($l[1]==$i) ? $l[2] : $l[1] ;
     }
+
+
+
+/*
+╔╦╗╔═╗╔═╗╔═╗
+ ║ ╠═╣║ ╦╚═╗
+ ╩ ╩ ╩╚═╝╚═╝
+*/
+
+    // Supprimer tous les tags de cette entrée pour réinitialiser
+    mysql_query ("DELETE FROM tags WHERE tags_id=$i;");
+
+
+    // Nouveaux tags
+    if ($plus_tags!="") {
+        // TODO : une page administration permettant de supprimer des tags ou d’en fusionner,…
+        // Nouveaux tags dans tags_list
+        $new_tag = explode(',',$plus_tags);
+        $allnewtags=""; $allnewtagscomma="";
+
+        foreach ($new_tag as &$nt) {
+            $nt= ($nt[0]!=" ") ? $nt : substr($nt,1) ; // supp premier caractère si c’est un espace
+            if ( in_array_r($nt,$tags) ) $allnewtagscomma.= "'$nt',"; // Recherche si le tag est déjà dans $tags
+            else { // si le tag n’existe pas déjà, on l’ajoute dans la liste des tags à créer
+                $allnewtags.= "(NULL,'$nt'),";
+                $allnewtagscomma.= "'$nt',";
+            }
+        }
+        $allnewtags=substr($allnewtags, 0, -1); // suppression du dernier caractère
+        $allnewtagscomma=substr($allnewtagscomma, 0, -1); // suppression du dernier caractère
+        if ($allnewtagscomma!="") {
+            mysql_query("INSERT INTO tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;");
+            // Nouveaux tags dans tags de $i
+            $allnewtags_index="";
+            // tagnew_i les tags de $i
+            $query_table_tagnew_i = mysql_query ("SELECT tags_list_index FROM tags_list WHERE tags_list_nom IN ($allnewtagscomma) ;");
+            while ($nti = mysql_fetch_row($query_table_tagnew_i)) $allnewtags_index.= "('".$nti[0]."','$i')," ;
+            $allnewtags_index=substr($allnewtags_index, 0, -1); // suppression du dernier caractère
+            mysql_query ("INSERT INTO tags (tags_index, tags_id) VALUES $allnewtags_index ; ");
+        }
+    }
+
+
+    // Ajout des tags
+    if (isset($_POST["tags"])) {
+        $allt="";
+        foreach ($_POST["tags"] as $ta) $allt.= "(".$ta.",$i),";
+        $allt=substr($allt, 0, -1); // suppression du dernier caractère
+        mysql_query ("INSERT INTO tags (tags_index, tags_id) VALUES $allt ;");
+    }
+    
+    
+    // refaire tags et tags de $i avant affichage
+    // $tags_list
+    $query_table_tags_list = mysql_query ("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
+    $tags = array();
+    while ($l = mysql_fetch_row($query_table_tags_list)) {
+        $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
+    }
+
+    // tags_i les tags de $i
+    $query_table_tag_i = mysql_query ("SELECT tags_index FROM tags WHERE tags_id=$i ;");
+    $tags_i = array();
+    while ($l = mysql_fetch_row($query_table_tag_i)) {
+        $tags_i[]=$l[0];
+    }
+
+
+
 
 
     /* ########### Ajout d’une nouvelle catégorie ########### */
@@ -667,19 +751,53 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
     echo "</fieldset>";
 
 
+
+
+
+   echo "<fieldset id=\"tags\"><legend>Mots clés</legend>";
+   
+         echo "<label for=\"tags[]\">Tags :</label>";
+        echo "<select data-placeholder=\"Aucun tag renseigné\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"tags[]\">";
+    echo "<option value=\"\"></option>";
+    foreach ($tags as $t2) {
+        if (in_array($t2[0], $tags_i)) $select=" selected=\"selected\"";
+        else $select="";
+        echo "<option value=\"".$t2[0]."\" $select>".$t2[1]."</option>";
+    }
+    echo "</select>";
+    
+echo "
+  <script type=\"text/javascript\">
+    var config = {
+      '.chosen-select'           : {no_results_text:'Oops, nothing found!'},
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+  </script>";
+
+    
+        echo "<label for=\"plus_tags\">Nouveaux tags <abbr title=\"séparés d’une virgule\"><strong>ⓘ</strong></abbr> :</label>";
+        echo "<input value=\"\" name=\"plus_tags\" type=\"text\">\n";    
+    
+    
+    echo "</fieldset>";
+
+
+
+
+
+
     echo "<fieldset><legend>Compatibilité</legend>";
 
         echo "<label for=\"compatibilite[]\">Élements compatibles : </label>\n";
 
     echo "<select data-placeholder=\"Aucune compatibilité renseignée\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"compatibilite[]\">";
     echo "<option value=\"\"></option>";
-    
     $cat="";
     foreach ($labids_cat as $li) {
         if ( ($cat!=$li[2])&&($cat!="") ) echo "</optgroup>";
         if ($cat!=$li[2]) echo "<optgroup label=\"".$li[4]."\">";
-
-
         if (in_array($li[0], $compatibilite)) $select=" selected=\"selected\"";
         else $select="";
 
@@ -1008,7 +1126,7 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
 
 
 
-    echo "<fieldset><legend>Intégration (si le composant est intégré à un autre)</legend>";
+    echo "<fieldset><legend>Intégration (composant intégré à un autre ou faisant parti d’un lot)</legend>";
 
         echo "<label for=\"integration\">Intégré dans :</label>\n";
 
@@ -1112,150 +1230,24 @@ echo "</div>";
 
 
 /*
-████████╗ █████╗  ██████╗ ███████╗
-╚══██╔══╝██╔══██╗██╔════╝ ██╔════╝
-   ██║   ███████║██║  ███╗███████╗
-   ██║   ██╔══██║██║   ██║╚════██║
-   ██║   ██║  ██║╚██████╔╝███████║
-   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
+███████╗███╗   ██╗████████╗██████╗ ███████╗████████╗██╗███████╗███╗   ██╗
+██╔════╝████╗  ██║╚══██╔══╝██╔══██╗██╔════╝╚══██╔══╝██║██╔════╝████╗  ██║
+█████╗  ██╔██╗ ██║   ██║   ██████╔╝█████╗     ██║   ██║█████╗  ██╔██╗ ██║
+██╔══╝  ██║╚██╗██║   ██║   ██╔══██╗██╔══╝     ██║   ██║██╔══╝  ██║╚██╗██║
+███████╗██║ ╚████║   ██║   ██║  ██║███████╗   ██║   ██║███████╗██║ ╚████║
+╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝╚══════╝╚═╝  ╚═══╝
 */
-
-/* ########### POST ########### */
-$arr = array("plus_tags","tags_save");
-foreach ($arr as &$value) {
-    $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
-}
-
-
-/* ########### Array ########### */
-// $tags_list
-$query_table_tags_list = mysql_query ("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
-$tags = array();
-while ($l = mysql_fetch_row($query_table_tags_list)) {
-    $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
-}
-
-// tags_i les tags de $i
-$query_table_tag_i = mysql_query ("SELECT tags_index FROM tags WHERE tags_id=$i ;");
-$tags_i = array();
-while ($l = mysql_fetch_row($query_table_tag_i)) {
-    $tags_i[]=$l[0];
-}
-
-
-
-
-
-/* ########### Modifications SQL ########### */
-if ($tags_save=="Enregistrer les modifications de tags") {
-    // Supprimer tous les tags de cette entrée pour réinitialiser
-    mysql_query ("DELETE FROM tags WHERE tags_id=$i;");
-
-
-    // Cases cochées
-    if ($tags_save=="Enregistrer les modifications de tags") {
-        // ajouter tous les tags cochés de cette entrée
-        $alltags="";
-        foreach ($tags as &$t) {
-            $alltags.= (isset($_POST["tag".$t[0].""])) ? htmlentities("(".$t[0].",$i),") : "" ;
-        }
-        $alltags=substr($alltags, 0, -1); // suppression du dernier caractère
-        mysql_query ("INSERT INTO tags (tags_index, tags_id) VALUES $alltags ; ");
-    }
-
-
-
-    if ($plus_tags!="") {
-    // TODO : une page administration permettant de supprimer des tags ou d’en fusionner,…
-        
-        // Nouveaux tags dans tags_list
-        $new_tag = explode(',',$plus_tags);
-        $allnewtags=""; $allnewtagscomma="";
-
-        foreach ($new_tag as &$nt) {
-            $nt= ($nt[0]!=" ") ? $nt : substr($nt,1) ; // suppression du premier caractère si c’est un espace
-            
-            if ( in_array_r($nt,$tags) ) { // Recherche si le tag est déjà dans $tags
-                $allnewtagscomma.= "'$nt',";
-            }
-            else { // si le tag n’existe pas déjà, on l’ajoute dans la liste des tags à créer
-                $allnewtags.= "(NULL,'$nt'),";
-                $allnewtagscomma.= "'$nt',";
-            }
-        }
-        
-        $allnewtags=substr($allnewtags, 0, -1); // suppression du dernier caractère
-        $allnewtagscomma=substr($allnewtagscomma, 0, -1); // suppression du dernier caractère
-        
-        if ($allnewtagscomma!="") {
-            mysql_query("INSERT INTO tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;");
-            
-            // Nouveaux tags dans tags de $i
-            $allnewtags_index="";
-            // tagnew_i les tags de $i
-            $query_table_tagnew_i = mysql_query ("SELECT tags_list_index FROM tags_list WHERE tags_list_nom IN ($allnewtagscomma) ;");
-            
-            while ($nti = mysql_fetch_row($query_table_tagnew_i)) {
-                $allnewtags_index.= "('".$nti[0]."','$i')," ;
-            }
-            $allnewtags_index=substr($allnewtags_index, 0, -1); // suppression du dernier caractère
-            mysql_query ("INSERT INTO tags (tags_index, tags_id) VALUES $allnewtags_index ; ");
-        }
-
-    }
-
-
-    /* ########### Avant d’afficher les cases on refait la requête sql car il y a peut-être eu des modifs… ########### */
-    
-    
-    /* ########### Array ########### */
-    // $tags_list
-    $query_table_tags_list = mysql_query ("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
-    $tags = array();
-    while ($l = mysql_fetch_row($query_table_tags_list)) {
-        $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
-    }
-    // tags_i les tags de $i
-    $query_table_tag_i = mysql_query ("SELECT tags_index FROM tags WHERE tags_id=$i ;");
-    $tags_i = array();
-    while ($l = mysql_fetch_row($query_table_tag_i)) {
-        $tags_i[]=$l[0];
-    }
-
-}
-
-
-
 
 
 echo "<div id=\"bloc\" style=\"background:#e9b96e; vertical-align:top;\">";
 
-    echo "<h1>Tags</h1>";
-    
-    echo "<form method=\"post\" action=\"?i=$i\">";
-    
-    echo "<fieldset id=\"tags\"><legend>Tags</legend>";
+    echo "<h1>Entretien</h1>";
 
-    echo "<ul>";
-        foreach ($tags as $v) {
-            echo "<li class=\"inline\">";
-            echo "<input type=\"checkbox\" name=\"tag".$v[0]."\" value=\"1\"";
-            if (in_array($v[0],$tags_i)) echo " checked ";
-            echo "> ".$v[1]."";
-            echo "</li>";
-        }
-    echo "</ul>";
+    echo "<fieldset><legend>TODO</legend>";
 
     echo "</fieldset>";
-    /* ########### + tags ########### */
-    echo "\n\n\n";
-    echo "<fieldset id=\"plus_tags\"><legend>Tags supplémentaires</legend>";
-        echo "<label for=\"plus_tags\">Nouveaux tags <abbr title=\"séparés d’une virgule\"><strong>ⓘ</strong></abbr> :</label>\n";
-        echo "<input value=\"\" name=\"plus_tags\" type=\"text\">\n";
-    echo "</fieldset>";
-    echo "\n\n\n";
 
-    echo "<p style=\"text-align:center;\"><input name='tags_save' value='Enregistrer les modifications de tags' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
+    echo "<p style=\"text-align:center;\"><input name='tags_save' value='Enregistrer les entretiens' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
 
     echo "</form>";
 
