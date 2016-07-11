@@ -148,7 +148,22 @@ echo "</fieldset>";
     echo "<fieldset><legend>Nouvelle caractéristique</legend>";
 
     // TODO des catégories de caractéristiques ?
-
+    
+    echo "Si la caractéristique n’est pas présente dans la liste ci-dessus…";
+    
+    echo "<label for=\"nom_carac\">Nom :</label>\n";
+    echo "<input value=\"\" name=\"nom_carac\" type=\"text\">\n";
+    
+    echo "<label for=\"unite_carac\">";
+    echo "<abbr title=\"µm, %,… si oui/non, entrez « bool »\">Unité</abbr>";
+    echo " :</label>\n";
+    echo "<input value=\"\" name=\"unite_carac\" type=\"text\">\n";
+    
+    echo "<label for=\"symbole_carac\">";
+    echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle</abbr>";
+    echo ":</label>\n";
+    echo "<input value=\"\" name=\"symbole_carac\" type=\"text\">\n";
+    
     echo "</fieldset>";
 
 
