@@ -1,5 +1,4 @@
 <?php
-
 /*
  ██████╗ █████╗ ██████╗  █████╗  ██████╗
 ██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝
@@ -8,26 +7,6 @@
 ╚██████╗██║  ██║██║  ██║██║  ██║╚██████╗
  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝
 */
-
-
-
-/*
- █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
-██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
-███████║██████╔╝██████╔╝███████║ ╚████╔╝ 
-██╔══██║██╔══██╗██╔══██╗██╔══██║  ╚██╔╝  
-██║  ██║██║  ██║██║  ██║██║  ██║   ██║   
-╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
-*/
-
-// caracs
-$caracs=array();
-$query_table_carac = mysql_query ("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index=$i AND carac!=0 ORDER BY base.base_index ASC, carac ASC");
-while ($l = mysql_fetch_row($query_table_carac)) {
-    $caracs[$l[3]]=array($l[0],$l[1],utf8_encode($l[2]),$l[3],utf8_encode($l[4]),utf8_encode($l[5]),utf8_encode($l[6]) );
-}
-
-
 
 
 /*
@@ -40,9 +19,52 @@ while ($l = mysql_fetch_row($query_table_carac)) {
 */
 if ( isset($_POST["carac_valid"]) ) {
 
+/*  ╔═╗╔═╗╦═╗╔═╗╔═╗
+    ║  ╠═╣╠╦╝╠═╣║  
+    ╚═╝╩ ╩╩╚═╩ ╩╚═╝ */
+    // Supprimer tous les compatibilités de cette entrée pour réinitialiser
+    mysql_query ("DELETE FROM carac WHERE carac_id=$i;");
 
+    // Ajout des caracteristiques
+    if (isset($_POST["carac"])) {
+        $allc="";
+        foreach ($_POST["carac"] as $ck => $cd) {
+            $allc.= ($cd!="") ? "($cd,$i,$ck)," : "";
+        }
+        $allc=substr($allc, 0, -1); // suppression du dernier caractère
+        mysql_query ("INSERT INTO carac (carac_valeur, carac_id, carac_caracteristique_id) VALUES $allc ; ");
+    }
 
 }
+
+
+/*
+ █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
+██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
+███████║██████╔╝██████╔╝███████║ ╚████╔╝ 
+██╔══██║██╔══██╗██╔══██╗██╔══██║  ╚██╔╝  
+██║  ██║██║  ██║██║  ██║██║  ██║   ██║   
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+*/
+
+// allcaracs
+$allcaracs=array();
+$query_table_allcarac = mysql_query ("SELECT * FROM caracteristiques WHERE carac!=0 ORDER BY nom_carac ASC");
+while ($l = mysql_fetch_row($query_table_allcarac)) {
+    $allcaracs[]=array($l[0],utf8_encode($l[1]),utf8_encode($l[2]),utf8_encode($l[3]) );
+}
+
+// caracs de i
+$caracs_i=array();
+$query_table_carac_i = mysql_query ("SELECT carac, carac_valeur FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index='$i' AND carac!=0 ORDER BY base.base_index ASC, carac ASC");
+while ($l = mysql_fetch_row($query_table_carac_i)) $caracs_i[$l[0]]=$l[1];
+
+// caracs_of_categorie
+$car_of_cat=array();
+$query_table_car_of_cat = mysql_query ("SELECT DISTINCT carac_caracteristique_id FROM carac, caracteristiques, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND categorie='".$data["categorie"]."'");
+while ($l = mysql_fetch_row($query_table_car_of_cat)) $car_of_cat[]=$l[0];
+
+
 
 
 /*
@@ -59,52 +81,40 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
     
     echo "<form method=\"post\" action=\"?i=$i\">";
 
-
-/*  ╔═╗╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗╦═╗╦╔═╗╔╦╗╦╔═╗ ╦ ╦╔═╗╔═╗
-    ║  ╠═╣╠╦╝╠═╣║   ║ ║╣ ╠╦╝║╚═╗ ║ ║║═╬╗║ ║║╣ ╚═╗   OLD
-    ╚═╝╩ ╩╩╚═╩ ╩╚═╝ ╩ ╚═╝╩╚═╩╚═╝ ╩ ╩╚═╝╚╚═╝╚═╝╚═╝   */
-    echo "<fieldset><legend>Caractéristiques OLD</legend>";
-
-        // TODO il serait intéressant d’afficher toutes les caractéristiques que des éléments ont rempli dans la même catégorie même si pour l’élément en question c’est vide.
-
-        foreach ($caracs as $c) {
-        
-            echo "<label for=\"carac".$c[3]."\">";
-            echo "<abbr title=\"$c[4]\" >".$c[6]."</abbr>";        
-        
-            if ($c[5]=="bool") {
-                echo " : </label>\n";
-                echo "<select name=\"carac".$c[3]."\" onchange=\"submit();\" id=\"carac".$c[3]."\">";
-                    echo "<option value=\"1\" "; if ($c[2]=="1") echo "selected"; echo ">Oui</option>"; 
-                    echo "<option value=\"0\" "; if ($c[2]=="0") echo "selected"; echo ">Non</option>";
-                echo "</select>";
-            }
-            else {
-                echo " (".$c[5].") : </label>\n"; 
-                echo "<input value=\"".$c[2]."\" name=\"carac".$c[3]."\" type=\"text\" id=\"carac".$c[3]."\">";
-            }
-            echo "<br/>";
-        }
-        
-    echo "<a href=\"\">➕</a>";
-        
-    echo "</fieldset>";
-
-
-
 /*  ╔═╗╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗╦═╗╦╔═╗╔╦╗╦╔═╗ ╦ ╦╔═╗╔═╗
     ║  ╠═╣╠╦╝╠═╣║   ║ ║╣ ╠╦╝║╚═╗ ║ ║║═╬╗║ ║║╣ ╚═╗
     ╚═╝╩ ╩╩╚═╩ ╩╚═╝ ╩ ╚═╝╩╚═╩╚═╝ ╩ ╩╚═╝╚╚═╝╚═╝╚═╝   */
-
     echo "<fieldset><legend>Caractéristiques</legend>";
 
 echo "<label for='significatives[]'>Significatives : </label>";
 
-echo "<select data-placeholder=\"Your Favorite Football Team\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"significatives[]\" id=\"multiple\">";
+echo "<select data-placeholder=\"Caractéristiques significatives\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"significatives[]\" id=\"multiple\">";
 
-    echo "<option selected=\"selected\" value=\"<label for='carac1'>Carac 1 : </label><input value='carac1' name='carac1' type='text' id='carac1'>\">Carac 1</option>";
-    echo "<option value=\"<label for='carac2'>Carac 2 : </label><input value='carac2' name='carac2' type='text' id='carac2'>\">Carac 2</option>";
-    echo "<option selected=\"selected\" value=\"<label for='carac3'>Carac 3 : </label><input value='carac3' name='carac3' type='text' id='carac3'>\">Carac 3</option>";
+    foreach ($allcaracs as $c) {
+        echo "<option ";
+        if (in_array($c[0], $car_of_cat)) echo "selected=\"selected\" ";
+        echo "value=\"";
+
+        /* ####### Label ####### */
+        echo "<label for='carac[".$c[0]."]'><abbr title='".$c[1]."' >".$c[3]."</abbr> "; // TODO : ne supporte pas les apostrophe dans $c[1] ! voir exemple avec « longueur d’onde »
+        if ($c[2]!="bool") echo "(".$c[2].")"; // Si ce n’est pas un booléen on affiche l’unité
+        echo " : </label>\n";
+
+        if ($c[2]=="bool") {
+            echo "<select name='carac[".$c[0]."]' id='carac[".$c[0]."]'>";
+            echo "<option value=''>Non renseigné</option>";
+            echo "<option value='1' "; if ($caracs_i[$c[0]]=="1") echo 'selected'; echo ">Oui</option>"; 
+            echo "<option value='0' "; if ($caracs_i[$c[0]]=="0") echo 'selected'; echo ">Non</option>";
+            echo "</select>";
+        }
+        else echo "<input value='".$caracs_i[$c[0]]."' name='carac[".$c[0]."]' type='text' id='carac[".$c[0]."]'>";
+
+        echo "\">";
+        echo $c[1];
+        echo "</option>";
+    }
+    
+    
     echo "</select>";
     echo "<script type=\"text/javascript\">
         var config = {
@@ -137,6 +147,7 @@ echo "</fieldset>";
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩╩╚═╩ ╩╚═╝  */
     echo "<fieldset><legend>Nouvelle caractéristique</legend>";
 
+    // TODO des catégories de caractéristiques ?
 
     echo "</fieldset>";
 
