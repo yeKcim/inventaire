@@ -35,6 +35,19 @@ if ( isset($_POST["carac_valid"]) ) {
         mysql_query ("INSERT INTO carac (carac_valeur, carac_id, carac_caracteristique_id) VALUES $allc ; ");
     }
 
+
+/*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗
+    ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣╠╦╝╠═╣║  
+    ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩╩╚═╩ ╩╚═╝  */
+    // TODO : Vérifier que la catégorie n’existe pas déjà + que le symbole n’est pas déjà pris.
+    // Création d’une nouvelle caracteristique
+    $arr = array("nom_carac", "unite_carac", "symbole_carac");
+    foreach ($arr as &$value) {
+        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+    }
+    mysql_query ("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
+
+
 }
 
 
