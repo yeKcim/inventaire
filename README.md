@@ -17,6 +17,7 @@ Les parties administrative et technique sont clairement différenciées pour per
 
 * **Ajout** : La page d’ajout d’un nouvel élément n’est pas en place…
 * **Identifiant labo** : Possibilité de choisir l’identifiant manuellement.
+* **Catégories de caractéristiques** : Les caractéristiques vont vite devenir très nombreuses et difficiles à trouver dans le sélecteur, penser à créer des catégories de caracs (dimensions, optique, électronique,…)
 * **Entretien** : Un bloc permettant de définir des entretiens à faire et des fréquence, des alertes pourraient alors s’afficher dans la liste.
 * **Documents** : Possibilité d’associer des documents soit à l’objet soit à la référence (data-sheet commune…).
 * **Select** : Améliorer les selecteurs, en particulier le gestionnaire des tags, avec [Choosen](https://harvesthq.github.io/chosen/#selected-and-disabled-support) par exemple.
