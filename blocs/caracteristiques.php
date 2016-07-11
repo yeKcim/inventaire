@@ -29,7 +29,7 @@ if ( isset($_POST["carac_valid"]) ) {
     if (isset($_POST["carac"])) {
         $allc="";
         foreach ($_POST["carac"] as $ck => $cd) {
-            $allc.= ($cd!="") ? "($cd,$i,$ck)," : "";
+            $allc.= ($cd!="") ? "(\"$cd\",\"$i\",\"$ck\")," : "";
         }
         $allc=substr($allc, 0, -1); // suppression du dernier caractère
         mysql_query ("INSERT INTO carac (carac_valeur, carac_id, carac_caracteristique_id) VALUES $allc ; ");
@@ -101,7 +101,7 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 
 echo "<label for='significatives[]'>Significatives : </label>";
 
-echo "<select data-placeholder=\"Caractéristiques significatives\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"significatives[]\" id=\"multiple\">";
+echo "<select data-placeholder=\"Caractéristiques significatives\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"significatives[]\" id=\"multiple\">"; // TODO : Ne pas effacer les case en dessous lorsque l’on modifie "Significatives" (cases remplies mais non sauvegarder)
 
     foreach ($allcaracs as $c) {
         echo "<option ";
@@ -110,7 +110,7 @@ echo "<select data-placeholder=\"Caractéristiques significatives\" style=\"widt
 
         /* ####### Label ####### */
         echo "<label for='carac[".$c[0]."]'><abbr title='".$c[1]."' >".$c[3]."</abbr> "; // TODO : ne supporte pas les apostrophe dans $c[1] ! voir exemple avec « longueur d’onde »
-        if ($c[2]!="bool") echo "(".$c[2].")"; // Si ce n’est pas un booléen on affiche l’unité
+        if ( ($c[2]!="bool")&&($c[2]!="") ) echo "(".$c[2].")"; // Si ce n’est pas un booléen on affiche l’unité
         echo " : </label>\n";
 
         if ($c[2]=="bool") {
