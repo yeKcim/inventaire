@@ -133,7 +133,7 @@ echo "<div id=\"container\">";
     require_once("./blocs/documents.php");
     require_once("./blocs/utilisation.php");
     require_once("./blocs/journal.php");
-    //require_once("./blocs/entretien.php");
+    require_once("./blocs/entretien.php");
 echo "</div>";
 
 ?>
