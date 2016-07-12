@@ -39,6 +39,7 @@ if ( isset($_POST["carac_valid"]) ) {
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗
     ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣╠╦╝╠═╣║  
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩╩╚═╩ ╩╚═╝  */
+    $error_nouvelle_carac="";
     // TODO : Vérifier que la catégorie n’existe pas déjà + que le symbole n’est pas déjà pris.
     // Création d’une nouvelle caracteristique
     $arr = array("nom_carac", "unite_carac", "symbole_carac");
@@ -49,9 +50,14 @@ if ( isset($_POST["carac_valid"]) ) {
     if ( ($nom_carac!="")||($unite_carac!="")||($symbole_carac!="") ) {
         // Si tous les champs sont remplis, on crée la nouvelle carac
         if ( ($nom_carac!="")&&($unite_carac!="")&&($symbole_carac!="") ) {
-        mysql_query ("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
+        
+        // Si la nouvelle carac existe déjà (nom ou symbôle)
+        $query_count_carac = mysql_query ("SELECT COUNT(*) FROM caracteristiques WHERE nom_carac=\"Diamètre\" OR symbole_carac=\"L\" ; ");
+        while ($l = mysql_fetch_row($query_count_carac)) $count_carac=$l[0] ;
+        if ($count_carac!=0) $error_nouvelle_carac.="<p class=\"error_message\">Nom ou symbôle déjà utilisé.</p>";
+        else mysql_query ("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
         } // Sinon on indique un message d’erreur
-        else $error_nouvelle_carac="Les trois champs sont obligatoires.";
+        else $error_nouvelle_carac.="<p class=\"error_message\">Les trois champs sont obligatoires.</p>";
     }
 }
 
@@ -83,7 +89,9 @@ $query_table_car_of_cat = mysql_query ("SELECT DISTINCT carac_caracteristique_id
 while ($l = mysql_fetch_row($query_table_car_of_cat)) $car_of_cat[]=$l[0];
 
 
-
+// Cas de création d’une nouvelle caracteristique, pour garder les champs remplis en cas d’erreur
+$arr = array("nom_carac", "unite_carac", "symbole_carac");
+foreach ($arr as $value) { $$value= isset($$value) ? "".$$value."" : "" ; }
 
 /*
 ███████╗ ██████╗ ██████╗ ███╗   ███╗██╗   ██╗██╗      █████╗ ██╗██████╗ ███████╗
@@ -170,18 +178,18 @@ echo "</fieldset>";
     echo "Si la caractéristique n’est pas présente dans la liste ci-dessus…";
     
     echo "<label for=\"nom_carac\">Nom :</label>\n";
-    echo "<input value=\"\" name=\"nom_carac\" type=\"text\">\n";
+    echo "<input value=\"$nom_carac\" name=\"nom_carac\" type=\"text\">\n";
     
     echo "<label for=\"unite_carac\">";
     echo "<abbr title=\"µm, %,… si oui/non, entrez « bool »\">Unité</abbr>";
     echo " :</label>\n";
-    echo "<input value=\"\" name=\"unite_carac\" type=\"text\">\n";
+    echo "<input value=\"$unite_carac\" name=\"unite_carac\" type=\"text\">\n";
     
     echo "<label for=\"symbole_carac\">";
     echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle</abbr>";
     echo ":</label>\n";
-    echo "<input value=\"\" name=\"symbole_carac\" type=\"text\">\n";
-    if (isset($error_nouvelle_carac)) echo "<br/>$error_nouvelle_carac";
+    echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\">\n";
+    echo "".$error_nouvelle_carac."";
     echo "</fieldset>";
 
 

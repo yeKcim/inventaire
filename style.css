@@ -3,8 +3,8 @@ h1                  { font-size: 1.7em; text-align: center; margin-bottom: 1.2em
 a                   { text-decoration: none; color:#3465a4; }
 
 table               { border: 1px solid #555753; border-collapse: collapse; width: 100%;}
-tr:nth-child(odd)	{ background-color:#ddd; }
-tr:nth-child(even)	{ background-color:#fff; }
+tr:nth-child(odd)    { background-color:#ddd; }
+tr:nth-child(even)    { background-color:#fff; }
 
 #listing th, #listing td     { padding: 2px; border-left: 1px solid #555753; }
 #listing th         { background: #afdde8; text-align: center; border-bottom: 1px solid #555753; vertical-align: bottom;}
@@ -105,9 +105,20 @@ li.inline {
 }
 
 #bloc p {
-    margin-top: 0px;
+    /*margin-top: 0px;*/
     padding-left: 5px;
     padding-right: 5px;
+}
+
+.error_message { 
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+    background-color: #a40000;
+    margin-left: 15px;
+    margin-right: 15px;
+    padding: 5px;
+    margin-top: 5px;
 }
 
 #container {
@@ -123,37 +134,37 @@ li.inline {
 
 
 @media screen and (max-width: 2050px) {
-	#container {
-		width: 1620px;
-		margin-left: auto;
-		margin-right: auto;
-	}
+    #container {
+        width: 1620px;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
 @media screen and (max-width: 1650px) {
-	#container {
+    #container {
         width: 1220px;
-		margin-left: auto;
-		margin-right: auto;
-	}
+        margin-left: auto;
+        margin-right: auto;
+    }
 
 @media screen and (max-width: 1250px) {
-	#container {
+    #container {
         width: 820px;
-		margin-left: auto;
-		margin-right: auto;
-	}
+        margin-left: auto;
+        margin-right: auto;
+    }
 
 @media screen and (max-width: 850px) {
-	#container {
-		width: 420px;
-		margin-left: auto;
-		margin-right: auto;
-	}
-	
+    #container {
+        width: 420px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
 @media screen and (max-width: 450px) {
-	#container {
-		width: auto;
-		float: none;
-	}
-	
-	
+    #container {
+        width: auto;
+        float: none;
+    }
+    
+    
