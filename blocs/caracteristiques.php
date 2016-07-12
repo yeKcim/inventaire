@@ -45,9 +45,14 @@ if ( isset($_POST["carac_valid"]) ) {
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
-    mysql_query ("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
-
-
+    // Si au moins un champ de « Nouvelle caracteristique » est rempli :
+    if ( ($nom_carac!="")||($unite_carac!="")||($symbole_carac!="") ) {
+        // Si tous les champs sont remplis, on crée la nouvelle carac
+        if ( ($nom_carac!="")&&($unite_carac!="")&&($symbole_carac!="") ) {
+        mysql_query ("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
+        } // Sinon on indique un message d’erreur
+        else $error_nouvelle_carac="Les trois champs sont obligatoires.";
+    }
 }
 
 
@@ -109,8 +114,8 @@ echo "<select data-placeholder=\"Caractéristiques significatives\" style=\"widt
         echo "value=\"";
 
         /* ####### Label ####### */
-        echo "<label for='carac[".$c[0]."]'><abbr title='".$c[1]."' >".$c[3]."</abbr> "; // TODO : ne supporte pas les apostrophe dans $c[1] ! voir exemple avec « longueur d’onde »
-        if ( ($c[2]!="bool")&&($c[2]!="") ) echo "(".$c[2].")"; // Si ce n’est pas un booléen on affiche l’unité
+        echo "<label for='carac[".$c[0]."]'><abbr title='".str_replace("'", "’", $c[1])."' >".str_replace("'", "’", $c[3])."</abbr> "; // TODO : ne supporte pas les apostrophe dans $c[1] ! voir exemple avec « longueur d’onde »
+        if ( ($c[2]!="bool")&&($c[2]!="") ) echo "(".str_replace("'", "’", $c[2]).")"; // Si ce n’est pas un booléen on affiche l’unité
         echo " : </label>\n";
 
         if ($c[2]=="bool") {
@@ -120,7 +125,7 @@ echo "<select data-placeholder=\"Caractéristiques significatives\" style=\"widt
             echo "<option value='0' "; if ($caracs_i[$c[0]]=="0") echo 'selected'; echo ">Non</option>";
             echo "</select>";
         }
-        else echo "<input value='".$caracs_i[$c[0]]."' name='carac[".$c[0]."]' type='text' id='carac[".$c[0]."]'>";
+        else echo "<input value='".str_replace("'", "’", $caracs_i[$c[0]])."' name='carac[".$c[0]."]' type='text' id='carac[".$c[0]."]'>";
 
         echo "\">";
         echo $c[1];
@@ -176,7 +181,7 @@ echo "</fieldset>";
     echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle</abbr>";
     echo ":</label>\n";
     echo "<input value=\"\" name=\"symbole_carac\" type=\"text\">\n";
-    
+    if (isset($error_nouvelle_carac)) echo "<br/>$error_nouvelle_carac";
     echo "</fieldset>";
 
 
