@@ -124,13 +124,37 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
 
     echo "<fieldset><legend>Entretiens</legend>";
 
+if ( empty($entretiens) ) echo "Aucun entretien spécifié.";
+else {
+
+        $today=date("Y-m-d");
+
         echo "<table style=\"border:none;\">";
-        
+
         foreach ($entretiens as $e) {
+
+            $f=$e[1];
+            $date_derniere_intervention=$e[2];
+            $date_prochaine_intervention = date("Y-m-d", strtotime($date_derniere_intervention." +$f days") );
+
+           // $retard = date_diff($today, $date_prochaine_intervention);
+
+            $retard = round( ( strtotime($today) - strtotime($date_prochaine_intervention) ) / 86400 );
+
+
             echo "<tr>";
-            echo "<td><input type=\"checkbox\" id=\"cbox1\" value=\"1\"></td>";
-            echo "<td>".$e[0]."+".$e[1]."+".$e[2]."+".$e[3]."+".$e[4]."+".$e[5]."</td>";
-            echo "<td>date (retard ou reste)</td>";
+            echo "<td><input type=\"checkbox\" id=\"ebox[".$e[0]."]\" value=\"1\"></td>";
+            echo "<td>e3:".$e[3]."|e4:".$e[4]."|effectuépar:".$e[5]."</td>";
+
+
+            //echo "<td>fréquence:".$f."<br/>date_derniere_intervention:".$date_derniere_intervention."<br/>date_prochaine_intervention:".$date_prochaine_intervention."<br/>retard:".$retard."</td>";
+            echo "<td>";
+            if ($retard>0) echo "<span style=\"color:#a40000;\">";
+            else echo "<span style=\"color:#069a82;\">";
+            echo "".dateformat($date_prochaine_intervention,"fr")."";
+            echo "</span>";
+            echo "</td>";
+            
             echo "<td style=\"text-align:right;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'del_confirm.php?i=$i&e=\$e[0]',width:280,height:110})\" title=\"cet entretien n’est plus nécessaire\">×<span></td>";
             echo "</tr>";
         }
@@ -172,6 +196,8 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
         /* ########### submit ########### */
         echo "<input name=\"modif_entretien\" value=\"Entretien effectué\" type=\"submit\">";
 
+    }
+    
     echo "</fieldset>";
 
 
