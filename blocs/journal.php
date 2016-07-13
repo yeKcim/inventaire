@@ -79,6 +79,9 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
 
     echo "<fieldset><legend>Historique</legend>";
 
+
+if ( empty($historique) ) echo "Aucune intervention spécifiée.";
+else {
     echo "<table style=\"border:none;\">";
     foreach ($historique as $h) {
         echo "<tr>";
@@ -89,6 +92,7 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
     }
     echo "</table>";
     
+    }
     
     echo "</fieldset>";
 
