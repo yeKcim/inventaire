@@ -36,10 +36,38 @@ if ( isset($_POST["add_entretien"]) ) {
 /*  ╔╦╗╔═╗╔╦╗╦╔═╗  ╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗╦╔═╗╔╗╔
     ║║║║ ║ ║║║╠╣   ║╣ ║║║║ ╠╦╝║╣  ║ ║║╣ ║║║
     ╩ ╩╚═╝═╩╝╩╚    ╚═╝╝╚╝╩ ╩╚═╚═╝ ╩ ╩╚═╝╝╚╝    */
-if ($modif_entretien=="Entretien effectué") {
-    
-}
+$modif_entretien= isset($_POST["modif_entretien"]) ? htmlentities($_POST["modif_entretien"]) : "" ;
 
+if ($modif_entretien!="") {
+    $arr = array("e_effectuele", "e_effectuepar", "plus_intervant_prenom", "plus_intervant_nom", "plus_intervant_mail", "plus_intervant_phone");
+    foreach ($arr as &$value) {
+        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+    }
+    
+    if ($e_effectuepar=="plus_intervant") {
+        $plus_intervant_nom=mb_strtoupper($plus_intervant_nom);
+        $plus_intervant_phone=phone_display("$plus_intervant_phone","");
+        mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_intervant_nom."', '".$plus_intervant_prenom."','".$plus_intervant_mail."','".$plus_intervant_phone."') ; ");
+        /* TODO : prévoir le cas où la personne existe déjà */
+        $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
+        while ($l = mysql_fetch_row($query_table_utilisateurnew)) $e_effectuepar=$l[0];
+        // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+        $utilisateurs[$e_effectuepar]=array( $e_effectuepar, utf8_encode($plus_intervant_nom), utf8_encode($plus_intervant_prenom), utf8_encode($plus_intervant_mail), phone_display("$plus_intervant_phone",".") );
+    }
+
+        if (isset($_POST["ebox"])) {
+            $alle="";
+            foreach ($_POST["ebox"] as $ek => $ed) $alle.=" e_index = $ek OR";
+            $alle=substr($alle, 0, -2);
+            $effectuepar_sql= ($e_effectuepar!="0") ? ", e_effectuerpar = '$e_effectuepar'" : "";
+            mysql_query ("UPDATE entretien SET e_lastdate = '".dateformat($e_effectuele,"en")."' $effectuepar_sql WHERE $alle ;" );
+        
+        $error_noebox="";
+        
+        }
+        else $error_noebox="Vous devez cocher au moins une case d’entretien";
+
+}
 
 /*  ╔═╗╦ ╦╔═╗╔═╗╦═╗╦╔╦╗  ╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗╦╔═╗╔╗╔
     ╚═╗║ ║╠═╝╠═╝╠╦╝║║║║  ║╣ ║║║║ ╠╦╝║╣  ║ ║║╣ ║║║
@@ -51,24 +79,8 @@ foreach ($arr as &$value) {
 
 if ($del_e_confirm=="Confirmer la suppression") {
     mysql_query ("DELETE FROM entretien WHERE e_index=$e_del AND e_id=$i;");
-    echo "DELETE FROM entretien WHERE e_index=$e_del AND e_id=$i;";
     // TODO ajouter l’information effacée dans trash ? avec l’ip et l’heure ?
 }
-
-
-
-/* TODO
-    if ($utilisateur=="plus_utilisateur") {
-        $plus_utilisateur_nom=mb_strtoupper($plus_utilisateur_nom);
-        $plus_utilisateur_phone=phone_display("$plus_utilisateur_phone","");
-        mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_utilisateur_nom."', '".$plus_utilisateur_prenom."','".$plus_utilisateur_mail."','".$plus_utilisateur_phone."') ; ");
-        // TODO : prévoir le cas où le contrat existe déjà
-        $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
-        while ($l = mysql_fetch_row($query_table_utilisateurnew)) $utilisateur=$l[0];
-        // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
-        $utilisateurs[$utilisateur]=array( $utilisateur, utf8_encode($plus_utilisateur_nom), utf8_encode($plus_utilisateur_prenom), utf8_encode($plus_utilisateur_mail), phone_display("$plus_utilisateur_phone",".") );
-    }
-*/
 
 
 
@@ -158,20 +170,21 @@ else {
             $f=$e[1];
             $date_derniere_intervention=$e[2];
             $date_prochaine_intervention = date("Y-m-d", strtotime($date_derniere_intervention." +$f days") );
-
-           // $retard = date_diff($today, $date_prochaine_intervention);
-
             $retard = round( ( strtotime($today) - strtotime($date_prochaine_intervention) ) / 86400 );
 
             echo "<tr>";
-            echo "<td><input type=\"checkbox\" id=\"ebox[".$e[0]."]\" value=\"1\"></td>";
+            
+            // ***** La checkbox ***** 
+            echo "<td><input type=\"checkbox\" id=\"ebox[".$e[0]."]\" name=\"ebox[".$e[0]."]\" value=\"1\"></td>";
 
+            // ***** La désignation ***** 
             echo "<td>";
             if ($e[4]!="") echo "<abbr title=\"".$e[4]."\">";
             echo $e[3];
             if ($e[4]!="") echo "</abbr>";
             echo "</td>";
 
+            // ***** La fréquence ***** 
             echo "<td>";
             $f_an=$f/365; $f_mois=$f/30;
             if ($f>=365) echo "$f_an an";
@@ -180,24 +193,28 @@ else {
             if ( ($f!=1)&&($f_an!=1) ) echo "s";
             echo "</td>";
             
+            // ***** Prochaine intervention ***** 
             echo "<td>";
             if ($retard>0) echo "<span style=\"color:#cc0000;\">";
             else {
                 if (-$retard<$f*0.05) echo "<span style=\"color:#f57900;\">";
-                else echo "<span style=\"color:#3465a4;\">";
+                else echo "<span style=\"color:#3a4a46;\">";
             }
             echo "<abbr title=\"dernier entretien effectué ";
             if ($e[5]!=0) echo "par ".$utilisateurs[$e[5]][2]." ".$utilisateurs[$e[5]][1]." ";
-            echo "le ".$date_derniere_intervention."\">";
+            echo "le ".dateformat($date_derniere_intervention,"fr")."\">";
             echo "<strong>".dateformat($date_prochaine_intervention,"fr")."</strong>";
             echo "</abbr>";
             
-            if ($retard>0) echo " (retard : $retard jours !)";
-            else { echo " (reste : ".abs($retard)." jours)"; }
-            echo "</span>";
-            
+            if ($retard==0) echo " (à faire aujourd’hui)</span>";
+            {   if ($retard>0) echo " (retard : $retard jour";
+                else echo " (reste : ".abs($retard)." jour";
+                if (abs($retard)!=1) echo "s";
+                echo ")</span>";
+            }
             echo "</td>";
             
+            // ***** La suppression ***** 
             echo "<td style=\"text-align:right;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'del_confirm.php?i=$i&e=".$e[0]."',width:280,height:110})\" title=\"cet entretien n’est plus nécessaire\">×<span></td>";
             
             echo "</tr>";
@@ -206,8 +223,8 @@ else {
         echo "</table>";
 
         /* ########### Le ########### */
-        echo "<label for=\"e_effectuele\" style=\"vertical-align: top;\"> Le :</label>\n";
-        echo "<input value=\"\" name=\"e_effectuele\" type=\"text\" id=\"e_effectuele\"><br/>";
+        echo "<label for=\"e_effectuele\" style=\"vertical-align: top;\"> Le <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<input value=\"".date("d/m/Y")."\" name=\"e_effectuele\" type=\"text\" id=\"e_effectuele\"><br/>";
 
         /* ########### Par ########### */
         echo "<label for=\"e_effectuepar\">Par : </label>\n";
@@ -235,7 +252,7 @@ else {
             echo "</fieldset>";
             echo "\n\n\n";
 
-
+        if ($error_noebox!="") echo "<p class=\"error_message\">$error_noebox</p>";
 
         /* ########### submit ########### */
         echo "<input name=\"modif_entretien\" value=\"Entretien effectué\" type=\"submit\">";
