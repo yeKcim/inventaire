@@ -28,8 +28,13 @@ if ( isset($_POST["add_entretien"]) ) {
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
-    $e_frequence=$e_frequence*$e_frequence_multipli;
-    mysql_query ("INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\"); ");
+    
+    if ( ($e_designation=="")||($e_frequence=="") ) $error_emptyinput="Fréquence et Désignation sont des champs obligatoires";
+    else {
+        $e_frequence=$e_frequence*$e_frequence_multipli;
+        mysql_query ("INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\"); ");
+        $error_emptyinput="";
+    }
 }
 
 
@@ -137,6 +142,8 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
         /* ########### Détails ########### */
         echo "<label for=\"e_detail\" style=\"vertical-align: top;\"> Détails :</label>\n";
         echo "<textarea name=\"e_detail\" rows=\"4\" cols=\"33\"></textarea><br/>";
+        
+        if ($error_emptyinput!="") echo "<p class=\"error_message\">$error_emptyinput</p>";
         
         /* ########### submit ########### */
         echo "<input name='add_entretien' value='Ajouter' type='submit'>";
