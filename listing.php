@@ -102,6 +102,14 @@ foreach ($tableau as &$t) {
         if ($IOT!="0") echo "<td>".$raison_sortie[$t["raison_sortie"]]."</td>";
         echo "<td><span title=\"Utilisé par ".$utilisateurs[$t["utilisateur"]][2]." ".$utilisateurs[$t["utilisateur"]][1]." le ".dateformat($t["localisation"][2],"fr")."\">".$t["localisation"][0]." ".$t["localisation"][1]."</span></td>";
         echo "<td><span title=\"Par ".$responsables[$t["responsable_achat"]][2]." ".$responsables[$t["responsable_achat"]][1]." le ".dateformat($t["date_achat"],"fr")."\">".$t["prix"]."€ sur ".$contrats[$t["contrat"]][1]."</span></td>";
+        
+        /* Ajouter symbole pour entretien !
+                    if ($retard>0) echo "<span style=\"color:#a40000;\"><strong>⚠</strong></span>";
+            else {
+                if (-$retard<$f*0.1) echo "<span style=\"color:#f57900;\"><strong>⌛</strong></span>";
+                else echo "<span style=\"color:#4e9a06;\"><strong>☑</strong></span>";
+            }*/
+        
     echo "</tr>";
 }
 
