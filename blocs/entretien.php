@@ -131,6 +131,14 @@ else {
 
         echo "<table style=\"border:none;\">";
 
+        echo "<tr>";
+            echo "<th>&nbsp;</th>";
+            echo "<th style=\"text-align:left;\">Désignation</th>";
+            echo "<th style=\"text-align:left;\">Fréquence</th>";
+            echo "<th style=\"text-align:left;\">Date limite</th>";
+            echo "<th>&nbsp;</th>";
+        echo "</tr>";
+            
         foreach ($entretiens as $e) {
 
             $f=$e[1];
@@ -141,17 +149,35 @@ else {
 
             $retard = round( ( strtotime($today) - strtotime($date_prochaine_intervention) ) / 86400 );
 
-
             echo "<tr>";
             echo "<td><input type=\"checkbox\" id=\"ebox[".$e[0]."]\" value=\"1\"></td>";
-            echo "<td>e3:".$e[3]."|e4:".$e[4]."|effectuépar:".$e[5]."</td>";
 
-
-            //echo "<td>fréquence:".$f."<br/>date_derniere_intervention:".$date_derniere_intervention."<br/>date_prochaine_intervention:".$date_prochaine_intervention."<br/>retard:".$retard."</td>";
             echo "<td>";
-            if ($retard>0) echo "<span style=\"color:#a40000;\">";
-            else echo "<span style=\"color:#069a82;\">";
-            echo "".dateformat($date_prochaine_intervention,"fr")."";
+            echo "<abbr title=\"".$e[4]."\">";
+            echo $e[3];
+            echo "</abbr>";
+            echo "</td>";
+
+            echo "<td>";
+            $f_an=$f/365;
+            $f_mois=$f/30;
+            if ($f>=365) echo "$f_an an";
+            elseif ($f>=30) echo "$f_mois moi";
+            else echo "$f jour";
+            if ( ($f!=1)&&($f_an!=1) ) echo "s";
+            echo "</td>";
+            
+            echo "<td>";
+            if ($retard>0) echo "<span style=\"color:#cc0000;\">";
+            else {
+                if (-$retard<$f*0.05) echo "<span style=\"color:#f57900;\">";
+                else echo "<span style=\"color:#3465a4;\">";
+            }
+            echo "<abbr title=\"dernier entretien effectué ";
+            if ($e[5]!=0) echo "par ".$utilisateurs[$e[5]][2]." ".$utilisateurs[$e[5]][1]." ";
+            echo "le ".$date_derniere_intervention."\">";
+            echo dateformat($date_prochaine_intervention,"fr");
+            echo "</abbr>";
             echo "</span>";
             echo "</td>";
             
