@@ -77,7 +77,7 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
     echo "</fieldset>";
 
 
-    echo "<fieldset><legend>Historique</legend>";
+    echo "<fieldset><legend>Historique - Remarques</legend>";
 
 
 if ( empty($historique) ) echo "Aucune intervention spécifiée.";
