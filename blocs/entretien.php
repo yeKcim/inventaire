@@ -135,7 +135,7 @@ else {
             echo "<th>&nbsp;</th>";
             echo "<th style=\"text-align:left;\">Désignation</th>";
             echo "<th style=\"text-align:left;\">Fréquence</th>";
-            echo "<th style=\"text-align:left;\">Date limite</th>";
+            echo "<th style=\"text-align:left;\">Prochaine intervention</th>";
             echo "<th>&nbsp;</th>";
         echo "</tr>";
             
@@ -153,14 +153,13 @@ else {
             echo "<td><input type=\"checkbox\" id=\"ebox[".$e[0]."]\" value=\"1\"></td>";
 
             echo "<td>";
-            echo "<abbr title=\"".$e[4]."\">";
+            if ($e[4]!="") echo "<abbr title=\"".$e[4]."\">";
             echo $e[3];
-            echo "</abbr>";
+            if ($e[4]!="") echo "</abbr>";
             echo "</td>";
 
             echo "<td>";
-            $f_an=$f/365;
-            $f_mois=$f/30;
+            $f_an=$f/365; $f_mois=$f/30;
             if ($f>=365) echo "$f_an an";
             elseif ($f>=30) echo "$f_mois moi";
             else echo "$f jour";
@@ -176,9 +175,13 @@ else {
             echo "<abbr title=\"dernier entretien effectué ";
             if ($e[5]!=0) echo "par ".$utilisateurs[$e[5]][2]." ".$utilisateurs[$e[5]][1]." ";
             echo "le ".$date_derniere_intervention."\">";
-            echo dateformat($date_prochaine_intervention,"fr");
+            echo "<strong>".dateformat($date_prochaine_intervention,"fr")."</strong>";
             echo "</abbr>";
+            
+            if ($retard>0) echo " (retard : $retard jours !)";
+            else { echo " (reste : ".abs($retard)." jours)"; }
             echo "</span>";
+            
             echo "</td>";
             
             echo "<td style=\"text-align:right;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'del_confirm.php?i=$i&e=\$e[0]',width:280,height:110})\" title=\"cet entretien n’est plus nécessaire\">×<span></td>";
