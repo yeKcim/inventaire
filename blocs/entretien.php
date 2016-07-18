@@ -32,15 +32,29 @@ if ( isset($_POST["add_entretien"]) ) {
     mysql_query ("INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\"); ");
 }
 
+
 /*  ╔╦╗╔═╗╔╦╗╦╔═╗  ╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗╦╔═╗╔╗╔
     ║║║║ ║ ║║║╠╣   ║╣ ║║║║ ╠╦╝║╣  ║ ║║╣ ║║║
     ╩ ╩╚═╝═╩╝╩╚    ╚═╝╝╚╝╩ ╩╚═╚═╝ ╩ ╩╚═╝╝╚╝    */
 if ($modif_entretien=="Entretien effectué") {
     
-    
-    
-    
 }
+
+
+/*  ╔═╗╦ ╦╔═╗╔═╗╦═╗╦╔╦╗  ╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗╦╔═╗╔╗╔
+    ╚═╗║ ║╠═╝╠═╝╠╦╝║║║║  ║╣ ║║║║ ╠╦╝║╣  ║ ║║╣ ║║║
+    ╚═╝╚═╝╩  ╩  ╩╚═╩╩ ╩  ╚═╝╝╚╝╩ ╩╚═╚═╝ ╩ ╩╚═╝╝╚╝   */
+$arr = array("e_del", "del_e_confirm");
+foreach ($arr as &$value) {
+    $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+}
+
+if ($del_e_confirm=="Confirmer la suppression") {
+    mysql_query ("DELETE FROM entretien WHERE e_index=$e_del AND e_id=$i;");
+    echo "DELETE FROM entretien WHERE e_index=$e_del AND e_id=$i;";
+    // TODO ajouter l’information effacée dans trash ? avec l’ip et l’heure ?
+}
+
 
 
 /* TODO
@@ -184,7 +198,8 @@ else {
             
             echo "</td>";
             
-            echo "<td style=\"text-align:right;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'del_confirm.php?i=$i&e=\$e[0]',width:280,height:110})\" title=\"cet entretien n’est plus nécessaire\">×<span></td>";
+            echo "<td style=\"text-align:right;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'del_confirm.php?i=$i&e=".$e[0]."',width:280,height:110})\" title=\"cet entretien n’est plus nécessaire\">×<span></td>";
+            
             echo "</tr>";
         }
 
