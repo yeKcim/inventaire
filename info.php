@@ -1,5 +1,7 @@
-<?php require_once("./head.html"); ?>
-
+<?php
+$titre="Informations détaillées";
+require_once("./head.php");
+?>
 <body>
 
 <?php
@@ -44,6 +46,8 @@ while ($l = mysql_fetch_row($query_table)) {
 ╚═════╝ ╚═╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝       ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝╚══════╝
 */
 
+$write=true;
+
 echo "<p>Informations #$i :</p>";
 
 echo "<div id=\"container\">";
@@ -51,9 +55,10 @@ echo "<div id=\"container\">";
     require_once("./blocs/technique.php");
     require_once("./blocs/caracteristiques.php");
     require_once("./blocs/documents.php");
+    require_once("./blocs/entretien.php");
     require_once("./blocs/utilisation.php");
     require_once("./blocs/journal.php");
-    require_once("./blocs/entretien.php");
+
 echo "</div>";
 
 ?>

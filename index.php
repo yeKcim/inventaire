@@ -1,4 +1,7 @@
-<?php require_once("./head.html"); ?>
+<?php
+$titre="Inventaire";
+require_once("./head.php");
+?>
 
 <!-- ########### BODY ########### -->
 <body>

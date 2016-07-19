@@ -4,7 +4,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="robots" content="noindex,nofollow" />
-    <title>Informations détaillées</title>
+    <title>
+        <?php
+        $titre=isset($titre) ? $titre : "Inventaire" ;
+        echo $titre; ?>
+    </title>
     <link rel="stylesheet" type="text/css" href="./style.css">
     
     <!-- ascii : http://patorjk.com/software/taag/#p=display&h=2&v=0&f=ANSI%20Shadow&t= -->
