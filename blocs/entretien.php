@@ -220,7 +220,10 @@ else {
             echo "</td>";
             
             // ***** La suppression ***** 
-            echo "<td style=\"text-align:right;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'del_confirm.php?i=$i&e=".$e[0]."',width:280,height:110})\" title=\"cet entretien n’est plus nécessaire\">×<span></td>";
+            echo "<td style=\"text-align:right;\">";
+            if ($write) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'del_confirm.php?i=$i&e=".$e[0]."',width:280,height:110})\" title=\"cet entretien n’est plus nécessaire\">×<span>";
+            else echo "&nbsp;";
+            echo "</td>";
             
             echo "</tr>";
         }
@@ -260,7 +263,7 @@ else {
         if ($error_noebox!="") echo "<p class=\"error_message\">$error_noebox</p>";
 
         /* ########### submit ########### */
-        echo "<input name=\"modif_entretien\" value=\"Entretien effectué\" type=\"submit\">";
+        if ($write) echo "<input name=\"modif_entretien\" value=\"Entretien effectué\" type=\"submit\">";
 
     }
     

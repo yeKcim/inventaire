@@ -368,7 +368,7 @@ echo "
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║ 
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
-    echo "<p style=\"text-align:center;\"><input name='technique_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
+    if ($write) echo "<p style=\"text-align:center;\"><input name='technique_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
 
 
     echo "</form>";

@@ -329,7 +329,7 @@ echo "<abbr title=\"".phone_display("".$utilisateurs[$data["responsable_achat"]]
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║ 
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
-    echo "<p style=\"text-align:center;\"><input name='administratif_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
+if ($write) echo "<p style=\"text-align:center;\"><input name='administratif_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
 
     echo "</form>";
 

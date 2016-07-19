@@ -78,7 +78,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
         }
         /* ########### END Ajout d’un fichier ########### */
 
-        echo "<input name='Valider' value='Envoyer' type='submit'>";
+        if ($write) echo "<input name='Valider' value='Envoyer' type='submit'>";
         echo "</form>";
 
     echo "</fieldset>";
@@ -87,9 +87,8 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     ╠╣ ║║  ╠═╣║║╣ ╠╦╝╚═╗
     ╚  ╩╚═╝╩ ╩╩╚═╝╩╚═╚═╝  */
     echo "<fieldset><legend>Fichiers</legend>";
-        displayDir("files/$i/", $del=TRUE);
+        displayDir("files/$i/", $del=$write);
     echo "</fieldset>";
-
 
 
 /*  ╦═╗╔═╗╔═╗╔═╗╦═╗╔═╗╔╗╔╔═╗╔═╗╔═╗  ╔═╗╦╔╦╗╦ ╦  ╔═╗╦╦═╗╔═╗╔═╗

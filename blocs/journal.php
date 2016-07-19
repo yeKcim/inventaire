@@ -72,7 +72,7 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
         
         echo "<label for=\"histo\" style=\"vertical-align: top;\"> Information :</label>\n";
         echo "<textarea name=\"histo\" rows=\"4\" cols=\"33\"></textarea><br/>";
-        echo "<input name='add_historique' value='Ajouter' type='submit'>";
+        if ($write) echo "<input name='add_historique' value='Ajouter' type='submit'>";
 
     echo "</fieldset>";
 
@@ -87,7 +87,10 @@ else {
         echo "<tr>";
         echo "<td style=\"padding-right: 10px; vertical-align: top;\"><strong>".dateformat($h[1],"fr")."</strong></td>";
         echo "<td>".$h[2]."</td>";
-        echo "<td style=\"text-align:right;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'del_confirm.php?i=$i&h=".$h[0]."',width:280,height:110})\" title=\"supprimer cette entrée (".$h[0].") du journal\">×<span></td>";
+        echo "<td style=\"text-align:right;\">";
+        if ($write) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'del_confirm.php?i=$i&h=".$h[0]."',width:280,height:110})\" title=\"supprimer cette entrée (".$h[0].") du journal\">×<span>";
+        else echo "&nbsp;";
+        echo "</td>";
         echo "</tr>";
     }
     echo "</table>";

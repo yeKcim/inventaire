@@ -242,7 +242,7 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║ 
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
-    echo "<p style=\"text-align:center;\"><input name='utilisation_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
+    if ($write) echo "<p style=\"text-align:center;\"><input name='utilisation_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
 
     echo "</form>";
 
