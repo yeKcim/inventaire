@@ -95,9 +95,9 @@ else $display_raison_sortie=0;
 
 echo "<table id=\"listing\">";
 
-#########################################################################
-#                              Entête                                   #
-#########################################################################
+/*  ╔═╗╔╗╔╦╗╔═╗╔╦╗╔═╗  ╔╦╗╔═╗╔╗ ╦  ╔═╗╔═╗╦ ╦
+    ║╣ ║║║║ ║╣  ║ ║╣    ║ ╠═╣╠╩╗║  ║╣ ╠═╣║ ║
+    ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝    */
 echo "<tr>";
     # echo "<th>&nbsp;<br/>&nbsp;</td>"; // À voir plus tard
     echo "<th>Id Labo<br/>";                orderbylink("lab_id");              echo "</td>";
@@ -113,22 +113,57 @@ echo "<tr>";
     echo "<th>Entretiens<br/>";              echo "&nbsp;";                      echo "</td>";
 echo "</tr>";
 
-#########################################################################
-#                           Les résultats                               #
-#########################################################################
+/*  ╦  ╦╔═╗╔╗╔╔═╗╔═╗  ╔╦╗╔═╗  ╦═╗╔═╗╔═╗╦ ╦╦ ╔╦╗╔═╗╔╦╗╔═╗
+    ║  ║║ ╦║║║║╣ ╚═╗   ║║║╣   ╠╦╝║╣ ╚═╗║ ║║  ║ ╠═╣ ║ ╚═╗
+    ╩═╝╩╚═╝╝╚╝╚═╝╚═╝  ═╩╝╚═╝  ╩╚═╚═╝╚═╝╚═╝╩═╝╩ ╩ ╩ ╩ ╚═╝    */
 foreach ($tableau as &$t) {
     echo "<tr>";
+        
+        // ********** Id Labo **********
         echo "<td style=\"text-align:center;\"><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">".$t["lab_id"]."</a></td>";
+        
+        // ********** Catégorie **********
         echo "<td>".$t["categorie"]."</td>";
+        
+        // ********** Référence **********
         echo "<td>".$t["reference"]."</td>";
+        
+        // ********** Désignation **********
         echo "<td>".$t["designation"]."</td>";
+        
+        // ********** Caractéristiques **********
         echo "<td>".substr($tableau_carac[$t["base_index"]], 0, -2)."</td>";
+        
+        // ********** Marque  **********
         echo "<td><span title=\"vendu par ".$t["vendeur"]."\">".$t["marque"]."</span></td>";
-        echo "<td>".$t["serial_number"]."</td>";
+        
+        // ********** Serial number **********
+        echo "<td>";
+        if ($t["serial_number"]!="") echo $t["serial_number"]; else echo "-";
+        echo "</td>";
+        
+        // ********** État **********
         if ($IOT!="0") echo "<td>".$raison_sortie[$t["raison_sortie"]]."</td>";
-        echo "<td><span title=\"Utilisé par ".$utilisateurs[$t["utilisateur"]][2]." ".$utilisateurs[$t["utilisateur"]][1]." le ".dateformat($t["localisation"][2],"fr")."\">".$t["localisation"][0]." ".$t["localisation"][1]."</span></td>";
-        echo "<td><span title=\"Par ".$responsables[$t["responsable_achat"]][2]." ".$responsables[$t["responsable_achat"]][1]." le ".dateformat($t["date_achat"],"fr")."\">".$t["prix"]."€ sur ".$contrats[$t["contrat"]][1]."</span></td>";
-        echo "<td>".$tableau_entretien[$t["base_index"]]."</td>";
+
+        // ********** Localisation **********
+        echo "<td>";
+        echo "<span title=\"Utilisé par ".$utilisateurs[$t["utilisateur"]][2]." ".$utilisateurs[$t["utilisateur"]][1]." le ".dateformat($t["localisation"][2],"fr")."\">";
+        echo "".$t["localisation"][0]." ".$t["localisation"][1]."</span>";
+        echo "</td>";
+        
+        // ********** Achat **********
+        echo "<td>
+        <span title=\"Par ".$responsables[$t["responsable_achat"]][2]." ".$responsables[$t["responsable_achat"]][1]." le ".dateformat($t["date_achat"],"fr")."\">";
+        if ($t["prix"]!="0") echo "".$t["prix"]."€";
+        if ($t["contrat"]!="0")echo " sur ".$contrats[$t["contrat"]][1]."";
+        if ( ($t["prix"]=="0") && ($t["contrat"]=="0") ) echo "-";
+        echo "</span></td>";
+        
+        // ********** Entretiens **********
+        echo "<td>";
+        if (isset($tableau_entretien[$t["base_index"]]) ) echo $tableau_entretien[$t["base_index"]]; else echo "-";
+        echo "</td>";
+        
     echo "</tr></a>";
 }
 
