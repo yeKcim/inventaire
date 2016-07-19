@@ -8,7 +8,7 @@
 ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝╚══════╝╚═╝  ╚═══╝
 */
 
-
+$error_noebox="";
 
 
 /*
@@ -66,8 +66,6 @@ if ($modif_entretien!="") {
             $alle=substr($alle, 0, -2);
             $effectuepar_sql= ($e_effectuepar!="0") ? ", e_effectuerpar = '$e_effectuepar'" : "";
             mysql_query ("UPDATE entretien SET e_lastdate = '".dateformat($e_effectuele,"en")."' $effectuepar_sql WHERE $alle ;" );
-        
-        $error_noebox="";
         
         }
         else $error_noebox="Vous devez cocher au moins une case d’entretien";
