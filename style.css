@@ -9,6 +9,9 @@ tr:nth-child(even)    { background-color:#fff; }
 #listing th, #listing td     { padding: 2px; border-left: 1px solid #555753; }
 #listing th         { background: #afdde8; text-align: center; border-bottom: 1px solid #555753; vertical-align: bottom;}
 #listing td         { text-align: left;}
+#listing tr:hover {
+    background-color: #E2F5BF;
+}
 
 #detail table           { border-collapse: collapse; width: 100%; font-size: 0.5em;}
 #detail th, #detail td  { border-left: 5px solid #fff; border-right: 5px solid #fff; border-top: 0px; border-bottom: 0px; }
