@@ -165,7 +165,8 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
         echo "<option value=\"plus_localisation\" "; if ($data["localisation"]=="plus_localisation") echo "selected"; echo ">Nouvelle localisation :</option>";
         echo "</select>";
 
-        echo " <abbr title=\"le ".dateformat($data["date_localisation"],"fr")."\"><strong>ⓘ</strong></abbr>";
+        if ( ($data["date_localisation"]!="") && ($data["date_localisation"]!="0000-00-00") )
+            echo " <abbr title=\"le ".dateformat($data["date_localisation"],"fr")."\"><strong>ⓘ</strong></abbr>";
 
 
             /* ########### + localisation ########### */
@@ -194,7 +195,8 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
             echo "<option value=\"2\" "; if ($data["sortie"]=="2") echo "selected"; echo ">Sortie temporaire d’inventaire</option>";
         echo "</select>";
         
-        if ($data["sortie"]!="0") echo " <abbr title=\"le ".dateformat($data["date_sortie"],"fr")."\"><strong>ⓘ</strong></abbr>"; /* seulement si sortie… !!! */
+        if ( ($data["sortie"]!="0") && ($data["date_sortie"]!="") && ($data["date_sortie"]!="0000-00-00") )
+        echo " <abbr title=\"le ".dateformat($data["date_sortie"],"fr")."\"><strong>ⓘ</strong></abbr>"; /* seulement si sortie… !!! */
 
 
         /* ########### raison_sortie ########### */
@@ -235,7 +237,8 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
         option_selecteur($data["integration"], $lab_ids, "2");
         echo "</select>";
 
-        if ($data["integration"]!="0") echo " <a href=\"info.php?i=".$data["integration"]."\"><strong>↗</strong></a>";
+        if ( ($data["integration"]!="0") && ($data["integration"]!="") )
+            echo " <a href=\"info.php?i=".$data["integration"]."\"><strong>↗</strong></a>";
 
     echo "</fieldset>";
 
