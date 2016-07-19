@@ -5,6 +5,7 @@ require_once("./tables_sql_commun.php");
 
 
 // on fait le my sql ici s’il n’y a pas eu de problème ainsi on se redirige vers la page de modification dans le head
+// en ajoutant un message pour indiquer l’identifiant labo qui a été assigné
 
 require_once("./head.php");
 ?>
@@ -63,20 +64,20 @@ $write=false;
 
 echo "<p>Ajouter une entrée (#$i) :</p>";
 
+echo "<p style=\"text-align:center;\">Champs obligatoires :<br/><strong>Administratif→Désignation</strong><br/>ou <strong>Technique→Catégorie</strong></p>"; // TODO faire en sorte de vérifier que cette condition est bien remplie
+
 echo "<form method=\"post\" action=\"?a=$i\">";
 
 echo "<div id=\"container\">";
-
     require_once("./blocs/administratif.php");
     require_once("./blocs/technique.php");
     require_once("./blocs/utilisation.php");
-
 echo "</div>";
 
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║ 
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
-    echo "<p style=\"text-align:center;\"><input name='add_valid' value='Ajouter' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
+echo "<p style=\"text-align:center;\"><input name='add_valid' value='Ajouter' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
     
 
 
