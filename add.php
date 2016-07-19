@@ -33,8 +33,10 @@ require_once("./fonctions.php");
 
 /* ########### INFORMATIONS COMPOSANT ########### */
 if ( isset($_POST["add_valid"]) ) {
-
-
+    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque", "plus_marque_nom", "reference", "serial_number", "plus_tags", "designation", "vendeur", "plus_vendeur_nom", "plus_vendeur_web", "plus_vendeur_remarque", "prix", "contrat", "plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie", "utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
+    foreach ($arr as &$value) {
+        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+    }
 }
 else { // Initialisation de toutes les variable
     $data=array(
