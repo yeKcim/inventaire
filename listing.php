@@ -36,16 +36,41 @@ $b_i="";
 foreach ($tableau as &$t) { $b_i.="".$t["base_index"].","; }
 $b_i=substr($b_i, 0, -1); // suppression du dernier caractère
 
-$table_carac="SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC";
-
+//liste des caracs correspondantes
 $tableau_carac=array();
-$query_table_carac = mysql_query ($table_carac);
+$query_table_carac = mysql_query ("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
 while ($l = mysql_fetch_row($query_table_carac)) {
     if ($l[5]=="bool") { $unit=""; $value= ($l[2]=="1") ? "oui" : "non" ; }
     else               { $unit=$l[5] ; $value=$l[2];}
     $tableau_carac[$l[0]].="<span title=\"".$l[4]."\">$l[6]=$value$unit</span>, ";
 }
 
+$today=date("Y-m-d");
+
+//liste des entretiens correspondants
+$tableau_entretien=array();
+$query_table_entretien = mysql_query ("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
+while ($l = mysql_fetch_row($query_table_entretien)) {
+
+    $f=$l[2];
+    $date_derniere_intervention=$l[3];
+    $date_prochaine_intervention = date("Y-m-d", strtotime($date_derniere_intervention." +$f days") );
+    $retard = round( ( strtotime($today) - strtotime($date_prochaine_intervention) ) / 86400 );
+
+    $tableau_entretien[$l[0]]=(isset($tableau_entretien[$l[0]])) ? $tableau_entretien[$l[0]] : "";
+    $tableau_entretien[$l[0]].="<span style=\"color:";
+    if ($retard>0)                  $tableau_entretien[$l[0]].="#cc0000";
+    else {  if (-$retard<$f*0.1)    $tableau_entretien[$l[0]].="#f57900";
+            else                    $tableau_entretien[$l[0]].="#4e9a06";
+    }
+    $tableau_entretien[$l[0]].=";\" title=\"".$l[4]." (".dateformat($date_prochaine_intervention,"fr").")\"><strong>";
+    if ($retard>0)                  $tableau_entretien[$l[0]].="⚠";
+    else {  if (-$retard<$f*0.1)    $tableau_entretien[$l[0]].="⌛";
+            else                    $tableau_entretien[$l[0]].="☑";
+    }
+    $tableau_entretien[$l[0]].="</strong></span> ";
+
+}
 
 #########################################################################
 #          Si du matériel sorti est affiché, afficher état              #
@@ -84,7 +109,8 @@ echo "<tr>";
     echo "<th>Numéro de série<br/>";        orderbylink("serial_number");       echo "</td>";
     if ($IOT!="0") echo "<th>État<br/>";    orderbylink("raison_sortie");       echo "</td>";
     echo "<th>Localisation<br/>";           orderbylink("localisation");        echo "</td>";
-    echo "<th>Achat<br/>";                  orderbylink("prix");             echo "</td>";
+    echo "<th>Achat<br/>";                  orderbylink("prix");                echo "</td>";
+    echo "<th>Entretiens<br/>";              echo "&nbsp;";                      echo "</td>";
 echo "</tr>";
 
 #########################################################################
@@ -92,7 +118,7 @@ echo "</tr>";
 #########################################################################
 foreach ($tableau as &$t) {
     echo "<tr>";
-        echo "<td style=\"text-align:center;\"><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">".$t["lab_id"]."</td>";
+        echo "<td style=\"text-align:center;\"><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">".$t["lab_id"]."</a></td>";
         echo "<td>".$t["categorie"]."</td>";
         echo "<td>".$t["reference"]."</td>";
         echo "<td>".$t["designation"]."</td>";
@@ -102,15 +128,8 @@ foreach ($tableau as &$t) {
         if ($IOT!="0") echo "<td>".$raison_sortie[$t["raison_sortie"]]."</td>";
         echo "<td><span title=\"Utilisé par ".$utilisateurs[$t["utilisateur"]][2]." ".$utilisateurs[$t["utilisateur"]][1]." le ".dateformat($t["localisation"][2],"fr")."\">".$t["localisation"][0]." ".$t["localisation"][1]."</span></td>";
         echo "<td><span title=\"Par ".$responsables[$t["responsable_achat"]][2]." ".$responsables[$t["responsable_achat"]][1]." le ".dateformat($t["date_achat"],"fr")."\">".$t["prix"]."€ sur ".$contrats[$t["contrat"]][1]."</span></td>";
-        
-        /* Ajouter symbole pour entretien !
-                    if ($retard>0) echo "<span style=\"color:#a40000;\"><strong>⚠</strong></span>";
-            else {
-                if (-$retard<$f*0.1) echo "<span style=\"color:#f57900;\"><strong>⌛</strong></span>";
-                else echo "<span style=\"color:#4e9a06;\"><strong>☑</strong></span>";
-            }*/
-        
-    echo "</tr>";
+        echo "<td>".$tableau_entretien[$t["base_index"]]."</td>";
+    echo "</tr></a>";
 }
 
 echo "</table>";
