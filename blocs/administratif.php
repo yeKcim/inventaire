@@ -181,7 +181,10 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
       
         /* ########### vendeur ########### */
         echo "<label for=\"vendeur\">Vendeur ";
-        echo " <a href=\"".$vendeurs[$data["vendeur"]][2]."\" title=\"site web\" target=\"_blank\"><strong>↗</strong></a> <strong><abbr title=\"".$vendeurs[$data["vendeur"]][3]."\"><strong>ⓘ</strong></abbr></strong>";
+        if ( ($data["vendeur"]!="0")&&(($data["vendeur"]!="")) ) {
+            echo " <a href=\"".$vendeurs[$data["vendeur"]][2]."\" title=\"site web\" target=\"_blank\"><strong>↗</strong></a>";
+            echo "<abbr title=\"".$vendeurs[$data["vendeur"]][3]."\"><strong>ⓘ</strong></abbr>";
+        }
         echo " :</label>\n";
         echo "<select name=\"vendeur\" id=\"vendeur\" onchange=\"display(this,'plus_vendeur','plus_vendeur');\" >";
         echo "<option value=\"0\" "; if ($data["vendeur"]=="0") echo "selected"; echo ">— Aucun vendeur spécifié —</option>"; 
@@ -277,8 +280,11 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### responsable_achat ########### */
         echo "<label for=\"responsable_achat\">Acheteur ";
 
-        echo "<a href=\"mailto:".$utilisateurs[$data["responsable_achat"]][3]."\" title=\"".$utilisateurs[$data["responsable_achat"]][3]."\"><strong>✉</strong></a> ";
-echo "<abbr title=\"".phone_display("".$utilisateurs[$data["responsable_achat"]][4]."",".")."\"><strong>☏</strong></abbr>";
+
+        if ( ($data["responsable_achat"]!="0")&&(($data["responsable_achat"]!="")) ) {
+            echo "<a href=\"mailto:".$utilisateurs[$data["responsable_achat"]][3]."\" title=\"".$utilisateurs[$data["responsable_achat"]][3]."\"><strong>✉</strong></a> ";
+        echo "<abbr title=\"".phone_display("".$utilisateurs[$data["responsable_achat"]][4]."",".")."\"><strong>☏</strong></abbr>";
+        }
         
         echo ": </label>\n";
         echo "<select name=\"responsable_achat\" onchange=\"display(this,'plus_responsable_achat','plus_responsable_achat');\" id=\"responsable_achat\">";
