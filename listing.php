@@ -92,7 +92,7 @@ echo "</tr>";
 #########################################################################
 foreach ($tableau as &$t) {
     echo "<tr>";
-        echo "<td style=\"text-align:center;\"><span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'info.php?i=".$t["base_index"]."',width:1280,height:800})\" title=\"#".$t["base_index"]."\">".$t["lab_id"]."<span></td>";
+        echo "<td style=\"text-align:center;\"><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">".$t["lab_id"]."</td>";
         echo "<td>".$t["categorie"]."</td>";
         echo "<td>".$t["reference"]."</td>";
         echo "<td>".$t["designation"]."</td>";
