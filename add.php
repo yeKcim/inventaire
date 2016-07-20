@@ -36,7 +36,7 @@ $error="";
 */
 if ( isset($_POST["add_valid"]) ) {
     $data=array();
-    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque_nom", "reference", "serial_number", "plus_tags", "designation", "vendeur", "plus_vendeur_nom", "plus_vendeur_web", "plus_vendeur_remarque", "prix", "contrat", "plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie", "utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
+    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque_nom", "reference", "serial_number", "plus_tags", "designation", "vendeur", "plus_vendeur_nom", "plus_vendeur_web", "plus_vendeur_remarque", "prix", "contrat", "plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie", "utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
     foreach ($arr as &$value) {
         $data["$value"]= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
@@ -87,7 +87,7 @@ if ( isset($_POST["add_valid"]) ) {
     // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ║  ║ ║║║║║ ╠╦╝╠═╣ ║ 
     // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╚═╝╚═╝╝╚╝╩ ╩╚═╩ ╩ ╩ 
     if ($data["contrat"]=="plus_contrat") {
-            if ($data["plus_contrat_nom"]=="") {
+        if ($data["plus_contrat_nom"]=="") {
             $error.="<p class=\"error_message\">Merci de spécifier le nom du nouveau contrat</p>";
             $data["contrat"]="0";
         }
@@ -102,6 +102,26 @@ if ( isset($_POST["add_valid"]) ) {
         }
     }
     
+    // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔╦╗╦ ╦╔╦╗╔═╗╦  ╦  ╔═╗
+    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣    ║ ║ ║ ║ ║╣ ║  ║  ║╣ 
+    // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝   ╩ ╚═╝ ╩ ╚═╝╩═╝╩═╝╚═╝
+    if ($data["tutelle"]=="plus_tutelle") {
+        if ($data["plus_tutelle"]=="") {
+            $error.="<p class=\"error_message\">Merci de spécifier un nom de nouvelle tutelle</p>";
+            $data["tutelle"]="0";
+        }
+        else {
+            mysql_query ("INSERT INTO tutelle (tutelle_nom) VALUES ('".$data["plus_tutelle"]."') ; ");
+            /* TODO : prévoir le cas où le contrat existe déjà */
+            $query_table_tutellenew = mysql_query ("SELECT tutelle_index FROM tutelle ORDER BY tutelle_index DESC LIMIT 1 ;");
+            while ($l = mysql_fetch_row($query_table_tutellenew)) $data["tutelle"]=$l[0];
+            // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+            $tutelles[$data["tutelle"]]=array( $data["tutelle"], "".utf8_encode($data["plus_tutelle"]."") );
+        }
+    }
+    
+    
+    
         /*
     if ($data["categorie"]=="plus_categorie")
         "plus_categorie_nom"
@@ -111,35 +131,22 @@ if ( isset($_POST["add_valid"]) ) {
     "plus_tags"
     tags[] ????
     compatibilite[] ????
-    
-    
 
-    if ($data["tutelle"]=="plus_tutelle")
     if ($data["responsable_achat"]=="plus_responsable_achat")
         "plus_responsable_achat_prenom"
         "plus_responsable_achat_nom"
         "plus_responsable_achat_mail"
         "plus_responsable_achat_phone"
         */
+        
     $datamysql=array();
-    $datamysql["reference"]=$data["reference"];
-    $datamysql["serial_number"]=$data["serial_number"];
-    $datamysql["prix"]=$data["prix"];
-    $datamysql["num_inventaire"]=$data["num_inventaire"];
-    $datamysql["serial_number"]=$data["serial_number"];
-    $datamysql["designation"]=$data["designation"];
     $datamysql["date_achat"]=($data["date_achat"]=="") ? "0000-00-00" : dateformat($data["date_achat"],"en");
     $datamysql["garantie"]=($data["garantie"]=="") ? "0000-00-00" : dateformat($data["garantie"],"en");
-    $datamysql["base_index"]=$i;
-    $datamysql["base_index"]=$i;
-    $datamysql["lab_id"]= new_lab_id($data["categorie"]);
-    $datamysql["vendeur"]=$data["vendeur"]; 
-    $datamysql["contrat"]=$data["contrat"];
 
     if ($error=="") {
     $mysql="INSERT
         INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration)
-        VALUES ('".$i."', '".$datamysql["lab_id"]."', '***categorie***', '".$datamysql["serial_number"]."', '".$datamysql["reference"]."', '".$datamysql["designation"]."', '0', '0', '0000-00-00', '***tutelle***', '".$datamysql["contrat"]."', '".$datamysql["num_inventaire"]."', '".$datamysql["vendeur"]."', '***marque***', '".$datamysql["date_achat"]."', '***responsable_achat***', '".$datamysql["garantie"]."', '".$datamysql["prix"]."', '0000-00-00', '0', '0', '0'); ";
+        VALUES ('".$i."', '".new_lab_id($data["categorie"])."', '***categorie***', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '***marque***', '".$datamysql["date_achat"]."', '***responsable_achat***', '".$datamysql["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ";
     }
     
 }
