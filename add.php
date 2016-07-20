@@ -2,37 +2,38 @@
 $titre="Ajouter une entrée";
 require_once("./connect.php");
 require_once("./tables_sql_commun.php");
-
-
-// on fait le my sql ici s’il n’y a pas eu de problème ainsi on se redirige vers la page de modification dans le head
-// en ajoutant un message pour indiquer l’identifiant labo qui a été assigné
-
 require_once("./head.php");
 ?>
 
 <body>
 
 <?php
-
-
-//Calcule du nouveau $i
+/*
+ ██████╗ █████╗ ██╗      ██████╗██╗   ██╗██╗         ███╗   ██╗ ██████╗ ██╗   ██╗██╗   ██╗███████╗ █████╗ ██╗   ██╗    ██╗
+██╔════╝██╔══██╗██║     ██╔════╝██║   ██║██║         ████╗  ██║██╔═══██╗██║   ██║██║   ██║██╔════╝██╔══██╗██║   ██║       
+██║     ███████║██║     ██║     ██║   ██║██║         ██╔██╗ ██║██║   ██║██║   ██║██║   ██║█████╗  ███████║██║   ██║    ██║
+██║     ██╔══██║██║     ██║     ██║   ██║██║         ██║╚██╗██║██║   ██║██║   ██║╚██╗ ██╔╝██╔══╝  ██╔══██║██║   ██║    ██║
+╚██████╗██║  ██║███████╗╚██████╗╚██████╔╝███████╗    ██║ ╚████║╚██████╔╝╚██████╔╝ ╚████╔╝ ███████╗██║  ██║╚██████╔╝    ██║
+ ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚══════╝    ╚═╝  ╚═══╝ ╚═════╝  ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝ ╚═════╝     ╚═╝
+*/
 $inew = mysql_query ("SELECT base_index FROM base ORDER BY base_index DESC LIMIT 1 ;");
 while ($l = mysql_fetch_row($inew)) $i=$l[0]+1;
 
-require_once("./fonctions.php");
 
+
+
+
+require_once("./fonctions.php");
 $error="";
 
 /*
- █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
-██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
-███████║██████╔╝██████╔╝███████║ ╚████╔╝ 
-██╔══██║██╔══██╗██╔══██╗██╔══██║  ╚██╔╝  
-██║  ██║██║  ██║██║  ██║██║  ██║   ██║   
-╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+ █████╗      ██╗ ██████╗ ██╗   ██╗████████╗    ███╗   ███╗██╗   ██╗███████╗ ██████╗ ██╗     
+██╔══██╗     ██║██╔═══██╗██║   ██║╚══██╔══╝    ████╗ ████║╚██╗ ██╔╝██╔════╝██╔═══██╗██║     
+███████║     ██║██║   ██║██║   ██║   ██║       ██╔████╔██║ ╚████╔╝ ███████╗██║   ██║██║     
+██╔══██║██   ██║██║   ██║██║   ██║   ██║       ██║╚██╔╝██║  ╚██╔╝  ╚════██║██║▄▄ ██║██║     
+██║  ██║╚█████╔╝╚██████╔╝╚██████╔╝   ██║       ██║ ╚═╝ ██║   ██║   ███████║╚██████╔╝███████╗
+╚═╝  ╚═╝ ╚════╝  ╚═════╝  ╚═════╝    ╚═╝       ╚═╝     ╚═╝   ╚═╝   ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
-
-/* ########### INFORMATIONS COMPOSANT ########### */
 if ( isset($_POST["add_valid"]) ) {
     $data=array();
     $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque_nom", "reference", "serial_number", "plus_tags", "designation", "vendeur", "plus_vendeur_nom", "plus_vendeur_web", "plus_vendeur_remarque", "prix", "contrat", "plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie", "utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
@@ -40,12 +41,35 @@ if ( isset($_POST["add_valid"]) ) {
         $data["$value"]= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
 
-    
+    // ╦  ╦╔═╗╦═╗╦╔═╗╦╔═╗╔═╗╔╦╗╦╔═╗╔╗╔  ╔╦╗╦╔╗╔╦╔╦╗╦ ╦╔╦╗  ╦╔╗╔╔═╗╦ ╦╔╦╗
+    // ╚╗╔╝║╣ ╠╦╝║╠╣ ║║  ╠═╣ ║ ║║ ║║║║  ║║║║║║║║║║║║ ║║║║  ║║║║╠═╝║ ║ ║ 
+    //  ╚╝ ╚═╝╩╚═╩╚  ╩╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝  ╩ ╩╩╝╚╝╩╩ ╩╚═╝╩ ╩  ╩╝╚╝╩  ╚═╝ ╩ 
     if ( ($data["categorie"]=="0")&&($data["designation"]=="") ) $error.="<p class=\"error_message\">Merci de remplir au minimum Administratif→Désignation ou Technique→Catégorie</p>";
     
     
+    // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╦  ╦╔═╗╔╗╔╔╦╗╔═╗╦ ╦╦═╗
+    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ╚╗╔╝║╣ ║║║ ║║║╣ ║ ║╠╦╝
+    // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝   ╚╝ ╚═╝╝╚╝═╩╝╚═╝╚═╝╩╚═
+    if ($data["vendeur"]=="plus_vendeur") {
+        // TODO : Si les infos sont vides !
+        if ($data["plus_vendeur_nom"]=="") {
+            $error.="<p class=\"error_message\">Merci de remplir au minimum le nom du nouveau vendeur</p>";
+            $data["vendeur"]="0";
+        }
+        else {
+            mysql_query ("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$data["plus_vendeur_nom"]."\",\"".$data["plus_vendeur_web"]."\",\"".$data["plus_vendeur_remarque"]."\") ; ");
+            // TODO : prévoir le cas où le vendeur existe déjà
+            $query_table_vendeurnew = mysql_query ("SELECT vendeur_index FROM vendeur ORDER BY vendeur_index DESC LIMIT 1 ;");
+            while ($l = mysql_fetch_row($query_table_vendeurnew)) $data["vendeur"]=$l[0];
+            // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
+            $vendeurs[$data["vendeur"]]=array($data["vendeur"],"".utf8_encode($plus_vendeur_nom)."","".utf8_encode($plus_vendeur_web)."","".utf8_encode($plus_vendeur_remarque)."");
+        }
+    }
     
-    /*
+    
+    
+    
+        /*
     if ($data["categorie"]=="plus_categorie")
         "plus_categorie_nom"
         "plus_categorie_abbr"
@@ -54,10 +78,9 @@ if ( isset($_POST["add_valid"]) ) {
     "plus_tags"
     tags[] ????
     compatibilite[] ????
-    if ($data["vendeur"]=="plus_vendeur")
-        "plus_vendeur_nom"
-        "plus_vendeur_web"
-        "plus_vendeur_remarque"
+    
+    
+
     if ($data["contrat"]=="plus_contrat")
         "plus_contrat_nom"
         if ($data["contrat_type"]=="plus_contrat_type")
@@ -70,7 +93,6 @@ if ( isset($_POST["add_valid"]) ) {
         "plus_responsable_achat_phone"
         */
     $datamysql=array();
-    
     $datamysql["reference"]=$data["reference"];
     $datamysql["serial_number"]=$data["serial_number"];
     $datamysql["prix"]=$data["prix"];
@@ -81,14 +103,25 @@ if ( isset($_POST["add_valid"]) ) {
     $datamysql["garantie"]=($data["garantie"]=="") ? "0000-00-00" : dateformat($data["garantie"],"en");
     $datamysql["base_index"]=$i;
     $datamysql["base_index"]=$i;
-    $datamysql["lab_id"] = new_lab_id($data["categorie"]);
-    
+    $datamysql["lab_id"]= new_lab_id($data["categorie"]);
+    $datamysql["vendeur"]=$data["vendeur"]; 
+
+    if ($error=="") {
     $mysql="INSERT
         INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration)
-        VALUES ('".$i."', '".$datamysql["lab_id"]."', '***categorie***', '".$datamysql["serial_number"]."', '".$datamysql["reference"]."', '".$datamysql["designation"]."', '0', '0', '0000-00-00', '***tutelle***', '***contrat***', '".$datamysql["num_inventaire"]."', '***vendeur***', '***marque***', '".$datamysql["date_achat"]."', '***responsable_achat***', '".$datamysql["garantie"]."', '".$datamysql["prix"]."', '0000-00-00', '0', '0', '0'); ";
-    
+        VALUES ('".$i."', '".$datamysql["lab_id"]."', '***categorie***', '".$datamysql["serial_number"]."', '".$datamysql["reference"]."', '".$datamysql["designation"]."', '0', '0', '0000-00-00', '***tutelle***', '***contrat***', '".$datamysql["num_inventaire"]."', '".$datamysql["vendeur"]."', '***marque***', '".$datamysql["date_achat"]."', '***responsable_achat***', '".$datamysql["garantie"]."', '".$datamysql["prix"]."', '0000-00-00', '0', '0', '0'); ";
+    }
     
 }
+/*
+███████╗██╗███╗   ██╗ ██████╗ ███╗   ██╗    ██╗███╗   ██╗██╗████████╗    ██╗   ██╗ █████╗ ██████╗ ██╗ █████╗ ██████╗ ██╗     ███████╗███████╗
+██╔════╝██║████╗  ██║██╔═══██╗████╗  ██║    ██║████╗  ██║██║╚══██╔══╝    ██║   ██║██╔══██╗██╔══██╗██║██╔══██╗██╔══██╗██║     ██╔════╝██╔════╝
+███████╗██║██╔██╗ ██║██║   ██║██╔██╗ ██║    ██║██╔██╗ ██║██║   ██║       ██║   ██║███████║██████╔╝██║███████║██████╔╝██║     █████╗  ███████╗
+╚════██║██║██║╚██╗██║██║   ██║██║╚██╗██║    ██║██║╚██╗██║██║   ██║       ╚██╗ ██╔╝██╔══██║██╔══██╗██║██╔══██║██╔══██╗██║     ██╔══╝  ╚════██║
+███████║██║██║ ╚████║╚██████╔╝██║ ╚████║    ██║██║ ╚████║██║   ██║        ╚████╔╝ ██║  ██║██║  ██║██║██║  ██║██████╔╝███████╗███████╗███████║
+╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═══╝    ╚═╝╚═╝  ╚═══╝╚═╝   ╚═╝         ╚═══╝  ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚══════╝
+                                                                                                                                             
+*/
 else { // Initialisation de toutes les variable
     $data=array(
         "base_index"=>$i,              "lab_id"=>"",                "categorie"=>"0",
