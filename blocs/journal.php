@@ -63,7 +63,7 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
 
     echo "<h1>Journal</h1>";
     
-    echo "<form method=\"post\" action=\"?i=$i\">";
+    if ($write) echo "<form method=\"post\" action=\"?i=$i\">";
 
     echo "<fieldset><legend>Nouvelle information</legend>";
 
@@ -99,7 +99,7 @@ else {
     
     echo "</fieldset>";
 
-    echo "</form>";
+    if ($write) echo "</form>";
 
 echo "</div>";
 

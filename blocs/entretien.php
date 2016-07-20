@@ -114,7 +114,7 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
 
     echo "<h1>Entretien</h1>";
     
-    echo "<form method=\"post\" action=\"?i=$i\">";
+    if ($write) echo "<form method=\"post\" action=\"?i=$i\">";
     
     
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦    ╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗╦╔═╗╔╗╔
@@ -272,7 +272,7 @@ else {
 
 
 
-    echo "</form>";
+    if ($write) echo "</form>";
 
 echo "</div>";
 

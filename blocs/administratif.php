@@ -167,7 +167,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     
     echo "<h1>Administratif</h1>";
     
-    echo "<form method=\"post\" action=\"?i=$i\">";
+    if ($write) echo "<form method=\"post\" action=\"?i=$i\">";
 
 
 /*  ╔═╗╦═╗╔═╗╔╦╗╦ ╦╦╔╦╗
@@ -337,7 +337,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
 if ($write) echo "<p style=\"text-align:center;\"><input name='administratif_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
 
-    echo "</form>";
+    if ($write) echo "</form>";
 
 
 

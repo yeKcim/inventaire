@@ -105,7 +105,7 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 
     echo "<h1>Caractéristiques</h1>";
     
-    echo "<form method=\"post\" action=\"?i=$i\">";
+    if ($write) echo "<form method=\"post\" action=\"?i=$i\">";
 
 /*  ╔═╗╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗╦═╗╦╔═╗╔╦╗╦╔═╗ ╦ ╦╔═╗╔═╗
     ║  ╠═╣╠╦╝╠═╣║   ║ ║╣ ╠╦╝║╚═╗ ║ ║║═╬╗║ ║║╣ ╚═╗
@@ -199,7 +199,7 @@ echo "</fieldset>";
 if ($write) echo "<p style=\"text-align:center;\"><input name='carac_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
 
 
-    echo "</form>";
+    if ($write) echo "</form>";
 
 echo "</div>";
 

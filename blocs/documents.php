@@ -47,7 +47,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     ╠═╣ ║║ ║║ ║ ║ ║╣ ╠╦╝  ║ ║║║║  ╠╣ ║║  ╠═╣║║╣ ╠╦╝
     ╩ ╩╚╝╚═╝╚═╝ ╩ ╚═╝╩╚═  ╚═╝╝╚╝  ╚  ╩╚═╝╩ ╩╩╚═╝╩╚═ */
     echo "<fieldset><legend>Ajouter un fichier</legend>";
-        echo "<form method=\"post\" action=\"?i=$i\" enctype=\"multipart/form-data\">";
+        if ($write) echo "<form method=\"post\" action=\"?i=$i\" enctype=\"multipart/form-data\">";
         echo "<input value=\"".$data["base_index"]."\" name=\"i\" type=\"hidden\">\n";
         /* echo "<form action=\"$racine$dir\" class=\"dropzone\"></form>";*/
         echo "<p>Extensions autorisées : ";
@@ -79,7 +79,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
         /* ########### END Ajout d’un fichier ########### */
 
         if ($write) echo "<input name='Valider' value='Envoyer' type='submit'>";
-        echo "</form>";
+        if ($write) echo "</form>";
 
     echo "</fieldset>";
 
