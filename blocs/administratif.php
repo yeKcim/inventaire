@@ -323,12 +323,16 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     
         /* ########### date_achat ########### */
         echo "<label for=\"achat\">Achat <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr> :</label>\n";
-        echo "<input value=\"".dateformat($data["date_achat"],"fr")."\" name=\"date_achat\" type=\"date\" id=\"achat\"/>";
+        echo "<input value=\"";
+        if ($data["date_achat"]!="0000-00-00") echo dateformat($data["date_achat"],"fr");
+        echo "\" name=\"date_achat\" type=\"date\" id=\"achat\"/>";
         echo "<br/>";
 
         /* ########### garantie ########### */
         echo "<label for=\"garantie\">Fin de garantie <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr> :</label>\n";
-        echo "<input value=\"".dateformat($data["garantie"],"fr")."\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
+        echo "<input value=\"";
+        if ($data["garantie"]!="0000-00-00") echo dateformat($data["garantie"],"fr");
+        echo "\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
         
     
     echo "</fieldset>";
