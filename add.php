@@ -121,24 +121,46 @@ if ( isset($_POST["add_valid"]) ) {
     }
     
     
-    
-        /*
-    if ($data["categorie"]=="plus_categorie")
-        "plus_categorie_nom"
-        "plus_categorie_abbr"
-    if ($data["marque"]=="plus_marque")
-        "plus_marque_nom"
-    "plus_tags"
-    tags[] ????
-    compatibilite[] ????
+    // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦    ╔═╗╔═╗╦ ╦╔═╗╔╦╗╔═╗╦ ╦╦═╗
+    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ║    ╠═╣║  ╠═╣║╣  ║ ║╣ ║ ║╠╦╝
+    // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝  ╩ ╩╚═╝╩ ╩╚═╝ ╩ ╚═╝╚═╝╩╚═
+    if ($data["responsable_achat"]=="plus_responsable_achat") {
+        if ($data["plus_responsable_achat_nom"]=="") {
+            $error.="<p class=\"error_message\">Merci de spécifier au moins un nom pour le nouveau responsable d’achat</p>";
+            $data["responsable_achat"]="0";
+        }
+        else {
+            $data["plus_responsable_achat_nom"]=mb_strtoupper($data["plus_responsable_achat_nom"]);
+            $data["plus_responsable_achat_phone"]=phone_display("".$data["plus_responsable_achat_phone"]."","");
+            
+            mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$data["plus_responsable_achat_nom"]."', '".$data["plus_responsable_achat_prenom"]."','".$data["plus_responsable_achat_mail"]."','".$data["plus_responsable_achat_phone"]."') ; ");
+            /* TODO : prévoir le cas où le contrat existe déjà */
+            $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
+            while ($l = mysql_fetch_row($query_table_utilisateurnew)) $data["responsable_achat"]=$l[0];
+            
+            // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+            $utilisateurs[$data["responsable_achat"]]=array( $data["responsable_achat"], utf8_encode($data["plus_responsable_achat_nom"]), utf8_encode($data["plus_responsable_achat_prenom"]), utf8_encode($data["plus_responsable_achat_mail"]), phone_display("".$data["plus_responsable_achat_phone"]."",".") );
+        }
+    }
 
-    if ($data["responsable_achat"]=="plus_responsable_achat")
-        "plus_responsable_achat_prenom"
-        "plus_responsable_achat_nom"
-        "plus_responsable_achat_mail"
-        "plus_responsable_achat_phone"
-        */
-        
+    // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔╦╗╔═╗╦═╗╔═╗ ╦ ╦╔═╗
+    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣ 
+    // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩ ╩╩ ╩╩╚═╚═╝╚╚═╝╚═╝
+    
+    // TODO
+
+/*
+if ($data["categorie"]=="plus_categorie")
+    "plus_categorie_nom"
+    "plus_categorie_abbr"
+if ($data["marque"]=="plus_marque")
+    "plus_marque_nom"
+"plus_tags"
+tags[] ????
+compatibilite[] ????
+*/
+
+
     $datamysql=array();
     $datamysql["date_achat"]=($data["date_achat"]=="") ? "0000-00-00" : dateformat($data["date_achat"],"en");
     $datamysql["garantie"]=($data["garantie"]=="") ? "0000-00-00" : dateformat($data["garantie"],"en");
@@ -146,7 +168,7 @@ if ( isset($_POST["add_valid"]) ) {
     if ($error=="") {
     $mysql="INSERT
         INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration)
-        VALUES ('".$i."', '".new_lab_id($data["categorie"])."', '***categorie***', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '***marque***', '".$datamysql["date_achat"]."', '***responsable_achat***', '".$datamysql["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ";
+        VALUES ('".$i."', '".new_lab_id($data["categorie"])."', '***categorie***', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '***marque***', '".$datamysql["date_achat"]."', '".$data["responsable_achat"]."', '".$datamysql["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ";
     }
     
 }
@@ -185,9 +207,7 @@ else { // Initialisation de toutes les variable
 
 $write=false;
 
-echo "<p>Ajouter une entrée (#$i) :</p>";
-
-echo "<p style=\"text-align:center;\">Champs obligatoires :<br/><strong>Administratif→Désignation</strong><br/>ou <strong>Technique→Catégorie</strong></p>"; // TODO faire en sorte de vérifier que cette condition est bien remplie
+echo "<p>Ajouter une entrée :</p>";
 
 echo "<form method=\"post\" action=\"?a=$i\">";
 
