@@ -237,7 +237,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             echo "<fieldset id=\"plus_categorie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Catégorie</legend>";
                 echo "<label for=\"plus_categorie_nom\">Nom :</label>\n";
                 echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\">\n";
-                echo "<label for=\"plus_categorie_abbr\">Abbréviation :</label>\n";
+                echo "<label for=\"plus_categorie_abbr\">Abbréviation <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
                 echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\">\n";
             echo "</fieldset>";
             echo "\n\n\n";
