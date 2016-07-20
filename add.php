@@ -51,7 +51,6 @@ if ( isset($_POST["add_valid"]) ) {
     // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ╚╗╔╝║╣ ║║║ ║║║╣ ║ ║╠╦╝
     // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝   ╚╝ ╚═╝╝╚╝═╩╝╚═╝╚═╝╩╚═
     if ($data["vendeur"]=="plus_vendeur") {
-        // TODO : Si les infos sont vides !
         if ($data["plus_vendeur_nom"]=="") {
             $error.="<p class=\"error_message\">Merci de remplir au minimum le nom du nouveau vendeur</p>";
             $data["vendeur"]="0";
@@ -66,8 +65,42 @@ if ( isset($_POST["add_valid"]) ) {
         }
     }
     
+    // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╔╦╗╦ ╦╔═╗╔═╗  ╔═╗╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗
+    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║   ║ ╚╦╝╠═╝║╣   ║  ║ ║║║║║ ╠╦╝╠═╣ ║ 
+    // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝   ╩  ╩ ╩  ╚═╝  ╚═╝╚═╝╝╚╝╩ ╩╚═╩ ╩ ╩ 
+    if ($data["contrat_type"]=="plus_contrat_type") {
+        if ($data["plus_contrat_type_nom"]=="") {
+            $error.="<p class=\"error_message\">Merci de spécifier un type de contrat</p>";
+            $data["contrat_type"]="0";
+        }
+        else {
+            mysql_query ("INSERT INTO contrat_type (contrat_type_cat) VALUES ('".$data["plus_contrat_type_nom"]."') ; ");
+            /* TODO : prévoir le cas où le type de contrat existe déjà */
+            $query_table_contrattypenew = mysql_query ("SELECT contrat_type_index FROM contrat_type ORDER BY contrat_type_index DESC LIMIT 1 ;");
+            while ($l = mysql_fetch_row($query_table_contrattypenew)) $data["contrat_type"]=$l[0];
+            // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+            $types_contrats[$data["contrat_type"]]=array( $data["contrat_type"], utf8_encode($data["plus_contrat_type_nom"]) );
+        }
+    }
     
-    
+    // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╔═╗╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗
+    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ║  ║ ║║║║║ ╠╦╝╠═╣ ║ 
+    // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╚═╝╚═╝╝╚╝╩ ╩╚═╩ ╩ ╩ 
+    if ($data["contrat"]=="plus_contrat") {
+            if ($data["plus_contrat_nom"]=="") {
+            $error.="<p class=\"error_message\">Merci de spécifier le nom du nouveau contrat</p>";
+            $data["contrat"]="0";
+        }
+        else {
+            //mysql_query ("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$data["plus_contrat_nom"]."','".$data["contrat_type"]."') ; ");
+            echo "INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$data["plus_contrat_nom"]."','".$data["contrat_type"]."') ; <br/>";
+            /* TODO : prévoir le cas où le contrat existe déjà */
+            $query_table_contratnew = mysql_query ("SELECT contrat_index FROM contrat ORDER BY contrat_index DESC LIMIT 1 ;");
+            while ($l = mysql_fetch_row($query_table_contratnew)) $data["contrat"]=$l[0];
+            // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+            $contrats[$data["contrat"]]=array( $data["contrat"], utf8_encode($data["plus_contrat_nom"]), $data["contrat_type"] );
+        }
+    }
     
         /*
     if ($data["categorie"]=="plus_categorie")
@@ -81,10 +114,6 @@ if ( isset($_POST["add_valid"]) ) {
     
     
 
-    if ($data["contrat"]=="plus_contrat")
-        "plus_contrat_nom"
-        if ($data["contrat_type"]=="plus_contrat_type")
-            "plus_contrat_type_nom"
     if ($data["tutelle"]=="plus_tutelle")
     if ($data["responsable_achat"]=="plus_responsable_achat")
         "plus_responsable_achat_prenom"
@@ -105,11 +134,12 @@ if ( isset($_POST["add_valid"]) ) {
     $datamysql["base_index"]=$i;
     $datamysql["lab_id"]= new_lab_id($data["categorie"]);
     $datamysql["vendeur"]=$data["vendeur"]; 
+    $datamysql["contrat"]=$data["contrat"];
 
     if ($error=="") {
     $mysql="INSERT
         INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration)
-        VALUES ('".$i."', '".$datamysql["lab_id"]."', '***categorie***', '".$datamysql["serial_number"]."', '".$datamysql["reference"]."', '".$datamysql["designation"]."', '0', '0', '0000-00-00', '***tutelle***', '***contrat***', '".$datamysql["num_inventaire"]."', '".$datamysql["vendeur"]."', '***marque***', '".$datamysql["date_achat"]."', '***responsable_achat***', '".$datamysql["garantie"]."', '".$datamysql["prix"]."', '0000-00-00', '0', '0', '0'); ";
+        VALUES ('".$i."', '".$datamysql["lab_id"]."', '***categorie***', '".$datamysql["serial_number"]."', '".$datamysql["reference"]."', '".$datamysql["designation"]."', '0', '0', '0000-00-00', '***tutelle***', '".$datamysql["contrat"]."', '".$datamysql["num_inventaire"]."', '".$datamysql["vendeur"]."', '***marque***', '".$datamysql["date_achat"]."', '***responsable_achat***', '".$datamysql["garantie"]."', '".$datamysql["prix"]."', '0000-00-00', '0', '0', '0'); ";
     }
     
 }
