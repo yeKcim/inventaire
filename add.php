@@ -57,7 +57,7 @@ if ( isset($_POST["add_valid"]) ) {
         }
         else {
             mysql_query ("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$data["plus_vendeur_nom"]."\",\"".$data["plus_vendeur_web"]."\",\"".$data["plus_vendeur_remarque"]."\") ; ");
-            // TODO : prévoir le cas où le vendeur existe déjà
+            // TODO : prévoir le cas où existe déjà
             $query_table_vendeurnew = mysql_query ("SELECT vendeur_index FROM vendeur ORDER BY vendeur_index DESC LIMIT 1 ;");
             while ($l = mysql_fetch_row($query_table_vendeurnew)) $data["vendeur"]=$l[0];
             // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
@@ -74,12 +74,12 @@ if ( isset($_POST["add_valid"]) ) {
             $data["contrat_type"]="0";
         }
         else {
-            mysql_query ("INSERT INTO contrat_type (contrat_type_cat) VALUES ('".$data["plus_contrat_type_nom"]."') ; ");
-            /* TODO : prévoir le cas où le type de contrat existe déjà */
+            mysql_query ("INSERT INTO contrat_type (contrat_type_cat) VALUES (\"".$data["plus_contrat_type_nom"]."\") ; ");
+            /* TODO : prévoir le cas où existe déjà */
             $query_table_contrattypenew = mysql_query ("SELECT contrat_type_index FROM contrat_type ORDER BY contrat_type_index DESC LIMIT 1 ;");
             while ($l = mysql_fetch_row($query_table_contrattypenew)) $data["contrat_type"]=$l[0];
             // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-            $types_contrats[$data["contrat_type"]]=array( $data["contrat_type"], utf8_encode($data["plus_contrat_type_nom"]) );
+            $types_contrats[$data["contrat_type"]]=array( $data["contrat_type"], "".utf8_encode($data["plus_contrat_type_nom"])."" );
         }
     }
     
@@ -92,13 +92,12 @@ if ( isset($_POST["add_valid"]) ) {
             $data["contrat"]="0";
         }
         else {
-            //mysql_query ("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$data["plus_contrat_nom"]."','".$data["contrat_type"]."') ; ");
-            echo "INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$data["plus_contrat_nom"]."','".$data["contrat_type"]."') ; <br/>";
-            /* TODO : prévoir le cas où le contrat existe déjà */
+            mysql_query ("INSERT INTO contrat (contrat_nom, contrat_type) VALUES (\"".$data["plus_contrat_nom"]."\",\"".$data["contrat_type"]."\") ; ");
+            /* TODO : prévoir le cas où existe déjà */
             $query_table_contratnew = mysql_query ("SELECT contrat_index FROM contrat ORDER BY contrat_index DESC LIMIT 1 ;");
             while ($l = mysql_fetch_row($query_table_contratnew)) $data["contrat"]=$l[0];
-            // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-            $contrats[$data["contrat"]]=array( $data["contrat"], utf8_encode($data["plus_contrat_nom"]), $data["contrat_type"] );
+            // on ajoute cette entrée dans le tableau des contrats (utilisé pour le select)
+            $contrats[$data["contrat"]]=array( $data["contrat"], "".utf8_encode($data["plus_contrat_nom"])."", $data["contrat_type"] );
         }
     }
     
@@ -111,8 +110,8 @@ if ( isset($_POST["add_valid"]) ) {
             $data["tutelle"]="0";
         }
         else {
-            mysql_query ("INSERT INTO tutelle (tutelle_nom) VALUES ('".$data["plus_tutelle"]."') ; ");
-            /* TODO : prévoir le cas où le contrat existe déjà */
+            mysql_query ("INSERT INTO tutelle (tutelle_nom) VALUES (\"".$data["plus_tutelle"]."\") ; ");
+            /* TODO : prévoir le cas où existe déjà */
             $query_table_tutellenew = mysql_query ("SELECT tutelle_index FROM tutelle ORDER BY tutelle_index DESC LIMIT 1 ;");
             while ($l = mysql_fetch_row($query_table_tutellenew)) $data["tutelle"]=$l[0];
             // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
@@ -133,13 +132,12 @@ if ( isset($_POST["add_valid"]) ) {
             $data["plus_responsable_achat_nom"]=mb_strtoupper($data["plus_responsable_achat_nom"]);
             $data["plus_responsable_achat_phone"]=phone_display("".$data["plus_responsable_achat_phone"]."","");
             
-            mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$data["plus_responsable_achat_nom"]."', '".$data["plus_responsable_achat_prenom"]."','".$data["plus_responsable_achat_mail"]."','".$data["plus_responsable_achat_phone"]."') ; ");
-            /* TODO : prévoir le cas où le contrat existe déjà */
+            mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$data["plus_responsable_achat_nom"]."\", \"".$data["plus_responsable_achat_prenom"]."\",\"".$data["plus_responsable_achat_mail"]."\",\"".$data["plus_responsable_achat_phone"]."\") ; ");
+            /* TODO : prévoir le cas où existe déjà */
             $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
             while ($l = mysql_fetch_row($query_table_utilisateurnew)) $data["responsable_achat"]=$l[0];
-            
-            // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-            $utilisateurs[$data["responsable_achat"]]=array( $data["responsable_achat"], utf8_encode($data["plus_responsable_achat_nom"]), utf8_encode($data["plus_responsable_achat_prenom"]), utf8_encode($data["plus_responsable_achat_mail"]), phone_display("".$data["plus_responsable_achat_phone"]."",".") );
+            // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
+            $utilisateurs[$data["responsable_achat"]]=array( $data["responsable_achat"], "".utf8_encode($data["plus_responsable_achat_nom"])."", "".utf8_encode($data["plus_responsable_achat_prenom"])."", "".utf8_encode($data["plus_responsable_achat_mail"])."", "".phone_display("".$data["plus_responsable_achat_phone"]."",".")."" );
         }
     }
 
@@ -152,16 +150,41 @@ if ( isset($_POST["add_valid"]) ) {
             $data["marque"]="0";
         }
         else {
-            mysql_query ("INSERT INTO marque (marque_nom) VALUES ('".$data["plus_marque_nom"]."') ; ");
-            /* TODO : prévoir le cas où la marque existe déjà */
+            mysql_query ("INSERT INTO marque (marque_nom) VALUES (\"".$data["plus_marque_nom"]."\") ; ");
+            /* TODO : prévoir le cas où existe déjà */
             $query_table_marquenew = mysql_query ("SELECT marque_index FROM marque ORDER BY marque_index DESC LIMIT 1 ;");
             while ($l = mysql_fetch_row($query_table_marquenew)) $data["marque"]=$l[0];
             // on ajoute cette entrée dans le tableau des marques (utilisé pour le select)
-            $marques[$data["marque"]]=array( $data["marque"], utf8_encode($data["plus_marque_nom"]) );
+            $marques[$data["marque"]]=array( $data["marque"], "".utf8_encode($data["plus_marque_nom"])."" );
         }
     }
     
 
+/*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔═╗╦═╗╦╔═╗
+    ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣ 
+    ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝    */
+    if ($data["categorie"]=="plus_categorie") {
+        if ( ($data["plus_categorie_nom"]=="") || ($data["plus_categorie_abbr"]=="") ) {
+            $error.="<p class=\"error_message\">Merci de spécifier un nom et une abbréviation pour la nouvelle catégorie</p>";
+            $data["categorie"]="0";
+        }
+        //elseif ( !ctype_alpha($data["plus_categorie_abbr"]) ) {
+        //    $error.="<p class=\"error_message\">Attention, l’abbréviation doit contenir uniquement des lettres</p>";
+        //    $data["categorie"]="0";
+        //} Cette fonction pose problème pour les caractères spéciaux, TODO trouver une méthode pour interdire les chiffres…
+        else {
+            mysql_query ("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$data["plus_categorie_abbr"]."\",\"".$data["plus_categorie_nom"]."\") ; ");
+            /* TODO : prévoir le cas où existe déjà */
+            $query_table_categorienew = mysql_query ("SELECT categorie_index FROM categorie ORDER BY categorie_index DESC LIMIT 1 ;");
+            while ($l = mysql_fetch_row($query_table_categorienew)) $data["categorie"]=$l[0];
+            // on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
+            $categories[$data["categorie"]]=array( $data["categorie"],"".utf8_encode($data["plus_categorie_nom"])."","(".utf8_encode($data["plus_categorie_abbr"]).")" );
+            // TODO Attention l’abréviation ne doit contenir que des lettres !
+        }
+    }
+    
+    
+    
 /*
 if ($data["categorie"]=="plus_categorie")
     "plus_categorie_nom"
@@ -170,7 +193,8 @@ if ($data["marque"]=="plus_marque")
 "plus_tags"
 tags[] ????
 compatibilite[] ????
-*/
+*/  
+    $data["lab_id"]=new_lab_id($data["categorie"]);
 
     $data["date_achat"]=($data["date_achat"]=="") ? "0000-00-00" : dateformat($data["date_achat"],"en");
     $data["garantie"]=($data["garantie"]=="") ? "0000-00-00" : dateformat($data["garantie"],"en");
@@ -179,7 +203,7 @@ compatibilite[] ????
     if ($error=="") {
     $mysql="INSERT
         INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration)
-        VALUES ('".$i."', '".new_lab_id($data["categorie"])."', '***categorie***', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ";
+        VALUES ('".$i."', '".$data["lab_id"]."', '***categorie***', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ";
     }
     
 }
