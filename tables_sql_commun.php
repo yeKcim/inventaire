@@ -5,7 +5,7 @@ $table_categories = "SELECT * FROM categorie WHERE categorie_index!=0 ORDER BY c
 $query_table_categories = mysql_query ($table_categories);
 $categories = array();
 while ($l = mysql_fetch_row($query_table_categories)) {
-    $categories[$l[0]]=array($l[0],utf8_encode($l[2]),utf8_encode($l[1]));
+    $categories[$l[0]]=array($l[0],"".utf8_encode($l[2])."","(".utf8_encode($l[1]).")");
 }
 
 
