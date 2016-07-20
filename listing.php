@@ -120,7 +120,9 @@ foreach ($tableau as &$t) {
     echo "<tr>";
         
         // ********** Id Labo **********
-        echo "<td style=\"text-align:center;\"><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">".$t["lab_id"]."</a></td>";
+        echo "<td style=\"text-align:center;\"><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
+        if ($t["lab_id"]=="") echo "#".$t["base_index"].""; else echo $t["lab_id"];
+        echo "</a></td>";
         
         // ********** Catégorie **********
         echo "<td>".$t["categorie"]."</td>";
