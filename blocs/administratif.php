@@ -68,6 +68,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
     /* ########### Ajout d’un nouveau vendeur ########### */
     if ($vendeur=="plus_vendeur") {
+        // TODO : Si les infos sont vides !
         mysql_query ("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ; ");
         
         /* TODO : prévoir le cas où le vendeur existe déjà */
