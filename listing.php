@@ -125,7 +125,7 @@ foreach ($tableau as &$t) {
         echo "</a></td>";
         
         // ********** Catégorie **********
-        echo "<td>".$t["categorie"]."</td>";
+        echo "<td>".utf8_encode($t["categorie"])."</td>";
         
         // ********** Référence **********
         echo "<td>".$t["reference"]."</td>";
@@ -150,7 +150,7 @@ foreach ($tableau as &$t) {
         // ********** Localisation **********
         echo "<td>";
         echo "<span title=\"Utilisé par ".$utilisateurs[$t["utilisateur"]][2]." ".$utilisateurs[$t["utilisateur"]][1]." le ".dateformat($t["localisation"][2],"fr")."\">";
-        echo "".$t["localisation"][0]." ".$t["localisation"][1]."</span>";
+        echo "".utf8_encode($t["localisation"][0])." ".utf8_encode($t["localisation"][1])."</span>";
         echo "</td>";
         
         // ********** Achat **********
