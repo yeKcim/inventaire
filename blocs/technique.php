@@ -188,7 +188,8 @@ if ( isset($_POST["technique_valid"]) ) {
     ║  ╠═╣╠╩╗ ║ ║║
     ╩═╝╩ ╩╚═╝┘╩═╩╝  */
     // Si on change la catégorie, il est nécessaire de changer également le lab_id !
-    if ($data["categorie"]!=$categorie) {
+    if ($data["categorie"]!=$categorie) $data["lab_id"] = new_lab_id($categorie);
+/*
         // quelle est l’abbréviation de la catégorie ?
         $query_table_abbr = mysql_query ("SELECT categorie_lettres FROM categorie WHERE categorie_index='".$categorie."' ;");
         while ($l = mysql_fetch_row($query_table_abbr)) $abbr=$l[0];
@@ -206,7 +207,7 @@ if ( isset($_POST["technique_valid"]) ) {
     }
 
     $data["lab_id"] = ($categorie==0) ? "" : $data["lab_id"];
-
+*/
 
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
