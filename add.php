@@ -143,18 +143,30 @@ if ( isset($_POST["add_valid"]) ) {
         }
     }
 
-    // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔╦╗╔═╗╦═╗╔═╗ ╦ ╦╔═╗
-    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣ 
-    // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩ ╩╩ ╩╩╚═╚═╝╚╚═╝╚═╝
+    // ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔╦╗╔═╗╦═╗╔═╗ ╦ ╦╔═╗
+    // ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣ 
+    // ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩ ╩╩ ╩╩╚═╚═╝╚╚═╝╚═╝  */
+    if ($data["marque"]=="plus_marque") {
+        if ($data["plus_marque_nom"]=="") {
+            $error.="<p class=\"error_message\">Merci de spécifier un nom de nouvelle marque</p>";
+            $data["marque"]="0";
+        }
+        else {
+            mysql_query ("INSERT INTO marque (marque_nom) VALUES ('".$data["plus_marque_nom"]."') ; ");
+            /* TODO : prévoir le cas où la marque existe déjà */
+            $query_table_marquenew = mysql_query ("SELECT marque_index FROM marque ORDER BY marque_index DESC LIMIT 1 ;");
+            while ($l = mysql_fetch_row($query_table_marquenew)) $data["marque"]=$l[0];
+            // on ajoute cette entrée dans le tableau des marques (utilisé pour le select)
+            $marques[$data["marque"]]=array( $data["marque"], utf8_encode($data["plus_marque_nom"]) );
+        }
+    }
     
-    // TODO
 
 /*
 if ($data["categorie"]=="plus_categorie")
     "plus_categorie_nom"
     "plus_categorie_abbr"
 if ($data["marque"]=="plus_marque")
-    "plus_marque_nom"
 "plus_tags"
 tags[] ????
 compatibilite[] ????
@@ -168,7 +180,7 @@ compatibilite[] ????
     if ($error=="") {
     $mysql="INSERT
         INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration)
-        VALUES ('".$i."', '".new_lab_id($data["categorie"])."', '***categorie***', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '***marque***', '".$datamysql["date_achat"]."', '".$data["responsable_achat"]."', '".$datamysql["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ";
+        VALUES ('".$i."', '".new_lab_id($data["categorie"])."', '***categorie***', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$datamysql["date_achat"]."', '".$data["responsable_achat"]."', '".$datamysql["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ";
     }
     
 }
