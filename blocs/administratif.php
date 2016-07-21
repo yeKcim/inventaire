@@ -60,7 +60,7 @@ while ($l = mysql_fetch_row($query_table_contrat)) {
 */
 if ( isset($_POST["administratif_valid"]) ) {
 
-    $arr = array("designation","vendeur","plus_vendeur_nom","plus_vendeur_web","plus_vendeur_remarque","prix","contrat","plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie");
+    $arr = array("designation","vendeur","plus_vendeur_nom","plus_vendeur_web","plus_vendeur_remarque","prix","contrat","plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "bon_commande", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie");
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
@@ -135,7 +135,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    mysql_query ("UPDATE base SET designation='".$designation."', vendeur='".$vendeur."', prix='".$prix."', contrat='".$contrat."', date_achat='".dateformat($date_achat,"en")."', garantie='".dateformat($garantie,"en")."', num_inventaire='".$num_inventaire."', tutelle='".$tutelle."', responsable_achat='".$responsable_achat."' WHERE base.base_index = $i;" );
+    mysql_query ("UPDATE base SET designation=\"".$designation."\", vendeur=\"".$vendeur."\", prix=\"".$prix."\", contrat=\"".$contrat."\", date_achat=\"".dateformat($date_achat,"en")."\", garantie=\"".dateformat($garantie,"en")."\", bon_commande=\"".$bon_commande."\", num_inventaire=\"".$num_inventaire."\", tutelle=\"".$tutelle."\", responsable_achat=\"".$responsable_achat."\" WHERE base.base_index = $i;" );
 
 
 
@@ -147,6 +147,7 @@ if ( isset($_POST["administratif_valid"]) ) {
     $data["contrat"]=$contrat;
     $data["date_achat"]=dateformat($date_achat,"en");
     $data["garantie"]=dateformat($garantie,"en");
+    $data["bon_commande"]=$bon_commande;
     $data["num_inventaire"]=$num_inventaire;
     $data["tutelle"]=$tutelle;
     $data["plus_tutelle"]=$plus_tutelle;
@@ -272,6 +273,10 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
             echo "</fieldset>";
             echo "\n\n\n";
         
+        /* ########### bon de commande ########### */
+        echo "<label for=\"bon_commande\">Bon de commande : </label>\n";
+        echo "<input value=\"".$data["bon_commande"]."\" name=\"bon_commande\" type=\"text\" id=\"bon_commande\">";
+        echo "<br/>";
 
         /* ########### num_inventaire ########### */
         echo "<label for=\"num_inventaire\">Numéro d’inventaire : </label>\n";

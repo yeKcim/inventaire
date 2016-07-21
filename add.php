@@ -23,7 +23,7 @@ $success="";
 */
 if ( isset($_POST["add_valid"]) ) {
     $data=array();
-    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque_nom", "reference", "serial_number", "plus_tags", "designation", "vendeur", "plus_vendeur_nom", "plus_vendeur_web", "plus_vendeur_remarque", "prix", "contrat", "plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie", "utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
+    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque_nom", "reference", "serial_number", "plus_tags", "designation", "vendeur", "plus_vendeur_nom", "plus_vendeur_web", "plus_vendeur_remarque", "prix", "contrat", "plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "bon_commande", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie", "utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
     foreach ($arr as &$value) {
         $data["$value"]= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
@@ -186,7 +186,7 @@ if ( isset($_POST["add_valid"]) ) {
         $inew = mysql_query ("SELECT base_index FROM base ORDER BY base_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($inew)) $i=$l[0]+1;
         
-        $add_result= mysql_query ("INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES ('".$i."', '".$data["lab_id"]."', '".$data["categorie"]."', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ");
+        $add_result= mysql_query ("INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES ('".$i."', '".$data["lab_id"]."', '".$data["categorie"]."', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["bon_commande"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ");
         
         if ($add_result!=1) $error.="<p class=\"error_message\">Une erreur inconnue est survenue. L’entrée n’a pas été ajoutée.</p>";
         else {
@@ -200,7 +200,8 @@ if ( isset($_POST["add_valid"]) ) {
                 "base_index"=>$i,              "lab_id"=>"",                "categorie"=>"0",
                 "serial_number"=>"",           "reference"=>"",             "designation"=>"",
                 "utilisateur"=>"0",            "localisation"=>"",          "date_localisation"=>"",
-                "tutelle"=>"0",                "contrat"=>"0",              "num_inventaire"=>"",
+                "tutelle"=>"0",                "contrat"=>"0",              "bon_commande"=>"",
+                "num_inventaire"=>"",
                 "vendeur"=>"0",                "marque"=>"0",               "date_achat"=>"",
                 "responsable_achat"=>"0",      "garantie"=>"",              "prix"=>"",
                 "date_sortie"=>"",             "sortie"=>"",                "raison_sortie"=>"",
@@ -224,7 +225,8 @@ else { // Initialisation de toutes les variable
         "base_index"=>$i,              "lab_id"=>"",                "categorie"=>"0",
         "serial_number"=>"",           "reference"=>"",             "designation"=>"",
         "utilisateur"=>"0",            "localisation"=>"",          "date_localisation"=>"",
-        "tutelle"=>"0",                "contrat"=>"0",              "num_inventaire"=>"",
+        "tutelle"=>"0",                "contrat"=>"0",              "bon_commande"=>"",
+        "num_inventaire"=>"",
         "vendeur"=>"0",                "marque"=>"0",               "date_achat"=>"",
         "responsable_achat"=>"0",      "garantie"=>"",              "prix"=>"",
         "date_sortie"=>"",             "sortie"=>"",                "raison_sortie"=>"",
