@@ -50,6 +50,10 @@ $write=true;
 
 echo "<p>Informations #$i :</p>";
 
+echo "<p style=\"text-align:right;\">";
+echo "<a href=\"add.php\" target=\"_blank\"><input class=\"big_button\" value=\"Ajouter une nouvelle entrée\" type=\"submit\" /></a>";
+echo "</p>";
+
 echo "<div id=\"container\">";
     require_once("./blocs/administratif.php");
     require_once("./blocs/technique.php");

@@ -33,7 +33,7 @@ $ORDER= ($ORDER=="") ? "ORDER BY categorie ASC, lab_id ASC" : "$ORDER, base_inde
 require_once("./fonctions.php");
 
 
-echo "<h1><a href=\"?\">Base de données OPTIQUE</a></h1>";
+echo "<h1><a href=\"?\">Base de données ".strtoupper($database)."</a></h1>";
 
 echo "<p style=\"text-align:right;\">";
 echo "<a href=\"add.php\" target=\"_blank\"><input class=\"big_button\" value=\"Ajouter une nouvelle entrée\" type=\"submit\" /></a>";

@@ -72,7 +72,10 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
         
         echo "<label for=\"histo\" style=\"vertical-align: top;\"> Information :</label>\n";
         echo "<textarea name=\"histo\" rows=\"4\" cols=\"33\"></textarea><br/>";
-        if ($write) echo "<input name=\"add_historique\" value=\"Ajouter\" type=\"submit\" class=\"little_button\" />";
+        if ($write) {
+            echo "<label for=\"add_historique\" > &nbsp;</label>\n";
+            echo "<input name=\"add_historique\" value=\"Ajouter\" type=\"submit\" class=\"little_button\" />";
+        }
 
     echo "</fieldset>";
 
