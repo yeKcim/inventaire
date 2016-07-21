@@ -7,7 +7,7 @@ tr:nth-child(odd)    { background-color:#ddd; }
 tr:nth-child(even)    { background-color:#fff; }
 
 #listing th, #listing td     { padding: 2px; border-left: 1px solid #555753; }
-#listing th         { background: #afdde8; text-align: center; border-bottom: 1px solid #555753; vertical-align: bottom;}
+#listing th         {text-align: center; border-bottom: 1px solid #555753; vertical-align: bottom; background: #919aa4; color: #fff;}
 #listing td         { text-align: left;}
 #listing tr:hover {
     background-color: #E2F5BF;
@@ -34,9 +34,7 @@ fieldset {
     margin-bottom: 15px;
  }
  
-legend {
- font-size: 1em; margin-bottom:0px; margin-left:5px; font-weight: bold; color:#2e3436;
- }
+legend { font-size: 1em; margin-bottom:0px; margin-left:5px; font-weight: bold; color:#2e3436; }
   
 input:focus, textarea:focus {
     background-color:white;
@@ -138,6 +136,13 @@ li.inline {
 .success_message a { 
     color: #edd400;
     text-decoration: underline;
+}
+
+.big_button { 
+    padding: 10px 50px;
+    background:#729fcf;
+    color:#fff;
+    font-weight: bold;
 }
 
 #container {
