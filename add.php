@@ -8,23 +8,10 @@ require_once("./head.php");
 <body>
 
 <?php
-/*
- ██████╗ █████╗ ██╗      ██████╗██╗   ██╗██╗         ███╗   ██╗ ██████╗ ██╗   ██╗██╗   ██╗███████╗ █████╗ ██╗   ██╗    ██╗
-██╔════╝██╔══██╗██║     ██╔════╝██║   ██║██║         ████╗  ██║██╔═══██╗██║   ██║██║   ██║██╔════╝██╔══██╗██║   ██║       
-██║     ███████║██║     ██║     ██║   ██║██║         ██╔██╗ ██║██║   ██║██║   ██║██║   ██║█████╗  ███████║██║   ██║    ██║
-██║     ██╔══██║██║     ██║     ██║   ██║██║         ██║╚██╗██║██║   ██║██║   ██║╚██╗ ██╔╝██╔══╝  ██╔══██║██║   ██║    ██║
-╚██████╗██║  ██║███████╗╚██████╗╚██████╔╝███████╗    ██║ ╚████║╚██████╔╝╚██████╔╝ ╚████╔╝ ███████╗██║  ██║╚██████╔╝    ██║
- ╚═════╝╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═════╝ ╚══════╝    ╚═╝  ╚═══╝ ╚═════╝  ╚═════╝   ╚═══╝  ╚══════╝╚═╝  ╚═╝ ╚═════╝     ╚═╝
-*/
-$inew = mysql_query ("SELECT base_index FROM base ORDER BY base_index DESC LIMIT 1 ;");
-while ($l = mysql_fetch_row($inew)) $i=$l[0]+1;
-
-
-
-
 
 require_once("./fonctions.php");
 $error="";
+$success="";
 
 /*
  █████╗      ██╗ ██████╗ ██╗   ██╗████████╗    ███╗   ███╗██╗   ██╗███████╗ ██████╗ ██╗     
@@ -183,17 +170,8 @@ if ( isset($_POST["add_valid"]) ) {
         }
     }
     
-    
-    
-/*
-if ($data["categorie"]=="plus_categorie")
-    "plus_categorie_nom"
-    "plus_categorie_abbr"
-if ($data["marque"]=="plus_marque")
-"plus_tags"
-tags[] ????
-compatibilite[] ????
-*/  
+
+
     $data["lab_id"]=new_lab_id($data["categorie"]);
 
     $data["date_achat"]=($data["date_achat"]=="") ? "0000-00-00" : dateformat($data["date_achat"],"en");
@@ -201,10 +179,36 @@ compatibilite[] ????
     // TODO : vérifier que les dates sont bien au bon format !
 
     if ($error=="") {
-    $mysql="INSERT
-        INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration)
-        VALUES ('".$i."', '".$data["lab_id"]."', '***categorie***', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ";
+        
+        // ╔═╗╔═╗╦  ╔═╗╦ ╦╦    ╔╦╗╦ ╦  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╦
+        // ║  ╠═╣║  ║  ║ ║║     ║║║ ║  ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ║
+        // ╚═╝╩ ╩╩═╝╚═╝╚═╝╩═╝  ═╩╝╚═╝  ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╩
+        $inew = mysql_query ("SELECT base_index FROM base ORDER BY base_index DESC LIMIT 1 ;");
+        while ($l = mysql_fetch_row($inew)) $i=$l[0]+1;
+        
+        $add_result= mysql_query ("INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES ('".$i."', '".$data["lab_id"]."', '".$data["categorie"]."', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ");
+        
+        if ($add_result!=1) $error.="<p class=\"error_message\">Une erreur inconnue est survenue. L’entrée n’a pas été ajoutée.</p>";
+        else {
+            $success.="<p class=\"success_message\">";
+            $success.="L’entrée a été ajoutée à la base de donnée.<br/>";
+            $success.="Vous pouvez directement ajouter une nouvelle entrée<br/>";
+            $success.="ou <a href=\"info.php?i=$i\" target=\"_blank\"><strong>→ Compléter les informations de ".$data["lab_id"]." #$i</strong></a>";
+            $success.="</p>";
+            
+            $data=array(
+                "base_index"=>$i,              "lab_id"=>"",                "categorie"=>"0",
+                "serial_number"=>"",           "reference"=>"",             "designation"=>"",
+                "utilisateur"=>"0",            "localisation"=>"",          "date_localisation"=>"",
+                "tutelle"=>"0",                "contrat"=>"0",              "num_inventaire"=>"",
+                "vendeur"=>"0",                "marque"=>"0",               "date_achat"=>"",
+                "responsable_achat"=>"0",      "garantie"=>"",              "prix"=>"",
+                "date_sortie"=>"",             "sortie"=>"",                "raison_sortie"=>"",
+                "integration"=>""   );
+            
+        }
     }
+    
     
 }
 /*
@@ -240,10 +244,14 @@ else { // Initialisation de toutes les variable
 */
 
 $write=false;
+$fieldset_tags="Cette fonctionnalité n’est activée qu’une fois l’entrée enregistrée dans la base.";
+$fieldset_compatibilite="Cette fonctionnalité n’est activée qu’une fois l’entrée enregistrée dans la base.";
 
 echo "<p>Ajouter une entrée :</p>";
 
-echo "<form method=\"post\" action=\"?a=$i\">";
+echo $success;
+
+echo "<form method=\"post\" action=\"\">";
 
 echo "<div id=\"container\">";
     require_once("./blocs/administratif.php");
@@ -260,12 +268,6 @@ echo "<div id=\"container\">";
     echo "</p>"; // TODO Ajouter un bouton réinitialiser
     
     echo $error;
-
-
-
-    echo $mysql;
-
-
 
     echo "</div>";
 

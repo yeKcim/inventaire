@@ -130,7 +130,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
     }
 
-
+// TODO : prix avec une virgule ou un point ?
 
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝

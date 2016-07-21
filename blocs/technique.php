@@ -286,31 +286,32 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
      ║ ╠═╣║ ╦╚═╗
      ╩ ╩ ╩╚═╝╚═╝    */
    echo "<fieldset id=\"tags\"><legend>Mots clés</legend>";
-   
-         echo "<label for=\"tags[]\">Tags :</label>";
-        echo "<select data-placeholder=\"Aucun tag renseigné\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"tags[]\">";
-    echo "<option value=\"\"></option>";
-    foreach ($tags as $t2) {
-        if (in_array($t2[0], $tags_i)) $select=" selected=\"selected\"";
-        else $select="";
-        echo "<option value=\"".$t2[0]."\" $select>".$t2[1]."</option>";
-    }
-    echo "</select>";
-    
-echo "
-  <script type=\"text/javascript\">
-    var config = {
-      '.chosen-select'           : {no_results_text:'Oops, nothing found!'},
-    }
-    for (var selector in config) {
-      $(selector).chosen(config[selector]);
-    }
-  </script>";
 
-    
+    if ( isset($fieldset_tags) ) echo "".$fieldset_tags."";
+    else {
+        echo "<label for=\"tags[]\">Tags :</label>";
+        echo "<select data-placeholder=\"Aucun tag renseigné\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"tags[]\">";
+        echo "<option value=\"\"></option>";
+        foreach ($tags as $t2) {
+            if (in_array($t2[0], $tags_i)) $select=" selected=\"selected\"";
+            else $select="";
+            echo "<option value=\"".$t2[0]."\" $select>".$t2[1]."</option>";
+        }
+        echo "</select>";
+        
+        echo "
+          <script type=\"text/javascript\">
+            var config = {
+              '.chosen-select'           : {no_results_text:'Oops, nothing found!'},
+            }
+            for (var selector in config) {
+              $(selector).chosen(config[selector]);
+            }
+          </script>";
+
         echo "<label for=\"plus_tags\">Nouveaux tags <abbr title=\"séparés d’une virgule\"><strong>ⓘ</strong></abbr> :</label>";
         echo "<input value=\"\" name=\"plus_tags\" type=\"text\">\n";    
-    
+    }
     
     echo "</fieldset>";
 
@@ -320,31 +321,34 @@ echo "
     ╚═╝╚═╝╩ ╩╩  ╩ ╩ ╩ ╩╚═╝╩ ╩═╝╩ ╩ ╚═╝  */
     echo "<fieldset><legend>Compatibilité</legend>";
 
+    if ( isset($fieldset_compatibilite) ) echo "".$fieldset_tags."";
+    else {
         echo "<label for=\"compatibilite[]\">Élements compatibles : </label>\n";
 
-    echo "<select data-placeholder=\"Aucune compatibilité renseignée\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"compatibilite[]\">";
-    echo "<option value=\"\"></option>";
-    $cat="";
-    foreach ($labids_cat as $li) {
-        if ( ($cat!=$li[2])&&($cat!="") ) echo "</optgroup>";
-        if ($cat!=$li[2]) echo "<optgroup label=\"".$li[4]."\">";
-        if (in_array($li[0], $compatibilite)) $select=" selected=\"selected\"";
-        else $select="";
+        echo "<select data-placeholder=\"Aucune compatibilité renseignée\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"compatibilite[]\">";
+        echo "<option value=\"\"></option>";
+        $cat="";
+        foreach ($labids_cat as $li) {
+            if ( ($cat!=$li[2])&&($cat!="") ) echo "</optgroup>";
+            if ($cat!=$li[2]) echo "<optgroup label=\"".$li[4]."\">";
+            if (in_array($li[0], $compatibilite)) $select=" selected=\"selected\"";
+            else $select="";
 
-        if ($li[0]!=$i) echo "<option value=\"".$li[0]."\" $select>".$li[1]." #".$li[0]."</option>";
-        $cat=$li[2];
-    }
-    echo "</select>";
+            if ($li[0]!=$i) echo "<option value=\"".$li[0]."\" $select>".$li[1]." #".$li[0]."</option>";
+            $cat=$li[2];
+        }
+        echo "</select>";
 
-    echo "
-      <script type=\"text/javascript\">
-        var config = {
-          '.chosen-select'           : {no_results_text:'Oops, nothing found!'},
+        echo "
+          <script type=\"text/javascript\">
+            var config = {
+              '.chosen-select'           : {no_results_text:'Oops, nothing found!'},
+            }
+            for (var selector in config) {
+              $(selector).chosen(config[selector]);
+            }
+          </script>";
         }
-        for (var selector in config) {
-          $(selector).chosen(config[selector]);
-        }
-      </script>";
 
     echo "</fieldset>";
 
