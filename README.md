@@ -11,14 +11,14 @@ Les parties administrative et technique sont clairement différenciées pour per
 
 ## Aperçu
 
-![Preview](./README_preview.png)
+![Preview index](./README_preview_index.png)
+![Preview add](./README_preview_add.png)
+![Preview informations](./README_preview_informations.png)
 
 ## TODO
 
-* **Ajout** : La page d’ajout d’un nouvel élément n’est pas en place…
 * **Identifiant labo** : Possibilité de choisir l’identifiant manuellement.
 * **Catégories de caractéristiques** : Les caractéristiques vont vite devenir très nombreuses et difficiles à trouver dans le sélecteur, penser à créer des catégories de caracs (dimensions, optique, électronique,…)
-* **Entretien** : Un bloc permettant de définir des entretiens à faire et des fréquence, des alertes pourraient alors s’afficher dans la liste.
 * **Documents** : Possibilité d’associer des documents soit à l’objet soit à la référence (data-sheet commune…). Supporter le glisser/déposer.
 * **Select** : Améliorer les selecteurs, en particulier le gestionnaire des tags, avec [Choosen](https://harvesthq.github.io/chosen/#selected-and-disabled-support) par exemple.
 * **Droits** : Ajouter un gestionnaire des droits, qu’un stagiaire ne puisse pas éditer les informations par exemple. Pour plus de simplicité, peut-être juste cacher les boutons de validation…
@@ -27,5 +27,5 @@ Les parties administrative et technique sont clairement différenciées pour per
 * **Division cellulaire** : Que faire si l’on casse un élément et qu’il devient 2 ou 3 (cas déjà arrivé pour un milieu actif…).
 * **Suppression sécurisée** : Un historique des modifications ? Avec nom et date ?
 * **Traduction** : Supporter plusieurs langues ?
-* **Intégration** : cacher ce fieldset si l’élément n’est pas intégré.
+
 

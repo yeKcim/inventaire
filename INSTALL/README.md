@@ -10,3 +10,14 @@ Par défaut, la taille maximale des fichiers envoyés en POST est de 2 Mo. Pour 
     upload_max_filesize = 10M
     post_max_size = 10M
 
+## Pour information
+
+La structure de la base est la suivante :
+
+![info](./info_structure.png)
+
+Document réalisé sur framamind :
+* [lien pour  lecture](https://framindmap.org/c/maps/197903/public)
+* [lien pour modification](https://framindmap.org/c/maps/197903/edit)
+
+
