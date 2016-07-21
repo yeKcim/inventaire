@@ -1,15 +1,17 @@
 <?php
-$titre="Informations détaillées";
+$i= isset($_GET["i"]) ? htmlentities($_GET["i"]) : "" ; // GET i
+$titre="Informations détaillées #$i";
+require_once("./connect.php");
+require_once("./tables_sql_commun.php");
 require_once("./head.php");
 ?>
 <body>
 
 <?php
-require_once("./connect.php");
-require_once("./tables_sql_commun.php");
-$i= isset($_GET["i"]) ? htmlentities($_GET["i"]) : "" ; // GET i
-require_once("./fonctions.php");
 
+require_once("./fonctions.php");
+$error="";
+$success="";
 
 
 /*
