@@ -104,7 +104,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     }
 
 
-    if (!$references_similaires) echo "Aucune référence correspondante trouvée";
+    if ( (!$references_similaires) || ($data["reference"]=="") || ($data["marque"]=="0") || ($data["categorie"]=="0") )echo "Aucune référence correspondante trouvée";
     else {
         foreach ($references_similaires as $rs) {
             echo "<a href=\"info.php?i=".$rs[0]."\" target=\"_blank\">#".$rs[0]." (".$rs[1].")</a>&nbsp;: ";
