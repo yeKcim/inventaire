@@ -163,7 +163,13 @@ foreach ($tableau as &$t) {
         
         // ********** Entretiens **********
         echo "<td>";
-        if (isset($tableau_entretien[$t["base_index"]]) ) echo $tableau_entretien[$t["base_index"]]; else echo "-";
+        if (isset($tableau_entretien[$t["base_index"]]) ) {
+        
+            echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick_entretien.php?i=".$t["base_index"]."',width:440,height:550})\" title=\"modification rapide entretien\">";
+            echo $tableau_entretien[$t["base_index"]];
+            echo "</span>";
+        }
+        else echo "-";
         echo "</td>";
         
     echo "</tr></a>";
