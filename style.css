@@ -7,7 +7,7 @@ tr:nth-child(odd)    { background-color:#ddd; }
 tr:nth-child(even)    { background-color:#fff; }
 
 #listing th, #listing td     { padding: 2px; border-left: 1px solid #555753; }
-#listing th         {text-align: center; border-bottom: 1px solid #555753; vertical-align: bottom; background: #919aa4; color: #fff;}
+#listing th         {text-align: center; border-bottom: 1px solid #555753; vertical-align: bottom; background: #a1a1a1; color: #fff;}
 #listing td         { text-align: left;}
 #listing tr:hover {
     background-color: #E2F5BF;
@@ -138,12 +138,25 @@ li.inline {
     text-decoration: underline;
 }
 
-.big_button { 
+.big_button,.big_button:focus { 
     padding: 10px 50px;
     background:#729fcf;
     color:#fff;
     font-weight: bold;
+    border: 1px solid #5897fb;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
+
+.big_button:active { 
+    background:#ad7fa8;
+    color:#fff;
+    font-weight: bold;
+}
+
+input[type="submit"]{
+ cursor:pointer;
+}
+
 
 #container {
     overflow: hidden;

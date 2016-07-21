@@ -34,6 +34,11 @@ require_once("./fonctions.php");
 
 
 echo "<h1><a href=\"?\">Base de données OPTIQUE</a></h1>";
+
+echo "<p style=\"text-align:right;\">";
+echo "<a href=\"add.php\" target=\"_blank\"><input class=\"big_button\" value=\"Ajouter une nouvelle entrée\" type=\"submit\" /></a>";
+echo "</p>";
+
 require_once("./form.php");
 require_once("./listing.php");
 

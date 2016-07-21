@@ -264,7 +264,7 @@ echo "<div id=\"container\">";
     echo "<div id=\"bloc\" style=\"background:#f3f3f3; vertical-align:top;\">";
     echo "<h1>Validation</h1>";
     echo "<p style=\"text-align:center;\">";
-    echo "<input name=\"add_valid\" value=\"Ajouter\" type=\"submit\" style=\"padding: 10px 50px;\">";
+    echo "<input name=\"add_valid\" value=\"Ajouter\" type=\"submit\" class=\"big_button\" />";
     echo "</p>"; // TODO Ajouter un bouton réinitialiser
     
     echo $error;
