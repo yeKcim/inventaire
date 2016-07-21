@@ -144,7 +144,7 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
         if ($error_emptyinput!="") echo "<p class=\"error_message\">$error_emptyinput</p>";
         
         /* ########### submit ########### */
-        echo "<input name='add_entretien' value='Ajouter' type='submit'>";
+        echo "<input name=\"add_entretien\" value=\"Ajouter\" type=\"submit\" class=\"little_button\" />";
 
 
     echo "</fieldset>";
@@ -263,7 +263,7 @@ else {
         if ($error_noebox!="") echo "<p class=\"error_message\">$error_noebox</p>";
 
         /* ########### submit ########### */
-        if ($write) echo "<input name=\"modif_entretien\" value=\"Entretien effectué\" type=\"submit\">";
+        if ($write) echo "<input name=\"modif_entretien\" value=\"Entretien effectué\" type=\"submit\" class=\"little_button\" />";
 
     }
     

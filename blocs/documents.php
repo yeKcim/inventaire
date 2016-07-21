@@ -78,7 +78,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
         }
         /* ########### END Ajout d’un fichier ########### */
 
-        if ($write) echo "<input name='Valider' value='Envoyer' type='submit'>";
+        if ($write) echo "<input name=\"Valider\" value=\"Envoyer\" type=\"submit\" class=\"little_button\" />";
         if ($write) echo "</form>";
 
     echo "</fieldset>";

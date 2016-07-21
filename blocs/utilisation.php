@@ -60,7 +60,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
     if ($utilisateur=="plus_utilisateur") {
         $plus_utilisateur_nom=mb_strtoupper($plus_utilisateur_nom);
         $plus_utilisateur_phone=phone_display("$plus_utilisateur_phone","");
-        mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_utilisateur_nom."', '".$plus_utilisateur_prenom."','".$plus_utilisateur_mail."','".$plus_utilisateur_phone."') ; ");
+        mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$plus_utilisateur_nom."\", \"".$plus_utilisateur_prenom."\",\"".$plus_utilisateur_mail."\",\"".$plus_utilisateur_phone."\") ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_utilisateurnew)) $utilisateur=$l[0];
@@ -70,7 +70,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
 
     if ($localisation=="plus_localisation") {
-        mysql_query ("INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES ('".$plus_localisation_bat."', '".$plus_localisation_piece."' ); ");
+        mysql_query ("INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES (\"".$plus_localisation_bat."\", \"".$plus_localisation_piece."\" ); ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_localisationnew = mysql_query ("SELECT localisation_index FROM localisation ORDER BY localisation_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_localisationnew)) $localisation=$l[0];
@@ -80,7 +80,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
 
     if ($raison_sortie=="plus_raison_sortie") {
-        mysql_query ("INSERT INTO raison_sortie (raison_sortie_nom) VALUES ('".$plus_raison_sortie_nom."'); ");
+        mysql_query ("INSERT INTO raison_sortie (raison_sortie_nom) VALUES (\"".$plus_raison_sortie_nom."\"); ");
         /* TODO : prévoir le cas où le contrat existe déjà */
         $query_table_raisonnew = mysql_query ("SELECT raison_sortie_index FROM raison_sortie ORDER BY raison_sortie_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_raisonnew)) $raison_sortie=$l[0];
@@ -94,7 +94,7 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    mysql_query ("UPDATE base SET utilisateur='".$utilisateur."', localisation='".$localisation."', sortie='".$sortie."', integration='".$integration."', raison_sortie='".$raison_sortie."' WHERE base.base_index = $i;" );
+    mysql_query ("UPDATE base SET utilisateur=\"".$utilisateur."\", localisation=\"".$localisation."\", sortie=\"".$sortie."\", integration=\"".$integration."\", raison_sortie=\"".$raison_sortie."\" WHERE base.base_index = $i;" );
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data["utilisateur"]=$utilisateur;
@@ -119,7 +119,7 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 ██║     ╚██████╔╝██║  ██║██║ ╚═╝ ██║╚██████╔╝███████╗██║  ██║██║██║  ██║███████╗
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝
 */
-echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
+echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 
     echo "<h1>Utilisation</h1>";
 
@@ -245,7 +245,7 @@ echo "<div id=\"bloc\" style=\"background:#a9bbcf; vertical-align:top;\">";
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║ 
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
-    if ($write) echo "<p style=\"text-align:center;\"><input name='utilisation_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
+    if ($write) echo "<p style=\"text-align:center;\"><input name=\"utilisation_valid\" value=\"Enregistrer\" type=\"submit\" class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser
 
     if ($write) echo "</form>";
 

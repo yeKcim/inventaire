@@ -340,7 +340,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║ 
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
-if ($write) echo "<p style=\"text-align:center;\"><input name='administratif_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
+if ($write) echo "<p style=\"text-align:center;\"><input name=\"administratif_valid\" value=\"Enregistrer\" type=\"submit\" class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser
 
     if ($write) echo "</form>";
 

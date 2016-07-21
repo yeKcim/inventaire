@@ -355,7 +355,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║ 
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
-    if ($write) echo "<p style=\"text-align:center;\"><input name='technique_valid' value='Enregistrer' type='submit'></p>"; // TODO Ajouter un bouton réinitialiser
+    if ($write) echo "<p style=\"text-align:center;\"><input name=\"technique_valid\" value=\"Enregistrer\" type=\"submit\" class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser
 
 
     if ($write) echo "</form>";
