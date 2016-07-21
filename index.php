@@ -1,13 +1,14 @@
 <?php
 $titre="Inventaire";
-require_once("./head.php");
+require_once("./0_head.php");
 ?>
 
 <!-- ########### BODY ########### -->
 <body>
 
 <?php
-require_once("./connect.php");
+require_once("./0_connect.php");
+require_once("./0_fonctions.php");
 
 /* ########### GET ########### */
 $arr = array("CAT","TYC","CON","SEA","RES","UTL","IOT","ORDER");
@@ -29,8 +30,7 @@ $ALL_GET=str_replace(" ", "%20", $ALL_GET);
 
 $ORDER= ($ORDER=="") ? "ORDER BY categorie ASC, lab_id ASC" : "$ORDER, base_index ASC";
 
-/* ########### FONCTIONS ########### */
-require_once("./fonctions.php");
+
 
 
 echo "<h1><a href=\"?\">Base de données ".strtoupper($database)."</a></h1>";
@@ -39,8 +39,8 @@ echo "<p style=\"text-align:right;\">";
 echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'add.php',width:900,height:700})\"><input class=\"big_button\" value=\"Ajouter une nouvelle entrée\" type=\"submit\" /></span>";
 echo "</p>";
 
-require_once("./form.php");
-require_once("./listing.php");
+require_once("./0_form.php");
+require_once("./0_listing.php");
 
 
 ?>

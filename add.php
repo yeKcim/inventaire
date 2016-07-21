@@ -1,15 +1,15 @@
 <?php
 $titre="Ajouter une entrée";
-require_once("./connect.php");
-require_once("./tables_sql_commun.php");
-require_once("./head.php");
+require_once("./0_connect.php");
+require_once("./0_tables_sql_commun.php");
+require_once("./0_head.php");
 ?>
 
 <body>
 
 <?php
 
-require_once("./fonctions.php");
+require_once("./0_fonctions.php");
 $error="";
 $success="";
 

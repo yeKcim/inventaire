@@ -1,6 +1,6 @@
 <?php
 
-require_once("./tables_sql_commun.php");
+require_once("./0_tables_sql_commun.php");
 
 #########################################################################
 #                                                                       #
