@@ -18,6 +18,7 @@ Les parties administrative et technique sont clairement différenciées pour per
 ## TODO
 
 * **Identifiant labo** : Possibilité de choisir l’identifiant manuellement.
+* **Recharger** : Si une modification a été faite dans une tinybox, recharger la page listing automatiquement.
 * **Catégories de caractéristiques** : Les caractéristiques vont vite devenir très nombreuses et difficiles à trouver dans le sélecteur, penser à créer des catégories de caracs (dimensions, optique, électronique,…)
 * **Documents** : Possibilité d’associer des documents soit à l’objet soit à la référence (data-sheet commune…). Supporter le glisser/déposer.
 * **Select** : Améliorer les selecteurs, en particulier le gestionnaire des tags, avec [Choosen](https://harvesthq.github.io/chosen/#selected-and-disabled-support) par exemple.

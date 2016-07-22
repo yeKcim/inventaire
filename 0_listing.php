@@ -179,7 +179,7 @@ foreach ($tableau as &$t) {
         // ********** Entretiens **********
         echo "<td>";
         
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=entretien&quick_name=Entretien',width:440,height:750})\" title=\"modification rapide entretien\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=entretien&quick_name=Entretien',width:440,height:750 })\" title=\"modification rapide entretien\">";
         
         if (isset($tableau_entretien[$t["base_index"]]) ) {
             echo $tableau_entretien[$t["base_index"]];
