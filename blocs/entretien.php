@@ -232,6 +232,8 @@ else {
 
         echo "</table>";
 
+        echo "&nbsp; &nbsp;↳ Cochez les entretiens que vous souhaitez renseigner.<br/>";
+
         /* ########### Le ########### */
         echo "<label for=\"e_effectuele\" style=\"vertical-align: top;\"> Le <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr> :</label>\n";
         echo "<input value=\"".date("d/m/Y")."\" name=\"e_effectuele\" type=\"text\" id=\"e_effectuele\"><br/>";
