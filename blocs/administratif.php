@@ -8,7 +8,7 @@
 ╚═╝  ╚═╝╚═════╝ ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   ╚═╝╚═╝     
 */
 
-
+$message="";
 
 /*
  █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
@@ -135,9 +135,9 @@ if ( isset($_POST["administratif_valid"]) ) {
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    mysql_query ("UPDATE base SET designation=\"".$designation."\", vendeur=\"".$vendeur."\", prix=\"".$prix."\", contrat=\"".$contrat."\", date_achat=\"".dateformat($date_achat,"en")."\", garantie=\"".dateformat($garantie,"en")."\", bon_commande=\"".$bon_commande."\", num_inventaire=\"".$num_inventaire."\", tutelle=\"".$tutelle."\", responsable_achat=\"".$responsable_achat."\" WHERE base.base_index = $i;" );
+    $modif_result=mysql_query ("UPDATE base SET designation=\"".$designation."\", vendeur=\"".$vendeur."\", prix=\"".$prix."\", contrat=\"".$contrat."\", date_achat=\"".dateformat($date_achat,"en")."\", garantie=\"".dateformat($garantie,"en")."\", bon_commande=\"".$bon_commande."\", num_inventaire=\"".$num_inventaire."\", tutelle=\"".$tutelle."\", responsable_achat=\"".$responsable_achat."\" WHERE base.base_index = $i;" );
 
-
+    $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
 
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
@@ -168,7 +168,9 @@ if ( isset($_POST["administratif_valid"]) ) {
 echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     
     echo "<h1>Administratif</h1>";
-    
+
+    echo $message;
+
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
 
