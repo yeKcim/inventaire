@@ -87,6 +87,8 @@ function is_dir_empty($dir) {
 function displayDir($dir, $del=FALSE) {
     $racine = "/var/www/";
 
+    $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
+    
     // Si le dossier n’existe pas, on le crée
     if (!file_exists("$racine$dir")) {
         mkdir("$racine$dir", 0775);
@@ -109,7 +111,7 @@ function displayDir($dir, $del=FALSE) {
                     echo "<li>";
                     echo "<a href=\"$dir$f\" target=\"_blank\">$f</a>";
                     echo " (".formatBytes(filesize("$dir$f"),"0")."o)";
-                    if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&f=".$f."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";
+                    if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&f=".$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";
                     echo"</li>";
                 }
             }
