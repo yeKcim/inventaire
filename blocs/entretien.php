@@ -114,7 +114,8 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
 
     echo "<h1>Entretien</h1>";
     
-    if ($write) echo "<form method=\"post\" action=\"?i=$i\">";
+    $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
+    if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
     
     
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦    ╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗╦╔═╗╔╗╔

@@ -45,7 +45,10 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     ╠═╣ ║║ ║║ ║ ║ ║╣ ╠╦╝  ║ ║║║║  ╠╣ ║║  ╠═╣║║╣ ╠╦╝
     ╩ ╩╚╝╚═╝╚═╝ ╩ ╚═╝╩╚═  ╚═╝╝╚╝  ╚  ╩╚═╝╩ ╩╩╚═╝╩╚═ */
     echo "<fieldset><legend>Ajouter un fichier</legend>";
-        if ($write) echo "<form method=\"post\" action=\"?i=$i\" enctype=\"multipart/form-data\">";
+    
+        $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
+        if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\" enctype=\"multipart/form-data\">";
+        
         echo "<input value=\"".$data["base_index"]."\" name=\"i\" type=\"hidden\">\n";
         /* echo "<form action=\"$racine$dir\" class=\"dropzone\"></form>";*/
         echo "<p>Extensions autorisées : ";

@@ -121,7 +121,9 @@ foreach ($tableau as &$t) {
         
         // ********** Id Labo **********
         echo "<td style=\"text-align:center;\"><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
+        echo "<strong>";
         if ($t["lab_id"]=="") echo "#".$t["base_index"].""; else echo $t["lab_id"];
+        echo "</strong>";
         echo "</a></td>";
         
         // ********** Catégorie **********
@@ -134,7 +136,15 @@ foreach ($tableau as &$t) {
         echo "<td>".$t["designation"]."</td>";
         
         // ********** Caractéristiques **********
-        echo "<td>".substr($tableau_carac[$t["base_index"]], 0, -2)."</td>";
+        echo "<td>";
+
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=caracteristiques&quick_name=Caractéristiques', width:440,height:750})\" title=\"modification rapide caracteristiques\">";
+
+        if (isset($tableau_carac[$t["base_index"]]) ) echo substr($tableau_carac[$t["base_index"]], 0, -2);
+        else echo "-";
+
+        echo "</span>";
+        echo "</td>";
         
         // ********** Marque  **********
         echo "<td><span title=\"vendu par ".$t["vendeur"]."\">".$t["marque"]."</span></td>";
@@ -149,8 +159,13 @@ foreach ($tableau as &$t) {
 
         // ********** Localisation **********
         echo "<td>";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750})\" title=\"modification rapide entretien\">";
         echo "<span title=\"Utilisé par ".$utilisateurs[$t["utilisateur"]][2]." ".$utilisateurs[$t["utilisateur"]][1]." le ".dateformat($t["localisation"][2],"fr")."\">";
-        echo "".utf8_encode($t["localisation"][0])." ".utf8_encode($t["localisation"][1])."</span>";
+
+        echo "".utf8_encode($t["localisation"][0])." ".utf8_encode($t["localisation"][1])."";
+
+        echo "</span>";
+        echo "</span>";
         echo "</td>";
         
         // ********** Achat **********
@@ -163,13 +178,16 @@ foreach ($tableau as &$t) {
         
         // ********** Entretiens **********
         echo "<td>";
-        if (isset($tableau_entretien[$t["base_index"]]) ) {
         
-            echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick_entretien.php?i=".$t["base_index"]."',width:440,height:550})\" title=\"modification rapide entretien\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=entretien&quick_name=Entretien',width:440,height:750})\" title=\"modification rapide entretien\">";
+        
+        if (isset($tableau_entretien[$t["base_index"]]) ) {
             echo $tableau_entretien[$t["base_index"]];
-            echo "</span>";
         }
         else echo "-";
+
+        echo "</span>";
+
         echo "</td>";
         
     echo "</tr></a>";

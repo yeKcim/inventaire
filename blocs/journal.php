@@ -63,7 +63,8 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
 
     echo "<h1>Journal</h1>";
     
-    if ($write) echo "<form method=\"post\" action=\"?i=$i\">";
+    $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
+    if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
 
     echo "<fieldset><legend>Nouvelle information</legend>";
 

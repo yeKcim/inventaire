@@ -1,5 +1,5 @@
-#linkbox {color:#3465a4; font-weight: bold;}
-#linkbox:hover {border:1px solid #729fcf; background:#eeeeec; color:#729fcf; font-weight: bold; cursor: pointer; cursor: hand;}
+#linkbox {color:#3465a4;}
+#linkbox:hover {border:1px solid #729fcf; color:#729fcf; cursor: pointer; cursor: hand;}
 
 
 .tbox {position:absolute; display:none; padding:14px 17px; z-index:900}
