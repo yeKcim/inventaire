@@ -157,11 +157,19 @@ foreach ($tableau as &$t) {
         echo "</td>";
         
         // ********** Marque  **********
-        echo "<td><span title=\"vendu par ".$t["vendeur"]."\">".$t["marque"]."</span></td>";
+        echo "<td>";
+        echo "<span title=\"";
+        if ($t["vendeur"]!="-") echo "vendu par ".$t["vendeur"]."";
+        echo "\">";
+        if ($t["marque"]!="") echo $t["marque"]; else echo "-";
+        echo "</span>";
+        echo "</td>";
         
         // ********** Serial number **********
         echo "<td>";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750})\" title=\"modification rapide technique\">";
         if ($t["serial_number"]!="") echo $t["serial_number"]; else echo "-";
+        echo "</span>";
         echo "</td>";
         
         // ********** État **********
