@@ -112,7 +112,7 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
     ╚═╝╩ ╩╩╚═╩ ╩╚═╝ ╩ ╚═╝╩╚═╩╚═╝ ╩ ╩╚═╝╚╚═╝╚═╝╚═╝   */
     echo "<fieldset><legend>Caractéristiques</legend>";
 
-echo "<label for='significatives[]'>Significatives : </label>";
+echo "<label for=\"significatives[]\">Significatives : </label>";
 
 echo "<select data-placeholder=\"Caractéristiques significatives\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"significatives[]\" id=\"multiple\">"; // TODO : Ne pas effacer les case en dessous lorsque l’on modifie "Significatives" (cases remplies mais non sauvegarder)
 
@@ -144,7 +144,7 @@ echo "<select data-placeholder=\"Caractéristiques significatives\" style=\"widt
     echo "</select>";
     echo "<script type=\"text/javascript\">
         var config = {
-          '.chosen-select'           : {no_results_text:'Oops, nothing found!'},
+          '.chosen-select'           : {no_results_text:'Oops, nothing found!', width:\"250px\"},
         }
         for (var selector in config) {
           $(selector).chosen(config[selector]);
