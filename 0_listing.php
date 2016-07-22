@@ -138,7 +138,12 @@ foreach ($tableau as &$t) {
         echo "</td>";
         
         // ********** Désignation **********
-        echo "<td>".$t["designation"]."</td>";
+        echo "<td>";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750})\" title=\"modification rapide administratif\">";
+        if ($t["designation"]!="") echo $t["designation"];
+        else echo "-";
+        echo "</span>";
+        echo "</td>";
         
         // ********** Caractéristiques **********
         echo "<td>";
@@ -181,12 +186,23 @@ foreach ($tableau as &$t) {
         echo "</td>";
         
         // ********** Achat **********
-        echo "<td>
-        <span title=\"Par ".$responsables[$t["responsable_achat"]][2]." ".$responsables[$t["responsable_achat"]][1]." le ".dateformat($t["date_achat"],"fr")."\">";
+        echo "<td>";
+
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750})\" title=\"modification rapide administratif\">";
+
+        echo "<span title=\"";
+        if ($t["responsable_achat"]!="0") echo "Par ".$responsables[$t["responsable_achat"]][2]." ".$responsables[$t["responsable_achat"]][1]." ";
+        if ($t["date_achat"]!="0000-00-00") echo "le ".dateformat($t["date_achat"],"fr")."";
+        echo "\">";
         if ($t["prix"]!="0") echo "".$t["prix"]."€";
         if ($t["contrat"]!="0")echo " sur ".$contrats[$t["contrat"]][1]."";
         if ( ($t["prix"]=="0") && ($t["contrat"]=="0") ) echo "-";
-        echo "</span></td>";
+        echo "</span>";
+        
+        echo "</span>";
+        
+        echo "</td>";
+        
         
         // ********** Entretiens **********
         echo "<td>";
