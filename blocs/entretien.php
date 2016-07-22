@@ -223,7 +223,7 @@ else {
             
             // ***** La suppression ***** 
             echo "<td style=\"text-align:right;\">";
-            if ($write) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'_del_confirm.php?i=$i&e=".$e[0]."',width:280,height:110})\" title=\"cet entretien n’est plus nécessaire\">×</span>";
+            if ($write) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&e=".$e[0]."',width:280,height:110})\" title=\"cet entretien n’est plus nécessaire\">×</span>";
             else echo "&nbsp;";
             echo "</td>";
             

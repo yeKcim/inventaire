@@ -109,7 +109,7 @@ function displayDir($dir, $del=FALSE) {
                     echo "<li>";
                     echo "<a href=\"$dir$f\" target=\"_blank\">$f</a>";
                     echo " (".formatBytes(filesize("$dir$f"),"0")."o)";
-                    if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'_del_confirm.php?i=$i&f=".$f."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";
+                    if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&f=".$f."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";
                     echo"</li>";
                 }
             }
