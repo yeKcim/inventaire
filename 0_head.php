@@ -67,6 +67,17 @@
     <script src="chosen/chosen.jquery.js" type="text/javascript"></script>
     <link rel="stylesheet" href="chosen/chosen.css">
 
+<!--╔╦╗╦╔═╗╔═╗╔═╗╔═╗╔═╗╔═╗╦═╗  ╔╦╗╔═╗╦  ╔═╗╦ ╦
+     ║║║╚═╗╠═╣╠═╝╠═╝║╣ ╠═╣╠╦╝   ║║║╣ ║  ╠═╣╚╦╝
+    ═╩╝╩╚═╝╩ ╩╩  ╩  ╚═╝╩ ╩╩╚═  ═╩╝╚═╝╩═╝╩ ╩ ╩   -->
+    <script type="text/javascript"> 
+      $(document).ready( function() {
+        $('#disappear_delay').delay(2000).fadeOut();
+      });
+    </script>
+
+
+
 </head>
 
 

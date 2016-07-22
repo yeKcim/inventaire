@@ -9,7 +9,7 @@
 */
 
 $error_noebox="";
-
+$message="";
 
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗     
@@ -32,8 +32,10 @@ if ( isset($_POST["add_entretien"]) ) {
     if ( ($e_designation=="")||($e_frequence=="") ) $error_emptyinput="Fréquence et Désignation sont des champs obligatoires";
     else {
         $e_frequence=$e_frequence*$e_frequence_multipli;
-        mysql_query ("INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\"); ");
+        $add_result= mysql_query ("INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\"); ");
         $error_emptyinput="";
+        
+        $message.= ($add_result!=1) ? $message_error_add : $message_success_add;
     }
 }
 
@@ -52,12 +54,18 @@ if ($modif_entretien!="") {
     if ($e_effectuepar=="plus_intervant") {
         $plus_intervant_nom=mb_strtoupper($plus_intervant_nom);
         $plus_intervant_phone=phone_display("$plus_intervant_phone","");
-        mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_intervant_nom."', '".$plus_intervant_prenom."','".$plus_intervant_mail."','".$plus_intervant_phone."') ; ");
+        $modif_result=mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_intervant_nom."', '".$plus_intervant_prenom."','".$plus_intervant_mail."','".$plus_intervant_phone."') ; ");
         /* TODO : prévoir le cas où la personne existe déjà */
-        $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
-        while ($l = mysql_fetch_row($query_table_utilisateurnew)) $e_effectuepar=$l[0];
-        // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-        $utilisateurs[$e_effectuepar]=array( $e_effectuepar, utf8_encode($plus_intervant_nom), utf8_encode($plus_intervant_prenom), utf8_encode($plus_intervant_mail), phone_display("$plus_intervant_phone",".") );
+        
+        if ($modif_result!=1) $message.=$message_error_add;
+        else {
+            $message.=$message_success_add;
+        
+            $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
+            while ($l = mysql_fetch_row($query_table_utilisateurnew)) $e_effectuepar=$l[0];
+            // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+            $utilisateurs[$e_effectuepar]=array( $e_effectuepar, utf8_encode($plus_intervant_nom), utf8_encode($plus_intervant_prenom), utf8_encode($plus_intervant_mail), phone_display("$plus_intervant_phone",".") );
+        }
     }
 
         if (isset($_POST["ebox"])) {
@@ -65,8 +73,9 @@ if ($modif_entretien!="") {
             foreach ($_POST["ebox"] as $ek => $ed) $alle.=" e_index = $ek OR";
             $alle=substr($alle, 0, -2);
             $effectuepar_sql= ($e_effectuepar!="0") ? ", e_effectuerpar = '$e_effectuepar'" : "";
-            mysql_query ("UPDATE entretien SET e_lastdate = '".dateformat($e_effectuele,"en")."' $effectuepar_sql WHERE $alle ;" );
+            $modif_result=mysql_query ("UPDATE entretien SET e_lastdate = '".dateformat($e_effectuele,"en")."' $effectuepar_sql WHERE $alle ;" );
         
+            $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
         }
         else $error_noebox="Vous devez cocher au moins une case d’entretien";
 
@@ -81,8 +90,11 @@ foreach ($arr as &$value) {
 }
 
 if ($del_e_confirm=="Confirmer la suppression") {
-    mysql_query ("DELETE FROM entretien WHERE e_index=$e_del AND e_id=$i;");
+    $del_result=mysql_query ("DELETE FROM entretien WHERE e_index=$e_del AND e_id=$i;");
     // TODO ajouter l’information effacée dans trash ? avec l’ip et l’heure ?
+    
+    $message.=($del_result!=1) ? $message_error_del : $message_success_del;
+
 }
 
 
@@ -100,6 +112,10 @@ $entretiens = array();
 while ($l = mysql_fetch_row($query_table_entretien)) {
     $entretiens[]=array($l[0], $l[1], $l[2], utf8_encode($l[3]), utf8_encode($l[4]), $l[5]);
 }
+
+
+
+echo $message;
 
 
 /*

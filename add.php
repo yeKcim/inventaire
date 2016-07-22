@@ -188,7 +188,7 @@ if ( isset($_POST["add_valid"]) ) {
         
         $add_result= mysql_query ("INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES ('".$i."', '".$data["lab_id"]."', '".$data["categorie"]."', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["bon_commande"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ");
         
-        if ($add_result!=1) $error.="<p class=\"error_message\">Une erreur inconnue est survenue. L’entrée n’a pas été ajoutée.</p>";
+        if ($add_result!=1) $error.=$message_error_add;
         else {
             $success.="<p class=\"success_message\">";
             $success.="L’entrée a été ajoutée à la base de donnée.<br/>";
