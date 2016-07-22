@@ -303,7 +303,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "
           <script type=\"text/javascript\">
             var config = {
-              '.chosen-select'           : {no_results_text:'Oops, nothing found!'},
+              '.chosen-select'           : {no_results_text:'Oops, nothing found!', width:\"250px\"},
             }
             for (var selector in config) {
               $(selector).chosen(config[selector]);
@@ -343,7 +343,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "
           <script type=\"text/javascript\">
             var config = {
-              '.chosen-select'           : {no_results_text:'Oops, nothing found!'},
+              '.chosen-select'           : {no_results_text:'Oops, nothing found!', width:\"250px\"},
             }
             for (var selector in config) {
               $(selector).chosen(config[selector]);

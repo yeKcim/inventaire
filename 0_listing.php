@@ -130,7 +130,12 @@ foreach ($tableau as &$t) {
         echo "<td>".utf8_encode($t["categorie"])."</td>";
         
         // ********** Référence **********
-        echo "<td>".$t["reference"]."</td>";
+        echo "<td>";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750})\" title=\"modification rapide technique\">";
+        if ($t["reference"]!="") echo $t["reference"];
+        else echo "-";
+        echo "</span>";
+        echo "</td>";
         
         // ********** Désignation **********
         echo "<td>".$t["designation"]."</td>";
@@ -155,11 +160,18 @@ foreach ($tableau as &$t) {
         echo "</td>";
         
         // ********** État **********
-        if ($IOT!="0") echo "<td>".$raison_sortie[$t["raison_sortie"]]."</td>";
+        if ($IOT!="0") {
+            echo "<td>";
+            echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750})\" title=\"modification rapide utilisation\">";
+            if ($raison_sortie[$t["raison_sortie"]]!="") echo $raison_sortie[$t["raison_sortie"]];
+            else echo "-";
+            echo "</span>";
+            echo "</td>";
+        }
 
         // ********** Localisation **********
         echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750})\" title=\"modification rapide entretien\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750})\" title=\"modification rapide utilisation\">";
         echo "<span title=\"Utilisé par ".$utilisateurs[$t["utilisateur"]][2]." ".$utilisateurs[$t["utilisateur"]][1]." le ".dateformat($t["localisation"][2],"fr")."\">";
 
         echo "".utf8_encode($t["localisation"][0])." ".utf8_encode($t["localisation"][1])."";
