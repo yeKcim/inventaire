@@ -19,9 +19,10 @@ Les parties administrative et technique sont clairement différenciées pour per
 
 * **Identifiant labo** : Possibilité de choisir l’identifiant manuellement.
 * **Intégration** : Si intégré, afficher un lien dans listing vers le conteneur.
-* **Formulaire chosen en dessous** : Bug : en quick, chosen est en dessous le cadre html… (voir technique, intégration)
+* **Base de données** : Passer de mysql à sqlite.
+* **Formulaire chosen en dessous** : Bug : en quick, chosen est en dessous le cadre html… (voir technique, intégration).
 * **Recharger** : Si une modification a été faite dans une tinybox, recharger la page listing automatiquement.
-* **Catégories de caractéristiques** : Les caractéristiques vont vite devenir très nombreuses et difficiles à trouver dans le sélecteur, penser à créer des catégories de caracs (dimensions, optique, électronique,…)
+* **Catégories de caractéristiques** : Les caractéristiques vont vite devenir très nombreuses et difficiles à trouver dans le sélecteur, penser à créer des catégories de caracs (dimensions, optique, électronique,…).
 * **Documents** : Possibilité d’associer des documents soit à l’objet soit à la référence (data-sheet commune…). Supporter le glisser/déposer.
 * **Select** : Améliorer les selecteurs, en particulier le gestionnaire des tags, avec [Choosen](https://harvesthq.github.io/chosen/#selected-and-disabled-support) par exemple.
 * **Droits** : Ajouter un gestionnaire des droits, qu’un stagiaire ne puisse pas éditer les informations par exemple. Pour plus de simplicité, peut-être juste cacher les boutons de validation…
@@ -30,5 +31,5 @@ Les parties administrative et technique sont clairement différenciées pour per
 * **Division cellulaire** : Que faire si l’on casse un élément et qu’il devient 2 ou 3 (cas déjà arrivé pour un milieu actif…).
 * **Suppression sécurisée** : Un historique des modifications ? Avec nom et date ?
 * **Traduction** : Supporter plusieurs langues ?
-* **Gérer les "à réformer" et les "réformé" ?
+* **Réforme** : Gérer les "à réformer" et les "réformé" ?
 
