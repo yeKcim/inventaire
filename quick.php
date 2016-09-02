@@ -22,6 +22,7 @@ require_once("./0_array_info_de_i.php");
 $write=true;
 
 echo "<div id=\"container\">";
+    echo "".$data["lab_id"]." #".$i."<br/>";
     require_once("./blocs/$quick_page.php");
 echo "</div>";
 
