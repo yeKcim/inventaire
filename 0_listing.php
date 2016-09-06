@@ -110,7 +110,8 @@ echo "<tr>";
     if ($IOT!="0") echo "<th>État<br/>";    orderbylink("raison_sortie");       echo "</td>";
     echo "<th>Localisation<br/>";           orderbylink("localisation");        echo "</td>";
     echo "<th>Achat<br/>";                  orderbylink("prix");                echo "</td>";
-    echo "<th>Entretiens<br/>";              echo "&nbsp;";                      echo "</td>";
+    echo "<th>Entretiens<br/>";             echo "&nbsp;";                      echo "</td>";
+    echo "<th>Fichiers<br/>";               echo "&nbsp;";                      echo "</td>";
 echo "</tr>";
 
 /*  ╦  ╦╔═╗╔╗╔╔═╗╔═╗  ╔╦╗╔═╗  ╦═╗╔═╗╔═╗╦ ╦╦ ╔╦╗╔═╗╔╦╗╔═╗
@@ -214,18 +215,42 @@ foreach ($tableau as &$t) {
         
         // ********** Entretiens **********
         echo "<td>";
-        
+
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=entretien&quick_name=Entretien',width:440,height:750 })\" title=\"modification rapide entretien\">";
-        
         if (isset($tableau_entretien[$t["base_index"]]) ) {
             echo $tableau_entretien[$t["base_index"]];
         }
         else echo "-";
-
         echo "</span>";
 
         echo "</td>";
-        
+
+        // ********** Fichiers **********
+        echo "<td>";
+
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750 })\" title=\"modification rapide documents\">";
+        $racine = "/var/www/";
+        $dir="files/".$t["base_index"]."/";
+        if (file_exists("$racine$dir")) {
+            if ( ! is_dir_empty("$racine$dir")) {
+                $files = scandir("$racine$dir");
+                if ($files != FALSE) {
+                    foreach ($files as $f) {
+                        if (($f!=".")&&($f!="..")) { echo "<span title=\"$f\">⊗</span> "; }
+                    }
+                }
+            }
+            else echo "-";
+        }
+        else echo "-";
+        echo "</span>";
+
+        echo "</td>";
+
+
+
+
+
     echo "</tr></a>";
 }
 
