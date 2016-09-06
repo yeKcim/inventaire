@@ -8,6 +8,7 @@
  ╚═════╝    ╚═╝   ╚═╝╚══════╝╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
 */
 
+$message="";
 
 /*
  █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
@@ -94,7 +95,9 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    mysql_query ("UPDATE base SET utilisateur=\"".$utilisateur."\", localisation=\"".$localisation."\", sortie=\"".$sortie."\", integration=\"".$integration."\", raison_sortie=\"".$raison_sortie."\" WHERE base.base_index = $i;" );
+    $modif_result=mysql_query ("UPDATE base SET utilisateur=\"".$utilisateur."\", localisation=\"".$localisation."\", sortie=\"".$sortie."\", integration=\"".$integration."\", raison_sortie=\"".$raison_sortie."\" WHERE base.base_index = $i;" );
+
+    $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data["utilisateur"]=$utilisateur;
@@ -122,7 +125,9 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 
     echo "<h1>Utilisation</h1>";
-
+    
+    echo $message;
+    
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
 
