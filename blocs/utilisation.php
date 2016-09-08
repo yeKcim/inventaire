@@ -185,6 +185,17 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
             echo "</fieldset>";
             echo "\n\n\n";
 
+    /* ########### carte pour aider à localiser ########### */
+    $utilisation_localisation_help = "./blocs/utilisation_localisation_help.jpg";
+    if (file_exists("$utilisation_localisation_help")) {
+
+        list($width, $height, $type) = getimagesize("$utilisation_localisation_help");
+
+        echo " <a href=\"".$utilisation_localisation_help."\" target=\"_blank\" title=\"Plan\">plan</a>";
+        //echo " <span id=\"linkbox\" onclick=\"TINY.box.show({image:'".$utilisation_localisation_help."',width:$width,height:$height})\" title=\"Plan\">plan</span>";
+    }
+    else { echo " <span title=\"fonctionnalité à venir\">&nbsp;</span>"; }
+
 
     echo "</fieldset>";
 
