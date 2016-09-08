@@ -76,7 +76,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
                 //echo "Fichier envoyé avec succès.<br/>";
                 echo "<p class=\"success_message\" id=\"disappear_delay\">Fichier envoyé avec succès.</p>";
             }
-            else foreach ($errors as $e) echo "<p><strong>$e</strong></p>";
+            else foreach ($errors as $e) echo "<p class=\"error_message\" id=\"disappear_delay\"><strong>$e</strong></p>";
         }
         /* ########### END Ajout d’un fichier ########### */
 
