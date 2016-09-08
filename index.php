@@ -36,7 +36,7 @@ $ORDER= ($ORDER=="") ? "ORDER BY categorie ASC, lab_id ASC" : "$ORDER, base_inde
 echo "<h1><a href=\"?\">Base de données ".strtoupper($database)."</a></h1>";
 
 echo "<p style=\"text-align:right;\">";
-echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'add.php',width:900,height:700})\"><input class=\"big_button\" value=\"Ajouter une nouvelle entrée\" type=\"submit\" /></span>";
+echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'add.php',width:900,height:700,closejs:function(){location.reload()}})\"><input class=\"big_button\" value=\"Ajouter une nouvelle entrée\" type=\"submit\" /></span>";
 echo "</p>";
 
 require_once("./0_form.php");
