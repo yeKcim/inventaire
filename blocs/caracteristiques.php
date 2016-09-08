@@ -8,6 +8,7 @@
  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝
 */
 
+$message_newcarac="";
 
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗     
@@ -47,19 +48,30 @@ if ( isset($_POST["carac_valid"]) ) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
     // Si au moins un champ de « Nouvelle caracteristique » est rempli :
-    if ( ($nom_carac!="")||($unite_carac!="")||($symbole_carac!="") ) {
+    if ( ($nom_carac!="")||($symbole_carac!="") ) {
         // Si tous les champs sont remplis, on crée la nouvelle carac
-        if ( ($nom_carac!="")&&($unite_carac!="")&&($symbole_carac!="") ) {
+        if ( ($nom_carac!="")&&($symbole_carac!="") ) {
         
-        // Si la nouvelle carac existe déjà (nom ou symbôle)
-        $query_count_carac = mysql_query ("SELECT COUNT(*) FROM caracteristiques WHERE nom_carac=\"Diamètre\" OR symbole_carac=\"L\" ; ");
-        while ($l = mysql_fetch_row($query_count_carac)) $count_carac=$l[0] ;
-        if ($count_carac!=0) $error_nouvelle_carac.="<p class=\"error_message\">Nom ou symbôle déjà utilisé.</p>";
-        else mysql_query ("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
+            // Si la nouvelle carac existe déjà (nom ou symbôle)
+            $query_count_carac = mysql_query ("SELECT COUNT(*) FROM caracteristiques WHERE nom_carac=\"$nom_carac\" OR symbole_carac=\"$symbole_carac\" ; ");
+            while ($l = mysql_fetch_row($query_count_carac)) $count_carac=$l[0] ;
+            if ($count_carac!=0) $error_nouvelle_carac.="<p class=\"error_message\">Nom ou symbôle déjà utilisé.</p>";
+            else {
+                $add_carac_result=mysql_query ("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
+                
+                if ($add_carac_result==1) { 
+                    $message_newcarac.="<p class=\"success_message\" id=\"disappear_delay\">La nouvelle caractéristique a été ajoutée.</p>";
+                    $nom_carac=""; $unite_carac=""; $symbole_carac="";
+                }
+                else { $message_newcarac.="<p class=\"error_message\" id=\"disappear_delay\">Une erreur est survenue. La nouvelle caractéristique n’a pas été ajoutée.</p>"; }
+            }
         } // Sinon on indique un message d’erreur
-        else $error_nouvelle_carac.="<p class=\"error_message\">Les trois champs sont obligatoires.</p>";
+        else $error_nouvelle_carac.="<p class=\"error_message\">Nom et Symbôle sont des champs obligatoires.</p>";
     }
 }
+
+
+    
 
 
 /*
@@ -175,6 +187,8 @@ echo "</fieldset>";
     echo "<fieldset><legend>Nouvelle caractéristique</legend>";
 
     // TODO des catégories de caractéristiques ?
+    
+    echo $message_newcarac;
     
     echo "Si la caractéristique n’est pas présente dans la liste ci-dessus…";
     
