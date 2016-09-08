@@ -95,7 +95,11 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    $modif_result=mysql_query ("UPDATE base SET utilisateur=\"".$utilisateur."\", localisation=\"".$localisation."\", sortie=\"".$sortie."\", integration=\"".$integration."\", raison_sortie=\"".$raison_sortie."\" WHERE base.base_index = $i;" );
+    
+    // Si la localisation change, on modifie la date de localisation pour mettre aujourd’hui
+    $change_date_localisation= ($data["localisation"]==$localisation) ? "" : ", date_localisation=\"".date("y.m.d")."\"";
+
+    $modif_result=mysql_query ("UPDATE base SET utilisateur=\"".$utilisateur."\", localisation=\"".$localisation."\", sortie=\"".$sortie."\", integration=\"".$integration."\", raison_sortie=\"".$raison_sortie."\" $change_date_localisation WHERE base.base_index = $i;" );
 
     $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
 
