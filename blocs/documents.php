@@ -73,7 +73,8 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 
             if(empty($errors)==true) {
                 move_uploaded_file($file_tmp,"/var/www/files/$i/".$file_name);
-                echo "Fichier envoyé avec succès.<br/>";
+                //echo "Fichier envoyé avec succès.<br/>";
+                echo "<p class=\"success_message\" id=\"disappear_delay\">Fichier envoyé avec succès.</p>";
             }
             else foreach ($errors as $e) echo "<p><strong>$e</strong></p>";
         }
