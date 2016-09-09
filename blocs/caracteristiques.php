@@ -8,7 +8,7 @@
  ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝
 */
 
-$message_newcarac="";
+$message="";
 
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗     
@@ -33,14 +33,14 @@ if ( isset($_POST["carac_valid"]) ) {
             $allc.= ($cd!="") ? "(\"$cd\",\"$i\",\"$ck\")," : "";
         }
         $allc=substr($allc, 0, -1); // suppression du dernier caractère
-        mysql_query ("INSERT INTO carac (carac_valeur, carac_id, carac_caracteristique_id) VALUES $allc ; ");
+        $modif_result=mysql_query ("INSERT INTO carac (carac_valeur, carac_id, carac_caracteristique_id) VALUES $allc ; ");
+        $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
     }
 
 
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗
     ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣╠╦╝╠═╣║  
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩╩╚═╩ ╩╚═╝  */
-    $error_nouvelle_carac="";
     // TODO : Vérifier que la catégorie n’existe pas déjà + que le symbole n’est pas déjà pris.
     // Création d’une nouvelle caracteristique
     $arr = array("nom_carac", "unite_carac", "symbole_carac");
@@ -55,23 +55,23 @@ if ( isset($_POST["carac_valid"]) ) {
             // Si la nouvelle carac existe déjà (nom ou symbôle)
             $query_count_carac = mysql_query ("SELECT COUNT(*) FROM caracteristiques WHERE nom_carac=\"$nom_carac\" OR symbole_carac=\"$symbole_carac\" ; ");
             while ($l = mysql_fetch_row($query_count_carac)) $count_carac=$l[0] ;
-            if ($count_carac!=0) $error_nouvelle_carac.="<p class=\"error_message\">Nom ou symbôle déjà utilisé.</p>";
+            if ($count_carac!=0) $message.="<p class=\"error_message\" id=\"disappear_delay\">Nom ou symbôle déjà utilisé.</p>";
             else {
                 $add_carac_result=mysql_query ("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
                 
                 if ($add_carac_result==1) { 
-                    $message_newcarac.="<p class=\"success_message\" id=\"disappear_delay\">La nouvelle caractéristique a été ajoutée.</p>";
+                    $message.="<p class=\"success_message\" id=\"disappear_delay\">La nouvelle caractéristique a été ajoutée.</p>";
                     $nom_carac=""; $unite_carac=""; $symbole_carac="";
                 }
-                else { $message_newcarac.="<p class=\"error_message\" id=\"disappear_delay\">Une erreur est survenue. La nouvelle caractéristique n’a pas été ajoutée.</p>"; }
+                else { $message.="<p class=\"error_message\" id=\"disappear_delay\">Une erreur est survenue. La nouvelle caractéristique n’a pas été ajoutée.</p>"; }
             }
         } // Sinon on indique un message d’erreur
-        else $error_nouvelle_carac.="<p class=\"error_message\">Nom et Symbôle sont des champs obligatoires.</p>";
+        else $message.="<p class=\"error_message\" id=\"disappear_delay\">Nom et Symbôle sont des champs obligatoires.</p>";
     }
 }
 
 
-    
+
 
 
 /*
@@ -116,6 +116,8 @@ foreach ($arr as $value) { $$value= isset($$value) ? "".$$value."" : "" ; }
 echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 
     echo "<h1>Caractéristiques</h1>";
+    
+    echo $message;
     
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
@@ -188,8 +190,6 @@ echo "</fieldset>";
 
     // TODO des catégories de caractéristiques ?
     
-    echo $message_newcarac;
-    
     echo "Si la caractéristique n’est pas présente dans la liste ci-dessus…";
     
     echo "<label for=\"nom_carac\">Nom :</label>\n";
@@ -204,7 +204,6 @@ echo "</fieldset>";
     echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle</abbr>";
     echo ":</label>\n";
     echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\">\n";
-    echo "".$error_nouvelle_carac."";
     echo "</fieldset>";
 
 
