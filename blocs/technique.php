@@ -248,9 +248,16 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             echo "\n\n\n";
 
         /* ########### lab_id ########### */
-        echo "<label for=\"lab_id\">Identifiant labo : </label>\n";
-        echo "<strong>".$data["lab_id"]."</strong>"; // TODO Ajouter un bouton pour choiser cette entrée manuellement (via tinybox ?)
+        echo "<label for=\"lab_id\">";
+        //echo "<abbr title=\"Modifier uniquement pour un lab_id manuel !\">";
+        echo "<abbr title=\"fonctionnalité en cours d’écriture ! Ne pas modifier cette entrée\">";
+        
+        echo "<strong>Identifiant labo :</strong></label>\n";
+        echo "</abbr>";
+        echo "<input value=\"".$data["lab_id"]."\" name=\"lab_id\" type=\"text\" id=\"lab_id\">";
         echo "<br/>";
+        
+
 
     echo "</fieldset>";
 
