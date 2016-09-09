@@ -10,6 +10,9 @@
 
 /* TODO : Ajouter la possibilité d’avoir des fichiers liés à fabricant-référence en plus de #n pour les data-sheet par exemple */
 
+
+/* TODO : Vérifications envoi de fichiers semble défectueux */
+
 $max_size=file_upload_max_size();
 /* ########### POST ########### */
 $arr = array("del_f_confirm","f");
