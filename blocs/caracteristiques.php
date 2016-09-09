@@ -36,8 +36,11 @@ if ( isset($_POST["carac_valid"]) ) {
         $modif_result=mysql_query ("INSERT INTO carac (carac_valeur, carac_id, carac_caracteristique_id) VALUES $allc ; ");
         $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
     }
+}
 
 
+
+if ( isset($_POST["new_carac_valid"]) ) {
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗
     ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣╠╦╝╠═╣║  
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩╩╚═╩ ╩╚═╝  */
@@ -55,7 +58,7 @@ if ( isset($_POST["carac_valid"]) ) {
             // Si la nouvelle carac existe déjà (nom ou symbôle)
             $query_count_carac = mysql_query ("SELECT COUNT(*) FROM caracteristiques WHERE nom_carac=\"$nom_carac\" OR symbole_carac=\"$symbole_carac\" ; ");
             while ($l = mysql_fetch_row($query_count_carac)) $count_carac=$l[0] ;
-            if ($count_carac!=0) $message.="<p class=\"error_message\" id=\"disappear_delay\">Nom ou symbôle déjà utilisé.</p>";
+            if ($count_carac!=0) $message.="<p class=\"error_message\">Nom ou symbôle déjà utilisé.</p>";
             else {
                 $add_carac_result=mysql_query ("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
                 
@@ -66,7 +69,7 @@ if ( isset($_POST["carac_valid"]) ) {
                 else { $message.="<p class=\"error_message\" id=\"disappear_delay\">Une erreur est survenue. La nouvelle caractéristique n’a pas été ajoutée.</p>"; }
             }
         } // Sinon on indique un message d’erreur
-        else $message.="<p class=\"error_message\" id=\"disappear_delay\">Nom et Symbôle sont des champs obligatoires.</p>";
+        else $message.="<p class=\"error_message\">Nom et Symbôle sont des champs obligatoires.</p>";
     }
 }
 
@@ -120,6 +123,7 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
     echo $message;
     
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
+
     if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
 
 /*  ╔═╗╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗╦═╗╦╔═╗╔╦╗╦╔═╗ ╦ ╦╔═╗╔═╗
@@ -127,9 +131,9 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
     ╚═╝╩ ╩╩╚═╩ ╩╚═╝ ╩ ╚═╝╩╚═╩╚═╝ ╩ ╩╚═╝╚╚═╝╚═╝╚═╝   */
     echo "<fieldset><legend>Caractéristiques</legend>";
 
-echo "<label for=\"significatives[]\">Significatives : </label>";
+    echo "<label for=\"significatives[]\">Significatives : </label>";
 
-echo "<select data-placeholder=\"Caractéristiques significatives\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"significatives[]\" id=\"multiple\">"; // TODO : Ne pas effacer les case en dessous lorsque l’on modifie "Significatives" (cases remplies mais non sauvegarder)
+    echo "<select data-placeholder=\"Caractéristiques significatives\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"significatives[]\" id=\"multiple\">"; // TODO : Ne pas effacer les case en dessous lorsque l’on modifie "Significatives" (cases remplies mais non sauvegarder)
 
     foreach ($allcaracs as $c) {
         echo "<option ";
@@ -177,11 +181,18 @@ echo "</fieldset>";
         displayVals();
     </script>";
     
+    
+    if ($write) echo "<p style=\"text-align:center;\"><input name=\"carac_valid\" value=\"Enregistrer\" type=\"submit\"  class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser ?
 
+    if ($write) echo "</form>";
     
     
     echo "</fieldset>";
 
+
+
+
+    if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
 
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗
     ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣╠╦╝╠═╣║  
@@ -204,16 +215,17 @@ echo "</fieldset>";
     echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle</abbr>";
     echo ":</label>\n";
     echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\">\n";
-    echo "</fieldset>";
 
 
-/*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
-    ╚═╗║ ║╠╩╗║║║║ ║ 
-    ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
-if ($write) echo "<p style=\"text-align:center;\"><input name=\"carac_valid\" value=\"Enregistrer\" type=\"submit\"  class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser
-
+    /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
+        ╚═╗║ ║╠╩╗║║║║ ║ 
+        ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
+    if ($write) echo "<p style=\"text-align:center;\"><input name=\"new_carac_valid\" value=\"Ajouter\" type=\"submit\"  class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser ?
 
     if ($write) echo "</form>";
+
+    echo "</fieldset>";
+
 
 echo "</div>";
 
