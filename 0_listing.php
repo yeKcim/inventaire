@@ -99,19 +99,19 @@ echo "<table id=\"listing\">";
     ║╣ ║║║║ ║╣  ║ ║╣    ║ ╠═╣╠╩╗║  ║╣ ╠═╣║ ║
     ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝    */
 echo "<tr>";
-    # echo "<th>&nbsp;<br/>&nbsp;</td>"; // À voir plus tard
-    echo "<th>Id Labo<br/>";                orderbylink("lab_id");              echo "</td>";
-    echo "<th>Catégorie<br/>";              orderbylink("categorie");           echo "</td>";
-    echo "<th>Référence<br/>";              orderbylink("reference");           echo "</td>";
-    echo "<th>Désignation<br/>";            orderbylink("designation");         echo "</td>";
-    echo "<th>Caractéristiques<br/>";       echo "&nbsp;";                      echo "</td>";
-    echo "<th>Marque<br/>";                 orderbylink("marque");              echo "</td>";
-    echo "<th>Numéro de série<br/>";        orderbylink("serial_number");       echo "</td>";
-    if ($IOT!="0") echo "<th>État<br/>";    orderbylink("raison_sortie");       echo "</td>";
-    echo "<th>Localisation<br/>";           orderbylink("localisation");        echo "</td>";
-    echo "<th>Achat<br/>";                  orderbylink("prix");                echo "</td>";
-    echo "<th>Entretiens<br/>";             echo "&nbsp;";                      echo "</td>";
-    echo "<th>Fichiers<br/>";               echo "&nbsp;";                      echo "</td>";
+                    # echo "<th>&nbsp;<br/>&nbsp;</td>"; // À voir plus tard
+                    echo "<th>Id Labo<br/>";                                            orderbylink("lab_id");              echo "</td>";
+                    echo "<th>Catégorie<br/>";                                          orderbylink("categorie");           echo "</td>";
+                    echo "<th style=\"background:#8AAA6D;\">Référence<br/>";            orderbylink("reference");           echo "</td>";
+                    echo "<th style=\"background:#bab987;\">Désignation<br/>";          orderbylink("designation");         echo "</td>";
+                    echo "<th style=\"background:#a4b395;\">Caractéristiques<br/>";     echo "&nbsp;";                      echo "</td>";
+                    echo "<th style=\"background:#8AAA6D;\">Marque<br/>";               orderbylink("marque");              echo "</td>";
+                    echo "<th style=\"background:#8AAA6D;\">Numéro de série<br/>";      orderbylink("serial_number");       echo "</td>";
+    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">État<br/>";                 orderbylink("raison_sortie");       echo "</td>";
+                    echo "<th style=\"background:#96a5bc;\">Localisation<br/>";         orderbylink("localisation");        echo "</td>";
+                    echo "<th style=\"background:#bab987;\">Achat<br/>";                orderbylink("prix");                echo "</td>";
+                    echo "<th style=\"background:#a786a2;\">Entretiens<br/>";           echo "&nbsp;";                      echo "</td>";
+                    echo "<th style=\"background:#BAA47A;\">Fichiers<br/>";             echo "&nbsp;";                      echo "</td>";
 echo "</tr>";
 
 /*  ╦  ╦╔═╗╔╗╔╔═╗╔═╗  ╔╦╗╔═╗  ╦═╗╔═╗╔═╗╦ ╦╦ ╔╦╗╔═╗╔╦╗╔═╗
@@ -159,7 +159,8 @@ foreach ($tableau as &$t) {
         
         // ********** Marque  **********
         echo "<td>";
-        echo "<span title=\"";
+        
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"";
         if ($t["vendeur"]!="-") echo "vendu par ".$t["vendeur"]."";
         echo "\">";
         if ($t["marque"]!="") echo $t["marque"]; else echo "-";
