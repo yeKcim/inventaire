@@ -9,7 +9,7 @@
    ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝
 */
 
-
+$message="";
 
 /*
  █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
@@ -194,7 +194,9 @@ if ( isset($_POST["technique_valid"]) ) {
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    mysql_query ("UPDATE base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$data["lab_id"]."' WHERE base.base_index = $i;" );
+    $modif_result=mysql_query ("UPDATE base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$data["lab_id"]."' WHERE base.base_index = $i;" );
+
+    $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data["marque"]=$marque;
@@ -216,6 +218,8 @@ if ( isset($_POST["technique_valid"]) ) {
 echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
     echo "<h1>Technique</h1>";
+    
+    echo $message;
     
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
