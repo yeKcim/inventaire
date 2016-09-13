@@ -102,9 +102,9 @@ echo "<tr>";
                     # echo "<th>&nbsp;<br/>&nbsp;</td>"; // À voir plus tard
                     echo "<th>Id Labo<br/>";                                            orderbylink("lab_id");              echo "</td>";
                     echo "<th>Catégorie<br/>";                                          orderbylink("categorie");           echo "</td>";
-                    echo "<th style=\"background:#8AAA6D;\">Référence<br/>";            orderbylink("reference");           echo "</td>";
                     echo "<th style=\"background:#bab987;\">Désignation<br/>";          orderbylink("designation");         echo "</td>";
                     echo "<th style=\"background:#a4b395;\">Caractéristiques<br/>";     echo "&nbsp;";                      echo "</td>";
+                    echo "<th style=\"background:#8AAA6D;\">Référence<br/>";            orderbylink("reference");           echo "</td>";
                     echo "<th style=\"background:#8AAA6D;\">Marque<br/>";               orderbylink("marque");              echo "</td>";
                     echo "<th style=\"background:#8AAA6D;\">Numéro de série<br/>";      orderbylink("serial_number");       echo "</td>";
     if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">État<br/>";                 orderbylink("raison_sortie");       echo "</td>";
@@ -130,14 +130,6 @@ foreach ($tableau as &$t) {
         // ********** Catégorie **********
         echo "<td>".utf8_encode($t["categorie"])."</td>";
         
-        // ********** Référence **********
-        echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
-        if ($t["reference"]!="") echo $t["reference"];
-        else echo "-";
-        echo "</span>";
-        echo "</td>";
-        
         // ********** Désignation **********
         echo "<td>";
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
@@ -154,6 +146,14 @@ foreach ($tableau as &$t) {
         if (isset($tableau_carac[$t["base_index"]]) ) echo substr($tableau_carac[$t["base_index"]], 0, -2);
         else echo "-";
 
+        echo "</span>";
+        echo "</td>";
+
+        // ********** Référence **********
+        echo "<td>";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
+        if ($t["reference"]!="") echo $t["reference"];
+        else echo "-";
         echo "</span>";
         echo "</td>";
         
