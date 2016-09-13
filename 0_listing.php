@@ -107,9 +107,9 @@ echo "<tr>";
                     echo "<th style=\"background:#8AAA6D;\">Référence<br/>";            orderbylink("reference");           echo "</td>";
                     echo "<th style=\"background:#8AAA6D;\">Marque<br/>";               orderbylink("marque");              echo "</td>";
                     echo "<th style=\"background:#8AAA6D;\">Numéro de série<br/>";      orderbylink("serial_number");       echo "</td>";
-                    echo "<th style=\"background:#bab987;\">Achat<br/>";                orderbylink("prix");                echo "</td>";
                     echo "<th style=\"background:#a786a2;\">Entretiens<br/>";           echo "&nbsp;";                      echo "</td>";
                     echo "<th style=\"background:#BAA47A;\">Fichiers<br/>";             echo "&nbsp;";                      echo "</td>";
+                    echo "<th style=\"background:#bab987;\">Achat<br/>";                orderbylink("prix");                echo "</td>";
                     echo "<th style=\"background:#96a5bc;\">Localisation<br/>";         orderbylink("localisation");        echo "</td>";
     if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">État<br/>";                 orderbylink("raison_sortie");       echo "</td>";
 echo "</tr>";
@@ -174,24 +174,6 @@ foreach ($tableau as &$t) {
         echo "</span>";
         echo "</td>";
         
-        // ********** Achat **********
-        echo "<td>";
-
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
-
-        echo "<span title=\"";
-        if ($t["responsable_achat"]!="0") echo "Par ".$responsables[$t["responsable_achat"]][2]." ".$responsables[$t["responsable_achat"]][1]." ";
-        if ($t["date_achat"]!="0000-00-00") echo "le ".dateformat($t["date_achat"],"fr")."";
-        echo "\">";
-        if ($t["prix"]!="0") echo "".$t["prix"]."€";
-        if ($t["contrat"]!="0")echo " sur ".$contrats[$t["contrat"]][1]."";
-        if ( ($t["prix"]=="0") && ($t["contrat"]=="0") ) echo "-";
-        echo "</span>";
-        
-        echo "</span>";
-        
-        echo "</td>";
-        
         // ********** Entretiens **********
         echo "<td>";
 
@@ -226,6 +208,24 @@ foreach ($tableau as &$t) {
 
         echo "</td>";
 
+        // ********** Achat **********
+        echo "<td>";
+
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
+
+        echo "<span title=\"";
+        if ($t["responsable_achat"]!="0") echo "Par ".$responsables[$t["responsable_achat"]][2]." ".$responsables[$t["responsable_achat"]][1]." ";
+        if ($t["date_achat"]!="0000-00-00") echo "le ".dateformat($t["date_achat"],"fr")."";
+        echo "\">";
+        if ($t["prix"]!="0") echo "".$t["prix"]."€";
+        if ($t["contrat"]!="0")echo " sur ".$contrats[$t["contrat"]][1]."";
+        if ( ($t["prix"]=="0") && ($t["contrat"]=="0") ) echo "-";
+        echo "</span>";
+        
+        echo "</span>";
+        
+        echo "</td>";
+        
         // ********** Localisation **********
         echo "<td>";
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
