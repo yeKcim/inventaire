@@ -107,11 +107,11 @@ echo "<tr>";
                     echo "<th style=\"background:#8AAA6D;\">Référence<br/>";            orderbylink("reference");           echo "</td>";
                     echo "<th style=\"background:#8AAA6D;\">Marque<br/>";               orderbylink("marque");              echo "</td>";
                     echo "<th style=\"background:#8AAA6D;\">Numéro de série<br/>";      orderbylink("serial_number");       echo "</td>";
-    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">État<br/>";                 orderbylink("raison_sortie");       echo "</td>";
-                    echo "<th style=\"background:#96a5bc;\">Localisation<br/>";         orderbylink("localisation");        echo "</td>";
                     echo "<th style=\"background:#bab987;\">Achat<br/>";                orderbylink("prix");                echo "</td>";
                     echo "<th style=\"background:#a786a2;\">Entretiens<br/>";           echo "&nbsp;";                      echo "</td>";
                     echo "<th style=\"background:#BAA47A;\">Fichiers<br/>";             echo "&nbsp;";                      echo "</td>";
+                    echo "<th style=\"background:#96a5bc;\">Localisation<br/>";         orderbylink("localisation");        echo "</td>";
+    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">État<br/>";                 orderbylink("raison_sortie");       echo "</td>";
 echo "</tr>";
 
 /*  ╦  ╦╔═╗╔╗╔╔═╗╔═╗  ╔╦╗╔═╗  ╦═╗╔═╗╔═╗╦ ╦╦ ╔╦╗╔═╗╔╦╗╔═╗
@@ -174,27 +174,6 @@ foreach ($tableau as &$t) {
         echo "</span>";
         echo "</td>";
         
-        // ********** État **********
-        if ($IOT!="0") {
-            echo "<td>";
-            echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()},closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
-            if ($raison_sortie[$t["raison_sortie"]]!="") echo $raison_sortie[$t["raison_sortie"]];
-            else echo "-";
-            echo "</span>";
-            echo "</td>";
-        }
-
-        // ********** Localisation **********
-        echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
-        echo "<span title=\"Utilisé par ".$utilisateurs[$t["utilisateur"]][2]." ".$utilisateurs[$t["utilisateur"]][1]." le ".dateformat($t["localisation"][2],"fr")."\">";
-
-        echo "".utf8_encode($t["localisation"][0])." ".utf8_encode($t["localisation"][1])."";
-
-        echo "</span>";
-        echo "</span>";
-        echo "</td>";
-        
         // ********** Achat **********
         echo "<td>";
 
@@ -212,7 +191,6 @@ foreach ($tableau as &$t) {
         echo "</span>";
         
         echo "</td>";
-        
         
         // ********** Entretiens **********
         echo "<td>";
@@ -248,7 +226,26 @@ foreach ($tableau as &$t) {
 
         echo "</td>";
 
+        // ********** Localisation **********
+        echo "<td>";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
+        echo "<span title=\"Utilisé par ".$utilisateurs[$t["utilisateur"]][2]." ".$utilisateurs[$t["utilisateur"]][1]." le ".dateformat($t["localisation"][2],"fr")."\">";
 
+        echo "".utf8_encode($t["localisation"][0])." ".utf8_encode($t["localisation"][1])."";
+
+        echo "</span>";
+        echo "</span>";
+        echo "</td>";
+
+        // ********** État **********
+        if ($IOT!="0") {
+            echo "<td>";
+            echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()},closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
+            if ($raison_sortie[$t["raison_sortie"]]!="") echo $raison_sortie[$t["raison_sortie"]];
+            else echo "-";
+            echo "</span>";
+            echo "</td>";
+        }
 
 
 
