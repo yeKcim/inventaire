@@ -154,7 +154,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
                 echo "<label for=\"plus_utilisateur_prenom\">Prénom :</label>\n";
                 echo "<input value=\"\" name=\"plus_utilisateur_prenom\" type=\"text\">\n";
 
-                echo "<label for=\"plus_utilisateur_nom\">Nom :</label>\n";
+                echo "<label for=\"plus_utilisateur_nom\">NOM :</label>\n";
                 echo "<input value=\"\" name=\"plus_utilisateur_nom\" type=\"text\">\n";
                 
                 echo "<label for=\"plus_utilisateur_mail\">Mail :</label>\n";

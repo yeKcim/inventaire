@@ -309,7 +309,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
                 echo "<label for=\"plus_responsable_achat_prenom\">Prénom :</label>\n";
                 echo "<input value=\"\" name=\"plus_responsable_achat_prenom\" type=\"text\">\n";
 
-                echo "<label for=\"plus_responsable_achat_nom\">Nom :</label>\n";
+                echo "<label for=\"plus_responsable_achat_nom\">NOM :</label>\n";
                 echo "<input value=\"\" name=\"plus_responsable_achat_nom\" type=\"text\">\n";
                 
                 echo "<label for=\"plus_responsable_achat_mail\">Mail :</label>\n";
