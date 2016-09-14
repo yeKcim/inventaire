@@ -9,7 +9,7 @@
 ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
 */
 
-$table = "SELECT base_index, lab_id, categorie, categorie_nom, reference, designation, marque, marque_nom, vendeur, vendeur_nom, vendeur_web, vendeur_remarques, serial_number, localisation, localisation_batiment, localisation_piece, date_localisation, vendeur_nom, marque_nom, raison_sortie, utilisateur, responsable_achat, date_achat, prix, contrat, num_inventaire
+$table = "SELECT base_index, lab_id, categorie, categorie_nom, reference, designation, marque, marque_nom, vendeur, vendeur_nom, vendeur_web, vendeur_remarques, serial_number, localisation, localisation_batiment, localisation_piece, date_localisation, vendeur_nom, marque_nom, raison_sortie, utilisateur, responsable_achat, date_achat, prix, contrat, num_inventaire, integration
 FROM base, categorie, marque, vendeur, localisation, contrat, contrat_type
 WHERE categorie=categorie_index AND marque=marque_index AND vendeur=vendeur_index AND localisation=localisation_index
 AND contrat_index=contrat AND contrat_type=contrat_type_index
@@ -26,7 +26,7 @@ while ($l = mysql_fetch_row($query_table)) {
         "vendeur"=>utf8_encode($l[9]),      "serial_number"=>utf8_encode($l[12]),       "raison_sortie"=>$l[19],
         "utilisateur"=>utf8_encode($l[20]), "responsable_achat"=>utf8_encode($l[21]),   "date_achat"=>$l[22],
         "prix"=>$l[23],                     "contrat"=>$l[24],                          "num_inventaire"=>$l[25],
-        "localisation"=> array($l[14],$l[15],$l[16])
+        "integration"=>$l[26],              "localisation"=> array($l[14],$l[15],$l[16])
     );
 }
 
@@ -100,17 +100,18 @@ echo "<table id=\"listing\">";
     ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝    */
 echo "<tr>";
                     # echo "<th>&nbsp;<br/>&nbsp;</td>"; // À voir plus tard
-                    echo "<th style=\"border-left: 0px\">   Id Labo<br/>";                                            orderbylink("lab_id");              echo "</td>";
+                    echo "<th style=\"border-left: 0px\">   Id Labo<br/>";              orderbylink("lab_id");              echo "</td>";
                     echo "<th>Catégorie<br/>";                                          orderbylink("categorie");           echo "</td>";
+                    echo "<th>Intégré à<br/>";                                          echo "&nbsp;";                      echo "</td>";
                     echo "<th style=\"background:#bab987;\">Désignation<br/>";          orderbylink("designation");         echo "</td>";
                     echo "<th style=\"background:#a4b395;\">Caractéristiques<br/>";     echo "&nbsp;";                      echo "</td>";
-                    echo "<th style=\"background:#8AAA6D;\">Référence fabricant<br/>";            orderbylink("reference");           echo "</td>";
+                    echo "<th style=\"background:#8AAA6D;\">Référence fabricant<br/>";  orderbylink("reference");           echo "</td>";
                     echo "<th style=\"background:#8AAA6D;\">Marque<br/>";               orderbylink("marque");              echo "</td>";
                     echo "<th style=\"background:#8AAA6D;\">Numéro de série<br/>";      orderbylink("serial_number");       echo "</td>";
-                    echo "<th style=\"background:#bab987;\">n° d’inventaire<br/>";      orderbylink("num_inventaire");       echo "</td>";
+                    echo "<th style=\"background:#bab987;\">n° d’inventaire<br/>";      orderbylink("num_inventaire");      echo "</td>";
                     echo "<th style=\"background:#bab987;\">Achat<br/>";                orderbylink("prix");                echo "</td>";
                     echo "<th style=\"background:#a786a2;\">Entretiens<br/>";           echo "&nbsp;";                      echo "</td>";
-                    echo "<th style=\"background:#BAA47A;\">Fichiers<br/>";             echo "&nbsp;";                      echo "</td>";
+                    echo "<th style=\"background:#BA944D;\">Fichiers<br/>";             echo "&nbsp;";                      echo "</td>";
                     echo "<th style=\"background:#96a5bc;\">Localisation<br/>";         orderbylink("localisation");        echo "</td>";
     if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">État<br/>";                 orderbylink("raison_sortie");       echo "</td>";
 echo "</tr>";
@@ -130,6 +131,12 @@ foreach ($tableau as &$t) {
         
         // ********** Catégorie **********
         echo "<td>".utf8_encode($t["categorie"])."</td>";
+        
+        // ********** Intégration **********
+        echo "<td>";
+        if ($t["integration"]!="0") echo "<a href=\"info.php?i=".$t["integration"]."\" target=\"_blank\">⤴</a>";
+        else echo "&nbsp;";
+        echo "</td>";
         
         // ********** Désignation **********
         echo "<td>";
