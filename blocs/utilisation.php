@@ -152,13 +152,13 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
             echo "\n\n\n";
             echo "<fieldset id=\"plus_utilisateur\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvel utilisateur</legend>";
                 echo "<label for=\"plus_utilisateur_prenom\">Prénom :</label>\n";
-                echo "<input value=\"\" name=\"plus_utilisateur_prenom\" type=\"text\">\n";
+                echo "<input value=\"\" name=\"plus_utilisateur_prenom\" type=\"text\"><br/>\n";
 
                 echo "<label for=\"plus_utilisateur_nom\">NOM :</label>\n";
-                echo "<input value=\"\" name=\"plus_utilisateur_nom\" type=\"text\">\n";
+                echo "<input value=\"\" name=\"plus_utilisateur_nom\" type=\"text\"><br/>\n";
                 
                 echo "<label for=\"plus_utilisateur_mail\">Mail :</label>\n";
-                echo "<input value=\"\" name=\"plus_utilisateur_mail\" type=\"text\">\n";
+                echo "<input value=\"\" name=\"plus_utilisateur_mail\" type=\"text\"><br/>\n";
                 
                 echo "<label for=\"plus_utilisateur_phone\">Téléphone :</label>\n";
                 echo "<input value=\"\" name=\"plus_utilisateur_phone\" type=\"text\">\n";
@@ -183,7 +183,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
             echo "\n\n\n";
             echo "<fieldset id=\"plus_localisation\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle localisation</legend>";
                 echo "<label for=\"plus_localisation_bat\">Bâtiment :</label>\n";
-                echo "<input value=\"\" name=\"plus_localisation_bat\" type=\"text\">\n";
+                echo "<input value=\"\" name=\"plus_localisation_bat\" type=\"text\"><br/>\n";
                 echo "<label for=\"plus_localisation_piece\">Pièce :</label>\n";
                 echo "<input value=\"\" name=\"plus_localisation_piece\" type=\"text\">\n";
             echo "</fieldset>";

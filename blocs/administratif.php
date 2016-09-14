@@ -204,13 +204,13 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<fieldset id=\"plus_vendeur\" class=\"subfield\" style=\"display: none;\"><legend  class=\"subfield\">Nouveau Vendeur</legend>";
     
             echo "<label for=\"plus_vendeur_nom\">Nom :</label>\n";
-            echo "<input value=\"\" name=\"plus_vendeur_nom\" type=\"text\">\n";
+            echo "<input value=\"\" name=\"plus_vendeur_nom\" type=\"text\"><br/>\n";
         
             echo "<label for=\"plus_vendeur_web\">Site web :</label>\n";
-            echo "<input value=\"\" name=\"plus_vendeur_web\" type=\"text\">\n";       
+            echo "<input value=\"\" name=\"plus_vendeur_web\" type=\"text\"><br/>\n";       
         
             echo "<label for=\"plus_vendeur_remarque\">Remarque :</label>\n";
-            echo "<input value=\"\" name=\"plus_vendeur_remarque\" type=\"text\">\n";        
+            echo "<input value=\"\" name=\"plus_vendeur_remarque\" type=\"text\"><br/>\n";        
         
         echo "</fieldset>";
         echo "\n\n\n";
@@ -240,7 +240,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<fieldset id=\"plus_contrat\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau Contrat</legend>";
     
             echo "<label for=\"plus_contrat_nom\">Nom :</label>\n";
-            echo "<input value=\"\" name=\"plus_contrat_nom\" type=\"text\">\n";
+            echo "<input value=\"\" name=\"plus_contrat_nom\" type=\"text\"><br/>\n";
         
             echo "<label for=\"contrat_type\">Type de contrat :</label>\n";
                echo "<select name=\"contrat_type\" onchange=\"display(this,'plus_contrat_type','plus_contrat_type');\" id=\"contrat_type\">";
@@ -307,16 +307,16 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
             echo "\n\n\n";
             echo "<fieldset id=\"plus_responsable_achat\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau responsable achat</legend>";
                 echo "<label for=\"plus_responsable_achat_prenom\">Prénom :</label>\n";
-                echo "<input value=\"\" name=\"plus_responsable_achat_prenom\" type=\"text\">\n";
+                echo "<input value=\"\" name=\"plus_responsable_achat_prenom\" type=\"text\"><br/>\n";
 
                 echo "<label for=\"plus_responsable_achat_nom\">NOM :</label>\n";
-                echo "<input value=\"\" name=\"plus_responsable_achat_nom\" type=\"text\">\n";
+                echo "<input value=\"\" name=\"plus_responsable_achat_nom\" type=\"text\"><br/>\n";
                 
                 echo "<label for=\"plus_responsable_achat_mail\">Mail :</label>\n";
-                echo "<input value=\"\" name=\"plus_responsable_achat_mail\" type=\"text\">\n";
+                echo "<input value=\"\" name=\"plus_responsable_achat_mail\" type=\"text\"><br/>\n";
                 
                 echo "<label for=\"plus_responsable_achat_phone\">Téléphone :</label>\n";
-                echo "<input value=\"\" name=\"plus_responsable_achat_phone\" type=\"text\">\n";
+                echo "<input value=\"\" name=\"plus_responsable_achat_phone\" type=\"text\"><br/>\n";
 
             echo "</fieldset>";
             echo "\n\n\n";

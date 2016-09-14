@@ -201,20 +201,20 @@ echo "</fieldset>";
 
     // TODO des catégories de caractéristiques ?
     
-    echo "Si la caractéristique n’est pas présente dans la liste ci-dessus…";
+    echo "Si la caractéristique n’est pas présente dans la liste ci-dessus…<br/>";
     
     echo "<label for=\"nom_carac\">Nom :</label>\n";
-    echo "<input value=\"$nom_carac\" name=\"nom_carac\" type=\"text\">\n";
+    echo "<input value=\"$nom_carac\" name=\"nom_carac\" type=\"text\"><br/>\n";
     
     echo "<label for=\"unite_carac\">";
     echo "<abbr title=\"µm, %,… si oui/non, entrez « bool »\">Unité</abbr>";
     echo " :</label>\n";
-    echo "<input value=\"$unite_carac\" name=\"unite_carac\" type=\"text\">\n";
+    echo "<input value=\"$unite_carac\" name=\"unite_carac\" type=\"text\"><br/>\n";
     
     echo "<label for=\"symbole_carac\">";
     echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle</abbr>";
     echo ":</label>\n";
-    echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\">\n";
+    echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\"><br/>\n";
 
 
     /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
