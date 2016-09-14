@@ -41,7 +41,7 @@ while ($l = mysql_fetch_row($query_table_localisation)) {
 }
 
 // tous les enfants 
-$query_table_enfants = mysql_query ("SELECT base_index, lab_id, designation FROM base WHERE intergration!=\"$i\" ORDER BY lab_id ASC ;");
+$query_table_enfants = mysql_query ("SELECT base_index, lab_id, designation FROM base WHERE integration=\"$i\" ORDER BY lab_id ASC ;");
 $kids = array();
 while ($l = mysql_fetch_row($query_table_enfants)) {
     $kids[$l[0]]=array($l[0],"#".$l[0]."", utf8_encode($l[1]), utf8_encode($l[2]));
@@ -266,10 +266,9 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         if ( ($data["integration"]!="0") && ($data["integration"]!="") )
             echo " <a href=\"info.php?i=".$data["integration"]."\"><strong>↗</strong></a>";
 
-        echo "<label for=\"parent\">Parent de  :</label>\n";
+        echo "<br/>Parent de :\n";
         echo "<ul>";
-            
-            foreach ($kids as $k) echo "<li>".$k[0]."</li>";
+            foreach ($kids as $k) echo "<li><a href=\"?i=".$k[0]."\" target=\"_blank\">".$k[2]." (".$k[1].")</a>&nbsp;: ".$k[3]."</li>";
         echo "</ul>";
         
     echo "</fieldset>";
