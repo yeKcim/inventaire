@@ -100,7 +100,7 @@ echo "<table id=\"listing\">";
     ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝    */
 echo "<tr>";
                     # echo "<th>&nbsp;<br/>&nbsp;</td>"; // À voir plus tard
-                    echo "<th>Id Labo<br/>";                                            orderbylink("lab_id");              echo "</td>";
+                    echo "<th style=\"border-left: 0px\">   Id Labo<br/>";                                            orderbylink("lab_id");              echo "</td>";
                     echo "<th>Catégorie<br/>";                                          orderbylink("categorie");           echo "</td>";
                     echo "<th style=\"background:#bab987;\">Désignation<br/>";          orderbylink("designation");         echo "</td>";
                     echo "<th style=\"background:#a4b395;\">Caractéristiques<br/>";     echo "&nbsp;";                      echo "</td>";
@@ -121,7 +121,7 @@ foreach ($tableau as &$t) {
     echo "<tr>";
         
         // ********** Id Labo **********
-        echo "<td style=\"text-align:center;\"><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
+        echo "<td style=\"text-align:center; border-left: 0px\"><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
         echo "<strong>";
         if ($t["lab_id"]=="") echo "#".$t["base_index"].""; else echo $t["lab_id"];
         echo "</strong>";
