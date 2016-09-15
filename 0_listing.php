@@ -42,7 +42,7 @@ $query_table_carac = mysql_query ("SELECT base_index, categorie, carac_valeur, c
 while ($l = mysql_fetch_row($query_table_carac)) {
     if ($l[5]=="bool") { $unit=""; $value= ($l[2]=="1") ? "oui" : "non" ; }
     else               { $unit=$l[5] ; $value=$l[2];}
-    $tableau_carac[$l[0]].="<span title=\"".utf8_encode($l[4])."\">$l[6]=$value$unit</span>, ";
+    $tableau_carac[$l[0]].="<span title=\"".utf8_encode($l[4])."\"><span style=\"color:#2e3436;\">".$l[6]."</span>:<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; ";
 }
 
 $today=date("Y-m-d");
