@@ -165,7 +165,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
                 echo "<label for=\"plus_utilisateur_mail\">Mail :</label>\n";
                 echo "<input value=\"\" name=\"plus_utilisateur_mail\" type=\"text\"><br/>\n";
                 
-                echo "<label for=\"plus_utilisateur_phone\">Téléphone :</label>\n";
+                echo "<label for=\"plus_utilisateur_phone\"><abbr title=\"juste les chiffres sans séparateur\">Téléphone</abbr> :</label>\n";
                 echo "<input value=\"\" name=\"plus_utilisateur_phone\" type=\"text\">\n";
 
             echo "</fieldset>";

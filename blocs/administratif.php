@@ -315,7 +315,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
                 echo "<label for=\"plus_responsable_achat_mail\">Mail :</label>\n";
                 echo "<input value=\"\" name=\"plus_responsable_achat_mail\" type=\"text\"><br/>\n";
                 
-                echo "<label for=\"plus_responsable_achat_phone\">Téléphone :</label>\n";
+                echo "<label for=\"plus_responsable_achat_phone\"><abbr title=\"juste les chiffres sans séparateur\">Téléphone</abbr> :</label>\n";
                 echo "<input value=\"\" name=\"plus_responsable_achat_phone\" type=\"text\"><br/>\n";
 
             echo "</fieldset>";
@@ -330,14 +330,14 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     echo "<fieldset><legend>Dates</legend>";
     
         /* ########### date_achat ########### */
-        echo "<label for=\"achat\">Achat <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<label for=\"achat\">Achat <abbr title=\"JJ/MM/AAAA (si jour ou mois inconnue → 01)\"><strong>ⓘ</strong></abbr> :</label>\n";
         echo "<input value=\"";
         if ($data["date_achat"]!="0000-00-00") echo dateformat($data["date_achat"],"fr");
         echo "\" name=\"date_achat\" type=\"date\" id=\"achat\"/>";
         echo "<br/>";
 
         /* ########### garantie ########### */
-        echo "<label for=\"garantie\">Fin de garantie <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<label for=\"garantie\">Fin de garantie <abbr title=\"JJ/MM/AAAA (si jour ou mois inconnue → 01)\"><strong>ⓘ</strong></abbr> :</label>\n";
         echo "<input value=\"";
         if ($data["garantie"]!="0000-00-00") echo dateformat($data["garantie"],"fr");
         echo "\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
