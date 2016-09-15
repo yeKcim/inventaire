@@ -36,6 +36,15 @@ $b_i="";
 foreach ($tableau as &$t) { $b_i.="".$t["base_index"].","; }
 $b_i=substr($b_i, 0, -1); // suppression du dernier caractère
 
+
+//liste des journaux correspondants
+$tableau_journaux=array();
+$query_tableau_journaux = mysql_query ("SELECT DISTINCT (base_index) FROM base, historique WHERE historique_id=base_index AND base_index IN ($b_i) ORDER BY base_index ASC ;");
+while ($l = mysql_fetch_row($query_tableau_journaux)) {
+    $tableau_journaux[$l[0]]=1;
+}
+
+
 //liste des caracs correspondantes
 $tableau_carac=array();
 $query_table_carac = mysql_query ("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
@@ -110,8 +119,9 @@ echo "<tr>";
                     echo "<th style=\"background:#8AAA6D;\">Numéro de série<br/>";      orderbylink("serial_number");       echo "</td>";
                     echo "<th style=\"background:#bab987;\">n° d’inventaire<br/>";      orderbylink("num_inventaire");      echo "</td>";
                     echo "<th style=\"background:#bab987;\">Achat<br/>";                orderbylink("prix");                echo "</td>";
-                    echo "<th style=\"background:#a786a2;\">Entretiens<br/>";           echo "&nbsp;";                      echo "</td>";
+                    echo "<th style=\"background:#c19aaa;\">Entretiens<br/>";           echo "&nbsp;";                      echo "</td>";
                     echo "<th style=\"background:#BA944D;\">Fichiers<br/>";             echo "&nbsp;";                      echo "</td>";
+                    echo "<th style=\"background:#a786a2;\">Journal<br/>";              echo "&nbsp;";                      echo "</td>";
                     echo "<th style=\"background:#96a5bc;\">Localisation<br/>";         orderbylink("localisation");        echo "</td>";
     if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">État<br/>";                 orderbylink("raison_sortie");       echo "</td>";
 echo "</tr>";
@@ -237,6 +247,18 @@ foreach ($tableau as &$t) {
             else echo "-";
         }
         else echo "-";
+        echo "</span>";
+
+        echo "</td>";
+
+        // ********** Journal **********
+        echo "<td>";
+
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=journal&quick_name=Journal',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide journal\">";
+
+        if ( isset($tableau_journaux[$t["base_index"]]) ) echo "◎" ;
+        else echo "-" ;
+        
         echo "</span>";
 
         echo "</td>";
