@@ -115,9 +115,9 @@ echo "<table id=\"listing\">";
     ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝    */
 echo "<tr>";
                     # echo "<th>&nbsp;<br/>&nbsp;</td>"; // À voir plus tard
-                    echo "<th style=\"border-left: 0px\">   Id Labo<br/>";              orderbylink("lab_id");              echo "</td>";
+                    echo "<th style=\"border-left: 0px\">&nbsp;<br/>";             echo "&nbsp;";                      echo "</td>";
+                    echo "<th>Id Labo<br/>";                                            orderbylink("lab_id");              echo "</td>";
                     echo "<th>Catégorie<br/>";                                          orderbylink("categorie");           echo "</td>";
-                    echo "<th>Intégré à<br/>";                                          echo "&nbsp;";                      echo "</td>";
                     echo "<th style=\"background:#bab987;\">Désignation<br/>";          orderbylink("designation");         echo "</td>";
                     echo "<th style=\"background:#a4b395;\">Caractéristiques<br/>";     echo "&nbsp;";                      echo "</td>";
                     echo "<th style=\"background:#8AAA6D;\">Référence fabricant<br/>";  orderbylink("reference");           echo "</td>";
@@ -138,18 +138,8 @@ echo "</tr>";
 foreach ($tableau as &$t) {
     echo "<tr>";
         
-        // ********** Id Labo **********
-        echo "<td style=\"text-align:center; border-left: 0px\"><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
-        echo "<strong>";
-        if ($t["lab_id"]=="") echo "#".$t["base_index"].""; else echo $t["lab_id"];
-        echo "</strong>";
-        echo "</a></td>";
-        
-        // ********** Catégorie **********
-        echo "<td>".utf8_encode($t["categorie"])."</td>";
-        
         // ********** Intégration **********
-        echo "<td>";
+        echo "<td style=\"border-left: 0px\">";
         if ($t["integration"]!="0") echo "<a href=\"info.php?i=".$t["integration"]."\" target=\"_blank\" title=\"intégré dans…\">↰ #".$t["integration"]."</a>";
         
         elseif ( isset ($tableau_parents[$t["base_index"]]) ) {
@@ -160,6 +150,16 @@ foreach ($tableau as &$t) {
             echo "&nbsp;";
         }
         echo "</td>";
+
+        // ********** Id Labo **********
+        echo "<td><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
+        echo "<strong>";
+        if ($t["lab_id"]=="") echo "#".$t["base_index"].""; else echo $t["lab_id"];
+        echo "</strong>";
+        echo "</a></td>";
+        
+        // ********** Catégorie **********
+        echo "<td>".utf8_encode($t["categorie"])."</td>";
         
         // ********** Désignation **********
         echo "<td>";
