@@ -44,6 +44,15 @@ while ($l = mysql_fetch_row($query_tableau_journaux)) {
     $tableau_journaux[$l[0]]=1;
 }
 
+//liste des ensembles parmi les éléments affichés
+$tableau_parents=array();
+$query_tableau_parents = mysql_query ("SELECT base_index, integration FROM base WHERE integration IN ($b_i) ORDER BY base_index ASC ;");
+while ($l = mysql_fetch_row($query_tableau_parents)) {
+    $tableau_parents[$l[1]].="".$l[0].",";
+}
+
+echo $tableau_parents;
+
 
 //liste des caracs correspondantes
 $tableau_carac=array();
@@ -144,8 +153,15 @@ foreach ($tableau as &$t) {
         
         // ********** Intégration **********
         echo "<td>";
-        if ($t["integration"]!="0") echo "<a href=\"info.php?i=".$t["integration"]."\" target=\"_blank\">⤴</a>";
-        else echo "&nbsp;";
+        if ($t["integration"]!="0") echo "<a href=\"info.php?i=".$t["integration"]."\" target=\"_blank\" title=\"intégré dans…\">↰ #".$t["integration"]."</a>";
+        
+        elseif ( isset ($tableau_parents[$t["base_index"]]) ) {
+            echo "↳ #".substr($tableau_parents[$t["base_index"]], 0, -1)."";
+        }
+        
+        else {
+            echo "&nbsp;";
+        }
         echo "</td>";
         
         // ********** Désignation **********
