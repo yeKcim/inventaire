@@ -51,9 +51,6 @@ while ($l = mysql_fetch_row($query_tableau_parents)) {
     $tableau_parents[$l[1]].="".$l[0].",";
 }
 
-echo $tableau_parents;
-
-
 //liste des caracs correspondantes
 $tableau_carac=array();
 $query_table_carac = mysql_query ("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
