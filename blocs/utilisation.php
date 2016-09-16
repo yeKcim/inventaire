@@ -264,12 +264,14 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo "</select>";
 
         if ( ($data["integration"]!="0") && ($data["integration"]!="") )
-            echo " <a href=\"info.php?i=".$data["integration"]."\"><strong>↗</strong></a>";
+            echo " <a href=\"info.php?i=".$data["integration"]."\" target=\"_blank\"><strong>↗</strong></a>";
 
-        echo "<br/>Parent de :\n";
-        echo "<ul>";
-            foreach ($kids as $k) echo "<li><a href=\"?i=".$k[0]."\" target=\"_blank\">".$k[2]." (".$k[1].")</a>&nbsp;: ".$k[3]."</li>";
-        echo "</ul>";
+        if (!empty($kids) ) {
+            echo "<br/>Parent de :\n";
+            echo "<ul>";
+                foreach ($kids as $k) echo "<li><a href=\"?i=".$k[0]."\" target=\"_blank\">".$k[2]." (".$k[1].")</a>&nbsp;: ".$k[3]."</li>";
+            echo "</ul>";
+        }
         
     echo "</fieldset>";
 
