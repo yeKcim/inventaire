@@ -182,7 +182,10 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
         /* ########### designation ########### */
         echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation :</label>\n";
-        echo "<textarea name=\"designation\" rows=\"4\" cols=\"33\" id=\"designation\">".$data["designation"]."</textarea><br/>";
+        echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"38\"";
+        echo "value=\"";
+        echo ($data["designation"]!="") ? $data["designation"] : "";
+        echo "\" ><br/>\n";
       
         /* ########### vendeur ########### */
         echo "<label for=\"vendeur\">Vendeur ";
