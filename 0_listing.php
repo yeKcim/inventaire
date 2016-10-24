@@ -245,7 +245,6 @@ foreach ($tableau as &$t) {
         // ********** Fichiers **********
         echo "<td>";
 
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">";
         $racine = "/var/www/";
         $dir="files/".$t["base_index"]."/";
         if (file_exists("$racine$dir")) {
@@ -253,14 +252,22 @@ foreach ($tableau as &$t) {
                 $files = scandir("$racine$dir");
                 if ($files != FALSE) {
                     foreach ($files as $f) {
-                        if (($f!=".")&&($f!="..")) { icone($f); }
+                        if (($f!=".")&&($f!="..")) {
+                            echo "<a href=\"files/".$t["base_index"]."/".$f."\" target=\"_blank\" title=\"".$f."\">";
+                            icone($f);
+                            echo "</a> ";}
                     }
+               echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">";
+                    echo "+</span>";
+                    $nofiles=false;
                 }
             }
-            else echo "-";
+            else $nofiles=true;
         }
-        else echo "-";
-        echo "</span>";
+        else $nofiles=true;
+        
+        if ($nofiles) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">-</span>";
+
 
         echo "</td>";
 

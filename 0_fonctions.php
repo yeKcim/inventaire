@@ -76,14 +76,12 @@ function option_selecteur($select, $table, $complement="0") {
 */
 
 function icone($file) {
-    echo "<span title=\"$file\">";
+    
     $info = new SplFileInfo($file);
     if ("mime-icons/".$info->getExtension().".png" != FALSE) {
         echo "<img src=\"mime-icons/".$info->getExtension().".png\" />";
     }
     else echo "<img src=\"mime-icons/unknown.png\" />";
-    
-    echo "</span> ";
 }
 
 
