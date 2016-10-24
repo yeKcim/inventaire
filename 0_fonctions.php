@@ -75,6 +75,20 @@ function option_selecteur($select, $table, $complement="0") {
 ╚═════╝  ╚═════╝ ╚══════╝╚══════╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
 */
 
+function icone($file) {
+    echo "<span title=\"$file\">";
+    $info = new SplFileInfo($file);
+    if ("mime-icons/".$info->getExtension().".png" != FALSE) {
+        echo "<img src=\"mime-icons/".$info->getExtension().".png\" />";
+    }
+    else echo "<img src=\"mime-icons/unknown.png\" />";
+    
+    echo "</span> ";
+}
+
+
+
+
 function is_dir_empty($dir) {
     if (!is_readable($dir)) return NULL; 
     $handle = opendir($dir);
@@ -109,6 +123,7 @@ function displayDir($dir, $del=FALSE) {
             foreach ($files as $f) {
                 if (($f!=".")&&($f!="..")) {
                     echo "<li>";
+                    icone($f);
                     echo "<a href=\"$dir$f\" target=\"_blank\">$f</a>";
                     echo " (".formatBytes(filesize("$dir$f"),"0")."o)";
                     if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&f=".$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";

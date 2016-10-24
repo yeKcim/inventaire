@@ -253,7 +253,7 @@ foreach ($tableau as &$t) {
                 $files = scandir("$racine$dir");
                 if ($files != FALSE) {
                     foreach ($files as $f) {
-                        if (($f!=".")&&($f!="..")) { echo "<span title=\"$f\">⊗</span> "; }
+                        if (($f!=".")&&($f!="..")) { icone($f); }
                     }
                 }
             }
