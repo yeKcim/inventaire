@@ -38,11 +38,19 @@ $b_i=substr($b_i, 0, -1); // suppression du dernier caractère
 
 
 //liste des journaux correspondants
-$tableau_journaux=array();
+/*$tableau_journaux=array();
 $query_tableau_journaux = mysql_query ("SELECT DISTINCT (base_index) FROM base, historique WHERE historique_id=base_index AND base_index IN ($b_i) ORDER BY base_index ASC ;");
 while ($l = mysql_fetch_row($query_tableau_journaux)) {
     $tableau_journaux[$l[0]]=1;
+}*/
+
+
+$tableau_journaux=array();
+$query_tableau_journaux = mysql_query ("SELECT historique_id, COUNT(* ) as nb_entree FROM historique, base WHERE historique_id=base_index AND base_index IN ($b_i) GROUP BY historique_id ORDER BY historique_id ASC;");
+while ($l = mysql_fetch_row($query_tableau_journaux)) {
+    $tableau_journaux[$l[0]]=$l[1];
 }
+
 
 //liste des ensembles parmi les éléments affichés
 $tableau_parents=array();
@@ -86,6 +94,7 @@ while ($l = mysql_fetch_row($query_table_entretien)) {
     $tableau_entretien[$l[0]].="</strong></span> ";
 
 }
+
 
 #########################################################################
 #          Si du matériel sorti est affiché, afficher état              #
@@ -276,7 +285,7 @@ foreach ($tableau as &$t) {
 
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=journal&quick_name=Journal',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide journal\">";
 
-        if ( isset($tableau_journaux[$t["base_index"]]) ) echo "◎" ;
+        if ( isset($tableau_journaux[$t["base_index"]]) ) echo "<sup>".$tableau_journaux[$t["base_index"]]."</sup> <img src=\"mime-icons/txt.png\" />" ;
         else echo "-" ;
         
         echo "</span>";
