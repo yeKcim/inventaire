@@ -79,9 +79,9 @@ function icone($file) {
     
     $info = new SplFileInfo($file);
     if ("mime-icons/".$info->getExtension().".png" != FALSE) {
-        echo "<img src=\"mime-icons/".$info->getExtension().".png\" />";
+        echo "<img src=\"mime-icons/".$info->getExtension().".png\" /> ";
     }
-    else echo "<img src=\"mime-icons/unknown.png\" />";
+    else echo "<img src=\"mime-icons/unknown.png\" /> ";
 }
 
 
@@ -124,7 +124,7 @@ function displayDir($dir, $del=FALSE) {
                     icone($f);
                     echo "<a href=\"$dir$f\" target=\"_blank\">$f</a>";
                     echo " (".formatBytes(filesize("$dir$f"),"0")."o)";
-                    if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&f=".$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";
+                    if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&f=".$racine."".$dir."".$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";
                     echo"</li>";
                 }
             }

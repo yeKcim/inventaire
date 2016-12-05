@@ -15,7 +15,7 @@
 
 $max_size=file_upload_max_size();
 /* ########### POST ########### */
-$arr = array("del_f_confirm","f");
+$arr = array("del_f_confirm","f","filetoref");
 foreach ($arr as &$value) {
     $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
 }
@@ -25,9 +25,9 @@ if ($del_f_confirm=="Confirmer la suppression") {
     // Si le dossier trash n’existe pas, on le crée
     if (!file_exists("$trash")) mkdir("$trash", 0775);
     // Si le dossier trash/$i n’existe pas, on le crée
-    if (!file_exists("$trash$i")) mkdir("$trash$i", 0775);
+    if (!file_exists("$trash/$f")) mkdir("$trash/$f", 0775);
     // unlink("/var/www/files/$i/$f"); // Supprimer un fichier ainsi est un peu violent, préférons le déplacer dans un dossier trash
-    rename("$dossierdesfichiers$i/$f","$trash$i/$f");
+    rename("$f","$trash/$f");
 }
 
 
@@ -49,6 +49,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     ╩ ╩╚╝╚═╝╚═╝ ╩ ╚═╝╩╚═  ╚═╝╝╚╝  ╚  ╩╚═╝╩ ╩╩╚═╝╩╚═ */
     echo "<fieldset><legend>Ajouter un fichier</legend>";
     
+        /* ########### Form ########### */
         $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
         if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\" enctype=\"multipart/form-data\">";
         
@@ -59,8 +60,13 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
         echo "<br/>";
         echo "Taille maximum : ".formatBytes($max_size)."o.<br/>";
         
-        echo "<input type=\"file\" name=\"fichier\" style=\"border:0px solid #cc0000;\"/>";
+        echo "<input type=\"file\" name=\"fichier\" style=\"border:0px solid #cc0000;\"/><br/>";
+
+        if ( ($data["reference"]!="")&&($data["marque"]!="0") )
+            echo "<br/><input type=\"checkbox\" name=\"filetoref\" value=\"1\"> Fichier global lié à la référence fabricant.<br/>";
+        else echo "<br/><em>Vous pouvez uniquement envoyer un document lié à cette entrée. Pour envoyer un fichier global lié à la référence constructeur il est nécessaire de renseigner la marque et la référence fabricant.</em><br/>";
         echo "</p>";
+        
         
         /* ########### Ajout d’un fichier ########### */
         if(isset($_FILES['fichier'])){
@@ -75,7 +81,11 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
             if ( ($file_size > $max_size)||($file_size == 0) ) $errors[]="La taille du fichier doit être au maximum de ".formatBytes($max_size)."o.";
 
             if(empty($errors)==true) {
-                move_uploaded_file($file_tmp,"/var/www/files/$i/".$file_name);
+
+                if ($filetoref!="" ) $dossier="/var/www/files/".$data["marque"]."-".$data["reference"];
+                else $dossier="/var/www/files/$i";
+
+                move_uploaded_file($file_tmp,"$dossier/".$file_name);
                 //echo "Fichier envoyé avec succès.<br/>";
                 echo "<p class=\"success_message\" id=\"disappear_delay\">Fichier envoyé avec succès.</p>";
             }
@@ -91,11 +101,16 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 /*  ╔═╗╦╔═╗╦ ╦╦╔═╗╦═╗╔═╗
     ╠╣ ║║  ╠═╣║║╣ ╠╦╝╚═╗
     ╚  ╩╚═╝╩ ╩╩╚═╝╩╚═╚═╝  */
-    echo "<fieldset><legend>Fichiers</legend>";
+    echo "<fieldset><legend>Fichiers de cette entrée</legend>";
         displayDir("files/$i/", $del=$write);
     echo "</fieldset>";
-
-
+    
+    if ( ($data["reference"]!="")&&($data["marque"]!="0") ) {
+        echo "<fieldset><legend>Fichiers globaux liés à la référence constructeur</legend>";
+            displayDir("files/".$data["marque"]."-".$data["reference"]."/", $del=$write);
+        echo "</fieldset>";
+    }
+    
 /*  ╦═╗╔═╗╔═╗╔═╗╦═╗╔═╗╔╗╔╔═╗╔═╗╔═╗  ╔═╗╦╔╦╗╦ ╦  ╔═╗╦╦═╗╔═╗╔═╗
     ╠╦╝║╣ ╠╣ ║╣ ╠╦╝║╣ ║║║║  ║╣ ╚═╗  ╚═╗║║║║║ ║  ╠═╣║╠╦╝║╣ ╚═╗
     ╩╚═╚═╝╚  ╚═╝╩╚═╚═╝╝╚╝╚═╝╚═╝╚═╝  ╚═╝╩╩ ╩╩ ╩═╝╩ ╩╩╩╚═╚═╝╚═╝ */
