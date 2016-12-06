@@ -96,7 +96,7 @@ function is_dir_empty($dir) {
     return TRUE;
 }
 
-function displayDir($dir, $del=FALSE) {
+function displayDir($i, $dir, $del=FALSE) {
     $racine = "/var/www/";
 
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
@@ -106,8 +106,6 @@ function displayDir($dir, $del=FALSE) {
         mkdir("$racine$dir", 0775);
         echo "Dossier créé. ";
     }
-    $tempi = explode("/", $dir);
-    $i=$tempi[1];
     
     // Si le dossier est vide on l’indique
     if (is_dir_empty("$racine$dir")) {

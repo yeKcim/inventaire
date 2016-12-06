@@ -24,10 +24,8 @@ foreach ($arr as &$value) {
 if ($del_f_confirm=="Confirmer la suppression") {
     // Si le dossier trash n’existe pas, on le crée
     if (!file_exists("$trash")) mkdir("$trash", 0775);
-    // Si le dossier trash/$i n’existe pas, on le crée
-    if (!file_exists("$trash/$f")) mkdir("$trash/$f", 0775);
-    // unlink("/var/www/files/$i/$f"); // Supprimer un fichier ainsi est un peu violent, préférons le déplacer dans un dossier trash
-    rename("$f","$trash/$f");
+    $nomdel=date("Ymdhms")."-".str_replace('/', "_", $f);
+    rename("$f","$trash/$nomdel");
 }
 
 
@@ -82,7 +80,11 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 
             if(empty($errors)==true) {
 
-                if ($filetoref!="" ) $dossier="/var/www/files/".$data["marque"]."-".$data["reference"];
+                if ($filetoref!="" ) {
+					$m=str_replace('/', "_", $marques[$data["marque"]][1]);
+					$r=str_replace('/', "_", $data["reference"]);
+					$dossier="/var/www/files/".$m."-".$r;
+				}
                 else $dossier="/var/www/files/$i";
 
                 move_uploaded_file($file_tmp,"$dossier/".$file_name);
@@ -102,12 +104,14 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     ╠╣ ║║  ╠═╣║║╣ ╠╦╝╚═╗
     ╚  ╩╚═╝╩ ╩╩╚═╝╩╚═╚═╝  */
     echo "<fieldset><legend>Fichiers de cette entrée</legend>";
-        displayDir("files/$i/", $del=$write);
+        displayDir($i, "files/$i/", $del=$write);
     echo "</fieldset>";
     
     if ( ($data["reference"]!="")&&($data["marque"]!="0") ) {
         echo "<fieldset><legend>Fichiers globaux liés à la référence constructeur</legend>";
-            displayDir("files/".$data["marque"]."-".$data["reference"]."/", $del=$write);
+        	$m=str_replace('/', "_", $marques[$data["marque"]][1]);
+			$r=str_replace('/', "_", $data["reference"]);
+            displayDir($i, "files/".$m."-".$r."/", $del=$write);
         echo "</fieldset>";
     }
     

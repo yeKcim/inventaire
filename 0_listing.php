@@ -129,13 +129,14 @@ echo "<tr>";
                     echo "<th>Catégorie<br/>";                                          orderbylink("categorie");           echo "</td>";
                     echo "<th style=\"background:#bab987;\">Désignation<br/>";          orderbylink("designation");         echo "</td>";
                     echo "<th style=\"background:#a4b395;\">Caractéristiques<br/>";     echo "&nbsp;";                      echo "</td>";
-                    echo "<th style=\"background:#8AAA6D;\">Référence fabricant<br/>";  orderbylink("reference");           echo "</td>";
                     echo "<th style=\"background:#8AAA6D;\">Marque<br/>";               orderbylink("marque");              echo "</td>";
+                    echo "<th style=\"background:#8AAA6D;\">Référence fabricant<br/>";  orderbylink("reference");           echo "</td>";
+                    echo "<th style=\"background:#BA944D;\">Fichiers liés à<br/>cette référence fabricant<br/>"; echo "&nbsp;";                      echo "</td>";
                     echo "<th style=\"background:#8AAA6D;\">Numéro de série<br/>";      orderbylink("serial_number");       echo "</td>";
                     echo "<th style=\"background:#bab987;\">n° d’inventaire<br/>";      orderbylink("num_inventaire");      echo "</td>";
                     echo "<th style=\"background:#bab987;\">Achat<br/>";                orderbylink("prix");                echo "</td>";
                     echo "<th style=\"background:#c19aaa;\">Entretiens<br/>";           echo "&nbsp;";                      echo "</td>";
-                    echo "<th style=\"background:#BA944D;\">Fichiers<br/>";             echo "&nbsp;";                      echo "</td>";
+                    echo "<th style=\"background:#BA944D;\">Fichiers de l’entrée<br/>"; echo "&nbsp;";                      echo "</td>";
                     echo "<th style=\"background:#a786a2;\">Journal<br/>";              echo "&nbsp;";                      echo "</td>";
                     echo "<th style=\"background:#96a5bc;\">Localisation<br/>";         orderbylink("localisation");        echo "</td>";
     if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">État<br/>";                 orderbylink("raison_sortie");       echo "</td>";
@@ -189,14 +190,7 @@ foreach ($tableau as &$t) {
         echo "</span>";
         echo "</td>";
 
-        // ********** Référence **********
-        echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
-        if ($t["reference"]!="") echo $t["reference"];
-        else echo "-";
-        echo "</span>";
-        echo "</td>";
-        
+       
         // ********** Marque  **********
         echo "<td>";
         
@@ -206,6 +200,52 @@ foreach ($tableau as &$t) {
         if ($t["marque"]!="") echo $t["marque"]; else echo "-";
         echo "</span>";
         echo "</td>";
+        
+        
+        // ********** Référence **********
+        echo "<td>";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
+        if ($t["reference"]!="") echo $t["reference"];
+        else echo "-";
+        echo "</span>";
+        echo "</td>";
+        
+        // ********** Fichiers globaux **********
+        echo "<td>";
+
+        $racine = "/var/www/";
+        $m=str_replace('/', "_", $t["marque"]);
+        $r=str_replace('/', "_", $t["reference"]);
+        $dir="files/".$m."-".$r;
+
+        if (file_exists("$racine$dir")) {
+            if ( ! is_dir_empty("$racine$dir")) {
+                $files = scandir("$racine$dir");
+                if ($files != FALSE) {
+                    foreach ($files as $f) {
+                        if (($f!=".")&&($f!="..")) {
+                            echo "<a href=\"$dir/$f\" target=\"_blank\" title=\"".$f."\">";
+                            icone($f);
+                            echo "</a> ";}
+                    }
+               echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">";
+                    echo "+</span>";
+                    $nofiles=false;
+                }
+            }
+            else $nofiles=true;
+        }
+        else $nofiles=true;
+        
+        if ($nofiles) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">-</span>";
+
+
+        echo "</td>";
+        
+        
+        
+        
+        
         
         // ********** Serial number **********
         echo "<td>";

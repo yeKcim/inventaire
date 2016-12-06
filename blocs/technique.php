@@ -47,12 +47,7 @@ while ($l = mysql_fetch_row($query_table_labid_cat)) {
 }
 
 
-// marque
-$query_table_marque = mysql_query ("SELECT * FROM marque WHERE marque_index!=0 ORDER BY marque_nom ASC ;");
-$marques = array();
-while ($l = mysql_fetch_row($query_table_marque)) {
-    $marques[$l[0]]=array($l[0],utf8_encode($l[1]));
-}
+
 
 
 
