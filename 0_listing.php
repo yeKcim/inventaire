@@ -123,8 +123,6 @@ echo "<table id=\"listing\">";
     ║╣ ║║║║ ║╣  ║ ║╣    ║ ╠═╣╠╩╗║  ║╣ ╠═╣║ ║
     ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝    */
 echo "<tr>";
-                    # echo "<th>&nbsp;<br/>&nbsp;</td>"; // À voir plus tard
-                    echo "<th style=\"border-left: 0px\">&nbsp;<br/>";             echo "&nbsp;";                      echo "</td>";
                     echo "<th>Id Labo<br/>";                                            orderbylink("lab_id");              echo "</td>";
                     echo "<th>Catégorie<br/>";                                          orderbylink("categorie");           echo "</td>";
                     echo "<th style=\"background:#bab987;\">Désignation<br/>";          orderbylink("designation");         echo "</td>";
@@ -148,19 +146,6 @@ echo "</tr>";
 foreach ($tableau as &$t) {
     echo "<tr>";
         
-        // ********** Intégration **********
-        echo "<td style=\"border-left: 0px\">";
-        if ($t["integration"]!="0") echo "<a href=\"info.php?i=".$t["integration"]."\" target=\"_blank\" title=\"intégré dans…\">↰ #".$t["integration"]."</a>";
-        
-        elseif ( isset ($tableau_parents[$t["base_index"]]) ) {
-            echo "↳ #".substr($tableau_parents[$t["base_index"]], 0, -1)."";
-        }
-        
-        else {
-            echo "&nbsp;";
-        }
-        echo "</td>";
-
         // ********** Id Labo **********
         echo "<td><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
         echo "<strong>";
@@ -188,6 +173,24 @@ foreach ($tableau as &$t) {
         else echo "-";
 
         echo "</span>";
+        
+        
+        
+        
+			// ********** Intégration **********
+			if ($t["integration"]!="0") echo "<br/><a href=\"info.php?i=".$t["integration"]."\" target=\"_blank\" title=\"intégré dans…\">↰ #".$t["integration"]."</a>";
+			
+			elseif ( isset ($tableau_parents[$t["base_index"]]) ) {
+				echo "<br/>↳ #".substr($tableau_parents[$t["base_index"]], 0, -1)."";
+			}
+			
+			else {
+				echo "&nbsp;";
+			}
+        
+        
+        
+        
         echo "</td>";
 
        
@@ -241,10 +244,6 @@ foreach ($tableau as &$t) {
 
 
         echo "</td>";
-        
-        
-        
-        
         
         
         // ********** Serial number **********
