@@ -33,6 +33,8 @@ Les parties administrative et technique sont clairement différenciées pour per
 * **Suppression sécurisée** : Un historique des modifications ? Avec nom et date ?
 * **Traduction** : Supporter plusieurs langues ?
 * **Réforme** : Gérer les "à réformer" et les "réformé" ?
+* **Tri** : Le tri par catégorie dans index.php ne doit pas être fait sur le numéro correspondant à la catégorie mais au nom de la catégorie
+
 
 ## BUGS
 * **Nouveau type de contrat** : Lors de la création d’un nouveau type de contrat contenant un apostrophe, le contrat est resté avec le dernier type de contrat créé, aucun nouveau type n’a été ajouté dans la base.
