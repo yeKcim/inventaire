@@ -28,7 +28,7 @@ $arr_in_get = array("CAT","TYC","CON","SEA","RES","UTL","IOT");
 foreach ($arr_in_get as &$value) { $ALL_GET="$ALL_GET&$value=".$$value.""; }
 $ALL_GET=str_replace(" ", "%20", $ALL_GET);
 
-$ORDER= ($ORDER=="") ? "ORDER BY categorie ASC, lab_id ASC" : "$ORDER, base_index ASC";
+$ORDER= ($ORDER=="") ? "ORDER BY categorie ASC, length(lab_id), lab_id ASC" : "$ORDER, base_index ASC";
 
 
 

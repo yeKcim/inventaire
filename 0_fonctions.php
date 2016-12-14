@@ -3,8 +3,15 @@
 // ########### liens ▲ ▼ ###########
 function orderbylink($id) {
     global $ALL_GET, $ORDER;
-    if ($ORDER=="ORDER BY $id ASC") echo "▲ "; else echo "<a href=?$ALL_GET&ORDER=ORDER%20BY%20$id%20ASC>▲</a> ";
-    if ($ORDER=="ORDER BY $id DESC") echo "▼"; else echo "<a href=?$ALL_GET&ORDER=ORDER%20BY%20$id%20DESC>▼</a> ";
+    if ($id=="lab_id") {
+		if ($ORDER=="ORDER BY $id ASC")  echo "▲ "; else echo "<a href=?$ALL_GET&ORDER=ORDER%20BY%20length($id)%20ASC,%20$id%20ASC>▲</a> ";
+		if ($ORDER=="ORDER BY $id DESC") echo "▼"; else echo "<a href=?$ALL_GET&ORDER=ORDER%20BY%20length($id)%20DESC,%20$id%20DESC>▼</a> ";
+		
+	}
+    else {
+		if ($ORDER=="ORDER BY $id ASC")  echo "▲ "; else echo "<a href=?$ALL_GET&ORDER=ORDER%20BY%20$id%20ASC>▲</a> ";
+		if ($ORDER=="ORDER BY $id DESC") echo "▼"; else echo "<a href=?$ALL_GET&ORDER=ORDER%20BY%20$id%20DESC>▼</a> ";
+	}
 }
 
 function dateformat($date, $to="fr") {
