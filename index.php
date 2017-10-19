@@ -42,7 +42,6 @@ echo "</p>";
 require_once("./0_form.php");
 require_once("./0_listing.php");
 
-
 ?>
 
 <script type="text/javascript">

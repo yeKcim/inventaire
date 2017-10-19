@@ -6,7 +6,6 @@ function orderbylink($id) {
     if ($id=="lab_id") {
 		if ($ORDER=="ORDER BY $id ASC")  echo "▲ "; else echo "<a href=?$ALL_GET&ORDER=ORDER%20BY%20length($id)%20ASC,%20$id%20ASC>▲</a> ";
 		if ($ORDER=="ORDER BY $id DESC") echo "▼"; else echo "<a href=?$ALL_GET&ORDER=ORDER%20BY%20length($id)%20DESC,%20$id%20DESC>▼</a> ";
-		
 	}
     else {
 		if ($ORDER=="ORDER BY $id ASC")  echo "▲ "; else echo "<a href=?$ALL_GET&ORDER=ORDER%20BY%20$id%20ASC>▲</a> ";
@@ -24,7 +23,7 @@ function dateformat($date, $to="fr") {
 
 function formatBytes($size, $precision = 2)
 {   $base = log($size, 1024);
-    $suffixes = array('', 'K', 'M', 'G', 'T');   
+    $suffixes = array('', 'K', 'M', 'G', 'T');
     return round(pow(1024, $base - floor($base)), $precision) .' '. $suffixes[floor($base)];
 }
 
@@ -39,35 +38,34 @@ function phone_display($n, $display) {
     if ($display=="") $n = str_replace($char, "", $n);
     else $n = wordwrap($n, 2, $display,1);
     return "$n";
-    
 }
 
 /*
 ███████╗███████╗██╗     ███████╗ ██████╗████████╗
 ██╔════╝██╔════╝██║     ██╔════╝██╔════╝╚══██╔══╝
-███████╗█████╗  ██║     █████╗  ██║        ██║   
-╚════██║██╔══╝  ██║     ██╔══╝  ██║        ██║   
-███████║███████╗███████╗███████╗╚██████╗   ██║   
-╚══════╝╚══════╝╚══════╝╚══════╝ ╚═════╝   ╚═╝   
+███████╗█████╗  ██║     █████╗  ██║        ██║
+╚════██║██╔══╝  ██║     ██╔══╝  ██║        ██║
+███████║███████╗███████╗███████╗╚██████╗   ██║
+╚══════╝╚══════╝╚══════╝╚══════╝ ╚═════╝   ╚═╝
 */
 
-function selecteur($nom, $table, $intitule, $complement="0") {
+function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0") {
     global $$nom;
     echo "<select name=\"$nom\" onchange=\"submit();\">";
-    echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>"; 
+    echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>";
     foreach ($table as &$l){
-        $selected= ($$nom==$l[0]) ? "selected > $nom =" : " > " ;
-        $complement_info= ($complement==0) ? "" : "$l[$complement]" ;
-        echo "<option value=\"$l[0]\" $selected $l[1] $complement_info</option>"; 
+        $selected= ($$nom==$l[$A]) ? "selected > $nom =" : " > " ;
+        $complement_info= ($complement!=0) ? "" : "$l[$complement]" ; // QU’EST-CE QUE C’EST QUE COMPLÉMENT ?
+        echo "<option value=\"$l[$A]\" $selected $l[$B] $complement_info</option>";
     }
     echo "</select> ";
 }
 
-function option_selecteur($select, $table, $complement="0") {
+function option_selecteur($select, $table, $complement="0", $A="0", $B="1") {
     foreach ($table as &$l){
-        $selected= ($select==$l[0]) ? "selected >" : " >" ;
+        $selected= ($select==$l[$A]) ? "selected >" : " >" ;
         $complement_info= ($complement==0) ? "" : "$l[$complement]" ;
-        echo "<option value=\"$l[0]\" $selected $l[1] $complement_info</option>"; 
+        echo "<option value=\"$l[$A]\" $selected $l[$B] $complement_info</option>";
     }
 }
 
@@ -83,7 +81,6 @@ function option_selecteur($select, $table, $complement="0") {
 */
 
 function icone($file) {
-    
     $info = new SplFileInfo($file);
     if ("mime-icons/".$info->getExtension().".png" != FALSE) {
         echo "<img src=\"mime-icons/".$info->getExtension().".png\" /> ";
@@ -91,11 +88,8 @@ function icone($file) {
     else echo "<img src=\"mime-icons/unknown.png\" /> ";
 }
 
-
-
-
 function is_dir_empty($dir) {
-    if (!is_readable($dir)) return NULL; 
+    if (!is_readable($dir)) return NULL;
     $handle = opendir($dir);
     while (false !== ($entry = readdir($handle))) {
         if ($entry != "." && $entry != "..") return FALSE;
@@ -105,15 +99,12 @@ function is_dir_empty($dir) {
 
 function displayDir($i, $dir, $del=FALSE) {
     $racine = "/var/www/";
-
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
-    
     // Si le dossier n’existe pas, on le crée
     if (!file_exists("$racine$dir")) {
         mkdir("$racine$dir", 0775);
         echo "Dossier créé. ";
     }
-    
     // Si le dossier est vide on l’indique
     if (is_dir_empty("$racine$dir")) {
         echo "Aucun fichier trouvé";
@@ -141,21 +132,19 @@ function displayDir($i, $dir, $del=FALSE) {
 
 
 /*
-███╗   ███╗ █████╗ ██╗  ██╗    ███████╗██╗███████╗███████╗    ██╗   ██╗██████╗ ██╗      ██████╗  █████╗ ██████╗ 
+███╗   ███╗ █████╗ ██╗  ██╗    ███████╗██╗███████╗███████╗    ██╗   ██╗██████╗ ██╗      ██████╗  █████╗ ██████╗
 ████╗ ████║██╔══██╗╚██╗██╔╝    ██╔════╝██║╚══███╔╝██╔════╝    ██║   ██║██╔══██╗██║     ██╔═══██╗██╔══██╗██╔══██╗
 ██╔████╔██║███████║ ╚███╔╝     ███████╗██║  ███╔╝ █████╗      ██║   ██║██████╔╝██║     ██║   ██║███████║██║  ██║
 ██║╚██╔╝██║██╔══██║ ██╔██╗     ╚════██║██║ ███╔╝  ██╔══╝      ██║   ██║██╔═══╝ ██║     ██║   ██║██╔══██║██║  ██║
 ██║ ╚═╝ ██║██║  ██║██╔╝ ██╗    ███████║██║███████╗███████╗    ╚██████╔╝██║     ███████╗╚██████╔╝██║  ██║██████╔╝
-╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝    ╚══════╝╚═╝╚══════╝╚══════╝     ╚═════╝ ╚═╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝ 
+╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝    ╚══════╝╚═╝╚══════╝╚══════╝     ╚═════╝ ╚═╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚═════╝
  from drupal */
 
 function file_upload_max_size() {
   static $max_size = -1;
-
   if ($max_size < 0) {
     // Start with post_max_size.
     $max_size = parse_size(ini_get('post_max_size'));
-
     // If upload_max_size is less, then reduce. Except if upload_max_size is
     // zero, which indicates no limit.
     $upload_max = parse_size(ini_get('upload_max_filesize'));
@@ -178,11 +167,6 @@ function parse_size($size) {
   }
 }
 
-
-
-
-
-
 function new_lab_id($categorie) {
     // quelle est l’abbréviation de la catégorie ?
     $query_table_abbr = mysql_query ("SELECT categorie_lettres FROM categorie WHERE categorie_index='".$categorie."' ;");
@@ -191,15 +175,13 @@ function new_lab_id($categorie) {
     $allid=array();
     $query_table_labid = mysql_query ("SELECT lab_id FROM base WHERE categorie='".$categorie."' ORDER BY lab_id ASC ;");
     // on supprime les lettres des lab_id, on met les chiffres dans un tableau
-    while ($lid = mysql_fetch_row($query_table_labid)) array_push ( $allid, preg_replace('`[^0-9]`', '', $lid[0]) ); 
+    while ($lid = mysql_fetch_row($query_table_labid)) array_push ( $allid, preg_replace('`[^0-9]`', '', $lid[0]) );
     $newid=max($allid)+1;
     $new_lab_id="".$abbr."".$newid."";
     // TODO : Vérifier avant qu’aucune autre entrée ainsi nommée n’existe ! dans le cas d’un nommage manuel
     $new_lab_id = ($categorie==0) ? "" : $new_lab_id;
     return $new_lab_id;
 }
-
-
 
 $message_error_add="<p class=\"error_message\" id=\"disappear_delay\">Une erreur inconnue est survenue. L’entrée n’a pas été ajoutée.</p>";
 $message_success_add="<p class=\"success_message\" id=\"disappear_delay\">L’entrée a été ajoutée à la base de donnée.</p>";

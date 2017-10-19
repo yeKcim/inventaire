@@ -3,97 +3,82 @@
 /*
  █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
 ██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
-███████║██████╔╝██████╔╝███████║ ╚████╔╝ 
-██╔══██║██╔══██╗██╔══██╗██╔══██║  ╚██╔╝  
-██║  ██║██║  ██║██║  ██║██║  ██║   ██║   
-╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+███████║██████╔╝██████╔╝███████║ ╚████╔╝
+██╔══██║██╔══██╗██╔══██╗██╔══██║  ╚██╔╝
+██║  ██║██║  ██║██║  ██║██║  ██║   ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
 */
 
-$table = "SELECT base_index, lab_id, categorie, categorie_nom, reference, designation, marque, marque_nom, vendeur, vendeur_nom, vendeur_web, vendeur_remarques, serial_number, localisation, localisation_batiment, localisation_piece, date_localisation, vendeur_nom, marque_nom, raison_sortie, utilisateur, responsable_achat, date_achat, prix, contrat, num_inventaire, integration
-FROM base, categorie, marque, vendeur, localisation, contrat, contrat_type
-WHERE categorie=categorie_index AND marque=marque_index AND vendeur=vendeur_index AND localisation=localisation_index
-AND contrat_index=contrat AND contrat_type=contrat_type_index
+$table = "
+SELECT base_index, lab_id, categorie, categorie_nom, reference, designation, marque, marque_nom, vendeur, vendeur_nom,
+	vendeur_web, vendeur_remarques, serial_number, localisation, localisation_batiment, localisation_piece, date_localisation,
+	vendeur_nom, marque_nom, raison_sortie, raison_sortie_nom, utilisateur, responsable_achat,
+	utilisateur_nom as `responsable_nom`, utilisateur_prenom as `responsable_prenom`, utilisateur_mail as `responsable_mail`,
+	utilisateur_phone as `responsable_phone`,
+	date_achat, prix, contrat, contrat_nom,
+	num_inventaire, integration
+FROM base, categorie, marque, vendeur, localisation, contrat, contrat_type, utilisateur, raison_sortie
+WHERE categorie=categorie_index AND marque=marque_index AND vendeur=vendeur_index AND
+	localisation=localisation_index AND contrat=contrat_index AND raison_sortie=raison_sortie_index
+AND contrat_index=contrat AND contrat_type=contrat_type_index AND responsable_achat=utilisateur_index
 $IOT_CMD $CAT_CMD $TYC_CMD $CON_CMD $SEA_CMD $RES_CMD $UTL_CMD
-$ORDER ;";
+$ORDER ;
+";
 
+print_r($utilisateurs);
 
-// Tous les résultats dans un array
-$query_table = mysql_query ($table);
-while ($l = mysql_fetch_row($query_table)) {
-    $tableau[$l[0]]=array(
-        "base_index"=>$l[0],                "lab_id"=>$l[1],                            "categorie"=>$l[3],
-        "reference"=>utf8_encode($l[4]),    "designation"=>utf8_encode($l[5]),          "marque"=>utf8_encode($l[7]),
-        "vendeur"=>utf8_encode($l[9]),      "serial_number"=>utf8_encode($l[12]),       "raison_sortie"=>$l[19],
-        "utilisateur"=>utf8_encode($l[20]), "responsable_achat"=>utf8_encode($l[21]),   "date_achat"=>$l[22],
-        "prix"=>$l[23],                     "contrat"=>$l[24],                          "num_inventaire"=>$l[25],
-        "integration"=>$l[26],              "localisation"=> array($l[14],$l[15],$l[16])
-    );
-}
-
+$sth = $dbh->query($table);
+$tableau = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 //liste des base_index affichés
 $b_i="";
 foreach ($tableau as &$t) { $b_i.="".$t["base_index"].","; }
 $b_i=substr($b_i, 0, -1); // suppression du dernier caractère
 
-
 //liste des journaux correspondants
-/*$tableau_journaux=array();
-$query_tableau_journaux = mysql_query ("SELECT DISTINCT (base_index) FROM base, historique WHERE historique_id=base_index AND base_index IN ($b_i) ORDER BY base_index ASC ;");
-while ($l = mysql_fetch_row($query_tableau_journaux)) {
-    $tableau_journaux[$l[0]]=1;
-}*/
-
-
-$tableau_journaux=array();
-$query_tableau_journaux = mysql_query ("SELECT historique_id, COUNT(* ) as nb_entree FROM historique, base WHERE historique_id=base_index AND base_index IN ($b_i) GROUP BY historique_id ORDER BY historique_id ASC;");
-while ($l = mysql_fetch_row($query_tableau_journaux)) {
-    $tableau_journaux[$l[0]]=$l[1];
-}
-
+$sth = $dbh->query("SELECT historique_id, COUNT(*) as nb_entree FROM historique, base WHERE historique_id=base_index AND base_index IN ($b_i) GROUP BY historique_id ORDER BY historique_id ASC;");
+$tableau_journaux = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 //liste des ensembles parmi les éléments affichés
-$tableau_parents=array();
-$query_tableau_parents = mysql_query ("SELECT base_index, integration FROM base WHERE integration IN ($b_i) ORDER BY base_index ASC ;");
-while ($l = mysql_fetch_row($query_tableau_parents)) {
-    $tableau_parents[$l[1]].="".$l[0].",";
-}
+$sth = $dbh->query("SELECT base_index, integration FROM base WHERE integration IN ($b_i) ORDER BY base_index ASC ;");
+$tableau_parents = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 //liste des caracs correspondantes
 $tableau_carac=array();
-$query_table_carac = mysql_query ("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
-while ($l = mysql_fetch_row($query_table_carac)) {
-    if ($l[5]=="bool") { $unit=""; $value= ($l[2]=="1") ? "oui" : "non" ; }
-    else               { $unit=$l[5] ; $value=$l[2];}
-    $tableau_carac[$l[0]].="<span title=\"".utf8_encode($l[4])."\"><span style=\"color:#2e3436;\">".$l[6]."</span>:<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; ";
+$sth = $dbh->query("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
+$table_carac = $sth->fetchAll(PDO::FETCH_ASSOC);
+foreach ($table_carac as &$l) {
+	if ($l["unite_carac"]=="bool") { $unit=""; $value= ($l["carac_valeur"]=="1") ? "oui" : "non" ; }
+	else { $unit=$l["unite_carac"] ; $value=$l["carac_valeur"];}
+	$tableau_carac[$l["base_index"]].="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l[symbole_carac]."</span>:<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; "; // À REVOIR
 }
 
+//date du jour
 $today=date("Y-m-d");
-
 //liste des entretiens correspondants
-$tableau_entretien=array();
-$query_table_entretien = mysql_query ("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
-while ($l = mysql_fetch_row($query_table_entretien)) {
-
-    $f=$l[2];
-    $date_derniere_intervention=$l[3];
+//$tableau_entretien=array();
+$sth = $dbh->query("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
+$table_entretien = $sth->fetchAll(PDO::FETCH_ASSOC);
+foreach ($table_entretien as &$l) {
+    $f=$l["e_frequence"];
+    $date_derniere_intervention=$l[e_lastdate];
     $date_prochaine_intervention = date("Y-m-d", strtotime($date_derniere_intervention." +$f days") );
     $retard = round( ( strtotime($today) - strtotime($date_prochaine_intervention) ) / 86400 );
 
-    $tableau_entretien[$l[0]]=(isset($tableau_entretien[$l[0]])) ? $tableau_entretien[$l[0]] : "";
-    $tableau_entretien[$l[0]].="<span style=\"color:";
-    if ($retard>0)                  $tableau_entretien[$l[0]].="#cc0000";
-    else {  if (-$retard<$f*0.1)    $tableau_entretien[$l[0]].="#f57900";
-            else                    $tableau_entretien[$l[0]].="#4e9a06";
+    $tableau_entretien[$l["e_id"]]=(isset($tableau_entretien[$l["e_id"]])) ? $tableau_entretien[$l["e_id"]] : ""; // À REVOIR
+    $tableau_entretien[$l["e_id"]].="<span style=\"color:";
+    if ($retard>0)                  $tableau_entretien[$l["e_id"]].="#cc0000";
+    else {  if (-$retard<$f*0.1)    $tableau_entretien[$l["e_id"]].="#f57900";
+            else                    $tableau_entretien[$l["e_id"]].="#4e9a06";
     }
-    $tableau_entretien[$l[0]].=";\" title=\"".$l[4]." (".dateformat($date_prochaine_intervention,"fr").")\"><strong>";
-    if ($retard>0)                  $tableau_entretien[$l[0]].="⚠";
-    else {  if (-$retard<$f*0.1)    $tableau_entretien[$l[0]].="⌛";
-            else                    $tableau_entretien[$l[0]].="☑";
+    $tableau_entretien[$l["e_id"]].=";\" title=\"".$l["e_designation"]." (".dateformat($date_prochaine_intervention,"fr").")\"><strong>";
+    if ($retard>0)                  $tableau_entretien[$l["e_id"]].="⚠";
+    else {  if (-$retard<$f*0.1)    $tableau_entretien[$l["e_id"]].="⌛";
+            else                    $tableau_entretien[$l["e_id"]].="☑";
     }
-    $tableau_entretien[$l[0]].="</strong></span> ";
+    $tableau_entretien[$l["e_id"]].="</strong></span> ";
 
-}
+}  /************ À DEBUG ************/
 
 
 #########################################################################
@@ -101,9 +86,9 @@ while ($l = mysql_fetch_row($query_table_entretien)) {
 #########################################################################
 if ($IOT!="0") {
     $raison_sortie=array();
-    $table_raison_sortie="SELECT * FROM raison_sortie WHERE raison_sortie_index!=0";
-    $query_table_table_raison_sortie = mysql_query ($table_raison_sortie);
-    while ($l = mysql_fetch_row($query_table_table_raison_sortie)) { $raison_sortie[$l[0]]=utf8_encode($l[1]); }
+//    while ($l = mysql_fetch_row($query_table_table_raison_sortie)) { $raison_sortie[$l[0]]=utf8_encode($l[1]); }
+	$sth = $dbh->query("SELECT * FROM raison_sortie WHERE raison_sortie_index!=0");
+	$raison_sortie = $sth->fetchAll(PDO::FETCH_ASSOC);
     $display_raison_sortie=1;
 }
 else $display_raison_sortie=0;
@@ -114,7 +99,7 @@ else $display_raison_sortie=0;
    ██║   ███████║██████╔╝██║     █████╗  ███████║██║   ██║
    ██║   ██╔══██║██╔══██╗██║     ██╔══╝  ██╔══██║██║   ██║
    ██║   ██║  ██║██████╔╝███████╗███████╗██║  ██║╚██████╔╝
-   ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ 
+   ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝
 */
 
 echo "<table id=\"listing\">";
@@ -145,17 +130,17 @@ echo "</tr>";
     ╩═╝╩╚═╝╝╚╝╚═╝╚═╝  ═╩╝╚═╝  ╩╚═╚═╝╚═╝╚═╝╩═╝╩ ╩ ╩ ╩ ╚═╝    */
 foreach ($tableau as &$t) {
     echo "<tr>";
-        
+
         // ********** Id Labo **********
         echo "<td><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
         echo "<strong>";
         if ($t["lab_id"]=="") echo "#".$t["base_index"].""; else echo $t["lab_id"];
         echo "</strong>";
         echo "</a></td>";
-        
+
         // ********** Catégorie **********
-        echo "<td>".utf8_encode($t["categorie"])."</td>";
-        
+        echo "<td>".$t["categorie_nom"]."</td>";
+
         // ********** Désignation **********
         echo "<td>";
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
@@ -163,7 +148,7 @@ foreach ($tableau as &$t) {
         else echo "-";
         echo "</span>";
         echo "</td>";
-        
+
         // ********** Caractéristiques **********
         echo "<td>";
 
@@ -173,38 +158,30 @@ foreach ($tableau as &$t) {
         else echo "-";
 
         echo "</span>";
-        
-        
-        
-        
-			// ********** Intégration **********
-			if ($t["integration"]!="0") echo "<br/><a href=\"info.php?i=".$t["integration"]."\" target=\"_blank\" title=\"intégré dans…\">↰ #".$t["integration"]."</a>";
-			
-			elseif ( isset ($tableau_parents[$t["base_index"]]) ) {
-				echo "<br/>↳ #".substr($tableau_parents[$t["base_index"]], 0, -1)."";
-			}
-			
-			else {
-				echo "&nbsp;";
-			}
-        
-        
-        
-        
+
+
+	// ********** Intégration **********
+	if ($t["integration"]!="0") echo "<br/><a href=\"info.php?i=".$t["integration"]."\" target=\"_blank\" title=\"intégré dans…\">↰ #".$t["integration"]."</a>";
+	elseif ( isset ($tableau_parents[$t["base_index"]]) ) {
+		echo "<br/>↳ #".substr($tableau_parents[$t["base_index"]], 0, -1)."";
+	}
+	else {
+		echo "&nbsp;";
+	}
         echo "</td>";
 
-       
+
         // ********** Marque  **********
         echo "<td>";
-        
+
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"";
-        if ($t["vendeur"]!="-") echo "vendu par ".$t["vendeur"]."";
+        if ($t["vendeur"]!="-") echo "vendu par ".$t["vendeur_nom"]."";
         echo "\">";
-        if ($t["marque"]!="") echo $t["marque"]; else echo "-";
-        echo "</span>";
+	if ($t["marque"]!="") echo $marques[$t["marque"]][marque_nom]; else echo "-";
+
+	echo "</span>";
         echo "</td>";
-        
-        
+
         // ********** Référence **********
         echo "<td>";
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
@@ -212,7 +189,7 @@ foreach ($tableau as &$t) {
         else echo "-";
         echo "</span>";
         echo "</td>";
-        
+
         // ********** Fichiers globaux **********
         echo "<td>";
 
@@ -239,20 +216,19 @@ foreach ($tableau as &$t) {
             else $nofiles=true;
         }
         else $nofiles=true;
-        
+
         if ($nofiles) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">-</span>";
 
 
         echo "</td>";
-        
-        
+
         // ********** Serial number **********
         echo "<td>";
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
         if ($t["serial_number"]!="") echo $t["serial_number"]; else echo "-";
         echo "</span>";
         echo "</td>";
-        
+
         // ********** N° d’inventaire **********
         echo "<td>";
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
@@ -266,16 +242,16 @@ foreach ($tableau as &$t) {
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
 
         echo "<span title=\"";
-        if ($t["responsable_achat"]!="0") echo "Par ".$responsables[$t["responsable_achat"]][2]." ".$responsables[$t["responsable_achat"]][1]." ";
+        if ($t["responsable_achat"]!="0") echo "Par ".$t["responsable_prenom"]." ".$t["responsable_nom"]." ";
         if ($t["date_achat"]!="0000-00-00") echo "le ".dateformat($t["date_achat"],"fr")."";
         echo "\">";
         if ($t["prix"]!="0") echo "".$t["prix"]."€";
-        if ($t["contrat"]!="0")echo " sur ".$contrats[$t["contrat"]][1]."";
+        if ($t["contrat"]!="0")echo " sur ".$t["contrat_nom"]."";
         if ( ($t["prix"]=="0") && ($t["contrat"]=="0") ) echo "-";
         echo "</span>";
-        
+
         echo "</span>";
-        
+
         echo "</td>";
 
         // ********** Entretiens **********
@@ -313,7 +289,7 @@ foreach ($tableau as &$t) {
             else $nofiles=true;
         }
         else $nofiles=true;
-        
+
         if ($nofiles) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">-</span>";
 
 
@@ -324,9 +300,9 @@ foreach ($tableau as &$t) {
 
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=journal&quick_name=Journal',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide journal\">";
 
-        if ( isset($tableau_journaux[$t["base_index"]]) ) echo "<sup>".$tableau_journaux[$t["base_index"]]."</sup> <img src=\"mime-icons/txt.png\" />" ;
-        else echo "-" ;
-        
+	if ( isset($tableau_journaux[$t["base_index"]]) ) echo "<sup>".$tableau_journaux[$t["base_index"]]["nb_entree"]."</sup> <img src=\"mime-icons/txt.png\" />" ;
+	else echo "-" ;
+
         echo "</span>";
 
         echo "</td>";
@@ -339,7 +315,7 @@ foreach ($tableau as &$t) {
         if ($t["localisation"]!=0) echo "le ".dateformat($t["localisation"][2],"fr")."";
         echo "\">";
 
-        echo "".utf8_encode($t["localisation"][0])." ".utf8_encode($t["localisation"][1])."";
+        echo "".$t["localisation"][0]." ".$t["localisation"][1]."";
 
         echo "</span>";
         echo "</span>";
@@ -349,8 +325,7 @@ foreach ($tableau as &$t) {
         if ($IOT!="0") {
             echo "<td>";
             echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()},closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
-            if ($raison_sortie[$t["raison_sortie"]]!="") echo $raison_sortie[$t["raison_sortie"]];
-            else echo "-";
+	    echo $t["raison_sortie_nom"];
             echo "</span>";
             echo "</td>";
         }
@@ -362,6 +337,4 @@ foreach ($tableau as &$t) {
 
 echo "</table>";
 
-
 ?>
-
