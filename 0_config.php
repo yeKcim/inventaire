@@ -1,8 +1,8 @@
 <?php
 
 $connecthost="localhost";
-$connectlogin="www-user";
-$connectpasse="Mais-Ou#Est+Donc_0r!Ni42Car?";
+$connectlogin="<YOUR_LOGIN>";
+$connectpasse="<YOUR_PASSWORD>";
 
 $database="optique";
 
