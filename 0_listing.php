@@ -25,8 +25,6 @@ $IOT_CMD $CAT_CMD $TYC_CMD $CON_CMD $SEA_CMD $RES_CMD $UTL_CMD
 $ORDER ;
 ";
 
-print_r($utilisateurs);
-
 $sth = $dbh->query($table);
 $tableau = $sth->fetchAll(PDO::FETCH_ASSOC);
 
@@ -310,12 +308,14 @@ foreach ($tableau as &$t) {
         // ********** Localisation **********
         echo "<td>";
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
-        if ($t["utilisateur"]!=0) echo "<span title=\"Utilisé par ".$utilisateurs[$t["utilisateur"]][2]." ".$utilisateurs[$t["utilisateur"]][1]." ";
+
+	$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]); $key=$keys[0];
+        if ($t["utilisateur"]!=0) echo "<span title=\"Utilisé par ".$utilisateurs[$key]["utilisateur_prenom"]." ".$utilisateurs[$key]["utilisateur_nom"]." ";
         else echo "<span title=\"";
-        if ($t["localisation"]!=0) echo "le ".dateformat($t["localisation"][2],"fr")."";
+        if ($t["localisation"]!=0) echo "le ".dateformat($t["date_localisation"],"fr")."";
         echo "\">";
 
-        echo "".$t["localisation"][0]." ".$t["localisation"][1]."";
+        echo "".$t["localisation_batiment"]." ".$t["localisation_piece"]."";
 
         echo "</span>";
         echo "</span>";
