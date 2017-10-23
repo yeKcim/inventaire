@@ -54,7 +54,6 @@ foreach ($table_carac as &$l) {
 //date du jour
 $today=date("Y-m-d");
 //liste des entretiens correspondants
-//$tableau_entretien=array();
 $sth = $dbh->query("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
 $table_entretien = $sth->fetchAll(PDO::FETCH_ASSOC);
 foreach ($table_entretien as &$l) {
@@ -63,7 +62,7 @@ foreach ($table_entretien as &$l) {
     $date_prochaine_intervention = date("Y-m-d", strtotime($date_derniere_intervention." +$f days") );
     $retard = round( ( strtotime($today) - strtotime($date_prochaine_intervention) ) / 86400 );
 
-    $tableau_entretien[$l["e_id"]]=(isset($tableau_entretien[$l["e_id"]])) ? $tableau_entretien[$l["e_id"]] : ""; // À REVOIR
+    $tableau_entretien[$l["e_id"]]=(isset($tableau_entretien[$l["e_id"]])) ? $tableau_entretien[$l["e_id"]] : "";
     $tableau_entretien[$l["e_id"]].="<span style=\"color:";
     if ($retard>0)                  $tableau_entretien[$l["e_id"]].="#cc0000";
     else {  if (-$retard<$f*0.1)    $tableau_entretien[$l["e_id"]].="#f57900";
@@ -76,7 +75,7 @@ foreach ($table_entretien as &$l) {
     }
     $tableau_entretien[$l["e_id"]].="</strong></span> ";
 
-}  /************ À DEBUG ************/
+}
 
 
 #########################################################################
@@ -84,9 +83,8 @@ foreach ($table_entretien as &$l) {
 #########################################################################
 if ($IOT!="0") {
     $raison_sortie=array();
-//    while ($l = mysql_fetch_row($query_table_table_raison_sortie)) { $raison_sortie[$l[0]]=utf8_encode($l[1]); }
-	$sth = $dbh->query("SELECT * FROM raison_sortie WHERE raison_sortie_index!=0");
-	$raison_sortie = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $sth = $dbh->query("SELECT * FROM raison_sortie WHERE raison_sortie_index!=0");
+    $raison_sortie = $sth->fetchAll(PDO::FETCH_ASSOC);
     $display_raison_sortie=1;
 }
 else $display_raison_sortie=0;
@@ -106,21 +104,21 @@ echo "<table id=\"listing\">";
     ║╣ ║║║║ ║╣  ║ ║╣    ║ ╠═╣╠╩╗║  ║╣ ╠═╣║ ║
     ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝    */
 echo "<tr>";
-                    echo "<th>Id Labo<br/>";                                            orderbylink("lab_id");              echo "</td>";
-                    echo "<th>Catégorie<br/>";                                          orderbylink("categorie");           echo "</td>";
-                    echo "<th style=\"background:#bab987;\">Désignation<br/>";          orderbylink("designation");         echo "</td>";
-                    echo "<th style=\"background:#a4b395;\">Caractéristiques<br/>";     echo "&nbsp;";                      echo "</td>";
-                    echo "<th style=\"background:#8AAA6D;\">Marque<br/>";               orderbylink("marque");              echo "</td>";
-                    echo "<th style=\"background:#8AAA6D;\">Référence fabricant<br/>";  orderbylink("reference");           echo "</td>";
-                    echo "<th style=\"background:#BA944D;\">Fichiers liés à<br/>cette référence fabricant<br/>"; echo "&nbsp;";                      echo "</td>";
-                    echo "<th style=\"background:#8AAA6D;\">Numéro de série<br/>";      orderbylink("serial_number");       echo "</td>";
-                    echo "<th style=\"background:#bab987;\">n° d’inventaire<br/>";      orderbylink("num_inventaire");      echo "</td>";
-                    echo "<th style=\"background:#bab987;\">Achat<br/>";                orderbylink("prix");                echo "</td>";
-                    echo "<th style=\"background:#c19aaa;\">Entretiens<br/>";           echo "&nbsp;";                      echo "</td>";
-                    echo "<th style=\"background:#BA944D;\">Fichiers de l’entrée<br/>"; echo "&nbsp;";                      echo "</td>";
-                    echo "<th style=\"background:#a786a2;\">Journal<br/>";              echo "&nbsp;";                      echo "</td>";
-                    echo "<th style=\"background:#96a5bc;\">Localisation<br/>";         orderbylink("localisation");        echo "</td>";
-    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">État<br/>";                 orderbylink("raison_sortie");       echo "</td>";
+     echo "<th>Id Labo<br/>";                                            	orderbylink("lab_id");              echo "</td>";
+     echo "<th>Catégorie<br/>";                                          	orderbylink("categorie");           echo "</td>";
+     echo "<th style=\"background:#bab987;\">Désignation<br/>";          	orderbylink("designation");         echo "</td>";
+     echo "<th style=\"background:#a4b395;\">Caractéristiques<br/>";     	echo "&nbsp;";                      echo "</td>";
+     echo "<th style=\"background:#8AAA6D;\">Marque<br/>";               	orderbylink("marque");              echo "</td>";
+     echo "<th style=\"background:#8AAA6D;\">Référence fabricant<br/>";  	orderbylink("reference");           echo "</td>";
+     echo "<th style=\"background:#BA944D;\">Fichiers liés à<br/>cette référence fabricant<br/>";   echo "&nbsp;";  echo "</td>";
+     echo "<th style=\"background:#8AAA6D;\">Numéro de série<br/>";      	orderbylink("serial_number");       echo "</td>";
+     echo "<th style=\"background:#bab987;\">n° d’inventaire<br/>";      	orderbylink("num_inventaire");      echo "</td>";
+     echo "<th style=\"background:#bab987;\">Achat<br/>";                	orderbylink("prix");                echo "</td>";
+     echo "<th style=\"background:#c19aaa;\">Entretiens<br/>";           	echo "&nbsp;";                      echo "</td>";
+     echo "<th style=\"background:#BA944D;\">Fichiers de l’entrée<br/>"; 	echo "&nbsp;";                      echo "</td>";
+     echo "<th style=\"background:#a786a2;\">Journal<br/>";              	echo "&nbsp;";                      echo "</td>";
+     echo "<th style=\"background:#96a5bc;\">Localisation<br/>";         	orderbylink("localisation");        echo "</td>";
+    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">État<br/>";  	orderbylink("raison_sortie");       echo "</td>";
 echo "</tr>";
 
 /*  ╦  ╦╔═╗╔╗╔╔═╗╔═╗  ╔╦╗╔═╗  ╦═╗╔═╗╔═╗╦ ╦╦ ╔╦╗╔═╗╔╦╗╔═╗
@@ -175,7 +173,7 @@ foreach ($tableau as &$t) {
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"";
         if ($t["vendeur"]!="-") echo "vendu par ".$t["vendeur_nom"]."";
         echo "\">";
-	if ($t["marque"]!="") echo $marques[$t["marque"]][marque_nom]; else echo "-";
+	if ($t["marque"]!="") echo $t["marque_nom"]; else echo "-";
 
 	echo "</span>";
         echo "</td>";
@@ -191,8 +189,8 @@ foreach ($tableau as &$t) {
         // ********** Fichiers globaux **********
         echo "<td>";
 
-        $racine = "/var/www/";
-        $m=str_replace('/', "_", $t["marque"]);
+        $racine = "/var/www/html/";
+        $m=str_replace('/', "_", $t["marque_nom"]);
         $r=str_replace('/', "_", $t["reference"]);
         $dir="files/".$m."-".$r;
 
@@ -267,7 +265,7 @@ foreach ($tableau as &$t) {
         // ********** Fichiers **********
         echo "<td>";
 
-        $racine = "/var/www/";
+        $racine = "/var/www/html/";
         $dir="files/".$t["base_index"]."/";
         if (file_exists("$racine$dir")) {
             if ( ! is_dir_empty("$racine$dir")) {
