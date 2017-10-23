@@ -55,13 +55,13 @@ function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0") {
     echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>";
     foreach ($table as &$l){
         $selected= ($$nom==$l[$A]) ? "selected > $nom =" : " > " ;
-        $complement_info= ($complement!=0) ? "" : "$l[$complement]" ; // QU’EST-CE QUE C’EST QUE COMPLÉMENT ?
+        $complement_info= ($complement!=0) ? "" : "$l[$complement]" ;
         echo "<option value=\"$l[$A]\" $selected $l[$B] $complement_info</option>";
     }
     echo "</select> ";
 }
 
-function option_selecteur($select, $table, $complement="0", $A="0", $B="1") {
+function option_selecteur($select, $table, $A="0", $B="1", $complement="0") {
     foreach ($table as &$l){
         $selected= ($select==$l[$A]) ? "selected >" : " >" ;
         $complement_info= ($complement==0) ? "" : "$l[$complement]" ;
