@@ -30,9 +30,6 @@ $raison_sorties = $sth->fetchAll(PDO::FETCH_ASSOC);
 // localisation
 $sth = $dbh->query("SELECT * FROM localisation WHERE localisation_index!=0 ORDER BY localisation_batiment ASC, localisation_piece ASC ;");
 $localisations = $sth->fetchAll(PDO::FETCH_ASSOC);
-									
-print_r($localisations);
-									
 // tous les enfants
 $sth = $dbh->query("SELECT base_index, lab_id, designation FROM base WHERE integration=\"$i\" ORDER BY lab_id ASC ;");
 $kids = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -204,22 +201,22 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
             echo "<option value=\"1\" "; if ($data[0]["sortie"]=="1") echo "selected"; echo ">Sortie définitive d’inventaire</option>";
             echo "<option value=\"2\" "; if ($data[0]["sortie"]=="2") echo "selected"; echo ">Sortie temporaire d’inventaire</option>";
         echo "</select>";
-        
+
         if ( ($data[0]["sortie"]!="0") && ($data[0]["date_sortie"]!="") && ($data[0]["date_sortie"]!="0000-00-00") )
         echo " <abbr title=\"le ".dateformat($data[0]["date_sortie"],"fr")."\"><strong>ⓘ</strong></abbr>"; /* seulement si sortie… !!! */
 
 
         /* ########### raison_sortie ########### */
-        
+
         $disp= ($data[0]["sortie"]=="0") ? "none" : "block";
-        
+
         echo "<span id=\"0\" style=\"display:$disp;\">";
         echo "<label for=\"raison_sortie\">Raison de sortie : </label>\n"; /* seulement si sortie… !!! */
         echo "<select name=\"raison_sortie\" onchange=\"display(this,'plus_raison_sortie','plus_raison_sortie');\" id=\"raison_sortie\">";
-        echo "<option value=\"0\" "; if ($data[0]["raison_sortie"]=="0") echo "selected"; echo ">— Aucune raison spécifiée —</option>"; 
-        option_selecteur($data[0]["raison_sortie"], $raison_sorties);
+        echo "<option value=\"0\" "; if ($data[0]["raison_sortie"]=="0") echo "selected"; echo ">— Aucune raison spécifiée —</option>";
+        option_selecteur($data[0]["raison_sortie"], $raison_sorties, "raison_sortie_index", "raison_sortie_nom");
         echo "<option value=\"plus_raison_sortie\" "; if ($data[0]["raison_sortie"]=="plus_raison_sortie") echo "selected"; echo ">Nouvelle raison :</option>";
-        echo "</select>";   
+        echo "</select>";
         echo "</span>";
 
 
@@ -231,8 +228,8 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
                         echo "<input value=\"\" name=\"plus_raison_sortie_nom\" type=\"text\">\n";
                     echo "</fieldset>";
                     echo "\n\n\n";
-                 
-    echo "</fieldset>";   
+
+    echo "</fieldset>";
 
 
 /*  ╦╔╗╔╦╗╔═╗╔═╗╦═╗╔═╗╔╦╗╦╔═╗╔╗╔
@@ -240,11 +237,12 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
     ╩╝╚╝╩ ╚═╝╚═╝╩╚═╩ ╩ ╩ ╩╚═╝╝╚╝  */
     echo "<fieldset><legend>Intégration (composant intégré à un autre ou faisant parti d’un lot)</legend>";
 
+	$keys = array_keys(array_column($lab_ids, 'base_index'), $data[0]["integration"]); $key=$keys[0];
         echo "<label for=\"integration\">Intégré dans :</label>\n";
 
         echo "<select name=\"integration\" id=\"integration\" >";
         echo "<option value=\"0\" "; if ($data[0]["integration"]=="0") echo "selected"; echo ">— Aucune intégration spécifiée —</option>"; 
-        option_selecteur($data[0]["integration"], $lab_ids, "2");
+        option_selecteur($data[0]["integration"], $lab_ids, "base_index", "lab_id");
         echo "</select>";
 
         if ( ($data[0]["integration"]!="0") && ($data[0]["integration"]!="") )
@@ -256,11 +254,11 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
                 foreach ($kids as $k) echo "<li><a href=\"?i=".$k[0]."\" target=\"_blank\">".$k[2]." (".$k[1].")</a>&nbsp;: ".$k[3]."</li>";
             echo "</ul>";
         }
-        
+
     echo "</fieldset>";
 
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
-    ╚═╗║ ║╠╩╗║║║║ ║ 
+    ╚═╗║ ║╠╩╗║║║║ ║
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
     if ($write) echo "<p style=\"text-align:center;\"><input name=\"utilisation_valid\" value=\"Enregistrer\" type=\"submit\" class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser
 
