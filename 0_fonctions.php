@@ -18,7 +18,7 @@ function dateformat($date, $to="fr") {
     else {$date = explode('-',$date); $dateout="".$date[2]."/".$date[1]."/".$date[0]."";}
     if ($dateout=="//") $dateout="";
     return $dateout;
-    // TODO : Vérifier que la date en input est au bon format…
+    // TODO : supprimer cette fonction devenue inutile
 }
 
 function formatBytes($size, $precision = 2)
@@ -64,7 +64,7 @@ function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0") {
 function option_selecteur($select, $table, $A="0", $B="1", $complement="0") {
     foreach ($table as &$l){
         $selected= ($select==$l[$A]) ? "selected >" : " >" ;
-        $complement_info= ($complement==0) ? "" : "$l[$complement]" ;
+        $complement_info= ($complement!=0) ? "" : "$l[$complement]" ;
         echo "<option value=\"$l[$A]\" $selected $l[$B] $complement_info</option>";
     }
 }

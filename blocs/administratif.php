@@ -323,21 +323,21 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### date_achat ########### */
 
         echo "<label for=\"achat\">Achat <abbr title=\"JJ/MM/AAAA (si jour ou mois inconnu → 01)\"><strong>ⓘ</strong></abbr> :</label>\n";
-        echo "<input value=\"";
-        if ($data[0]["date_achat"]!="0000-00-00") echo dateformat($data[0]["date_achat"],"fr");
-        echo "\" name=\"date_achat\" type=\"date\" id=\"achat\"/>";
+	echo "<input value=\"";
+        if ($data[0]["date_achat"]!="0000-00-00") echo $data[0]["date_achat"]; //echo dateformat($data[0]["date_achat"],"en");
+	echo "\" name=\"date_achat\" type=\"date\" id=\"achat\"/>";
         echo "<br/>";
 
         /* ########### garantie ########### */
         echo "<label for=\"garantie\">Fin de garantie <abbr title=\"JJ/MM/AAAA (si jour ou mois inconnu → 01)\"><strong>ⓘ</strong></abbr> :</label>\n";
         echo "<input value=\"";
-        if ($data[0]["garantie"]!="0000-00-00") echo dateformat($data[0]["garantie"],"fr");
+        if ($data[0]["garantie"]!="0000-00-00") echo $data[0]["garantie"]; //dateformat($data[0]["garantie"],"en");
         echo "\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
 
     echo "</fieldset>";
 
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
-    ╚═╗║ ║╠╩╗║║║║ ║ 
+    ╚═╗║ ║╠╩╗║║║║ ║
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
 if ($write) echo "<p style=\"text-align:center;\"><input name=\"administratif_valid\" value=\"Enregistrer\" type=\"submit\" class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser
 
