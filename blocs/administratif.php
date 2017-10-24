@@ -25,11 +25,8 @@ $tutelles = $sth->fetchAll(PDO::FETCH_ASSOC);
 // vendeur
 $sth = $dbh->query("SELECT * FROM vendeur WHERE vendeur_index!=0 ORDER BY vendeur_nom ASC ;");
 $vendeurs = $sth->fetchAll(PDO::FETCH_ASSOC);
-// marque
-$sth = $dbh->query("SELECT * FROM marque WHERE marque_index!=0 ORDER BY marque_nom ASC ;");
-$marques = $sth->fetchAll(PDO::FETCH_ASSOC);
 // contrats
-$sth = $dbh->query("SELECT * FROM contrat, contrat_type WHERE contrat_type!=0 AND contrat_index!=0 ORDER BY contrat_nom ASC ;");
+$sth = $dbh->query("SELECT DISTINCT contrat_index, contrat_nom, contrat_type FROM contrat, contrat_type WHERE contrat_type!=0 AND contrat_index!=0 ORDER BY contrat_nom ASC ;");
 $contrats = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 /*
@@ -164,21 +161,23 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
         /* ########### designation ########### */
         echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation :</label>\n";
-        echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"38\"";
+        echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"34\"";
         echo "value=\"";
         echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";
         echo "\" ><br/>\n";
-      
+
         /* ########### vendeur ########### */
         echo "<label for=\"vendeur\">Vendeur ";
         if ( ($data[0]["vendeur"]!="0")&&(($data[0]["vendeur"]!="")) ) {
-            echo " <a href=\"".$vendeurs[$data[0]["vendeur"]][2]."\" title=\"site web\" target=\"_blank\"><strong>↗</strong></a>";
-            echo "<abbr title=\"".$vendeurs[$data[0]["vendeur"]][3]."\"><strong>ⓘ</strong></abbr>";
+
+	    $keys = array_keys(array_column($vendeurs, 'vendeur_index'), $data[0]["vendeur"]); $key=$keys[0];
+            echo " <a href=\"".$vendeurs[$key]["vendeur_web"]."\" title=\"site web\" target=\"_blank\"><strong>↗</strong></a>";
+            echo "<abbr title=\"".$vendeurs[$key]["vendeur_remarques"]."\"><strong>ⓘ</strong></abbr>";
         }
         echo " :</label>\n";
         echo "<select name=\"vendeur\" id=\"vendeur\" onchange=\"display(this,'plus_vendeur','plus_vendeur');\" >";
         echo "<option value=\"0\" "; if ($data[0]["vendeur"]=="0") echo "selected"; echo ">— Aucun vendeur spécifié —</option>"; 
-        option_selecteur($data[0]["vendeur"], $vendeurs);
+        option_selecteur($data[0]["vendeur"], $vendeurs, "vendeur_index", "vendeur_nom");
         echo "<option value=\"plus_vendeur\" "; if ($data[0]["vendeur"]=="plus_vendeur") echo "selected"; echo ">Nouveau vendeur :</option>";
         echo "</select>";
         echo "<br/>";
@@ -187,16 +186,16 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### + vendeur ########### */
         echo "\n\n\n";
         echo "<fieldset id=\"plus_vendeur\" class=\"subfield\" style=\"display: none;\"><legend  class=\"subfield\">Nouveau Vendeur</legend>";
-    
+
             echo "<label for=\"plus_vendeur_nom\">Nom :</label>\n";
             echo "<input value=\"\" name=\"plus_vendeur_nom\" type=\"text\"><br/>\n";
-        
+
             echo "<label for=\"plus_vendeur_web\">Site web :</label>\n";
-            echo "<input value=\"\" name=\"plus_vendeur_web\" type=\"text\"><br/>\n";       
-        
+            echo "<input value=\"\" name=\"plus_vendeur_web\" type=\"text\"><br/>\n";
+
             echo "<label for=\"plus_vendeur_remarque\">Remarque :</label>\n";
-            echo "<input value=\"\" name=\"plus_vendeur_remarque\" type=\"text\"><br/>\n";        
-        
+            echo "<input value=\"\" name=\"plus_vendeur_remarque\" type=\"text\"><br/>\n";
+
         echo "</fieldset>";
         echo "\n\n\n";
 
@@ -217,22 +216,22 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### contrat ########### */
         echo "<label for=\"contrat\">Contrat : </label>\n";
         echo "<select name=\"contrat\" onchange=\"display(this,'plus_contrat','plus_contrat');\" id=\"contrat\">";
-        echo "<option value=\"0\" "; if ($data[0]["contrat"]=="0") echo "selected"; echo ">— Aucun contrat spécifié —</option>"; 
-        option_selecteur($data[0]["contrat"], $contrats);
+        echo "<option value=\"0\" "; if ($data[0]["contrat"]=="0") echo "selected"; echo ">— Aucun contrat spécifié —</option>";
+        option_selecteur($data[0]["contrat"], $contrats, "contrat_index", "contrat_nom");
         echo "<option value=\"plus_contrat\" "; if ($data[0]["contrat"]=="plus_contrat") echo "selected"; echo ">Nouveau contrat :</option>";
         echo "</select><br/>";
 
         /* ########### + contrat ########### */
         echo "\n\n\n";
         echo "<fieldset id=\"plus_contrat\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau Contrat</legend>";
-    
+
             echo "<label for=\"plus_contrat_nom\">Nom :</label>\n";
             echo "<input value=\"\" name=\"plus_contrat_nom\" type=\"text\"><br/>\n";
-        
+
             echo "<label for=\"contrat_type\">Type de contrat :</label>\n";
                echo "<select name=\"contrat_type\" onchange=\"display(this,'plus_contrat_type','plus_contrat_type');\" id=\"contrat_type\">";
                    echo "<option value=\"0\" selected >— Aucun type de contrat spécifié —</option>"; 
-                   option_selecteur("0", $types_contrats);
+                   option_selecteur("0", $types_contrats, "contrat_type_index", "contrat_type_cat");
                    echo "<option value=\"plus_contrat_type\" >Nouveau type de contrat :</option>";
                echo "</select><br/>";
 
@@ -269,23 +268,28 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<br/>";
 
         /* ########### num_inventaire ########### */
-        echo "<label for=\"num_inventaire\">Numéro d’inventaire : </label>\n";
+        echo "<label for=\"num_inventaire\">N° d’inventaire : </label>\n";
         echo "<input value=\"".$data[0]["num_inventaire"]."\" name=\"num_inventaire\" type=\"text\" id=\"num_inventaire\">";
         echo "<br/>";
 
         /* ########### responsable_achat ########### */
         echo "<label for=\"responsable_achat\">Acheteur ";
 
+	$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $data[0]["responsable_achat"]); $key=$keys[0];
 
         if ( ($data[0]["responsable_achat"]!="0")&&(($data[0]["responsable_achat"]!="")) ) {
-            echo "<a href=\"mailto:".$utilisateurs[$data[0]["responsable_achat"]][3]."\" title=\"".$utilisateurs[$data[0]["responsable_achat"]][3]."\"><strong>✉</strong></a> ";
-        echo "<abbr title=\"".phone_display("".$utilisateurs[$data[0]["responsable_achat"]][4]."",".")."\"><strong>☏</strong></abbr>";
+            echo "<a href=\"mailto:".$utilisateurs[$key]["utilisateur_mail"]."\" title=\"".$utilisateurs[$key]["utilisateur_mail"]."\"><strong>✉</strong></a> ";
+        echo "<abbr title=\"".phone_display("".$utilisateurs[$key]["utilisateur_phone"]."",".")."\"><strong>☏</strong></abbr>";
         }
-        
+
         echo ": </label>\n";
         echo "<select name=\"responsable_achat\" onchange=\"display(this,'plus_responsable_achat','plus_responsable_achat');\" id=\"responsable_achat\">";
         echo "<option value=\"0\" "; if ($data[0]["responsable_achat"]=="0") echo "selected"; echo ">— Aucun responsable achat spécifié —</option>"; 
-        option_selecteur($data[0]["responsable_achat"], $utilisateurs, "2");
+																	
+
+        option_selecteur($data[0]["responsable_achat"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
+
+																	
         echo "<option value=\"plus_responsable_achat\" "; if ($data[0]["responsable_achat"]=="plus_responsable_achat") echo "selected"; echo ">Nouveau responsable achat :</option>";
         echo "</select>";
 
@@ -298,10 +302,10 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
                 echo "<label for=\"plus_responsable_achat_nom\">NOM :</label>\n";
                 echo "<input value=\"\" name=\"plus_responsable_achat_nom\" type=\"text\"><br/>\n";
-                
+
                 echo "<label for=\"plus_responsable_achat_mail\">Mail :</label>\n";
                 echo "<input value=\"\" name=\"plus_responsable_achat_mail\" type=\"text\"><br/>\n";
-                
+
                 echo "<label for=\"plus_responsable_achat_phone\"><abbr title=\"juste les chiffres sans séparateur\">Téléphone</abbr> :</label>\n";
                 echo "<input value=\"\" name=\"plus_responsable_achat_phone\" type=\"text\"><br/>\n";
 
@@ -315,21 +319,21 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
      ║║╠═╣ ║ ║╣ ╚═╗
     ═╩╝╩ ╩ ╩ ╚═╝╚═╝  */
     echo "<fieldset><legend>Dates</legend>";
-    
+
         /* ########### date_achat ########### */
-        echo "<label for=\"achat\">Achat <abbr title=\"JJ/MM/AAAA (si jour ou mois inconnue → 01)\"><strong>ⓘ</strong></abbr> :</label>\n";
+
+        echo "<label for=\"achat\">Achat <abbr title=\"JJ/MM/AAAA (si jour ou mois inconnu → 01)\"><strong>ⓘ</strong></abbr> :</label>\n";
         echo "<input value=\"";
         if ($data[0]["date_achat"]!="0000-00-00") echo dateformat($data[0]["date_achat"],"fr");
         echo "\" name=\"date_achat\" type=\"date\" id=\"achat\"/>";
         echo "<br/>";
 
         /* ########### garantie ########### */
-        echo "<label for=\"garantie\">Fin de garantie <abbr title=\"JJ/MM/AAAA (si jour ou mois inconnue → 01)\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<label for=\"garantie\">Fin de garantie <abbr title=\"JJ/MM/AAAA (si jour ou mois inconnu → 01)\"><strong>ⓘ</strong></abbr> :</label>\n";
         echo "<input value=\"";
         if ($data[0]["garantie"]!="0000-00-00") echo dateformat($data[0]["garantie"],"fr");
         echo "\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
-        
-    
+
     echo "</fieldset>";
 
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
