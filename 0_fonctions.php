@@ -18,7 +18,6 @@ function dateformat($date, $to="fr") {
     else {$date = explode('-',$date); $dateout="".$date[2]."/".$date[1]."/".$date[0]."";}
     if ($dateout=="//") $dateout="";
     return $dateout;
-    // TODO : supprimer cette fonction devenue inutile
 }
 
 function formatBytes($size, $precision = 2)
