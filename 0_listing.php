@@ -296,7 +296,8 @@ foreach ($tableau as &$t) {
 
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=journal&quick_name=Journal',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide journal\">";
 
-	if ( isset($tableau_journaux[$t["base_index"]]) ) echo "<sup>".$tableau_journaux[$t["base_index"]]["nb_entree"]."</sup> <img src=\"mime-icons/txt.png\" />" ;
+	$keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]); $key=$keys[0];
+	if ( isset($key) ) echo "<sup>".$tableau_journaux[$key]["nb_entree"]."</sup> <img src=\"mime-icons/txt.png\" />" ;
 	else echo "-" ;
 
         echo "</span>";
