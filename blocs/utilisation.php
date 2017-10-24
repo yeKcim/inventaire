@@ -251,7 +251,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         if (!empty($kids) ) {
             echo "<br/>Parent de :\n";
             echo "<ul>";
-                foreach ($kids as $k) echo "<li><a href=\"?i=".$k[0]."\" target=\"_blank\">".$k[2]." (".$k[1].")</a>&nbsp;: ".$k[3]."</li>";
+                foreach ($kids as $k) echo "<li><a href=\"?i=".$k["base_index"]."\" target=\"_blank\">".$k["lab_id"]." (#".$k["base_index"].")</a>&nbsp;: ".$k["designation"]."</li>";
             echo "</ul>";
         }
 
