@@ -1,9 +1,9 @@
 <?php
 /*
-     ██╗ ██████╗ ██╗   ██╗██████╗ ███╗   ██╗ █████╗ ██╗     
-     ██║██╔═══██╗██║   ██║██╔══██╗████╗  ██║██╔══██╗██║     
-     ██║██║   ██║██║   ██║██████╔╝██╔██╗ ██║███████║██║     
-██   ██║██║   ██║██║   ██║██╔══██╗██║╚██╗██║██╔══██║██║     
+     ██╗ ██████╗ ██╗   ██╗██████╗ ███╗   ██╗ █████╗ ██╗
+     ██║██╔═══██╗██║   ██║██╔══██╗████╗  ██║██╔══██╗██║
+     ██║██║   ██║██║   ██║██████╔╝██╔██╗ ██║███████║██║
+██   ██║██║   ██║██║   ██║██╔══██╗██║╚██╗██║██╔══██║██║
 ╚█████╔╝╚██████╔╝╚██████╔╝██║  ██║██║ ╚████║██║  ██║███████╗
  ╚════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝
 */
@@ -17,10 +17,10 @@ foreach ($arr as &$value) {
 
 
 /*
-███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗     
-████╗ ████║██╔═══██╗██╔══██╗██║██╔════╝    ██╔════╝██╔═══██╗██║     
-██╔████╔██║██║   ██║██║  ██║██║█████╗      ███████╗██║   ██║██║     
-██║╚██╔╝██║██║   ██║██║  ██║██║██╔══╝      ╚════██║██║▄▄ ██║██║     
+███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗
+████╗ ████║██╔═══██╗██╔══██╗██║██╔════╝    ██╔════╝██╔═══██╗██║
+██╔████╔██║██║   ██║██║  ██║██║█████╗      ███████╗██║   ██║██║
+██║╚██╔╝██║██║   ██║██║  ██║██║██╔══╝      ╚════██║██║▄▄ ██║██║
 ██║ ╚═╝ ██║╚██████╔╝██████╔╝██║██║██╗      ███████║╚██████╔╝███████╗
 ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝╚═╝      ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
@@ -43,34 +43,40 @@ if ($del_h_confirm=="Confirmer la suppression") {
 }
 
 
-// Array historique
-$query_table_historique = mysql_query ("SELECT * FROM historique WHERE historique_id=$i ORDER BY historique_date DESC, historique_index DESC ;");
-$historique = array();
-while ($l = mysql_fetch_row($query_table_historique)) {
-    $historique[$l[0]]=array($l[0],$l[1],utf8_encode($l[2]));
-}
+/*
+ █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
+██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
+███████║██████╔╝██████╔╝███████║ ╚████╔╝
+██╔══██║██╔══██╗██╔══██╗██╔══██║  ╚██╔╝
+██║  ██║██║  ██║██║  ██║██║  ██║   ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
+*/
+// historique
+$sth = $dbh->query("SELECT * FROM historique WHERE historique_id=$i ORDER BY historique_date DESC, historique_index DESC ;");
+$historique = $sth->fetchAll(PDO::FETCH_ASSOC);
+
 
 
 /*
 ███████╗ ██████╗ ██████╗ ███╗   ███╗██╗   ██╗██╗      █████╗ ██╗██████╗ ███████╗
 ██╔════╝██╔═══██╗██╔══██╗████╗ ████║██║   ██║██║     ██╔══██╗██║██╔══██╗██╔════╝
-█████╗  ██║   ██║██████╔╝██╔████╔██║██║   ██║██║     ███████║██║██████╔╝█████╗  
-██╔══╝  ██║   ██║██╔══██╗██║╚██╔╝██║██║   ██║██║     ██╔══██║██║██╔══██╗██╔══╝  
+█████╗  ██║   ██║██████╔╝██╔████╔██║██║   ██║██║     ███████║██║██████╔╝█████╗
+██╔══╝  ██║   ██║██╔══██╗██║╚██╔╝██║██║   ██║██║     ██╔══██║██║██╔══██╗██╔══╝
 ██║     ╚██████╔╝██║  ██║██║ ╚═╝ ██║╚██████╔╝███████╗██║  ██║██║██║  ██║███████╗
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝
 */
 echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
 
     echo "<h1>Journal</h1>";
-    
+
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
 
     echo "<fieldset><legend>Nouvelle information</legend>";
 
         echo "<label for=\"date_info\">Date <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr>:</label>\n";
-        echo "<input value=\"".date("d/m/Y")."\" name=\"date_info\" type=\"date\" id=\"date_info\"/><br/>";
-        
+        echo "<input value=\"".date("Y-m-d")."\" name=\"date_info\" type=\"date\" id=\"date_info\"/><br/>";
+
         echo "<label for=\"histo\" style=\"vertical-align: top;\"> Information :</label>\n";
         echo "<textarea name=\"histo\" rows=\"4\" cols=\"33\"></textarea><br/>";
         if ($write) {
@@ -84,23 +90,23 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
     echo "<fieldset><legend>Historique - Remarques</legend>";
 
 
-if ( empty($historique) ) echo "Aucune intervention spécifiée.";
+if ( empty($historique[0]) ) echo "Aucune intervention spécifiée.";
 else {
     echo "<table style=\"border:none;\">";
     foreach ($historique as $h) {
         echo "<tr>";
-        echo "<td style=\"padding-right: 10px; vertical-align: top;\"><strong>".dateformat($h[1],"fr")."</strong></td>";
-        echo "<td>".$h[2]."</td>";
+        echo "<td style=\"padding-right: 10px; vertical-align: top;\"><strong>".dateformat($h["historique_date"],"fr")."</strong></td>";
+        echo "<td>".$h["historique_texte"]."</td>";
         echo "<td style=\"text-align:right;\">";
-        if ($write) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&h=".$h[0]."".$quick."',width:280,height:110})\" title=\"supprimer cette entrée (".$h[0].") du journal\">×</span>";
+        if ($write) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&h=".$h["historique_index"]."".$quick."',width:280,height:110})\" title=\"supprimer cette entrée (".$h["historique_index"].") du journal\">×</span>";
         else echo "&nbsp;";
         echo "</td>";
         echo "</tr>";
     }
     echo "</table>";
-    
+
     }
-    
+
     echo "</fieldset>";
 
     if ($write) echo "</form>";
