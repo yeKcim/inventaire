@@ -61,11 +61,12 @@ function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0") {
     echo "</select> ";
 }
 
-function option_selecteur($select, $table, $A="0", $B="1", $complement="0") {
+function option_selecteur($select, $table, $A="0", $B="1", $complement="0",$complement_display="") {
     foreach ($table as &$l){
         $selected= ($select==$l[$A]) ? "selected >" : " >" ;
-        $complement_info= ($complement!=0) ? "" : "$l[$complement]" ;
-        echo "<option value=\"$l[$A]\" $selected $l[$B] $complement_info</option>";
+	$complement_info= ($complement!=0) ? "" : "$l[$complement]" ;
+	$c= ($complement_display!="") ? "($l[$complement])" : "$l[$complement]";
+        echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
     }
 }
 

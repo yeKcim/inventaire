@@ -3,8 +3,8 @@
 /*
 ████████╗███████╗ ██████╗██╗  ██╗███╗   ██╗██╗ ██████╗ ██╗   ██╗███████╗
 ╚══██╔══╝██╔════╝██╔════╝██║  ██║████╗  ██║██║██╔═══██╗██║   ██║██╔════╝
-   ██║   █████╗  ██║     ███████║██╔██╗ ██║██║██║   ██║██║   ██║█████╗  
-   ██║   ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║██║▄▄ ██║██║   ██║██╔══╝  
+   ██║   █████╗  ██║     ███████║██╔██╗ ██║██║██║   ██║██║   ██║█████╗
+   ██║   ██╔══╝  ██║     ██╔══██║██║╚██╗██║██║██║▄▄ ██║██║   ██║██╔══╝
    ██║   ███████╗╚██████╗██║  ██║██║ ╚████║██║╚██████╔╝╚██████╔╝███████╗
    ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝
 */
@@ -14,41 +14,26 @@ $message="";
 /*
  █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
 ██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
-███████║██████╔╝██████╔╝███████║ ╚████╔╝ 
-██╔══██║██╔══██╗██╔══██╗██╔══██║  ╚██╔╝  
-██║  ██║██║  ██║██║  ██║██║  ██║   ██║   
-╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+███████║██████╔╝██████╔╝███████║ ╚████╔╝
+██╔══██║██╔══██╗██╔══██╗██╔══██║  ╚██╔╝
+██║  ██║██║  ██║██║  ██║██║  ██║   ██║
+╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
 */
-$query_table_tags_list = mysql_query ("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
-$tags = array();
-while ($l = mysql_fetch_row($query_table_tags_list)) {
-    $tags[$l[0]]=array($l[0],utf8_encode($l[1]));
-}
+// tags
+$sth = $dbh->query("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
+$tags = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 // tags_i les tags de $i
-$query_table_tag_i = mysql_query ("SELECT tags_index FROM tags WHERE tags_id=$i ;");
-$tags_i = array();
-while ($l = mysql_fetch_row($query_table_tag_i)) {
-    $tags_i[]=$l[0];
-}
+$sth = $dbh->query("SELECT tags_index FROM tags WHERE tags_id=$i ;");
+$tags = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 // compatibilité de $i
-$query_table_compatibilite = mysql_query ("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
-$compatibilite = array();
-while ($l = mysql_fetch_row($query_table_compatibilite)) {
-    $compatibilite[]= ($l[1]==$i) ? $l[2] : $l[1] ;
-}
+$sth = $dbh->query("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
+$compatibilite = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 // tous les lab_id classé par catégorie
-$query_table_labid_cat = mysql_query ("SELECT base_index, lab_id, categorie, categorie_lettres, categorie_nom FROM base, categorie WHERE categorie=categorie_index ORDER BY categorie_nom ASC ;");
-$labids_cat = array();
-while ($l = mysql_fetch_row($query_table_labid_cat)) {
-    $labids_cat[$l[0]]=array( $l[0], utf8_encode($l[1]), $l[2], utf8_encode($l[3]), utf8_encode($l[4]) );
-}
-
-
-
-
+$sth = $dbh->query("SELECT base_index, lab_id, categorie, categorie_lettres, categorie_nom FROM base, categorie WHERE categorie=categorie_index ORDER BY categorie_nom ASC ;");
+$labids_cat = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 
 /*
@@ -183,21 +168,21 @@ if ( isset($_POST["technique_valid"]) ) {
     ║  ╠═╣╠╩╗ ║ ║║
     ╩═╝╩ ╩╚═╝┘╩═╩╝  */
     // Si on change la catégorie, il est nécessaire de changer également le lab_id !
-    if ($data["categorie"]!=$categorie) $data["lab_id"] = new_lab_id($categorie);
+    if ($data[0]["categorie"]!=$categorie) $data[0]["lab_id"] = new_lab_id($categorie);
 
 
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    $modif_result=mysql_query ("UPDATE base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$data["lab_id"]."' WHERE base.base_index = $i;" );
+    $modif_result=mysql_query ("UPDATE base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$data[0]["lab_id"]."' WHERE base.base_index = $i;" );
 
     $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
-    $data["marque"]=$marque;
-    $data["serial_number"]=$serial_number;
-    $data["reference"]=$reference;
-    $data["categorie"]=$categorie;
+    $data[0]["marque"]=$marque;
+    $data[0]["serial_number"]=$serial_number;
+    $data[0]["reference"]=$reference;
+    $data[0]["categorie"]=$categorie;
 
 }
 
@@ -205,33 +190,33 @@ if ( isset($_POST["technique_valid"]) ) {
 /*
 ███████╗ ██████╗ ██████╗ ███╗   ███╗██╗   ██╗██╗      █████╗ ██╗██████╗ ███████╗
 ██╔════╝██╔═══██╗██╔══██╗████╗ ████║██║   ██║██║     ██╔══██╗██║██╔══██╗██╔════╝
-█████╗  ██║   ██║██████╔╝██╔████╔██║██║   ██║██║     ███████║██║██████╔╝█████╗  
-██╔══╝  ██║   ██║██╔══██╗██║╚██╔╝██║██║   ██║██║     ██╔══██║██║██╔══██╗██╔══╝  
+█████╗  ██║   ██║██████╔╝██╔████╔██║██║   ██║██║     ███████║██║██████╔╝█████╗
+██╔══╝  ██║   ██║██╔══██╗██║╚██╔╝██║██║   ██║██║     ██╔══██║██║██╔══██╗██╔══╝
 ██║     ╚██████╔╝██║  ██║██║ ╚═╝ ██║╚██████╔╝███████╗██║  ██║██║██║  ██║███████╗
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝
 */
 echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
     echo "<h1>Technique</h1>";
-    
+
     echo $message;
-    
+
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
 
 /*  ╦═╗╔═╗╔═╗╔═╗╦═╗╔═╗╔╗╔╔═╗╔═╗  ╦╔╗╔╦╗╔═╗╦═╗╔╗╔╔═╗
-    ╠╦╝║╣ ╠╣ ║╣ ╠╦╝║╣ ║║║║  ║╣   ║║║║║ ║╣ ╠╦╝║║║║╣ 
+    ╠╦╝║╣ ╠╣ ║╣ ╠╦╝║╣ ║║║║  ║╣   ║║║║║ ║╣ ╠╦╝║║║║╣
     ╩╚═╚═╝╚  ╚═╝╩╚═╚═╝╝╚╝╚═╝╚═╝  ╩╝╚╝╩ ╚═╝╩╚═╝╚╝╚═╝    */
     echo "<fieldset><legend>Référence interne</legend>";
 
         /* ########### categorie ########### */
         echo "<label for=\"categorie\">Catégorie : </label>\n";
         echo "<select name=\"categorie\" onchange=\"display(this,'plus_categorie','plus_categorie');\" id=\"categorie\">";
-        echo "<option value=\"0\" "; if ($data["categorie"]=="0") echo "selected"; echo ">— Aucune catégorie spécifiée —</option>"; 
-        option_selecteur($data["categorie"], $categories, "2");
-        echo "<option value=\"plus_categorie\" "; if ($data["categorie"]=="plus_categorie") echo "selected"; echo ">Nouvelle catégorie :</option>";
+        echo "<option value=\"0\" "; if ($data[0]["categorie"]=="0") echo "selected"; echo ">— Aucune catégorie spécifiée —</option>";
+        option_selecteur($data[0]["categorie"], $categories, "categorie_index", "categorie_nom", "categorie_lettres", "display()");
+        echo "<option value=\"plus_categorie\" "; if ($data[0]["categorie"]=="plus_categorie") echo "selected"; echo ">Nouvelle catégorie :</option>";
         echo "</select><br/>";
-        
+
             /* ########### + categorie ########### */
             echo "\n\n\n";
             echo "<fieldset id=\"plus_categorie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Catégorie</legend>";
@@ -249,7 +234,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         
         echo "<strong>Identifiant labo :</strong></label>\n";
         echo "</abbr>";
-        echo "<input value=\"".$data["lab_id"]."\" name=\"lab_id\" type=\"text\" id=\"lab_id\">";
+        echo "<input value=\"".$data[0]["lab_id"]."\" name=\"lab_id\" type=\"text\" id=\"lab_id\">";
         echo "<br/>";
         
 
@@ -264,9 +249,9 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         /* ########### marque ########### */
         echo "<label for=\"marque\">Marque : </label>\n";
         echo "<select name=\"marque\" onchange=\"display(this,'plus_marque','plus_marque');\" id=\"marque\">";
-        echo "<option value=\"0\" "; if ($data["marque"]=="0") echo "selected"; echo ">— Aucune marque spécifiée —</option>"; 
-        option_selecteur($data["marque"], $marques);
-        echo "<option value=\"plus_marque\" "; if ($data["marque"]=="plus_marque") echo "selected"; echo ">Nouvelle marque :</option>";
+        echo "<option value=\"0\" "; if ($data[0]["marque"]=="0") echo "selected"; echo ">— Aucune marque spécifiée —</option>"; 
+        option_selecteur($data[0]["marque"], $marques, "marque_index", "marque_nom");
+        echo "<option value=\"plus_marque\" "; if ($data[0]["marque"]=="plus_marque") echo "selected"; echo ">Nouvelle marque :</option>";
         echo "</select><br/>";
         
             /* ########### + marque ########### */
@@ -279,12 +264,12 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
         /* ########### reference ########### */
         echo "<label for=\"reference\">Référence : </label>\n";
-        echo "<input value=\"".$data["reference"]."\" name=\"reference\" type=\"text\" id=\"reference\">";
+        echo "<input value=\"".$data[0]["reference"]."\" name=\"reference\" type=\"text\" id=\"reference\">";
         echo "<br/>";
 
         /* ########### serial_number ########### */
         echo "<label for=\"serial_number\">Numéro de série : </label>\n";
-        echo "<input value=\"".$data["serial_number"]."\" name=\"serial_number\" type=\"text\" id=\"serial_number\"><br/>";
+        echo "<input value=\"".$data[0]["serial_number"]."\" name=\"serial_number\" type=\"text\" id=\"serial_number\"><br/>";
 
     echo "</fieldset>";
 

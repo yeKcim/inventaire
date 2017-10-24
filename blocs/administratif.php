@@ -253,7 +253,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         option_selecteur($data[0]["tutelle"], $tutelles, "tutelle_index", "tutelle_nom");
         echo "<option value=\"plus_tutelle\" "; if ($data[0]["tutelle"]=="plus_tutelle") echo "selected"; echo ">Nouvelle tutelle :</option>";
         echo "</select><br/>";
-        
+
             /* ########### + tutelle ########### */
             echo "\n\n\n";
             echo "<fieldset id=\"plus_tutelle\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle tutelle</legend>";
@@ -261,7 +261,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
                 echo "<input value=\"\" name=\"plus_tutelle\" type=\"text\">\n";
             echo "</fieldset>";
             echo "\n\n\n";
-        
+
         /* ########### bon de commande ########### */
         echo "<label for=\"bon_commande\">Bon de commande : </label>\n";
         echo "<input value=\"".$data[0]["bon_commande"]."\" name=\"bon_commande\" type=\"text\" id=\"bon_commande\">";
@@ -285,11 +285,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo ": </label>\n";
         echo "<select name=\"responsable_achat\" onchange=\"display(this,'plus_responsable_achat','plus_responsable_achat');\" id=\"responsable_achat\">";
         echo "<option value=\"0\" "; if ($data[0]["responsable_achat"]=="0") echo "selected"; echo ">— Aucun responsable achat spécifié —</option>"; 
-																	
-
         option_selecteur($data[0]["responsable_achat"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
-
-																	
         echo "<option value=\"plus_responsable_achat\" "; if ($data[0]["responsable_achat"]=="plus_responsable_achat") echo "selected"; echo ">Nouveau responsable achat :</option>";
         echo "</select>";
 
