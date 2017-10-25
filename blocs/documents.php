@@ -105,10 +105,10 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     echo "<fieldset><legend>Fichiers de cette entrée</legend>";
         displayDir($i, "files/$i/", $del=$write);
     echo "</fieldset>";
-
+	$keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
     if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
         echo "<fieldset><legend>Fichiers globaux liés à la référence constructeur</legend>";
-        	$m=str_replace('/', "_", $marques[$data[0]["marque"]][1]);
+        	$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
 			$r=str_replace('/', "_", $data[0]["reference"]);
             displayDir($i, "files/".$m."-".$r."/", $del=$write);
         echo "</fieldset>";
