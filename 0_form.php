@@ -26,7 +26,7 @@ $IOT_CMD= ($IOT!="") ? "AND sortie IN ($IOT)" : "AND sortie IN (0,2)" ;
 #                        CAT : categorie                                #
 #########################################################################
 // $categories in tables_sql_commun.php
-selecteur("CAT", $categories, "Toutes catégories", "categorie_index", "categorie_nom");
+selecteur("CAT", $categories, "Toutes catégories", "categorie_index", "categorie_nom", "categorie_lettres", "display()");
 $CAT_CMD= ($CAT!="") ? "AND categorie_index=$CAT" : "" ;
 
 #########################################################################

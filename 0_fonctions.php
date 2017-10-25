@@ -48,14 +48,15 @@ function phone_display($n, $display) {
 ╚══════╝╚══════╝╚══════╝╚══════╝ ╚═════╝   ╚═╝
 */
 
-function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0") {
+function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0",$complement_display="") {
     global $$nom;
     echo "<select name=\"$nom\" onchange=\"submit();\">";
     echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>";
     foreach ($table as &$l){
         $selected= ($$nom==$l[$A]) ? "selected > $nom =" : " > " ;
         $complement_info= ($complement!=0) ? "" : "$l[$complement]" ;
-        echo "<option value=\"$l[$A]\" $selected $l[$B] $complement_info</option>";
+	$c= ($complement_display!="") ? "($l[$complement])" : "$l[$complement]";
+        echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
     }
     echo "</select> ";
 }
@@ -107,7 +108,7 @@ function displayDir($i, $dir, $del=FALSE) {
     }
     // Si le dossier est vide on l’indique
     if (is_dir_empty("$racine$dir")) {
-        echo "Aucun fichier trouvé";
+        echo "Aucun fichier trouvé dans $dir";
     }
     // Si le dossier n’est pas vide on liste
     else {
