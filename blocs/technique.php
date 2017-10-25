@@ -23,13 +23,19 @@ $message="";
 $sth = $dbh->query("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
 $tags = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-// tags_i les tags de $i
-$sth = $dbh->query("SELECT tags_index FROM tags WHERE tags_id=$i ;");
-$tags = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-// compatibilité de $i
-$sth = $dbh->query("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
-$compatibilite = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+if (!isset($fieldset_tags)) {
+	// tags_i les tags de $i
+	$sth = $dbh->query("SELECT tags_index FROM tags WHERE tags_id=$i ;");
+	$tags = $sth->fetchAll(PDO::FETCH_ASSOC);
+}
+
+if (!isset($fieldset_compatibilite)) {
+	// compatibilité de $i
+	$sth = $dbh->query("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
+	$compatibilite = $sth->fetchAll(PDO::FETCH_ASSOC);
+}
 
 // tous les lab_id classé par catégorie
 $sth = $dbh->query("SELECT base_index, lab_id, categorie, categorie_lettres, categorie_nom FROM base, categorie WHERE categorie=categorie_index ORDER BY categorie_nom ASC ;");
@@ -37,16 +43,16 @@ $labids_cat = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 
 /*
-███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗     
-████╗ ████║██╔═══██╗██╔══██╗██║██╔════╝    ██╔════╝██╔═══██╗██║     
-██╔████╔██║██║   ██║██║  ██║██║█████╗      ███████╗██║   ██║██║     
-██║╚██╔╝██║██║   ██║██║  ██║██║██╔══╝      ╚════██║██║▄▄ ██║██║     
+███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗
+████╗ ████║██╔═══██╗██╔══██╗██║██╔════╝    ██╔════╝██╔═══██╗██║
+██╔████╔██║██║   ██║██║  ██║██║█████╗      ███████╗██║   ██║██║
+██║╚██╔╝██║██║   ██║██║  ██║██║██╔══╝      ╚════██║██║▄▄ ██║██║
 ██║ ╚═╝ ██║╚██████╔╝██████╔╝██║██║██╗      ███████║╚██████╔╝███████╗
 ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝╚═╝      ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
 if ( isset($_POST["technique_valid"]) ) {
 
-    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque", "plus_marque_nom", "reference", "serial_number", "plus_tags");
+    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "lab_id", "plus_marque", "plus_marque_nom", "reference", "serial_number", "plus_tags");
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
@@ -56,21 +62,37 @@ if ( isset($_POST["technique_valid"]) ) {
     ║  ║ ║║║║╠═╝╠═╣ ║ ║╠╩╗║  ║ ║ ║╣ ╚═╗
     ╚═╝╚═╝╩ ╩╩  ╩ ╩ ╩ ╩╚═╝╩═╝╩ ╩ ╚═╝╚═╝ */
     // Supprimer tous les compatibilités de cette entrée pour réinitialiser
-    mysql_query ("DELETE FROM compatibilite WHERE compatib_id1=$i OR compatib_id2=$i ;");
+														
+    //mysql_query ("DELETE FROM compatibilite WHERE compatib_id1=$i OR compatib_id2=$i ;");
+//------>    $delcount = $dbh->exec("DELETE FROM compatibilite WHERE compatib_id1=$i OR compatib_id2=$i ;");
+														
+
 
     // Ajout des compatibilités
     if (isset($_POST["compatibilite"])) {
         $allc="";
         foreach ($_POST["compatibilite"] as $c) $allc.= "(".$c[0].",$i),";
         $allc=substr($allc, 0, -1); // suppression du dernier caractère
-        mysql_query ("INSERT INTO compatibilite (compatib_id1, compatib_id2) VALUES $allc ; ");
+                                                                                                                
+        //mysql_query ("INSERT INTO compatibilite (compatib_id1, compatib_id2) VALUES $allc ; ");
+//------>	$sth = $dbh->query("INSERT INTO compatibilite (compatib_id1, compatib_id2) VALUES $allc ; ");
+                                                                                                                
     }
     // refaire compatibilité de $i
-    $query_table_compatibilite = mysql_query ("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
-    $compatibilite = array();
-    while ($l = mysql_fetch_row($query_table_compatibilite)) {
-        $compatibilite[]= ($l[1]==$i) ? $l[2] : $l[1] ;
-    }
+														
+    //$query_table_compatibilite = mysql_query ("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
+    //$compatibilite = array();
+    //while ($l = mysql_fetch_row($query_table_compatibilite)) {
+    //    $compatibilite[]= ($l[1]==$i) ? $l[2] : $l[1] ;
+    //}
+														
+//------>    $sth = $dbh->query("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
+//------>    $compatibilite_query = $sth->fetchAll(PDO::FETCH_ASSOC);
+//------>    $compatibilite = array();
+//------>    foreach ($compatibilite_query as $c) {
+//------>	$compatibilite[]= ($l["compatib_id1"]==$i) ? $l["compatib_id2"] : $l["compatib_id1"] ;
+//------>    }
+
 
 
 
@@ -136,7 +158,7 @@ if ( isset($_POST["technique_valid"]) ) {
 
 
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔╦╗╔═╗╦═╗╔═╗ ╦ ╦╔═╗
-    ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣ 
+    ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩ ╩╩ ╩╩╚═╚═╝╚╚═╝╚═╝  */
     if ($marque=="plus_marque") {
         mysql_query ("INSERT INTO marque (marque_nom) VALUES ('".$plus_marque_nom."') ; ");
@@ -149,7 +171,7 @@ if ( isset($_POST["technique_valid"]) ) {
     
 
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔═╗╦═╗╦╔═╗
-    ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣ 
+    ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝    */
     if ($categorie=="plus_categorie") {
         mysql_query ("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$plus_categorie_abbr."\",\"".$plus_categorie_nom."\") ; ");
@@ -159,7 +181,7 @@ if ( isset($_POST["technique_valid"]) ) {
         while ($l = mysql_fetch_row($query_table_categorienew)) $categorie=$l[0];
         // on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
         $categories[$categorie]=array( $categorie,utf8_encode($plus_categorie_nom),utf8_encode($plus_categorie_abbr) );
-        // TODO Attetion l’abréviation ne doit contenir que des lettres !
+        // TODO Attention l’abréviation ne doit contenir que des lettres !
     }
 
 
@@ -168,13 +190,17 @@ if ( isset($_POST["technique_valid"]) ) {
     ║  ╠═╣╠╩╗ ║ ║║
     ╩═╝╩ ╩╚═╝┘╩═╩╝  */
     // Si on change la catégorie, il est nécessaire de changer également le lab_id !
-    if ($data[0]["categorie"]!=$categorie) $data[0]["lab_id"] = new_lab_id($categorie);
-
+    if ($data[0]["categorie"]!=$categorie) {
+	$data[0]["lab_id"] = new_lab_id($categorie);
+								
+	echo "<br/>data[0][lab_id]:".$data[0]["lab_id"]."<br/>";
+								
+}
 
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    $modif_result=mysql_query ("UPDATE base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$data[0]["lab_id"]."' WHERE base.base_index = $i;" );
+    $modif_result=mysql_query ("UPDATE base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$lab_id."' WHERE base.base_index = $i;" );
 
     $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
 
@@ -227,14 +253,44 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             echo "</fieldset>";
             echo "\n\n\n";
 
+																	
+																	
+																	
         /* ########### lab_id ########### */
         echo "<label for=\"lab_id\">";
-        //echo "<abbr title=\"Modifier uniquement pour un lab_id manuel !\">";
-        echo "<abbr title=\"fonctionnalité en cours d’écriture ! Ne pas modifier cette entrée\">";
-        
+
         echo "<strong>Identifiant labo :</strong></label>\n";
-        echo "</abbr>";
-        echo "<input value=\"".$data[0]["lab_id"]."\" name=\"lab_id\" type=\"text\" id=\"lab_id\">";
+	echo "<select name=\"lab_id\" onchange=\"display(this,'manual_id','manual_id');\" id=\"lab_id\">";
+
+	echo "<option value=\"".$data[0]["lab_id"]."\" ";
+		if ($lab_id==$data[0]["lab_id"]) echo "selected";
+		echo ">";
+		if (isset($fieldset_tags)) echo "Auto";
+		else echo $data[0]["lab_id"];
+	echo "</option>";
+
+	echo "<option value=\"manual_id\">Manuel (non fonctionnel)</option>";
+
+        echo "</select><br/>";
+
+        /* ########### + manuel ########### */
+        echo "\n\n\n";
+        echo "<fieldset id=\"manual_id\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Id Manuel</legend>";
+            echo "<label for=\"id_man\">Nom :</label>\n";
+            echo "<input value=\"\" name=\"id_man\" type=\"text\">\n";
+        echo "</fieldset>";
+        echo "\n\n\n";
+																	
+																	
+																	
+
+echo "";
+
+														
+
+
+
+
         echo "<br/>";
         
 
