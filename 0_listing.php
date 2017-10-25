@@ -189,7 +189,6 @@ foreach ($tableau as &$t) {
         // ********** Fichiers globaux **********
         echo "<td>";
 
-        $racine = "/var/www/html/";
         $m=str_replace('/', "_", $t["marque_nom"]);
         $r=str_replace('/', "_", $t["reference"]);
         $dir="files/".$m."-".$r;
@@ -265,7 +264,6 @@ foreach ($tableau as &$t) {
         // ********** Fichiers **********
         echo "<td>";
 
-        $racine = "/var/www/html/";
         $dir="files/".$t["base_index"]."/";
         if (file_exists("$racine$dir")) {
             if ( ! is_dir_empty("$racine$dir")) {

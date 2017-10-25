@@ -98,7 +98,7 @@ function is_dir_empty($dir) {
 }
 
 function displayDir($i, $dir, $del=FALSE) {
-    $racine = "/var/www/";
+    global $racine;
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     // Si le dossier n’existe pas, on le crée
     if (!file_exists("$racine$dir")) {
