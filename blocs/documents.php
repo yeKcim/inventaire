@@ -10,7 +10,6 @@
 
 /* TODO : Ajouter la possibilité d’avoir des fichiers liés à fabricant-référence en plus de #n pour les data-sheet par exemple */
 
-
 /* TODO : Vérifications envoi de fichiers semble défectueux */
 
 $max_size=file_upload_max_size();
@@ -27,7 +26,6 @@ if ($del_f_confirm=="Confirmer la suppression") {
     $nomdel=date("Ymdhms")."-".str_replace('/', "_", $f);
     rename("$f","$trash/$nomdel");
 }
-
 
 
 /*
@@ -130,7 +128,6 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
             echo "<br/>";
         }
     }
-
     echo "</fieldset>";
 
 echo "</div>";
