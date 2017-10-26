@@ -30,16 +30,18 @@ if ($add_historique=="Ajouter") {
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
-    $query_do_i_insert_histo = mysql_query ("SELECT historique_index FROM historique WHERE historique_date=\"".dateformat($date_info,"en")."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";");
-    if (!isset(mysql_fetch_row($query_do_i_insert_histo)[0]) ) {
-        mysql_query ("INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".dateformat($date_info,"en")."\", \"".$histo."\", \"".$i."\"); ");
+    $sth = $dbh->query("SELECT historique_index FROM historique WHERE historique_date=\"".$date_info."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";");
+    $query_do_i_insert_histo = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!isset($query_do_i_insert_histo[0]) ) {
+	$sth = $dbh->query("INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".$date_info."\", \"".$histo."\", \"".$i."\");");
     }
+    else {/* TODO: écrire un message comme quoi l’entrée était déjà dans la base donc n’a pas été ajoutée*/}
 }
 
 // Suppression d’une entrée dans l’historique
 if ($del_h_confirm=="Confirmer la suppression") {
-    mysql_query ("DELETE FROM historique WHERE historique_index=$h AND historique_id=$i;");
-    // TODO ajouter l’information effacée dans trash ? avec l’ip et l’heure ?
+    $delcount = $dbh->exec("DELETE FROM historique WHERE historique_index=$h AND historique_id=$i;");
 }
 
 
