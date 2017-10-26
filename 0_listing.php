@@ -155,11 +155,13 @@ foreach ($tableau as &$t) {
 
         echo "</span>";
 
-
 	// ********** Intégration **********
+        $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
 	if ($t["integration"]!="0") echo "<br/><a href=\"info.php?i=".$t["integration"]."\" target=\"_blank\" title=\"intégré dans…\">↰ #".$t["integration"]."</a>";
-	elseif ( isset ($tableau_parents[$t["base_index"]]) ) {
-		echo "<br/>↳ #".substr($tableau_parents[$t["base_index"]], 0, -1)."";
+
+	elseif (isset ($tableau_parents[$keys[0]])) {
+		echo "<br/>↳ ";
+		foreach ($keys as $k) echo "#".$tableau_parents[$k]["base_index"]." ";
 	}
 	else {
 		echo "&nbsp;";
@@ -294,7 +296,7 @@ foreach ($tableau as &$t) {
 
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=journal&quick_name=Journal',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide journal\">";
 
-	$keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]); if (isset(keys[0])) $key=$keys[0];
+	if (isset($t["base_index"])) $keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]); if (isset(keys[0])) $key=$keys[0];
 	if ( isset($key) ) echo "<sup>".$tableau_journaux[$key]["nb_entree"]."</sup> <img src=\"mime-icons/txt.png\" />" ;
 	else echo "-" ;
 
@@ -306,7 +308,7 @@ foreach ($tableau as &$t) {
         echo "<td>";
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
 
-	$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]); if (isset(keys[0])) $key=$keys[0];
+	if (isset($t["utilisateur"])) $keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]); if (isset(keys[0])) $key=$keys[0];
         if ($t["utilisateur"]!=0) echo "<span title=\"Utilisé par ".$utilisateurs[$key]["utilisateur_prenom"]." ".$utilisateurs[$key]["utilisateur_nom"]." ";
         else echo "<span title=\"";
         if ($t["localisation"]!=0) echo "le ".dateformat($t["date_localisation"],"fr")."";
