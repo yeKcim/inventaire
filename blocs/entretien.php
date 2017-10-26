@@ -7,7 +7,6 @@
 ███████╗██║ ╚████║   ██║   ██║  ██║███████╗   ██║   ██║███████╗██║ ╚████║
 ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝╚══════╝╚═╝  ╚═══╝
 */
-
 $error_noebox="";
 $message="";
 
@@ -53,30 +52,32 @@ if ($modif_entretien!="") {
     if ($e_effectuerpar=="plus_intervant") {
         $plus_intervant_nom=mb_strtoupper($plus_intervant_nom);
         $plus_intervant_phone=phone_display("$plus_intervant_phone","");
-        $modif_result=mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_intervant_nom."', '".$plus_intervant_prenom."','".$plus_intervant_mail."','".$plus_intervant_phone."') ; ");
+
+        $modif_result = $dbh->query("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_intervant_nom."', '".$plus_intervant_prenom."','".$plus_intervant_mail."','".$plus_intervant_phone."') ;");
         /* TODO : prévoir le cas où la personne existe déjà */
 
-        if ($modif_result!=1) $message.=$message_error_add;
+        if (!isset($modif_result)) $message.=$message_error_add;
         else {
             $message.=$message_success_add;
 
-            $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
-            while ($l = mysql_fetch_row($query_table_utilisateurnew)) $e_effectuerpar=$l[0];
-            // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-            $utilisateurs[$e_effectuerpar]=array( $e_effectuerpar, utf8_encode($plus_intervant_nom), utf8_encode($plus_intervant_prenom), utf8_encode($plus_intervant_mail), phone_display("$plus_intervant_phone",".") );
+	    $sth = $dbh->query("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
+    	    $query_table_utilisateurnew = $sth->fetchAll(PDO::FETCH_ASSOC);
+	    $e_effectuerpar=$query_table_utilisateurnew[0]["utilisateur_index"];
+
+            // on ajoute cette entrée dans le tableau des utilisateurs
+	    array_push($utilisateurs, array("utilisateur_index" => $e_effectuerpar, "utilisateur_nom"  => $plus_intervant_nom, "utilisateur_prenom" => $plus_intervant_prenom, "utilisateur_mail" => $plus_intervant_mail, "utilisateur_phone" =>phone_display("$plus_intervant_phone",".") ) );
         }
     }
 
-        if (isset($_POST["ebox"])) {
-            $alle="";
-            foreach ($_POST["ebox"] as $ek => $ed) $alle.=" e_index = $ek OR";
-            $alle=substr($alle, 0, -2);
-            $effectuepar_sql= ($e_effectuerpar!="0") ? ", e_effectuerpar = '$e_effectuerpar'" : "";
-            $modif_result=mysql_query ("UPDATE entretien SET e_lastdate = '".dateformat($e_effectuele,"en")."' $effectuepar_sql WHERE $alle ;" );
-
-            $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
-        }
-        else $error_noebox="Vous devez cocher au moins une case d’entretien";
+    if (isset($_POST["ebox"])) {
+        $alle="";
+        foreach ($_POST["ebox"] as $ek => $ed) $alle.=" e_index = $ek OR";
+        $alle=substr($alle, 0, -2);
+        $effectuepar_sql= ($e_effectuerpar!="0") ? ", e_effectuerpar = '$e_effectuerpar'" : "";
+	$modif_result = $dbh->query("UPDATE entretien SET e_lastdate = '".$e_effectuele."' $effectuepar_sql WHERE $alle ;");
+	$message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
+    }
+    else $error_noebox="Vous devez cocher au moins une case d’entretien";
 
 }
 
@@ -94,7 +95,6 @@ if ($del_e_confirm=="Confirmer la suppression") {
 }
 
 
-
 /*
  █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
 ██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
@@ -108,7 +108,6 @@ $sth = $dbh->query("SELECT e_index, e_frequence, e_lastdate, e_designation, e_de
 $entretiens = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 
-
 /*
 ███████╗ ██████╗ ██████╗ ███╗   ███╗██╗   ██╗██╗      █████╗ ██╗██████╗ ███████╗
 ██╔════╝██╔═══██╗██╔══██╗████╗ ████║██║   ██║██║     ██╔══██╗██║██╔══██╗██╔════╝
@@ -117,7 +116,6 @@ $entretiens = $sth->fetchAll(PDO::FETCH_ASSOC);
 ██║     ╚██████╔╝██║  ██║██║ ╚═╝ ██║╚██████╔╝███████╗██║  ██║██║██║  ██║███████╗
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝
 */
-
 echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
 
     echo "<h1>Entretien</h1>";
