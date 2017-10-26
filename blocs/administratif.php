@@ -318,14 +318,14 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
         /* ########### date_achat ########### */
 
-        echo "<label for=\"achat\">Achat <abbr title=\"JJ/MM/AAAA (si jour ou mois inconnu → 01)\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<label for=\"achat\">Achat <abbr title=\"si jour ou mois inconnu → 01\"><strong>ⓘ</strong></abbr> :</label>\n";
 	echo "<input value=\"";
         if ($data[0]["date_achat"]!="0000-00-00") echo $data[0]["date_achat"];
 	echo "\" name=\"date_achat\" type=\"date\" id=\"achat\"/>";
         echo "<br/>";
 
         /* ########### garantie ########### */
-        echo "<label for=\"garantie\">Fin de garantie <abbr title=\"JJ/MM/AAAA (si jour ou mois inconnu → 01)\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<label for=\"garantie\">Fin de garantie <abbr title=\"si jour ou mois inconnu → 01\"><strong>ⓘ</strong></abbr> :</label>\n";
         echo "<input value=\"";
         if ($data[0]["garantie"]!="0000-00-00") echo $data[0]["garantie"];
         echo "\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
