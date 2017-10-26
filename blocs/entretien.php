@@ -32,9 +32,8 @@ if ( isset($_POST["add_entretien"]) ) {
     if ( ($e_designation=="")||($e_frequence=="") ) $error_emptyinput="Fréquence et Désignation sont des champs obligatoires";
     else {
         $e_frequence=$e_frequence*$e_frequence_multipli;
-        $add_result= mysql_query ("INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\"); ");
+        $add_result = $dbh->query("INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\");");
         $error_emptyinput="";
-
         $message.= ($add_result!=1) ? $message_error_add : $message_success_add;
     }
 }
@@ -90,11 +89,8 @@ foreach ($arr as &$value) {
 }
 
 if ($del_e_confirm=="Confirmer la suppression") {
-    $del_result=mysql_query ("DELETE FROM entretien WHERE e_index=$e_del AND e_id=$i;");
-    // TODO ajouter l’information effacée dans trash ? avec l’ip et l’heure ?
-
-    $message.=($del_result!=1) ? $message_error_del : $message_success_del;
-
+    $delresult = $dbh->exec("DELETE FROM entretien WHERE e_index=$e_del AND e_id=$i;");
+    $message.=($del_result!="") ? $message_error_del : $message_success_del;
 }
 
 
@@ -144,7 +140,7 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
 
         echo "<select name=\"e_frequence_multipli\" id=\"e_frequence_multipli\">";
         echo "<option value=\"1\">jours</option>";
-        echo "<option value=\"30\" selected>mois</option>"; 
+        echo "<option value=\"30\" selected>mois</option>";
         echo "<option value=\"365\">ans</option>";
         echo "</select> <br/>";
 
@@ -251,13 +247,13 @@ else {
         echo "&nbsp; &nbsp;↳ Cochez les entretiens que vous souhaitez renseigner.<br/>";
 
         /* ########### Le ########### */
-        echo "<label for=\"e_effectuele\" style=\"vertical-align: top;\"> Le <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<label for=\"e_effectuele\" style=\"vertical-align: top;\"> Le :</label>\n";
         echo "<input value=\"".date("Y-m-d")."\" name=\"e_effectuele\" type=\"date\" id=\"e_effectuele\"><br/>";
 
         /* ########### Par ########### */
         echo "<label for=\"e_effectuerpar\">Par : </label>\n";
         echo "<select name=\"e_effectuerpar\" onchange=\"display(this,'plus_intervant','plus_intervant');\" id=\"e_effectuerpar\">";
-        echo "<option value=\"0\" "; if ($e["e_effectuerpar"]=="0") echo "selected"; echo ">— Aucun intervenant spécifié —</option>"; 
+        echo "<option value=\"0\" "; if ($e["e_effectuerpar"]=="0") echo "selected"; echo ">— Aucun intervenant spécifié —</option>";
         option_selecteur($e["e_effectuerpar"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
         echo "<option value=\"plus_intervant\" "; if ($e["e_effectuerpar"]=="plus_intervant") echo "selected"; echo ">Nouvel intervenant :</option>";
         echo "</select><br/>";
@@ -270,10 +266,10 @@ else {
 
                 echo "<label for=\"plus_intervant_nom\">Nom :</label>\n";
                 echo "<input value=\"\" name=\"plus_intervant_nom\" type=\"text\">\n";
-                
+
                 echo "<label for=\"plus_intervant_mail\">Mail :</label>\n";
                 echo "<input value=\"\" name=\"plus_intervant_mail\" type=\"text\">\n";
-                
+
                 echo "<label for=\"plus_intervant_phone\">Téléphone :</label>\n";
                 echo "<input value=\"\" name=\"plus_intervant_phone\" type=\"text\">\n";
 
@@ -288,11 +284,7 @@ else {
             echo "<input name=\"modif_entretien\" value=\"Entretien effectué\" type=\"submit\" class=\"little_button\" />";
         }
     }
-    
     echo "</fieldset>";
-
-
-
 
     if ($write) echo "</form>";
 
