@@ -294,7 +294,7 @@ foreach ($tableau as &$t) {
 
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=journal&quick_name=Journal',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide journal\">";
 
-	$keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]); $key=$keys[0];
+	$keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]); if (isset(keys[0])) $key=$keys[0];
 	if ( isset($key) ) echo "<sup>".$tableau_journaux[$key]["nb_entree"]."</sup> <img src=\"mime-icons/txt.png\" />" ;
 	else echo "-" ;
 
@@ -306,7 +306,7 @@ foreach ($tableau as &$t) {
         echo "<td>";
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
 
-	$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]); $key=$keys[0];
+	$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]); if (isset(keys[0])) $key=$keys[0];
         if ($t["utilisateur"]!=0) echo "<span title=\"Utilisé par ".$utilisateurs[$key]["utilisateur_prenom"]." ".$utilisateurs[$key]["utilisateur_nom"]." ";
         else echo "<span title=\"";
         if ($t["localisation"]!=0) echo "le ".dateformat($t["date_localisation"],"fr")."";
