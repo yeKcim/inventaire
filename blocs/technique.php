@@ -52,7 +52,7 @@ $labids_cat = $sth->fetchAll(PDO::FETCH_ASSOC);
 */
 if ( isset($_POST["technique_valid"]) ) {
 
-    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "lab_id", "plus_marque", "plus_marque_nom", "reference", "serial_number", "plus_tags");
+    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "lab_id", "id_man", "marque", "plus_marque", "plus_marque_nom", "reference", "serial_number", "plus_tags");
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
@@ -139,8 +139,7 @@ if ( isset($_POST["technique_valid"]) ) {
         $allt=substr($allt, 0, -1); // suppression du dernier caractère
         mysql_query ("INSERT INTO tags (tags_index, tags_id) VALUES $allt ;");
     }
-    
-    
+
     // refaire tags et tags de $i avant affichage
     // $tags_list
     $query_table_tags_list = mysql_query ("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
@@ -168,14 +167,14 @@ if ( isset($_POST["technique_valid"]) ) {
         // on ajoute cette entrée dans le tableau des marques (utilisé pour le select)
         $marques[$marque]=array( $marque, utf8_encode($plus_marque_nom) );
     }
-    
+
 
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔═╗╦═╗╦╔═╗
     ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝    */
     if ($categorie=="plus_categorie") {
         mysql_query ("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$plus_categorie_abbr."\",\"".$plus_categorie_nom."\") ; ");
-        
+
         /* TODO : prévoir le cas où le vendeur existe déjà */
         $query_table_categorienew = mysql_query ("SELECT categorie_index FROM categorie ORDER BY categorie_index DESC LIMIT 1 ;");
         while ($l = mysql_fetch_row($query_table_categorienew)) $categorie=$l[0];
@@ -192,10 +191,7 @@ if ( isset($_POST["technique_valid"]) ) {
     // Si on change la catégorie, il est nécessaire de changer également le lab_id !
     if ($data[0]["categorie"]!=$categorie) {
 	$data[0]["lab_id"] = new_lab_id($categorie);
-								
-	echo "<br/>data[0][lab_id]:".$data[0]["lab_id"]."<br/>";
-								
-}
+    }
 
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
@@ -253,13 +249,10 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             echo "</fieldset>";
             echo "\n\n\n";
 
-																	
-																	
-																	
         /* ########### lab_id ########### */
         echo "<label for=\"lab_id\">";
 
-        echo "<strong>Identifiant labo :</strong></label>\n";
+        echo "Identifiant labo :</label>\n";
 	echo "<select name=\"lab_id\" onchange=\"display(this,'manual_id','manual_id');\" id=\"lab_id\">";
 
 	echo "<option value=\"".$data[0]["lab_id"]."\" ";
@@ -273,27 +266,14 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
         echo "</select><br/>";
 
-        /* ########### + manuel ########### */
+        /* ########### + id_manuel ########### */
         echo "\n\n\n";
         echo "<fieldset id=\"manual_id\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Id Manuel</legend>";
-            echo "<label for=\"id_man\">Nom :</label>\n";
+            echo "<label for=\"id_man\">Id :</label>\n";
             echo "<input value=\"\" name=\"id_man\" type=\"text\">\n";
         echo "</fieldset>";
         echo "\n\n\n";
-																	
-																	
-																	
-
-echo "";
-
-														
-
-
-
-
         echo "<br/>";
-        
-
 
     echo "</fieldset>";
 
@@ -309,7 +289,7 @@ echo "";
         option_selecteur($data[0]["marque"], $marques, "marque_index", "marque_nom");
         echo "<option value=\"plus_marque\" "; if ($data[0]["marque"]=="plus_marque") echo "selected"; echo ">Nouvelle marque :</option>";
         echo "</select><br/>";
-        
+
             /* ########### + marque ########### */
             echo "\n\n\n";
             echo "<fieldset id=\"plus_marque\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Marque</legend>";
@@ -333,7 +313,7 @@ echo "";
 /*  ╔╦╗╔═╗╔═╗╔═╗
      ║ ╠═╣║ ╦╚═╗
      ╩ ╩ ╩╚═╝╚═╝    */
-   echo "<fieldset id=\"tags\"><legend>Mots clés</legend>";
+   echo "<fieldset id=\"tags\"><legend>Mots clés (fonction désactivée pour l’instant)</legend>";
 
     if ( isset($fieldset_tags) ) echo "".$fieldset_tags."";
     else {
@@ -346,7 +326,7 @@ echo "";
             echo "<option value=\"".$t2[0]."\" $select>".$t2[1]."</option>";
         }
         echo "</select>";
-        
+
         echo "
           <script type=\"text/javascript\">
             var config = {
@@ -358,16 +338,16 @@ echo "";
           </script>";
 
         echo "<label for=\"plus_tags\">Nouveaux tags <abbr title=\"séparés d’une virgule\"><strong>ⓘ</strong></abbr> :</label>";
-        echo "<input value=\"\" name=\"plus_tags\" type=\"text\">\n";    
+        echo "<input value=\"\" name=\"plus_tags\" type=\"text\">\n";
     }
-    
+
     echo "</fieldset>";
 
 
 /*  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔╦╗╦╔╗ ╦ ╦  ╦╔╦╗╔═╗
-    ║  ║ ║║║║╠═╝╠═╣ ║ ║╠╩╗║ ║  ║ ║ ║╣ 
+    ║  ║ ║║║║╠═╝╠═╣ ║ ║╠╩╗║ ║  ║ ║ ║╣
     ╚═╝╚═╝╩ ╩╩  ╩ ╩ ╩ ╩╚═╝╩ ╩═╝╩ ╩ ╚═╝  */
-    echo "<fieldset><legend>Compatibilité</legend>";
+    echo "<fieldset><legend>Compatibilité (fonction désactivée pour l’instant)</legend>";
 
     if ( isset($fieldset_compatibilite) ) echo "".$fieldset_tags."";
     else {
@@ -401,10 +381,9 @@ echo "";
     echo "</fieldset>";
 
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
-    ╚═╗║ ║╠╩╗║║║║ ║ 
+    ╚═╗║ ║╠╩╗║║║║ ║
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
     if ($write) echo "<p style=\"text-align:center;\"><input name=\"technique_valid\" value=\"Enregistrer\" type=\"submit\" class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser
-
 
     if ($write) echo "</form>";
 
