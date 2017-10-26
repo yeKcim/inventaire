@@ -54,8 +54,8 @@ function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0",$com
     echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>";
     foreach ($table as &$l){
         $selected= ($$nom==$l[$A]) ? "selected > $nom =" : " > " ;
-        $complement_info= ($complement!=0) ? "" : "$l[$complement]" ;
-	$c= ($complement_display!="") ? "($l[$complement])" : "$l[$complement]";
+        $complement_info= ( (complement!=0)&&(isset($l[$complement])) ) ? "" : "$l[$complement]" ;
+	$c= ($complement_display!="") ? "($complement_info)" : "$complement_info";
         echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
     }
     echo "</select> ";
@@ -64,8 +64,8 @@ function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0",$com
 function option_selecteur($select, $table, $A="0", $B="1", $complement="0",$complement_display="") {
     foreach ($table as &$l){
         $selected= ($select==$l[$A]) ? "selected >" : " >" ;
-	$complement_info= ($complement!=0) ? "" : "$l[$complement]" ;
-	$c= ($complement_display!="") ? "($l[$complement])" : "$l[$complement]";
+	$complement_info= ( (complement!=0)&&(isset($l[$complement])) ) ? "" : "$l[$complement]" ;
+	$c= ($complement_display!="") ? "($complement_info)" : "$complement_info";
         echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
     }
 }
