@@ -119,7 +119,7 @@ if ( isset($_POST["add_valid"]) ) {
             /* TODO : prévoir le cas où existe déjà */
 	    $data["responsable_achat"]=return_last_id("utilisateur_index","utilisateur");
             // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
-	    array_push	($utilisateurs, array(	"utilisateur_index" => $data["responsable_achat"], "utilisateur_nom" => $data["plus_responsable_achat_nom"], "utilisateur_prenom" => $data["plus_responsable_achat_prenom"], "utilisateur_mail" => $data["plus_responsable_achat_mail"], "utilisateur_phone" => phone_display("".$data["plus_responsable_achat_phone"]."",".") ) );
+	    array_push($utilisateurs, array("utilisateur_index" => $data["responsable_achat"], "utilisateur_nom" => $data["plus_responsable_achat_nom"], "utilisateur_prenom" => $data["plus_responsable_achat_prenom"], "utilisateur_mail" => $data["plus_responsable_achat_mail"], "utilisateur_phone" => phone_display("".$data["plus_responsable_achat_phone"]."",".") ) );
         }
     }
 
@@ -173,7 +173,7 @@ if ( isset($_POST["add_valid"]) ) {
         // ║  ╠═╣║  ║  ║ ║║     ║║║ ║  ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ║
         // ╚═╝╩ ╩╩═╝╚═╝╚═╝╩═╝  ═╩╝╚═╝  ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╩
 	$i=return_last_id("base_index", "base") + 1;
-	$add_result = $dbh->query("INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES ('".$i."', '".$data["lab_id"]."', '".$data["categorie"]."', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["bon_commande"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0') );" );
+	$add_result = $dbh->query("INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES ('".$i."', '".$data["lab_id"]."', '".$data["categorie"]."', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["bon_commande"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0') ;" );
         if (!isset($add_result)) $error.=$message_error_add;
         else {
             $success.="<p class=\"success_message\">";
