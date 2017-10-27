@@ -14,10 +14,10 @@ $error="";
 $success="";
 
 /*
- █████╗      ██╗ ██████╗ ██╗   ██╗████████╗    ███╗   ███╗██╗   ██╗███████╗ ██████╗ ██╗     
-██╔══██╗     ██║██╔═══██╗██║   ██║╚══██╔══╝    ████╗ ████║╚██╗ ██╔╝██╔════╝██╔═══██╗██║     
-███████║     ██║██║   ██║██║   ██║   ██║       ██╔████╔██║ ╚████╔╝ ███████╗██║   ██║██║     
-██╔══██║██   ██║██║   ██║██║   ██║   ██║       ██║╚██╔╝██║  ╚██╔╝  ╚════██║██║▄▄ ██║██║     
+ █████╗      ██╗ ██████╗ ██╗   ██╗████████╗    ███╗   ███╗██╗   ██╗███████╗ ██████╗ ██╗
+██╔══██╗     ██║██╔═══██╗██║   ██║╚══██╔══╝    ████╗ ████║╚██╗ ██╔╝██╔════╝██╔═══██╗██║
+███████║     ██║██║   ██║██║   ██║   ██║       ██╔████╔██║ ╚████╔╝ ███████╗██║   ██║██║
+██╔══██║██   ██║██║   ██║██║   ██║   ██║       ██║╚██╔╝██║  ╚██╔╝  ╚════██║██║▄▄ ██║██║
 ██║  ██║╚█████╔╝╚██████╔╝╚██████╔╝   ██║       ██║ ╚═╝ ██║   ██║   ███████║╚██████╔╝███████╗
 ╚═╝  ╚═╝ ╚════╝  ╚═════╝  ╚═════╝    ╚═╝       ╚═╝     ╚═╝   ╚═╝   ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
@@ -29,11 +29,11 @@ if ( isset($_POST["add_valid"]) ) {
     }
 
     // ╦  ╦╔═╗╦═╗╦╔═╗╦╔═╗╔═╗╔╦╗╦╔═╗╔╗╔  ╔╦╗╦╔╗╔╦╔╦╗╦ ╦╔╦╗  ╦╔╗╔╔═╗╦ ╦╔╦╗
-    // ╚╗╔╝║╣ ╠╦╝║╠╣ ║║  ╠═╣ ║ ║║ ║║║║  ║║║║║║║║║║║║ ║║║║  ║║║║╠═╝║ ║ ║ 
-    //  ╚╝ ╚═╝╩╚═╩╚  ╩╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝  ╩ ╩╩╝╚╝╩╩ ╩╚═╝╩ ╩  ╩╝╚╝╩  ╚═╝ ╩ 
+    // ╚╗╔╝║╣ ╠╦╝║╠╣ ║║  ╠═╣ ║ ║║ ║║║║  ║║║║║║║║║║║║ ║║║║  ║║║║╠═╝║ ║ ║
+    //  ╚╝ ╚═╝╩╚═╩╚  ╩╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝  ╩ ╩╩╝╚╝╩╩ ╩╚═╝╩ ╩  ╩╝╚╝╩  ╚═╝ ╩
     if ( ($data["categorie"]=="0")&&($data["designation"]=="") ) $error.="<p class=\"error_message\">Merci de remplir au minimum Administratif→Désignation ou Technique→Catégorie</p>";
-    
-    
+
+
     // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╦  ╦╔═╗╔╗╔╔╦╗╔═╗╦ ╦╦═╗
     // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ╚╗╔╝║╣ ║║║ ║║║╣ ║ ║╠╦╝
     // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝   ╚╝ ╚═╝╝╚╝═╩╝╚═╝╚═╝╩╚═
@@ -43,53 +43,51 @@ if ( isset($_POST["add_valid"]) ) {
             $data["vendeur"]="0";
         }
         else {
-            mysql_query ("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$data["plus_vendeur_nom"]."\",\"".$data["plus_vendeur_web"]."\",\"".$data["plus_vendeur_remarque"]."\") ; ");
+	    $sth = $dbh->query("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$data["plus_vendeur_nom"]."\",\"".$data["plus_vendeur_web"]."\",\"".$data["plus_vendeur_remarque"]."\") ;");
             // TODO : prévoir le cas où existe déjà
-            $query_table_vendeurnew = mysql_query ("SELECT vendeur_index FROM vendeur ORDER BY vendeur_index DESC LIMIT 1 ;");
-            while ($l = mysql_fetch_row($query_table_vendeurnew)) $data["vendeur"]=$l[0];
+	    $data["vendeur"]=return_last_id("vendeur_index","vendeur");
             // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
-            $vendeurs[$data["vendeur"]]=array($data["vendeur"],"".utf8_encode($plus_vendeur_nom)."","".utf8_encode($plus_vendeur_web)."","".utf8_encode($plus_vendeur_remarque)."");
+	    array_push($vendeurs, array("vendeur_index" => $data["vendeur"], "vendeur_nom" => $plus_vendeur_nom, "vendeur_web" => $plus_vendeur_web, "vendeur_remarques" => $plus_vendeur_remarque ) );
         }
     }
-    
+
     // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╔╦╗╦ ╦╔═╗╔═╗  ╔═╗╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗
-    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║   ║ ╚╦╝╠═╝║╣   ║  ║ ║║║║║ ╠╦╝╠═╣ ║ 
-    // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝   ╩  ╩ ╩  ╚═╝  ╚═╝╚═╝╝╚╝╩ ╩╚═╩ ╩ ╩ 
+    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║   ║ ╚╦╝╠═╝║╣   ║  ║ ║║║║║ ╠╦╝╠═╣ ║
+    // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝   ╩  ╩ ╩  ╚═╝  ╚═╝╚═╝╝╚╝╩ ╩╚═╩ ╩ ╩
     if ($data["contrat_type"]=="plus_contrat_type") {
         if ($data["plus_contrat_type_nom"]=="") {
             $error.="<p class=\"error_message\">Merci de spécifier un type de contrat</p>";
             $data["contrat_type"]="0";
         }
         else {
-            mysql_query ("INSERT INTO contrat_type (contrat_type_cat) VALUES (\"".$data["plus_contrat_type_nom"]."\") ; ");
+            $sth = $dbh->query("INSERT INTO contrat_type (contrat_type_cat) VALUES (\"".$data["plus_contrat_type_nom"]."\") ;");
             /* TODO : prévoir le cas où existe déjà */
-            $query_table_contrattypenew = mysql_query ("SELECT contrat_type_index FROM contrat_type ORDER BY contrat_type_index DESC LIMIT 1 ;");
-            while ($l = mysql_fetch_row($query_table_contrattypenew)) $data["contrat_type"]=$l[0];
+	    $data["contrat_type"]=return_last_id("contrat_type_index","contrat_type");
             // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-            $types_contrats[$data["contrat_type"]]=array( $data["contrat_type"], "".utf8_encode($data["plus_contrat_type_nom"])."" );
+	    array_push($types_contrats, array("contrat_type_index" => $data["contrat_type"], "contrat_type_cat" => $data["plus_contrat_type_nom"] ) );
         }
     }
-    
+
     // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╔═╗╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗
-    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ║  ║ ║║║║║ ╠╦╝╠═╣ ║ 
-    // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╚═╝╚═╝╝╚╝╩ ╩╚═╩ ╩ ╩ 
+    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ║  ║ ║║║║║ ╠╦╝╠═╣ ║
+    // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╚═╝╚═╝╝╚╝╩ ╩╚═╩ ╩ ╩
     if ($data["contrat"]=="plus_contrat") {
         if ($data["plus_contrat_nom"]=="") {
             $error.="<p class=\"error_message\">Merci de spécifier le nom du nouveau contrat</p>";
             $data["contrat"]="0";
         }
         else {
-            mysql_query ("INSERT INTO contrat (contrat_nom, contrat_type) VALUES (\"".$data["plus_contrat_nom"]."\",\"".$data["contrat_type"]."\") ; ");
+            $sth = $dbh->query("INSERT INTO contrat (contrat_nom, contrat_type) VALUES (\"".$data["plus_contrat_nom"]."\",\"".$data["contrat_type"]."\") ;");
             /* TODO : prévoir le cas où existe déjà */
-            $query_table_contratnew = mysql_query ("SELECT contrat_index FROM contrat ORDER BY contrat_index DESC LIMIT 1 ;");
-            while ($l = mysql_fetch_row($query_table_contratnew)) $data["contrat"]=$l[0];
+	    $data["contrat"]=return_last_id("contrat_index","contrat");
             // on ajoute cette entrée dans le tableau des contrats (utilisé pour le select)
-            $contrats[$data["contrat"]]=array( $data["contrat"], "".utf8_encode($data["plus_contrat_nom"])."", $data["contrat_type"] );
+	    array_push($contrats, array("contrat_index" => $data["contrat"], "contrat_nom" => $data["plus_contrat_nom"], "contrat_type" => $data["contrat_type"] ) );
+
         }
     }
-    
+
     // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔╦╗╦ ╦╔╦╗╔═╗╦  ╦  ╔═╗
-    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣    ║ ║ ║ ║ ║╣ ║  ║  ║╣ 
+    // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣    ║ ║ ║ ║ ║╣ ║  ║  ║╣
     // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝   ╩ ╚═╝ ╩ ╚═╝╩═╝╩═╝╚═╝
     if ($data["tutelle"]=="plus_tutelle") {
         if ($data["plus_tutelle"]=="") {
@@ -97,16 +95,14 @@ if ( isset($_POST["add_valid"]) ) {
             $data["tutelle"]="0";
         }
         else {
-            mysql_query ("INSERT INTO tutelle (tutelle_nom) VALUES (\"".$data["plus_tutelle"]."\") ; ");
+            $sth = $dbh->query("INSERT INTO tutelle (tutelle_nom) VALUES (\"".$data["plus_tutelle"]."\") ;");
             /* TODO : prévoir le cas où existe déjà */
-            $query_table_tutellenew = mysql_query ("SELECT tutelle_index FROM tutelle ORDER BY tutelle_index DESC LIMIT 1 ;");
-            while ($l = mysql_fetch_row($query_table_tutellenew)) $data["tutelle"]=$l[0];
+	    $data["tutelle"]=return_last_id("tutelle_index","tutelle");
             // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-            $tutelles[$data["tutelle"]]=array( $data["tutelle"], "".utf8_encode($data["plus_tutelle"]."") );
+	    array_push($tutelles, array("tutelle_index" => $data["tutelle"], "tutelle_nom" => $data["plus_tutelle"] ) );
         }
     }
-    
-    
+
     // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦    ╔═╗╔═╗╦ ╦╔═╗╔╦╗╔═╗╦ ╦╦═╗
     // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ║    ╠═╣║  ╠═╣║╣  ║ ║╣ ║ ║╠╦╝
     // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝  ╩ ╩╚═╝╩ ╩╚═╝ ╩ ╚═╝╚═╝╩╚═
@@ -118,38 +114,35 @@ if ( isset($_POST["add_valid"]) ) {
         else {
             $data["plus_responsable_achat_nom"]=mb_strtoupper($data["plus_responsable_achat_nom"]);
             $data["plus_responsable_achat_phone"]=phone_display("".$data["plus_responsable_achat_phone"]."","");
-            
-            mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$data["plus_responsable_achat_nom"]."\", \"".$data["plus_responsable_achat_prenom"]."\",\"".$data["plus_responsable_achat_mail"]."\",\"".$data["plus_responsable_achat_phone"]."\") ; ");
+
+	    $sth = $dbh->query("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$data["plus_responsable_achat_nom"]."\", \"".$data["plus_responsable_achat_prenom"]."\",\"".$data["plus_responsable_achat_mail"]."\",\"".$data["plus_responsable_achat_phone"]."\") ; ");
             /* TODO : prévoir le cas où existe déjà */
-            $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
-            while ($l = mysql_fetch_row($query_table_utilisateurnew)) $data["responsable_achat"]=$l[0];
+	    $data["responsable_achat"]=return_last_id("utilisateur_index","utilisateur");
             // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
-            $utilisateurs[$data["responsable_achat"]]=array( $data["responsable_achat"], "".utf8_encode($data["plus_responsable_achat_nom"])."", "".utf8_encode($data["plus_responsable_achat_prenom"])."", "".utf8_encode($data["plus_responsable_achat_mail"])."", "".phone_display("".$data["plus_responsable_achat_phone"]."",".")."" );
+	    array_push	($utilisateurs, array(	"utilisateur_index" => $data["responsable_achat"], "utilisateur_nom" => $data["plus_responsable_achat_nom"], "utilisateur_prenom" => $data["plus_responsable_achat_prenom"], "utilisateur_mail" => $data["plus_responsable_achat_mail"], "utilisateur_phone" => phone_display("".$data["plus_responsable_achat_phone"]."",".") ) );
         }
     }
 
     // ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔╦╗╔═╗╦═╗╔═╗ ╦ ╦╔═╗
-    // ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣ 
-    // ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩ ╩╩ ╩╩╚═╚═╝╚╚═╝╚═╝  */
+    // ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣
+    // ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩ ╩╩ ╩╩╚═╚═╝╚╚═╝╚═╝
     if ($data["marque"]=="plus_marque") {
         if ($data["plus_marque_nom"]=="") {
             $error.="<p class=\"error_message\">Merci de spécifier un nom de nouvelle marque</p>";
             $data["marque"]="0";
         }
         else {
-            mysql_query ("INSERT INTO marque (marque_nom) VALUES (\"".$data["plus_marque_nom"]."\") ; ");
+	    $sth = $dbh->query("INSERT INTO marque (marque_nom) VALUES (\"".$data["plus_marque_nom"]."\") ;");
             /* TODO : prévoir le cas où existe déjà */
-            $query_table_marquenew = mysql_query ("SELECT marque_index FROM marque ORDER BY marque_index DESC LIMIT 1 ;");
-            while ($l = mysql_fetch_row($query_table_marquenew)) $data["marque"]=$l[0];
-            // on ajoute cette entrée dans le tableau des marques (utilisé pour le select)
-            $marques[$data["marque"]]=array( $data["marque"], "".utf8_encode($data["plus_marque_nom"])."" );
+            $data["marque"]=return_last_id("marque_index","marque");
+	    // on ajoute cette entrée dans le tableau des marques (utilisé pour le select)
+	    array_push($marques, array("marque_index" => $data["marque"], "marque_nom" => $data["plus_marque_nom"] ) );
         }
     }
-    
 
-/*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔═╗╦═╗╦╔═╗
-    ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣ 
-    ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝    */
+    //  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔═╗╦═╗╦╔═╗
+    //  ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣
+    //  ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝
     if ($data["categorie"]=="plus_categorie") {
         if ( ($data["plus_categorie_nom"]=="") || ($data["plus_categorie_abbr"]=="") ) {
             $error.="<p class=\"error_message\">Merci de spécifier un nom et une abbréviation pour la nouvelle catégorie</p>";
@@ -160,42 +153,35 @@ if ( isset($_POST["add_valid"]) ) {
         //    $data["categorie"]="0";
         //} Cette fonction pose problème pour les caractères spéciaux, TODO trouver une méthode pour interdire les chiffres…
         else {
-            mysql_query ("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$data["plus_categorie_abbr"]."\",\"".$data["plus_categorie_nom"]."\") ; ");
+            $sth = $dbh->query("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$data["plus_categorie_abbr"]."\",\"".$data["plus_categorie_nom"]."\") ;") ;
             /* TODO : prévoir le cas où existe déjà */
-            $query_table_categorienew = mysql_query ("SELECT categorie_index FROM categorie ORDER BY categorie_index DESC LIMIT 1 ;");
-            while ($l = mysql_fetch_row($query_table_categorienew)) $data["categorie"]=$l[0];
+	    $data["categorie"]=return_last_id("categorie_index", "categorie");
             // on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
-            $categories[$data["categorie"]]=array( $data["categorie"],"".utf8_encode($data["plus_categorie_nom"])."","(".utf8_encode($data["plus_categorie_abbr"]).")" );
+	    array_push($categories, array("categorie_index" => $data["categorie"], "categorie_nom" => $data["plus_categorie_nom"], "categorie_lettres" => $data["plus_categorie_abbr"] ) );
             // TODO Attention l’abréviation ne doit contenir que des lettres !
         }
     }
-    
-
 
     $data["lab_id"]=new_lab_id($data["categorie"]);
 
-    $data["date_achat"]=($data["date_achat"]=="") ? "0000-00-00" : dateformat($data["date_achat"],"en");
-    $data["garantie"]=($data["garantie"]=="") ? "0000-00-00" : dateformat($data["garantie"],"en");
+    $data["date_achat"]=($data["date_achat"]=="") ? "0000-00-00" : $data["date_achat"];
+    $data["garantie"]=($data["garantie"]=="") ? "0000-00-00" : $data["garantie"];
     // TODO : vérifier que les dates sont bien au bon format !
 
     if ($error=="") {
-        
         // ╔═╗╔═╗╦  ╔═╗╦ ╦╦    ╔╦╗╦ ╦  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╦
         // ║  ╠═╣║  ║  ║ ║║     ║║║ ║  ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ║
         // ╚═╝╩ ╩╩═╝╚═╝╚═╝╩═╝  ═╩╝╚═╝  ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╩
-        $inew = mysql_query ("SELECT base_index FROM base ORDER BY base_index DESC LIMIT 1 ;");
-        while ($l = mysql_fetch_row($inew)) $i=$l[0]+1;
-        
-        $add_result= mysql_query ("INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES ('".$i."', '".$data["lab_id"]."', '".$data["categorie"]."', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["bon_commande"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0'); ");
-        
-        if ($add_result!=1) $error.=$message_error_add;
+	$i=return_last_id("base_index", "base") + 1;
+	$add_result = $dbh->query("INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES ('".$i."', '".$data["lab_id"]."', '".$data["categorie"]."', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["bon_commande"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0') );" );
+        if (!isset($add_result)) $error.=$message_error_add;
         else {
             $success.="<p class=\"success_message\">";
             $success.="L’entrée a été ajoutée à la base de donnée.<br/>";
             $success.="Vous pouvez directement ajouter une nouvelle entrée<br/>";
             $success.="ou <a href=\"info.php?i=$i\" target=\"_blank\"><strong>→ Compléter les informations de ".$data["lab_id"]." #$i</strong></a>";
             $success.="</p>";
-            
+
             $data=array(
                 "base_index"=>$i,              "lab_id"=>"",                "categorie"=>"0",
                 "serial_number"=>"",           "reference"=>"",             "designation"=>"",
@@ -206,11 +192,8 @@ if ( isset($_POST["add_valid"]) ) {
                 "responsable_achat"=>"0",      "garantie"=>"",              "prix"=>"",
                 "date_sortie"=>"",             "sortie"=>"",                "raison_sortie"=>"",
                 "integration"=>""   );
-            
         }
     }
-    
-    
 }
 /*
 ███████╗██╗███╗   ██╗ ██████╗ ███╗   ██╗    ██╗███╗   ██╗██╗████████╗    ██╗   ██╗ █████╗ ██████╗ ██╗ █████╗ ██████╗ ██╗     ███████╗███████╗
@@ -261,21 +244,21 @@ echo "<div id=\"container\">";
 
 
     /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
-        ╚═╗║ ║╠╩╗║║║║ ║ 
+        ╚═╗║ ║╠╩╗║║║║ ║
         ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
     echo "<div id=\"bloc\" style=\"background:#f3f3f3; vertical-align:top;\">";
     echo "<h1>Validation</h1>";
     echo "<p style=\"text-align:center;\">";
     echo "<input name=\"add_valid\" value=\"Ajouter\" type=\"submit\" class=\"big_button\" />";
     echo "</p>"; // TODO Ajouter un bouton réinitialiser
-    
+
     echo $error;
 
     echo "</div>";
 
 echo "</div>";
 
-echo "</form>"
+echo "</form>";
 
 ?>
 

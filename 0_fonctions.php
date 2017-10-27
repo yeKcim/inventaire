@@ -169,20 +169,31 @@ function parse_size($size) {
 }
 
 function new_lab_id($categorie) {
+    global $dbh;
     // quelle est l’abbréviation de la catégorie ?
-    $query_table_abbr = mysql_query ("SELECT categorie_lettres FROM categorie WHERE categorie_index='".$categorie."' ;");
-    while ($l = mysql_fetch_row($query_table_abbr)) $abbr=$l[0];
+    $sth = $dbh->query("SELECT categorie_lettres FROM categorie WHERE categorie_index='".$categorie."' ;");
+    $tabbr = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $abbr=$tabbr[0]["categorie_lettres"];
     // recherche du labid max
-    $allid=array();
-    $query_table_labid = mysql_query ("SELECT lab_id FROM base WHERE categorie='".$categorie."' ORDER BY lab_id ASC ;");
+    $sth = $dbh->query("SELECT lab_id FROM base WHERE categorie='".$categorie."' ORDER BY lab_id ASC ;");
+    $allid = $sth->fetchAll(PDO::FETCH_ASSOC);
     // on supprime les lettres des lab_id, on met les chiffres dans un tableau
-    while ($lid = mysql_fetch_row($query_table_labid)) array_push ( $allid, preg_replace('`[^0-9]`', '', $lid[0]) );
-    $newid=max($allid)+1;
+    $allidnum=array();
+    foreach ($allid as $a) array_push ( $allidnum, preg_replace('`[^0-9]`', '', $a["lab_id"]) );
+    $newid=max($allidnum)+1;
     $new_lab_id="".$abbr."".$newid."";
     // TODO : Vérifier avant qu’aucune autre entrée ainsi nommée n’existe ! dans le cas d’un nommage manuel
     $new_lab_id = ($categorie==0) ? "" : $new_lab_id;
     return $new_lab_id;
 }
+
+function return_last_id($col,$table) {
+    global $dbh;
+    $sth = $dbh->query("SELECT $col FROM $table ORDER BY $col DESC LIMIT 1 ;");
+    $t = $sth->fetchAll(PDO::FETCH_ASSOC);
+    return $t[0][$col];
+}
+
 
 $message_error_add="<p class=\"error_message\" id=\"disappear_delay\">Une erreur inconnue est survenue. L’entrée n’a pas été ajoutée.</p>";
 $message_success_add="<p class=\"success_message\" id=\"disappear_delay\">L’entrée a été ajoutée à la base de donnée.</p>";

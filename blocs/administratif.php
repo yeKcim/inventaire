@@ -49,9 +49,7 @@ if ( isset($_POST["administratif_valid"]) ) {
         // TODO : Si les infos sont vides !
 	$sth = $dbh->query("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ;");
         /* TODO : prévoir le cas où le vendeur existe déjà */
-	$sth = $dbh->query("SELECT vendeur_index FROM vendeur ORDER BY vendeur_index DESC LIMIT 1 ;");
-	$query_table_vendeurnew = $sth->fetchAll(PDO::FETCH_ASSOC);
-	$vendeur=$query_table_vendeurnew[0]["vendeur_index"];
+	$vendeur=return_last_id("vendeur_index","vendeur");
         // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
 	array_push($vendeurs, array("vendeur_index" => $vendeur, "vendeur_nom" => $plus_vendeur_nom, "vendeur_web" => $plus_vendeur_web, "vendeur_remarques" =>$plus_vendeur_remarque ) );
     }
@@ -59,9 +57,7 @@ if ( isset($_POST["administratif_valid"]) ) {
     if ($contrat_type=="plus_contrat_type") {
 	$sth = $dbh->query("INSERT INTO contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ;");
         /* TODO : prévoir le cas où le type de contrat existe déjà */
-        $sth = $dbh->query("SELECT contrat_type_index FROM contrat_type ORDER BY contrat_type_index DESC LIMIT 1 ;");
-        $query_table_contrattypenew = $sth->fetchAll(PDO::FETCH_ASSOC);
-        $contrat_type=$query_table_contrattypenew[0]["contrat_type_index"];
+	$contrat_type=return_last_id("contrat_type_index","contrat_type");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
         array_push($types_contrats, array("contrat_type_index" => $contrat_type, "contrat_type_cat" => $plus_contrat_type_nom ) );
     }
@@ -69,9 +65,7 @@ if ( isset($_POST["administratif_valid"]) ) {
     if ($contrat=="plus_contrat") {
         $sth = $dbh->query("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;");
         /* TODO : prévoir le cas où le contrat existe déjà */
-        $sth = $dbh->query("SELECT contrat_index FROM contrat ORDER BY contrat_index DESC LIMIT 1 ;");
-        $query_table_contratnew = $sth->fetchAll(PDO::FETCH_ASSOC);
-        $contrat=$query_table_contratnew[0]["contrat_index"];
+	$contrat=return_last_id("contrat_index","contrat");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
         array_push($contrats, array("contrat_nom" => $plus_contrat_nom, "contrat_type" => $contrat_type ) );
     }
@@ -79,9 +73,7 @@ if ( isset($_POST["administratif_valid"]) ) {
     if ($tutelle=="plus_tutelle") {
         $sth = $dbh->query("INSERT INTO tutelle (tutelle_nom) VALUES ('".$plus_tutelle."') ;");
         /* TODO : prévoir le cas où le contrat existe déjà */
-	$sth = $dbh->query("SELECT tutelle_index FROM tutelle ORDER BY tutelle_index DESC LIMIT 1 ;");
-        $query_table_tutellenew = $sth->fetchAll(PDO::FETCH_ASSOC);
-        $tutelle=$query_table_tutellenew[0]["tutelle_index"];
+	$tutelle=return_last_id("tutelle_index","tutelle");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
         array_push($tutelles, array("tutelle_index" => $tutelle, "tutelle_nom" => $plus_tutelle ) );
     }
@@ -91,9 +83,7 @@ if ( isset($_POST["administratif_valid"]) ) {
         $plus_responsable_achat_phone=phone_display("$plus_responsable_achat_phone","");
         $sth = $dbh->query("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
-	$sth = $dbh->query("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
-        $query_table_utilisateurnew = $sth->fetchAll(PDO::FETCH_ASSOC);
-        $responsable_achat=$query_table_utilisateurnew[0]["utilisateur_index"];
+	$responsable_achat=return_last_id("utilisateur_index","utilisateur");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
         array_push($utilisateurs, array("utilisateur_index" => $responsable_achat, "utilisateur_nom" => $plus_responsable_achat_nom, "utilisateur_prenom" => $plus_responsable_achat_prenom, "utilisateur_mail" => $plus_responsable_achat_mail, "utilisateur_phone" => $plus_responsable_achat_phone) );
     }

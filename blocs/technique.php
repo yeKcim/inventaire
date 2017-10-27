@@ -139,9 +139,8 @@ if ( isset($_POST["technique_valid"]) ) {
     if ($marque=="plus_marque") {
 	$sth = $dbh->query("INSERT INTO marque (marque_nom) VALUES ('".$plus_marque_nom."') ;");
         /* TODO : prévoir le cas où la marque existe déjà */
-	$sth = $dbh->query("SELECT marque_index FROM marque ORDER BY marque_index DESC LIMIT 1 ;");
-	$query_table_marquenew = $sth->fetchAll(PDO::FETCH_ASSOC);
-	$marque=$query_table_marquenew[0]["marque_index"];
+	$marque=return_last_id("marque_index","marque");
+
         // on ajoute cette entrée dans le tableau des marques (utilisé pour le select)
 	array_push($marques, array("marque_index" => $marque, "marque_nom" => $plus_marque_nom ) );
     }
@@ -153,9 +152,8 @@ if ( isset($_POST["technique_valid"]) ) {
     if ($categorie=="plus_categorie") {
 	$sth = $dbh->query("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$plus_categorie_abbr."\",\"".$plus_categorie_nom."\") ;");
         /* TODO : prévoir le cas où le vendeur existe déjà */
-	$sth = $dbh->query("SELECT categorie_index FROM categorie ORDER BY categorie_index DESC LIMIT 1 ;");
-	$query_table_categorienew = $sth->fetchAll(PDO::FETCH_ASSOC);
-	$categorie=$query_table_categorienew[0]["categorie_index"];
+	$categorie=return_last_id("categorie_index","categorie");
+
         // on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
 	array_push($categories, array("categorie_index" => $categorie, "categorie_lettres" => $plus_categorie_nom, "categorie_nom" => $plus_categorie_abbr ) );
         // TODO Attention l’abréviation ne doit contenir que des lettres !

@@ -59,11 +59,7 @@ if ($modif_entretien!="") {
         if (!isset($modif_result)) $message.=$message_error_add;
         else {
             $message.=$message_success_add;
-
-	    $sth = $dbh->query("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
-    	    $query_table_utilisateurnew = $sth->fetchAll(PDO::FETCH_ASSOC);
-	    $e_effectuerpar=$query_table_utilisateurnew[0]["utilisateur_index"];
-
+	    $e_effectuerpar=return_last_id("utilisateur_index","utilisateur");
             // on ajoute cette entrée dans le tableau des utilisateurs
 	    array_push($utilisateurs, array("utilisateur_index" => $e_effectuerpar, "utilisateur_nom"  => $plus_intervant_nom, "utilisateur_prenom" => $plus_intervant_prenom, "utilisateur_mail" => $plus_intervant_mail, "utilisateur_phone" =>phone_display("$plus_intervant_phone",".") ) );
         }

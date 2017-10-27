@@ -54,9 +54,8 @@ if ( isset($_POST["utilisation_valid"]) ) {
         $plus_utilisateur_phone=phone_display("$plus_utilisateur_phone","");
 	$sth = $dbh->query("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$plus_utilisateur_nom."\", \"".$plus_utilisateur_prenom."\",\"".$plus_utilisateur_mail."\",\"".$plus_utilisateur_phone."\") ;");
         /* TODO : prévoir le cas où le contrat existe déjà */
-	$sth = $dbh->query("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
-        $query_table_utilisateurnew = $sth->fetchAll(PDO::FETCH_ASSOC);
-        $utilisateur=$query_table_utilisateurnew[0]["utilisateur_index"];
+	$utilisateur=return_last_id("utilisateur_index","utilisateur");
+
         // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
 	array_push($utilisateurs, array("utilisateur_index" => $utilisateur, "utilisateur_nom" => $plus_utilisateur_nom, "utilisateur_prenom" => $plus_utilisateur_prenom, "utilisateur_mail" => $plus_utilisateur_mail, "utilisateur_phone" => phone_display("$plus_utilisateur_phone",".") ) );
     }
@@ -64,9 +63,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
     if ($localisation=="plus_localisation") {
         $sth = $dbh->query("INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES (\"".$plus_localisation_bat."\", \"".$plus_localisation_piece."\" );");
         /* TODO : prévoir le cas où la nouvelle localisation existe déjà */
-	$sth = $dbh->query("SELECT localisation_index FROM localisation ORDER BY localisation_index DESC LIMIT 1 ;");
-	$query_table_localisationnew = $sth->fetchAll(PDO::FETCH_ASSOC);
-	$localisation=$query_table_localisationnew[0]["localisation_index"];
+	$localisation=return_last_id("localisation_index","localisation");
         // on ajoute cette entrée dans le tableau des localisations (utilisé pour le select)
 	array_push($vendeurs, array("localisation_index" => $localisation, "localisation_batiment" => $plus_localisation_bat, "localisation_piece" => $plus_localisation_piece ) );
     }
@@ -75,9 +72,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
     if ($raison_sortie=="plus_raison_sortie") {
         $sth = $dbh->query("INSERT INTO raison_sortie (raison_sortie_nom) VALUES (\"".$plus_raison_sortie_nom."\");");
         /* TODO : prévoir le cas où le contrat existe déjà */
-        $sth = $dbh->query("SELECT raison_sortie_index FROM raison_sortie ORDER BY raison_sortie_index DESC LIMIT 1 ;");
-        $query_table_raisonnew = $sth->fetchAll(PDO::FETCH_ASSOC);
-        $raison_sortie=$query_table_raisonnew[0]["raison_sortie_index"];
+	$raison_sortie=return_last_id("raison_sortie_index","raison_sortie");
         // on ajoute cette entrée dans le tableau des raisons de sortie (utilisé pour le select)
 	array_push($vendeurs, array("raison_sortie_index" => $raison_sortie, "raison_sortie_nom" => $plus_raison_sortie_nom ) );
     }
