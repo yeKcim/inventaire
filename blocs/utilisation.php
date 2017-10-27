@@ -49,37 +49,37 @@ if ( isset($_POST["utilisation_valid"]) ) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
 
-
     if ($utilisateur=="plus_utilisateur") {
         $plus_utilisateur_nom=mb_strtoupper($plus_utilisateur_nom);
         $plus_utilisateur_phone=phone_display("$plus_utilisateur_phone","");
-        mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$plus_utilisateur_nom."\", \"".$plus_utilisateur_prenom."\",\"".$plus_utilisateur_mail."\",\"".$plus_utilisateur_phone."\") ; ");
+	$sth = $dbh->query("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$plus_utilisateur_nom."\", \"".$plus_utilisateur_prenom."\",\"".$plus_utilisateur_mail."\",\"".$plus_utilisateur_phone."\") ;");
         /* TODO : prévoir le cas où le contrat existe déjà */
-        $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
-        while ($l = mysql_fetch_row($query_table_utilisateurnew)) $utilisateur=$l[0];
+	$sth = $dbh->query("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
+        $query_table_utilisateurnew = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $utilisateur=$query_table_utilisateurnew[0]["utilisateur_index"];
         // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
-        $utilisateurs[$utilisateur]=array( $utilisateur, utf8_encode($plus_utilisateur_nom), utf8_encode($plus_utilisateur_prenom), utf8_encode($plus_utilisateur_mail), phone_display("$plus_utilisateur_phone",".") );
+	array_push($utilisateurs, array("utilisateur_index" => $utilisateur, "utilisateur_nom" => $plus_utilisateur_nom, "utilisateur_prenom" => $plus_utilisateur_prenom, "utilisateur_mail" => $plus_utilisateur_mail, "utilisateur_phone" => phone_display("$plus_utilisateur_phone",".") ) );
     }
 
-
     if ($localisation=="plus_localisation") {
-        mysql_query ("INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES (\"".$plus_localisation_bat."\", \"".$plus_localisation_piece."\" ); ");
-        /* TODO : prévoir le cas où le contrat existe déjà */
-        $query_table_localisationnew = mysql_query ("SELECT localisation_index FROM localisation ORDER BY localisation_index DESC LIMIT 1 ;");
-        while ($l = mysql_fetch_row($query_table_localisationnew)) $localisation=$l[0];
+        $sth = $dbh->query("INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES (\"".$plus_localisation_bat."\", \"".$plus_localisation_piece."\" );");
+        /* TODO : prévoir le cas où la nouvelle localisation existe déjà */
+	$sth = $dbh->query("SELECT localisation_index FROM localisation ORDER BY localisation_index DESC LIMIT 1 ;");
+	$query_table_localisationnew = $sth->fetchAll(PDO::FETCH_ASSOC);
+	$localisation=$query_table_localisationnew[0]["localisation_index"];
         // on ajoute cette entrée dans le tableau des localisations (utilisé pour le select)
-        $localisations[$localisation]=array( $localisation, utf8_encode($plus_localisation_bat), utf8_encode($plus_localisation_piece) );
+	array_push($vendeurs, array("localisation_index" => $localisation, "localisation_batiment" => $plus_localisation_bat, "localisation_piece" => $plus_localisation_piece ) );
     }
 
 
     if ($raison_sortie=="plus_raison_sortie") {
-        mysql_query ("INSERT INTO raison_sortie (raison_sortie_nom) VALUES (\"".$plus_raison_sortie_nom."\"); ");
+        $sth = $dbh->query("INSERT INTO raison_sortie (raison_sortie_nom) VALUES (\"".$plus_raison_sortie_nom."\");");
         /* TODO : prévoir le cas où le contrat existe déjà */
-        $query_table_raisonnew = mysql_query ("SELECT raison_sortie_index FROM raison_sortie ORDER BY raison_sortie_index DESC LIMIT 1 ;");
-        while ($l = mysql_fetch_row($query_table_raisonnew)) $raison_sortie=$l[0];
+        $sth = $dbh->query("SELECT raison_sortie_index FROM raison_sortie ORDER BY raison_sortie_index DESC LIMIT 1 ;");
+        $query_table_raisonnew = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $raison_sortie=$query_table_raisonnew[0]["raison_sortie_index"];
         // on ajoute cette entrée dans le tableau des raisons de sortie (utilisé pour le select)
-        $raison_sorties[$raison_sortie]=array($raison_sortie,utf8_encode($plus_raison_sortie_nom));
-
+	array_push($vendeurs, array("raison_sortie_index" => $raison_sortie, "raison_sortie_nom" => $plus_raison_sortie_nom ) );
     }
 
 $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
@@ -91,9 +91,8 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
     // Si la localisation change, on modifie la date de localisation pour mettre aujourd’hui
     $change_date_localisation= ($data[0]["localisation"]==$localisation) ? "" : ", date_localisation=\"".date("y.m.d")."\"";
 
-    $modif_result=mysql_query ("UPDATE base SET utilisateur=\"".$utilisateur."\", localisation=\"".$localisation."\", sortie=\"".$sortie."\", integration=\"".$integration."\", raison_sortie=\"".$raison_sortie."\" $change_date_localisation WHERE base.base_index = $i;" );
-
-    $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
+    $modif_result = $dbh->query("UPDATE base SET utilisateur=\"".$utilisateur."\", localisation=\"".$localisation."\", sortie=\"".$sortie."\", integration=\"".$integration."\", raison_sortie=\"".$raison_sortie."\" $change_date_localisation WHERE base.base_index = $i;");
+    $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data[0]["utilisateur"]=$utilisateur;

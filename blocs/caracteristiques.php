@@ -24,7 +24,7 @@ if ( isset($_POST["carac_valid"]) ) {
     ║  ╠═╣╠╦╝╠═╣║
     ╚═╝╩ ╩╩╚═╩ ╩╚═╝ */
     // Supprimer tous les compatibilités de cette entrée pour réinitialiser
-    mysql_query ("DELETE FROM carac WHERE carac_id=$i;");
+    $delcount = $dbh->exec("DELETE FROM carac WHERE carac_id=$i;");
 
     // Ajout des caracteristiques
     if (isset($_POST["carac"])) {
@@ -33,8 +33,9 @@ if ( isset($_POST["carac_valid"]) ) {
             $allc.= ($cd!="") ? "(\"$cd\",\"$i\",\"$ck\")," : "";
         }
         $allc=substr($allc, 0, -1); // suppression du dernier caractère
-        $modif_result=mysql_query ("INSERT INTO carac (carac_valeur, carac_id, carac_caracteristique_id) VALUES $allc ; ");
-        $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
+	$modif_result = $dbh->query("INSERT INTO carac (carac_valeur, carac_id, carac_caracteristique_id) VALUES $allc ;");
+	$message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
+
     }
 }
 
@@ -54,15 +55,17 @@ if ( isset($_POST["new_carac_valid"]) ) {
     if ( ($nom_carac!="")||($symbole_carac!="") ) {
         // Si tous les champs sont remplis, on crée la nouvelle carac
         if ( ($nom_carac!="")&&($symbole_carac!="") ) {
-
             // Si la nouvelle carac existe déjà (nom ou symbôle)
-            $query_count_carac = mysql_query ("SELECT COUNT(*) FROM caracteristiques WHERE nom_carac=\"$nom_carac\" OR symbole_carac=\"$symbole_carac\" ; ");
-            while ($l = mysql_fetch_row($query_count_carac)) $count_carac=$l[0] ;
+	    if ( $dbh->query("SELECT COUNT(*) FROM caracteristiques WHERE nom_carac=\"$nom_carac\" OR symbole_carac=\"$symbole_carac\" ;") ) $count_carac = $res->fetchColumn();
+	}
+
+   /* Récupère le nombre de lignes qui correspond à la requête SELECT */
+   if ($res->fetchColumn() > 0) {
+
             if ($count_carac!=0) $message.="<p class=\"error_message\">Nom ou symbôle déjà utilisé.</p>";
             else {
-                $add_carac_result=mysql_query ("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
-
-                if ($add_carac_result==1) {
+		$sth = $dbh->query("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
+                if ( !isset($sth) ) {
                     $message.="<p class=\"success_message\" id=\"disappear_delay\">La nouvelle caractéristique a été ajoutée.</p>";
                     $nom_carac=""; $unite_carac=""; $symbole_carac="";
                 }

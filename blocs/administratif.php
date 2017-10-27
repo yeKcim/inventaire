@@ -44,69 +44,58 @@ if ( isset($_POST["administratif_valid"]) ) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
 
-
     /* ########### Ajout d’un nouveau vendeur ########### */
     if ($vendeur=="plus_vendeur") {
         // TODO : Si les infos sont vides !
-        mysql_query ("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ; ");
-
+	$sth = $dbh->query("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ;");
         /* TODO : prévoir le cas où le vendeur existe déjà */
-        $query_table_vendeurnew = mysql_query ("SELECT vendeur_index FROM vendeur ORDER BY vendeur_index DESC LIMIT 1 ;");
-        while ($l = mysql_fetch_row($query_table_vendeurnew)) $vendeur=$l[0];
-
+	$sth = $dbh->query("SELECT vendeur_index FROM vendeur ORDER BY vendeur_index DESC LIMIT 1 ;");
+	$query_table_vendeurnew = $sth->fetchAll(PDO::FETCH_ASSOC);
+	$vendeur=$query_table_vendeurnew[0]["vendeur_index"];
         // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
-        $vendeurs[$vendeur]=array($vendeur,utf8_encode($plus_vendeur_nom),utf8_encode($plus_vendeur_web),utf8_encode($plus_vendeur_remarque));
+	array_push($vendeurs, array("vendeur_index" => $vendeur, "vendeur_nom" => $plus_vendeur_nom, "vendeur_web" => $plus_vendeur_web, "vendeur_remarques" =>$plus_vendeur_remarque ) );
     }
-
 
     if ($contrat_type=="plus_contrat_type") {
-        mysql_query ("INSERT INTO contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ; ");
-
+	$sth = $dbh->query("INSERT INTO contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ;");
         /* TODO : prévoir le cas où le type de contrat existe déjà */
-        $query_table_contrattypenew = mysql_query ("SELECT contrat_type_index FROM contrat_type ORDER BY contrat_type_index DESC LIMIT 1 ;");
-        while ($l = mysql_fetch_row($query_table_contrattypenew)) $contrat_type=$l[0];
-
+        $sth = $dbh->query("SELECT contrat_type_index FROM contrat_type ORDER BY contrat_type_index DESC LIMIT 1 ;");
+        $query_table_contrattypenew = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $contrat_type=$query_table_contrattypenew[0]["contrat_type_index"];
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-        $types_contrats[$contrat_type]=array( $contrat_type, utf8_encode($plus_contrat_type_nom) );
+        array_push($types_contrats, array("contrat_type_index" => $contrat_type, "contrat_type_cat" => $plus_contrat_type_nom ) );
     }
-
 
     if ($contrat=="plus_contrat") {
-        mysql_query ("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ; ");
+        $sth = $dbh->query("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;");
         /* TODO : prévoir le cas où le contrat existe déjà */
-        $query_table_contratnew = mysql_query ("SELECT contrat_index FROM contrat ORDER BY contrat_index DESC LIMIT 1 ;");
-        while ($l = mysql_fetch_row($query_table_contratnew)) $contrat=$l[0];
-
+        $sth = $dbh->query("SELECT contrat_index FROM contrat ORDER BY contrat_index DESC LIMIT 1 ;");
+        $query_table_contratnew = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $contrat=$query_table_contratnew[0]["contrat_index"];
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-        $contrats[$contrat]=array( $contrat, utf8_encode($plus_contrat_nom), $contrat_type );
+        array_push($contrats, array("contrat_nom" => $plus_contrat_nom, "contrat_type" => $contrat_type ) );
     }
-
 
     if ($tutelle=="plus_tutelle") {
-        mysql_query ("INSERT INTO tutelle (tutelle_nom) VALUES ('".$plus_tutelle."') ; ");
+        $sth = $dbh->query("INSERT INTO tutelle (tutelle_nom) VALUES ('".$plus_tutelle."') ;");
         /* TODO : prévoir le cas où le contrat existe déjà */
-        $query_table_tutellenew = mysql_query ("SELECT tutelle_index FROM tutelle ORDER BY tutelle_index DESC LIMIT 1 ;");
-        while ($l = mysql_fetch_row($query_table_tutellenew)) $tutelle=$l[0];
-
+	$sth = $dbh->query("SELECT tutelle_index FROM tutelle ORDER BY tutelle_index DESC LIMIT 1 ;");
+        $query_table_tutellenew = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $tutelle=$query_table_tutellenew[0]["tutelle_index"];
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-        $tutelles[$tutelle]=array( $tutelle, utf8_encode($plus_tutelle) );
+        array_push($tutelles, array("tutelle_index" => $tutelle, "tutelle_nom" => $plus_tutelle ) );
     }
 
-
-
     if ($responsable_achat=="plus_responsable_achat") {
-
         $plus_responsable_achat_nom=mb_strtoupper($plus_responsable_achat_nom);
         $plus_responsable_achat_phone=phone_display("$plus_responsable_achat_phone","");
-
-        mysql_query ("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; ");
+        $sth = $dbh->query("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; ");
         /* TODO : prévoir le cas où le contrat existe déjà */
-        $query_table_utilisateurnew = mysql_query ("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
-        while ($l = mysql_fetch_row($query_table_utilisateurnew)) $responsable_achat=$l[0];
-
+	$sth = $dbh->query("SELECT utilisateur_index FROM utilisateur ORDER BY utilisateur_index DESC LIMIT 1 ;");
+        $query_table_utilisateurnew = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $responsable_achat=$query_table_utilisateurnew[0]["utilisateur_index"];
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-        $utilisateurs[$responsable_achat]=array( $responsable_achat, utf8_encode($plus_responsable_achat_nom), utf8_encode($plus_responsable_achat_prenom), utf8_encode($plus_responsable_achat_mail), phone_display("$plus_responsable_achat_phone",".") );
-
+        array_push($utilisateurs, array("utilisateur_index" => $responsable_achat, "utilisateur_nom" => $plus_responsable_achat_nom, "utilisateur_prenom" => $plus_responsable_achat_prenom, "utilisateur_mail" => $plus_responsable_achat_mail, "utilisateur_phone" => $plus_responsable_achat_phone) );
     }
 
 // TODO : prix avec une virgule ou un point ?
@@ -114,24 +103,21 @@ if ( isset($_POST["administratif_valid"]) ) {
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    $modif_result=mysql_query ("UPDATE base SET designation=\"".$designation."\", vendeur=\"".$vendeur."\", prix=\"".$prix."\", contrat=\"".$contrat."\", date_achat=\"".dateformat($date_achat,"en")."\", garantie=\"".dateformat($garantie,"en")."\", bon_commande=\"".$bon_commande."\", num_inventaire=\"".$num_inventaire."\", tutelle=\"".$tutelle."\", responsable_achat=\"".$responsable_achat."\" WHERE base.base_index = $i;" );
-
-    $message.= ($modif_result!=1) ? $message_error_modif : $message_success_modif;
-
+    $modif_result = $dbh->query("UPDATE base SET designation=\"".$designation."\", vendeur=\"".$vendeur."\", prix=\"".$prix."\", contrat=\"".$contrat."\", date_achat=\"".$date_achat."\", garantie=\"".$garantie."\", bon_commande=\"".$bon_commande."\", num_inventaire=\"".$num_inventaire."\", tutelle=\"".$tutelle."\", responsable_achat=\"".$responsable_achat."\" WHERE base.base_index = $i;");
+    $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data[0]["designation"]=$designation;
     $data[0]["vendeur"]=$vendeur;
     $data[0]["prix"]=$prix;
     $data[0]["contrat"]=$contrat;
-    $data[0]["date_achat"]=dateformat($date_achat,"en");
-    $data[0]["garantie"]=dateformat($garantie,"en");
+    $data[0]["date_achat"]=$date_achat;
+    $data[0]["garantie"]=$garantie;
     $data[0]["bon_commande"]=$bon_commande;
     $data[0]["num_inventaire"]=$num_inventaire;
     $data[0]["tutelle"]=$tutelle;
     $data[0]["plus_tutelle"]=$plus_tutelle;
     $data[0]["responsable_achat"]=$responsable_achat;
-
 
 }
 
@@ -153,7 +139,6 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
 
-
 /*  ╔═╗╦═╗╔═╗╔╦╗╦ ╦╦╔╦╗
     ╠═╝╠╦╝║ ║ ║║║ ║║ ║
     ╩  ╩╚═╚═╝═╩╝╚═╝╩ ╩  */
@@ -162,14 +147,11 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### designation ########### */
         echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation :</label>\n";
         echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"34\"";
-        echo "value=\"";
-        echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";
-        echo "\" ><br/>\n";
+        echo "value=\"";	echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";	echo "\" ><br/>\n";
 
         /* ########### vendeur ########### */
         echo "<label for=\"vendeur\">Vendeur ";
         if ( ($data[0]["vendeur"]!="0")&&(($data[0]["vendeur"]!="")) ) {
-
 	    $keys = array_keys(array_column($vendeurs, 'vendeur_index'), $data[0]["vendeur"]); $key=$keys[0];
             echo " <a href=\"".$vendeurs[$key]["vendeur_web"]."\" title=\"site web\" target=\"_blank\"><strong>↗</strong></a>";
             echo "<abbr title=\"".$vendeurs[$key]["vendeur_remarques"]."\"><strong>ⓘ</strong></abbr>";
@@ -182,31 +164,20 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "</select>";
         echo "<br/>";
 
-
         /* ########### + vendeur ########### */
         echo "\n\n\n";
         echo "<fieldset id=\"plus_vendeur\" class=\"subfield\" style=\"display: none;\"><legend  class=\"subfield\">Nouveau Vendeur</legend>";
-
-            echo "<label for=\"plus_vendeur_nom\">Nom :</label>\n";
-            echo "<input value=\"\" name=\"plus_vendeur_nom\" type=\"text\"><br/>\n";
-
-            echo "<label for=\"plus_vendeur_web\">Site web :</label>\n";
-            echo "<input value=\"\" name=\"plus_vendeur_web\" type=\"text\"><br/>\n";
-
-            echo "<label for=\"plus_vendeur_remarque\">Remarque :</label>\n";
-            echo "<input value=\"\" name=\"plus_vendeur_remarque\" type=\"text\"><br/>\n";
-
+            echo "<label for=\"plus_vendeur_nom\">Nom :</label>\n";		echo "<input value=\"\" name=\"plus_vendeur_nom\" type=\"text\"><br/>\n";
+            echo "<label for=\"plus_vendeur_web\">Site web :</label>\n";   	echo "<input value=\"\" name=\"plus_vendeur_web\" type=\"text\"><br/>\n";
+            echo "<label for=\"plus_vendeur_remarque\">Remarque :</label>\n";	echo "<input value=\"\" name=\"plus_vendeur_remarque\" type=\"text\"><br/>\n";
         echo "</fieldset>";
         echo "\n\n\n";
 
         /* ########### prix ########### */
         echo "<label for=\"prix\">Prix (€) : </label>\n";
-        echo "<input value=\"";
-        echo ($data[0]["prix"]!="0") ? $data[0]["prix"] : "";
-        echo "\" name=\"prix\" type=\"text\" id=\"prix\"><br/>";
+        echo "<input value=\"";		echo ($data[0]["prix"]!="0") ? $data[0]["prix"] : "";		echo "\" name=\"prix\" type=\"text\" id=\"prix\"><br/>";
 
     echo "</fieldset>";
-
 
 /*  ╔═╗╔═╗╦ ╦╔═╗╔╦╗╔═╗╦ ╦╦═╗
     ╠═╣║  ╠═╣║╣  ║ ║╣ ║ ║╠╦╝
@@ -225,12 +196,11 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "\n\n\n";
         echo "<fieldset id=\"plus_contrat\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau Contrat</legend>";
 
-            echo "<label for=\"plus_contrat_nom\">Nom :</label>\n";
-            echo "<input value=\"\" name=\"plus_contrat_nom\" type=\"text\"><br/>\n";
+            echo "<label for=\"plus_contrat_nom\">Nom :</label>\n";		echo "<input value=\"\" name=\"plus_contrat_nom\" type=\"text\"><br/>\n";
 
             echo "<label for=\"contrat_type\">Type de contrat :</label>\n";
                echo "<select name=\"contrat_type\" onchange=\"display(this,'plus_contrat_type','plus_contrat_type');\" id=\"contrat_type\">";
-                   echo "<option value=\"0\" selected >— Aucun type de contrat spécifié —</option>"; 
+                   echo "<option value=\"0\" selected >— Aucun type de contrat spécifié —</option>";
                    option_selecteur("0", $types_contrats, "contrat_type_index", "contrat_type_cat");
                    echo "<option value=\"plus_contrat_type\" >Nouveau type de contrat :</option>";
                echo "</select><br/>";
@@ -238,8 +208,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
                     /* ########### + type contrat ########### */
                     echo "\n\n\n";
                     echo "<fieldset id=\"plus_contrat_type\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau Type de contrat</legend>";
-                        echo "<label for=\"plus_contrat_type_nom\">Type :</label>\n";
-                        echo "<input value=\"\" name=\"plus_contrat_type_nom\" type=\"text\">\n";
+                        echo "<label for=\"plus_contrat_type_nom\">Type :</label>\n";		echo "<input value=\"\" name=\"plus_contrat_type_nom\" type=\"text\">\n";
                     echo "</fieldset>";
                     echo "\n\n\n";
 
@@ -249,7 +218,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### tutelle ########### */
         echo "<label for=\"tutelle\">Tutelle : </label>\n";
         echo "<select name=\"tutelle\" onchange=\"display(this,'plus_tutelle','plus_tutelle');\" id=\"tutelle\">";
-        echo "<option value=\"0\" "; if ($data[0]["tutelle"]=="") echo "selected"; echo ">— Aucune tutelle spécifiée —</option>"; 
+        echo "<option value=\"0\" "; if ($data[0]["tutelle"]=="") echo "selected"; echo ">— Aucune tutelle spécifiée —</option>";
         option_selecteur($data[0]["tutelle"], $tutelles, "tutelle_index", "tutelle_nom");
         echo "<option value=\"plus_tutelle\" "; if ($data[0]["tutelle"]=="plus_tutelle") echo "selected"; echo ">Nouvelle tutelle :</option>";
         echo "</select><br/>";
@@ -279,7 +248,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
         if ( ($data[0]["responsable_achat"]!="0")&&(($data[0]["responsable_achat"]!="")) ) {
             echo "<a href=\"mailto:".$utilisateurs[$key]["utilisateur_mail"]."\" title=\"".$utilisateurs[$key]["utilisateur_mail"]."\"><strong>✉</strong></a> ";
-        echo "<abbr title=\"".phone_display("".$utilisateurs[$key]["utilisateur_phone"]."",".")."\"><strong>☏</strong></abbr>";
+            echo "<abbr title=\"".phone_display("".$utilisateurs[$key]["utilisateur_phone"]."",".")."\"><strong>☏</strong></abbr>";
         }
 
         echo ": </label>\n";
@@ -289,27 +258,17 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<option value=\"plus_responsable_achat\" "; if ($data[0]["responsable_achat"]=="plus_responsable_achat") echo "selected"; echo ">Nouveau responsable achat :</option>";
         echo "</select>";
 
-
             /* ########### + responsable_achat ########### */
             echo "\n\n\n";
             echo "<fieldset id=\"plus_responsable_achat\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau responsable achat</legend>";
-                echo "<label for=\"plus_responsable_achat_prenom\">Prénom :</label>\n";
-                echo "<input value=\"\" name=\"plus_responsable_achat_prenom\" type=\"text\"><br/>\n";
-
-                echo "<label for=\"plus_responsable_achat_nom\">NOM :</label>\n";
-                echo "<input value=\"\" name=\"plus_responsable_achat_nom\" type=\"text\"><br/>\n";
-
-                echo "<label for=\"plus_responsable_achat_mail\">Mail :</label>\n";
-                echo "<input value=\"\" name=\"plus_responsable_achat_mail\" type=\"text\"><br/>\n";
-
-                echo "<label for=\"plus_responsable_achat_phone\"><abbr title=\"juste les chiffres sans séparateur\">Téléphone</abbr> :</label>\n";
-                echo "<input value=\"\" name=\"plus_responsable_achat_phone\" type=\"text\"><br/>\n";
-
+                echo "<label for=\"plus_responsable_achat_prenom\">Prénom :</label>\n";				echo "<input value=\"\" name=\"plus_responsable_achat_prenom\" type=\"text\"><br/>\n";
+                echo "<label for=\"plus_responsable_achat_nom\">NOM :</label>\n";				echo "<input value=\"\" name=\"plus_responsable_achat_nom\" type=\"text\"><br/>\n";
+                echo "<label for=\"plus_responsable_achat_mail\">Mail :</label>\n";				echo "<input value=\"\" name=\"plus_responsable_achat_mail\" type=\"text\"><br/>\n";
+                echo "<label for=\"plus_responsable_achat_phone\"><abbr title=\"juste les chiffres sans séparateur\">Téléphone</abbr> :</label>\n";	echo "<input value=\"\" name=\"plus_responsable_achat_phone\" type=\"text\"><br/>\n";
             echo "</fieldset>";
             echo "\n\n\n";
 
     echo "</fieldset>";
-
 
 /*  ╔╦╗╔═╗╔╦╗╔═╗╔═╗
      ║║╠═╣ ║ ║╣ ╚═╗
@@ -317,29 +276,20 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     echo "<fieldset><legend>Dates</legend>";
 
         /* ########### date_achat ########### */
-
         echo "<label for=\"achat\">Achat <abbr title=\"si jour ou mois inconnu → 01\"><strong>ⓘ</strong></abbr> :</label>\n";
-	echo "<input value=\"";
-        if ($data[0]["date_achat"]!="0000-00-00") echo $data[0]["date_achat"];
-	echo "\" name=\"date_achat\" type=\"date\" id=\"achat\"/>";
-        echo "<br/>";
+	echo "<input value=\"";		if ($data[0]["date_achat"]!="0000-00-00") echo $data[0]["date_achat"];		echo "\" name=\"date_achat\" type=\"date\" id=\"achat\"/><br/>";
 
         /* ########### garantie ########### */
         echo "<label for=\"garantie\">Fin de garantie <abbr title=\"si jour ou mois inconnu → 01\"><strong>ⓘ</strong></abbr> :</label>\n";
-        echo "<input value=\"";
-        if ($data[0]["garantie"]!="0000-00-00") echo $data[0]["garantie"];
-        echo "\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
+        echo "<input value=\"";		if ($data[0]["garantie"]!="0000-00-00") echo $data[0]["garantie"];		echo "\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
 
     echo "</fieldset>";
 
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
-if ($write) echo "<p style=\"text-align:center;\"><input name=\"administratif_valid\" value=\"Enregistrer\" type=\"submit\" class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser
-
+    if ($write) echo "<p style=\"text-align:center;\"><input name=\"administratif_valid\" value=\"Enregistrer\" type=\"submit\" class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser
     if ($write) echo "</form>";
-
-
 
 echo "</div>";
 
