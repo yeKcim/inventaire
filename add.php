@@ -23,7 +23,7 @@ $success="";
 */
 if ( isset($_POST["add_valid"]) ) {
     $data=array();
-    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque_nom", "reference", "serial_number", "plus_tags", "designation", "vendeur", "plus_vendeur_nom", "plus_vendeur_web", "plus_vendeur_remarque", "prix", "contrat", "plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "bon_commande", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie", "utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
+    $arr = array("lab_id", "id_man", "categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque_nom", "reference", "serial_number", "plus_tags", "designation", "vendeur", "plus_vendeur_nom", "plus_vendeur_web", "plus_vendeur_remarque", "prix", "contrat", "plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "bon_commande", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie", "utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
     foreach ($arr as &$value) {
         $data["$value"]= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
@@ -32,6 +32,13 @@ if ( isset($_POST["add_valid"]) ) {
     // ╚╗╔╝║╣ ╠╦╝║╠╣ ║║  ╠═╣ ║ ║║ ║║║║  ║║║║║║║║║║║║ ║║║║  ║║║║╠═╝║ ║ ║
     //  ╚╝ ╚═╝╩╚═╩╚  ╩╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝  ╩ ╩╩╝╚╝╩╩ ╩╚═╝╩ ╩  ╩╝╚╝╩  ╚═╝ ╩
     if ( ($data["categorie"]=="0")&&($data["designation"]=="") ) $error.="<p class=\"error_message\">Merci de remplir au minimum Administratif→Désignation ou Technique→Catégorie</p>";
+
+
+
+    // ╔═╗╦  ╦╔╦╗   ╔╦╗╔═╗╔╗╔  ╔═╗╔═╗╔╦╗  ╔╦╗╔═╗╔═╗╦╔╗╔╦
+    // ╚═╗║  ║ ║║   ║║║╠═╣║║║  ║╣ ╚═╗ ║    ║║║╣ ╠╣ ║║║║║
+    // ╚═╝╩  ╩═╩╝═══╩ ╩╩ ╩╝╚╝  ╚═╝╚═╝ ╩   ═╩╝╚═╝╚  ╩╝╚╝╩
+    if ( ($data["lab_id"]=="manual_id")&&($data["id_man"]=="") ) $error.="<p class=\"error_message\">L’id manuel ne peut pas être laissé vide</p>";
 
 
     // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╦  ╦╔═╗╔╗╔╔╦╗╔═╗╦ ╦╦═╗
@@ -162,7 +169,8 @@ if ( isset($_POST["add_valid"]) ) {
         }
     }
 
-    $data["lab_id"]=new_lab_id($data["categorie"]);
+    if ($data["lab_id"]=="manual_id")  $data["lab_id"]=$data["id_man"];
+    else $data["lab_id"]=new_lab_id($data["categorie"]);
 
     $data["date_achat"]=($data["date_achat"]=="") ? "0000-00-00" : $data["date_achat"];
     $data["garantie"]=($data["garantie"]=="") ? "0000-00-00" : $data["garantie"];
@@ -173,6 +181,7 @@ if ( isset($_POST["add_valid"]) ) {
         // ║  ╠═╣║  ║  ║ ║║     ║║║ ║  ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ║
         // ╚═╝╩ ╩╩═╝╚═╝╚═╝╩═╝  ═╩╝╚═╝  ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╩
 	$i=return_last_id("base_index", "base") + 1;
+
 	$add_result = $dbh->query("INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES ('".$i."', '".$data["lab_id"]."', '".$data["categorie"]."', '".$data["serial_number"]."', '".$data["reference"]."', '".$data["designation"]."', '0', '0', '0000-00-00', '".$data["tutelle"]."', '".$data["contrat"]."', '".$data["bon_commande"]."', '".$data["num_inventaire"]."', '".$data["vendeur"]."', '".$data["marque"]."', '".$data["date_achat"]."', '".$data["responsable_achat"]."', '".$data["garantie"]."', '".$data["prix"]."', '0000-00-00', '0', '0', '0') ;" );
         if (!isset($add_result)) $error.=$message_error_add;
         else {

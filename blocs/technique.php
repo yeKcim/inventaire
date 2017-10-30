@@ -167,6 +167,11 @@ if ( isset($_POST["technique_valid"]) ) {
     // Si on change la catégorie, il est nécessaire de changer également le lab_id !
     if ($data[0]["categorie"]!=$categorie) $data[0]["lab_id"]=new_lab_id($categorie);
 
+    if ($lab_id=="manual_id") {
+        if ($id_man!="") $lab_id=$id_man;
+        else {/* si manuel mais vide → auto */}
+    }
+
 
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
@@ -231,9 +236,14 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 	echo "<select name=\"lab_id\" onchange=\"display(this,'manual_id','manual_id');\" id=\"lab_id\">";
 		echo "<option value=\"".$data[0]["lab_id"]."\" ";
 			if ($lab_id==$data[0]["lab_id"]) echo "selected";	echo ">";
-			if (isset($fieldset_tags)) echo "Auto"; else echo $data[0]["lab_id"];
+			if (isset($fieldset_tags)) echo "Auto";
+			else {
+			    if ($id_man=="") echo $data[0]["lab_id"];
+			    else echo "$id_man";
+			}
 		echo "</option>";
-		echo "<option value=\"manual_id\">Manuel (non fonctionnel)</option>";
+		echo "<option value=\"manual_id\" ";
+		echo ">Manuel (non fonctionnel)</option>";
         echo "</select><br/>";
 
         /* ########### + id_manuel ########### */
