@@ -22,7 +22,11 @@ require_once("./0_array_info_de_i.php");
 $write=true;
 
 echo "<div id=\"container\">";
-    echo "".$data["lab_id"]." #".$i." ".$data["designation"]."<br/>";
+    echo "";
+    if (array_key_exists("lab_id", $data)) echo $data["lab_id"];
+    echo " #".$i." ";
+    if (array_key_exists("designation", $data)) echo $data["designation"];
+    echo "<br/>";
     require_once("./blocs/$quick_page.php");
 echo "</div>";
 
