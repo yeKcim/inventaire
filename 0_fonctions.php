@@ -54,7 +54,7 @@ function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0",$com
     echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>";
     foreach ($table as &$l){
         $selected= ($$nom==$l[$A]) ? "selected > $nom =" : " > " ;
-        $complement_info= ( (complement!=0)&&(isset($l[$complement])) ) ? "" : "$l[$complement]" ;
+        $complement_info= ( ($complement!=0)&&(array_key_exists($complement, $l)) ) ? "" : "$l[$complement]" ;
 	$c= ($complement_display!="") ? "($complement_info)" : "$complement_info";
         echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
     }
@@ -198,12 +198,13 @@ function integrationdisplay($pourleselements,$tableau,$puce) {
 	global $categories;
 	echo "<ul>";
 	foreach ($pourleselements as $k) {
+		if (array_key_exists($k, $tableau)) {
 		    echo "<li style=\"list-style-type: '".$puce."';\">&nbsp;";
 		    if ($tableau[$k]["sortie"]=="1") echo "<strike>";
 		    echo "<a href=\"info.php?i=".$tableau[$k]["base_index"]."\" title=\"#".$tableau[$k]["base_index"]."\" target=\"_blank\">";
 		    echo $tableau[$k]["lab_id"];
 		    echo "</a>";
-		    if (isset($tableau[$k]["categorie"])) {
+			if (isset($tableau[$k]["categorie"])) {
 		            $keys = array_keys(array_column($categories, 'categorie_index'), $tableau[$k]["categorie"]);
 		            if (isset($keys[0])) {
 		                    echo "&nbsp;: ";
@@ -211,11 +212,12 @@ function integrationdisplay($pourleselements,$tableau,$puce) {
 		                    echo $tableau[$k]["designation"];
 		                    echo " </abbr>";
 		            }
-		    }
+		    	}
 		    else echo "&nbsp;: ".$tableau[$k]["designation"]." ";
 		    if (isset($tableau[$k]["reference"])) echo " {".$tableau[$k]["reference"]."} ";
 		    if ($tableau[$k]["sortie"]=="1") echo "</strike>";
 		    echo "</li>";
+		}
 	}
 	echo "</ul>";
 }

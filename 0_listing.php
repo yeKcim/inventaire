@@ -52,9 +52,10 @@ foreach ($table_carac as &$l) {
 	if ($l["unite_carac"]=="bool") { $unit=""; $value= ($l["carac_valeur"]=="1") ? "oui" : "non" ; }
 	elseif ($l["carac_valeur"]=="∞") { $unit="" ; $value=$l["carac_valeur"];} // do not display unit if value is infinite
 	else { $unit=$l["unite_carac"] ; $value=$l["carac_valeur"];}
-
-	$tableau_carac[$l["base_index"]].="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l[symbole_carac]."</span>:";
-        $tableau_carac[$l["base_index"]].="<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; ";
+	if (array_key_exists($l["base_index"], $tableau_carac)) {
+	    $tableau_carac[$l["base_index"]].="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l[symbole_carac]."</span>:";
+            $tableau_carac[$l["base_index"]].="<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; ";
+	}
 }
 
 //date du jour
@@ -62,28 +63,28 @@ $today=date("Y-m-d");
 
 //liste des entretiens correspondants
 $sth = $dbh->query("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
-$table_entretien = $sth->fetchAll(PDO::FETCH_ASSOC);
-foreach ($table_entretien as &$l) {
+$tableau_entretien = $sth->fetchAll(PDO::FETCH_ASSOC);
+$te=array();
+foreach ($tableau_entretien as &$l) {
     $f=$l["e_frequence"];
-    $date_derniere_intervention=$l[e_lastdate];
+    $date_derniere_intervention=$l["e_lastdate"];
     $date_prochaine_intervention = date("Y-m-d", strtotime($date_derniere_intervention." +$f days") );
     $retard = round( ( strtotime($today) - strtotime($date_prochaine_intervention) ) / 86400 );
 
-    $tableau_entretien[$l["e_id"]]=(isset($tableau_entretien[$l["e_id"]])) ? $tableau_entretien[$l["e_id"]] : "";
-    $tableau_entretien[$l["e_id"]].="<span style=\"color:";
-    if ($retard>0)                  $tableau_entretien[$l["e_id"]].="#cc0000";
-    else {  if (-$retard<$f*0.1)    $tableau_entretien[$l["e_id"]].="#f57900";
-            else                    $tableau_entretien[$l["e_id"]].="#4e9a06";
+    $te[$l["e_id"]]=(array_key_exists($l["e_id"], $te)) ? $te[$l["e_id"]] : "";
+    $te[$l["e_id"]].="<span style=\"color:";
+    if ($retard>0)                  $te[$l["e_id"]].="#cc0000";
+    else {  if (-$retard<$f*0.1)    $te[$l["e_id"]].="#f57900";
+            else                    $te[$l["e_id"]].="#4e9a06";
     }
-    $tableau_entretien[$l["e_id"]].=";\" title=\"".$l["e_designation"]." (".dateformat($date_prochaine_intervention,"fr").")\"><strong>";
-    if ($retard>0)                  $tableau_entretien[$l["e_id"]].="⚠";
-    else {  if (-$retard<$f*0.1)    $tableau_entretien[$l["e_id"]].="⌛";
-            else                    $tableau_entretien[$l["e_id"]].="☑";
+    $te[$l["e_id"]].=";\" title=\"".$l["e_designation"]." (".dateformat($date_prochaine_intervention,"fr").")\"><strong>";
+    if ($retard>0)                  $te[$l["e_id"]].="⚠";
+    else {  if (-$retard<$f*0.1)    $te[$l["e_id"]].="⌛";
+            else                    $te[$l["e_id"]].="☑";
     }
-    $tableau_entretien[$l["e_id"]].="</strong></span> ";
+    $te[$l["e_id"]].="</strong></span> ";
 
 }
-
 
 /*#######################################################################
 #          Si du matériel sorti est affiché, afficher état              #
@@ -157,7 +158,7 @@ foreach ($tableau as &$t) {
 
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=caracteristiques&quick_name=Caractéristiques', width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide caracteristiques\">";
 
-        if (isset($tableau_carac[$t["base_index"]]) ) echo substr($tableau_carac[$t["base_index"]], 0, -2);
+	if (array_key_exists($t["base_index"], $tableau_carac)) echo substr($tableau_carac[$t["base_index"]], 0, -2);
         else echo "-";
 
         echo "</span>";
@@ -165,7 +166,7 @@ foreach ($tableau as &$t) {
 	// ********** Intégration **********
         $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
 	if ($t["integration"]!="0") integrationdisplay(array(0 => $t["base_index"]),$tableau_enfants,"↰"); // Cette référence est intégré dans
-	elseif (isset ($tableau_parents[$keys[0]])) integrationdisplay($keys,$tableau_parents,"↳"); // Cette référence intègre différentes entrées
+        elseif (array_key_exists("0", $keys)) { if (array_key_exists($keys[0], $tableau_parents)) integrationdisplay($keys,$tableau_parents,"↳"); }// Cette référence intègre différentes entrées
 	else echo "&nbsp;";
         echo "</td>";
 
@@ -255,10 +256,7 @@ foreach ($tableau as &$t) {
         echo "<td>";
 
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=entretien&quick_name=Entretien',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide entretien\">";
-        if (isset($tableau_entretien[$t["base_index"]]) ) {
-            echo $tableau_entretien[$t["base_index"]];
-        }
-        else echo "-";
+	if (array_key_exists($t["base_index"], $te)) echo $te[$t["base_index"]]; else echo "-";
         echo "</span>";
 
         echo "</td>";
@@ -296,7 +294,7 @@ foreach ($tableau as &$t) {
 
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=journal&quick_name=Journal',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide journal\">";
 
-	if (isset($t["base_index"])) { $keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]); if (isset(keys[0])) $key=$keys[0]; }
+	if (array_key_exists("base_index", $t)) { $keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]); if (array_key_exists("0",$keys)) $key=$keys[0]; }
 	if ( isset($key) ) echo "<sup>".$tableau_journaux[$key]["nb_entree"]."</sup> <img src=\"mime-icons/txt.png\" />" ;
 	else echo "-" ;
 
@@ -308,7 +306,7 @@ foreach ($tableau as &$t) {
         echo "<td>";
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
 
-	if (isset($t["utilisateur"])) { $keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]); if (isset(keys[0])) $key=$keys[0]; }
+	if (array_key_exists("utilisateur", $t)) { $keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]); if (array_key_exists("0",$keys)) $key=$keys[0]; }
         if ($t["utilisateur"]!=0) echo "<span title=\"Utilisé par ".$utilisateurs[$key]["utilisateur_prenom"]." ".$utilisateurs[$key]["utilisateur_nom"]." ";
         else echo "<span title=\"";
         if ($t["localisation"]!=0) echo "le ".dateformat($t["date_localisation"],"fr")."";
