@@ -164,63 +164,10 @@ foreach ($tableau as &$t) {
 
 	// ********** Intégration **********
         $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
-
-	// Cette référence est intégré dans :
-	if ($t["integration"]!="0") {
-//		echo "<br/><a href=\"info.php?i=".$t["integration"]."\" target=\"_blank\" title=\"intégré dans…\">↰ #".$t["integration"]."</a>";
-
-                echo "<ul>";
-                echo "<li style=\"list-style-type: '↰';\">";
-                if ($tableau_enfants[$k]["sortie"]=="1") echo "<strike>";
-                echo "<a href=\"info.php?i=".$tableau_enfants[$k]["base_index"]."\" title=\"#".$tableau_enfants[$k]["base_index"]."\" target=\"_blank\">";
-                echo $tableau_enfants[$k]["lab_id"];
-                echo "</a>";
-                if (isset($tableau_enfants[$k]["categorie"])) {
-                      $keys = array_keys(array_column($categories, 'categorie_index'), $tableau_enfants[$k]["categorie"]);
-                      if (isset($keys[0])) {
-                              echo "&nbsp;: ";
-                              echo "<abbr title=\"Catégorie&nbsp;: ".$categories[$keys[0]]["categorie_lettres"]." (".$categories[$keys[0]]["categorie_nom"].") \">";
-                              echo $tableau_enfants[$k]["designation"];
-                              echo " </abbr>";
-                      }
-                }
-                else echo "&nbsp;: ".$tableau_enfants[$k]["designation"]." ";
-                if (isset($tableau_enfants[$k]["reference"])) echo " {".$tableau_enfants[$k]["reference"]."} ";
-                if ($tableau_enfants[$k]["sortie"]=="1") echo "</strike>";
-                echo "</li>";
-                echo "</ul>";
-
-	}
-
-
-	// Cette référence intègre différentes entrées :
-	elseif (isset ($tableau_parents[$keys[0]])) {
-		echo "<ul>";
-		foreach ($keys as $k) {
-			echo "<li style=\"list-style-type: '↳';\">";
-			if ($tableau_parents[$k]["sortie"]=="1") echo "<strike>";
-			echo "<a href=\"info.php?i=".$tableau_parents[$k]["base_index"]."\" title=\"#".$tableau_parents[$k]["base_index"]."\" target=\"_blank\">";
-			echo $tableau_parents[$k]["lab_id"];
-			echo "</a>";
-			if (isset($tableau_parents[$k]["categorie"])) {
-                                $keys = array_keys(array_column($categories, 'categorie_index'), $tableau_parents[$k]["categorie"]);
-                                if (isset($keys[0])) {
-					echo "&nbsp;: ";
-					echo "<abbr title=\"Catégorie&nbsp;: ".$categories[$keys[0]]["categorie_lettres"]." (".$categories[$keys[0]]["categorie_nom"].") \">";
-					echo $tableau_parents[$k]["designation"];
-					echo " </abbr>";
-				}
-			}
-			else echo "&nbsp;: ".$tableau_parents[$k]["designation"]." ";
-			if (isset($tableau_parents[$k]["reference"])) echo " {".$tableau_parents[$k]["reference"]."} ";
-			if ($tableau_parents[$k]["sortie"]=="1") echo "</strike>";
-			echo "</li>";
-		}
-		echo "</ul>";
-	}
+	if ($t["integration"]!="0") integrationdisplay(array(0 => $t["base_index"]),$tableau_enfants,"↰"); // Cette référence est intégré dans
+	elseif (isset ($tableau_parents[$keys[0]])) integrationdisplay($keys,$tableau_parents,"↳"); // Cette référence intègre différentes entrées
 	else echo "&nbsp;";
         echo "</td>";
-
 
         // ********** Marque  **********
         echo "<td>";

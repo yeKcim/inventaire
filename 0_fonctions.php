@@ -194,6 +194,33 @@ function return_last_id($col,$table) {
     return $t[0][$col];
 }
 
+function integrationdisplay($pourleselements,$tableau,$puce) {
+	global $categories;
+	echo "<ul>";
+	foreach ($pourleselements as $k) {
+		    echo "<li style=\"list-style-type: '".$puce."';\">&nbsp;";
+		    if ($tableau[$k]["sortie"]=="1") echo "<strike>";
+		    echo "<a href=\"info.php?i=".$tableau[$k]["base_index"]."\" title=\"#".$tableau[$k]["base_index"]."\" target=\"_blank\">";
+		    echo $tableau[$k]["lab_id"];
+		    echo "</a>";
+		    if (isset($tableau[$k]["categorie"])) {
+		            $keys = array_keys(array_column($categories, 'categorie_index'), $tableau[$k]["categorie"]);
+		            if (isset($keys[0])) {
+		                    echo "&nbsp;: ";
+		                    echo "<abbr title=\"Catégorie&nbsp;: ".$categories[$keys[0]]["categorie_lettres"]." (".$categories[$keys[0]]["categorie_nom"].") \">";
+		                    echo $tableau[$k]["designation"];
+		                    echo " </abbr>";
+		            }
+		    }
+		    else echo "&nbsp;: ".$tableau[$k]["designation"]." ";
+		    if (isset($tableau[$k]["reference"])) echo " {".$tableau[$k]["reference"]."} ";
+		    if ($tableau[$k]["sortie"]=="1") echo "</strike>";
+		    echo "</li>";
+	}
+	echo "</ul>";
+}
+
+
 
 $message_error_add="<p class=\"error_message\" id=\"disappear_delay\">Une erreur inconnue est survenue. L’entrée n’a pas été ajoutée.</p>";
 $message_success_add="<p class=\"success_message\" id=\"disappear_delay\">L’entrée a été ajoutée à la base de donnée.</p>";
