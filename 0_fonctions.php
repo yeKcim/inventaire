@@ -54,7 +54,7 @@ function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0",$com
     echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>";
     foreach ($table as &$l){
         $selected= ($$nom==$l[$A]) ? "selected > $nom =" : " > " ;
-        $complement_info= ( ($complement!=0)&&(array_key_exists($complement, $l)) ) ? "" : "$l[$complement]" ;
+        $complement_info= ( ($complement!=0)||(array_key_exists($complement, $l)) ) ? "$l[$complement]" : "";
 	$c= ($complement_display!="") ? "($complement_info)" : "$complement_info";
         echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
     }
