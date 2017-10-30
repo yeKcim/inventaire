@@ -47,8 +47,11 @@ $sth = $dbh->query("SELECT base_index, categorie, carac_valeur, carac, nom_carac
 $table_carac = $sth->fetchAll(PDO::FETCH_ASSOC);
 foreach ($table_carac as &$l) {
 	if ($l["unite_carac"]=="bool") { $unit=""; $value= ($l["carac_valeur"]=="1") ? "oui" : "non" ; }
+	elseif ($l["carac_valeur"]=="∞") { $unit="" ; $value=$l["carac_valeur"];} // do not display unit if value is infinite
 	else { $unit=$l["unite_carac"] ; $value=$l["carac_valeur"];}
-	$tableau_carac[$l["base_index"]].="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l[symbole_carac]."</span>:<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; "; // À REVOIR
+
+	$tableau_carac[$l["base_index"]].="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l[symbole_carac]."</span>:";
+        $tableau_carac[$l["base_index"]].="<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; "; // À REVOIR
 }
 
 //date du jour
