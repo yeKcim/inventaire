@@ -13,6 +13,16 @@
 /* TODO : Vérifications envoi de fichiers semble défectueux */
 
 $max_size=file_upload_max_size();
+/* HOW-TO:
+To modify $max_size edit /etc/php/7.1/apache2/php.ini:
+	; Maximum allowed size for uploaded files.
+	upload_max_filesize = 40M
+	; Must be greater than or equal to upload_max_filesize
+	post_max_size = 40M
+sudo service apache2 restart
+
+*/
+
 /* ########### POST ########### */
 $arr = array("del_f_confirm","f","filetoref");
 foreach ($arr as &$value) {
