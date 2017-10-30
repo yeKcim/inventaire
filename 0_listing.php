@@ -38,7 +38,7 @@ $sth = $dbh->query("SELECT historique_id, COUNT(*) as nb_entree FROM historique,
 $tableau_journaux = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 //liste des ensembles parmi les éléments affichés
-$sth = $dbh->query("SELECT base_index, integration FROM base WHERE integration IN ($b_i) ORDER BY base_index ASC ;");
+$sth = $dbh->query("SELECT base_index, integration, lab_id, categorie, reference, designation FROM base WHERE integration IN ($b_i) ORDER BY base_index ASC ; ");
 $tableau_parents = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 //liste des caracs correspondantes
@@ -51,11 +51,12 @@ foreach ($table_carac as &$l) {
 	else { $unit=$l["unite_carac"] ; $value=$l["carac_valeur"];}
 
 	$tableau_carac[$l["base_index"]].="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l[symbole_carac]."</span>:";
-        $tableau_carac[$l["base_index"]].="<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; "; // À REVOIR
+        $tableau_carac[$l["base_index"]].="<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; ";
 }
 
 //date du jour
 $today=date("Y-m-d");
+
 //liste des entretiens correspondants
 $sth = $dbh->query("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
 $table_entretien = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -81,9 +82,9 @@ foreach ($table_entretien as &$l) {
 }
 
 
-#########################################################################
+/*#######################################################################
 #          Si du matériel sorti est affiché, afficher état              #
-#########################################################################
+#######################################################################*/
 if ($IOT!="0") {
     $raison_sortie=array();
     $sth = $dbh->query("SELECT * FROM raison_sortie WHERE raison_sortie_index!=0");
@@ -163,8 +164,30 @@ foreach ($tableau as &$t) {
 	if ($t["integration"]!="0") echo "<br/><a href=\"info.php?i=".$t["integration"]."\" target=\"_blank\" title=\"intégré dans…\">↰ #".$t["integration"]."</a>";
 
 	elseif (isset ($tableau_parents[$keys[0]])) {
-		echo "<br/>↳ ";
-		foreach ($keys as $k) echo "#".$tableau_parents[$k]["base_index"]." ";
+		echo "<ul>";
+		foreach ($keys as $k) {
+			echo "<li style=\"list-style-type: '↳';\">";
+			echo "<a href=\"info.php?i=".$tableau_parents[$k]["base_index"]."\" title=\"#".$tableau_parents[$k]["base_index"]."\" target=\"_blank\">";
+			echo $tableau_parents[$k]["lab_id"];
+			echo "</a>";
+
+			if (isset($tableau_parents[$k]["categorie"])) {
+                                $keys = array_keys(array_column($categories, 'categorie_index'), $tableau_parents[$k]["categorie"]);
+                                if (isset($keys[0])) {
+					echo "&nbsp;: ";
+					echo "<abbr title=\"Catégorie&nbsp;: ".$categories[$keys[0]]["categorie_lettres"]." (".$categories[$keys[0]]["categorie_nom"].") \">";
+					echo $tableau_parents[$k]["designation"];
+					echo " </abbr>";
+				}
+			}
+			else echo "&nbsp;: ".$tableau_parents[$k]["designation"]." ";
+
+			if (isset($tableau_parents[$k]["reference"])) echo " {".$tableau_parents[$k]["reference"]."} ";
+
+			echo "</li>";
+		}
+		echo "</ul>";
+
 	}
 	else {
 		echo "&nbsp;";
