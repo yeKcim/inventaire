@@ -34,3 +34,7 @@ echo "</div>";
 
 </body>
 </html>
+
+<?php
+$dbh = null;
+?>

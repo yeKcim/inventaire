@@ -30,9 +30,6 @@ $ALL_GET=str_replace(" ", "%20", $ALL_GET);
 
 $ORDER= ($ORDER=="") ? "ORDER BY categorie ASC, length(lab_id), lab_id ASC" : "$ORDER, base_index ASC";
 
-
-
-
 echo "<h1><a href=\"?\">Base de données ".strtoupper($database)."</a></h1>";
 
 echo "<p style=\"text-align:right;\">";
@@ -52,3 +49,7 @@ require_once("./0_listing.php");
 </body>
 
 </html>
+
+<?php
+$dbh = null;
+?>

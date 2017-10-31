@@ -274,3 +274,7 @@ echo "</form>";
 
 </body>
 </html>
+
+<?php
+$dbh = null;
+?>
