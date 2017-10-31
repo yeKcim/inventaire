@@ -153,8 +153,11 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
             echo "<option value='0' "; if ($caracs_i[$keys[0]]["carac_valeur"]=="0") echo 'selected'; echo ">Non</option>";
             echo "</select>";
         }
-        else echo "<input value='".str_replace("'", "’", $caracs_i[$keys[0]]["carac_valeur"])."' name='carac[".$c["carac"]."]' type='text' id='carac[".$c["carac"]."]'>";
-
+        else {
+	    echo "<input value='";
+	    if (array_key_exists("0",$keys)) echo str_replace("'", "’", $caracs_i[$keys[0]]["carac_valeur"]);
+	    echo "' name='carac[".$c["carac"]."]' type='text' id='carac[".$c["carac"]."]'>";
+	}
         echo "\">";
         echo $c["nom_carac"];
         echo "</option>";
