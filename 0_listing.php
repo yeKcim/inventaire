@@ -45,17 +45,16 @@ $sth = $dbh->query("SELECT base_index, integration, lab_id, categorie, reference
 $tableau_enfants = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 //liste des caracs correspondantes
-$tableau_carac=array();
 $sth = $dbh->query("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
 $table_carac = $sth->fetchAll(PDO::FETCH_ASSOC);
-foreach ($table_carac as &$l) {
-	if ($l["unite_carac"]=="bool") { $unit=""; $value= ($l["carac_valeur"]=="1") ? "oui" : "non" ; }
-	elseif ($l["carac_valeur"]=="∞") { $unit="" ; $value=$l["carac_valeur"];} // do not display unit if value is infinite
-	else { $unit=$l["unite_carac"] ; $value=$l["carac_valeur"];}
-	if (array_key_exists($l["base_index"], $tableau_carac)) {
-	    $tableau_carac[$l["base_index"]].="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l[symbole_carac]."</span>:";
-            $tableau_carac[$l["base_index"]].="<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; ";
-	}
+$tc=array();
+foreach ($table_carac as $l) {
+        if ($l["unite_carac"]=="bool") { $unit=""; $value= ($l["carac_valeur"]=="1") ? "oui" : "non" ; }
+        elseif ($l["carac_valeur"]=="∞") { $unit="" ; $value=$l["carac_valeur"];} // do not display unit if value is infinite
+        else { $unit=$l["unite_carac"] ; $value=$l["carac_valeur"];}
+        if (!array_key_exists($l["base_index"], $tc)) $tc[$l["base_index"]]="";
+        $tc[$l["base_index"]].="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l["symbole_carac"]."</span>:";
+        $tc[$l["base_index"]].="<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; ";
 }
 
 //date du jour
@@ -65,7 +64,7 @@ $today=date("Y-m-d");
 $sth = $dbh->query("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
 $tableau_entretien = $sth->fetchAll(PDO::FETCH_ASSOC);
 $te=array();
-foreach ($tableau_entretien as &$l) {
+foreach ($tableau_entretien as $l) {
     $f=$l["e_frequence"];
     $date_derniere_intervention=$l["e_lastdate"];
     $date_prochaine_intervention = date("Y-m-d", strtotime($date_derniere_intervention." +$f days") );
@@ -158,7 +157,7 @@ foreach ($tableau as &$t) {
 
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=caracteristiques&quick_name=Caractéristiques', width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide caracteristiques\">";
 
-	if (array_key_exists($t["base_index"], $tableau_carac)) echo substr($tableau_carac[$t["base_index"]], 0, -2);
+	if (array_key_exists($t["base_index"], $tc)) echo substr($tc[$t["base_index"]], 0, -2);
         else echo "-";
 
         echo "</span>";
