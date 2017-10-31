@@ -235,6 +235,10 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
 	echo "<select name=\"lab_id\" onchange=\"display(this,'manual_id','manual_id');\" id=\"lab_id\">";
 		echo "<option value=\"".$data[0]["lab_id"]."\" ";
+
+			$lab_id = (!isset($lab_id)) ? "" : $lab_id;
+			$id_man = (!isset($id_man)) ? "" : $id_man;
+
 			if ($lab_id==$data[0]["lab_id"]) echo "selected";	echo ">";
 			if (isset($fieldset_tags)) echo "Auto";
 			else {
