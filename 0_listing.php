@@ -17,7 +17,7 @@ $entretiens_done=0;
 */
 
 $table = "
-SELECT base_index, lab_id, categorie, categorie_nom, reference, designation, marque, marque_nom, vendeur, vendeur_nom,
+SELECT base_index, lab_id, categorie, categorie_nom, categorie_lettres, reference, designation, marque, marque_nom, vendeur, vendeur_nom,
 	vendeur_web, vendeur_remarques, serial_number, localisation, localisation_batiment, localisation_piece, date_localisation,
 	vendeur_nom, marque_nom, raison_sortie, raison_sortie_nom, utilisateur, responsable_achat,
 	utilisateur_nom as `responsable_nom`, utilisateur_prenom as `responsable_prenom`, utilisateur_mail as `responsable_mail`,
@@ -155,7 +155,11 @@ foreach ($tableau as &$t) {
         echo "</a></td>";
 
         // ********** Catégorie **********
-        echo "<td>".$t["categorie_nom"]."</td>";
+        echo "<td>";
+	if ($CAT=="") echo "<a href=\"?CAT=".$t["categorie"]."\" style=\"color:#000;\" title=\"Afficher les entrées de la catégorie [".$t["categorie_lettres"]."]\">";
+	echo $t["categorie_nom"];
+	if ($CAT=="") echo "</a>";
+	echo "</td>";
 
         // ********** Désignation **********
         echo "<td>";
