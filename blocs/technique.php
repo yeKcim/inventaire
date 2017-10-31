@@ -293,8 +293,9 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 /*  ╔╦╗╔═╗╔═╗╔═╗
      ║ ╠═╣║ ╦╚═╗
      ╩ ╩ ╩╚═╝╚═╝    */
-   echo "<fieldset id=\"tags\"><legend>Mots clés (fonction désactivée pour l’instant)</legend>";
+    echo "<fieldset id=\"tags\"><legend>Mots clés</legend>";
 
+    echo "fonction désactivée"; /*
     if ( isset($fieldset_tags) ) echo "".$fieldset_tags."";
     else {
         echo "<label for=\"tags[]\">Tags :</label>";
@@ -319,15 +320,16 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "<label for=\"plus_tags\">Nouveaux tags <abbr title=\"séparés d’une virgule\"><strong>ⓘ</strong></abbr> :</label>";
         echo "<input value=\"\" name=\"plus_tags\" type=\"text\">\n";
     }
-
+*/
     echo "</fieldset>";
 
 
 /*  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔╦╗╦╔╗ ╦ ╦  ╦╔╦╗╔═╗
     ║  ║ ║║║║╠═╝╠═╣ ║ ║╠╩╗║ ║  ║ ║ ║╣
     ╚═╝╚═╝╩ ╩╩  ╩ ╩ ╩ ╩╚═╝╩ ╩═╝╩ ╩ ╚═╝  */
-    echo "<fieldset><legend>Compatibilité (fonction désactivée pour l’instant)</legend>";
+    echo "<fieldset><legend>Compatibilité</legend>";
 
+    echo "fonction désactivée"; /*
     if ( isset($fieldset_compatibilite) ) echo "".$fieldset_tags."";
     else {
         echo "<label for=\"compatibilite[]\">Élements compatibles : </label>\n";
@@ -356,7 +358,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             }
           </script>";
         }
-
+*/
     echo "</fieldset>";
 
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
