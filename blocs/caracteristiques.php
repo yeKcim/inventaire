@@ -56,28 +56,23 @@ if ( isset($_POST["new_carac_valid"]) ) {
         // Si tous les champs sont remplis, on crée la nouvelle carac
         if ( ($nom_carac!="")&&($symbole_carac!="") ) {
             // Si la nouvelle carac existe déjà (nom ou symbôle)
-	    if ( $dbh->query("SELECT COUNT(*) FROM caracteristiques WHERE nom_carac=\"$nom_carac\" OR symbole_carac=\"$symbole_carac\" ;") ) $count_carac = $res->fetchColumn();
+	    $sth = $dbh->query("SELECT COUNT(*) FROM caracteristiques WHERE nom_carac=\"$nom_carac\" OR symbole_carac=\"$symbole_carac\" ;");
+	    $count_carac = $sth->fetchAll(PDO::FETCH_ASSOC);
+	    $count_carac[0]["COUNT(*)"];
 	}
-
-   /* Récupère le nombre de lignes qui correspond à la requête SELECT */
-   if ($res->fetchColumn() > 0) {
-
-            if ($count_carac!=0) $message.="<p class=\"error_message\">Nom ou symbôle déjà utilisé.</p>";
-            else {
-		$sth = $dbh->query("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
-                if ( !isset($sth) ) {
-                    $message.="<p class=\"success_message\" id=\"disappear_delay\">La nouvelle caractéristique a été ajoutée.</p>";
-                    $nom_carac=""; $unite_carac=""; $symbole_carac="";
-                }
-                else { $message.="<p class=\"error_message\" id=\"disappear_delay\">Une erreur est survenue. La nouvelle caractéristique n’a pas été ajoutée.</p>"; }
+       /* Récupère le nombre de lignes qui correspond à la requête SELECT */
+        if ($count_carac[0]["COUNT(*)"]!=0) $message.="<p class=\"error_message\">Nom ou symbôle déjà utilisé.</p>";
+        else {
+	    $sth = $dbh->query("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
+            if ( isset($sth) ) {
+                $message.="<p class=\"success_message\" id=\"disappear_delay\">La nouvelle caractéristique a été ajoutée.</p>";
+                $nom_carac=""; $unite_carac=""; $symbole_carac="";
             }
-        } // Sinon on indique un message d’erreur
-        else $message.="<p class=\"error_message\">Nom et Symbôle sont des champs obligatoires.</p>";
-    }
+            else { $message.="<p class=\"error_message\" id=\"disappear_delay\">Une erreur est survenue. La nouvelle caractéristique n’a pas été ajoutée.</p>"; }
+        }
+    } // Sinon on indique un message d’erreur
+    //else $message.="<p class=\"error_message\">Nom et Symbôle sont des champs obligatoires.</p>";
 }
-
-
-
 
 
 /*
