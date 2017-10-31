@@ -44,9 +44,11 @@ $tableau_parents = $sth->fetchAll(PDO::FETCH_ASSOC);
 //liste des base_index affichés
 $b_e="";
 foreach ($tableau as &$t) { $b_e.=($t["integration"]!="0") ? $t["integration"]."," : ""; }
-$b_e= ($b_e=="") ? "" : substr($b_e, 0, -1); // suppression du dernier caractère
-$sth = $dbh->query("SELECT base_index, lab_id, categorie, reference, designation, sortie FROM base WHERE base_index IN ($b_e) ORDER BY base_index ASC ; ");
-$tableau_enfants = $sth->fetchAll(PDO::FETCH_ASSOC);
+if ($b_e!="") {
+	$b_e=substr($b_e, 0, -1); // suppression du dernier caractère
+	$sth = $dbh->query("SELECT base_index, lab_id, categorie, reference, designation, sortie FROM base WHERE base_index IN ($b_e) ORDER BY base_index ASC ; ");
+	$tableau_enfants = $sth->fetchAll(PDO::FETCH_ASSOC);
+}
 
 //liste des caracs correspondantes
 $sth = $dbh->query("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
@@ -108,7 +110,6 @@ else $display_raison_sortie=0;
    ██║   ██║  ██║██████╔╝███████╗███████╗██║  ██║╚██████╔╝
    ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝
 */
-
 echo "<table id=\"listing\">";
 
 /*  ╔═╗╔╗╔╦╗╔═╗╔╦╗╔═╗  ╔╦╗╔═╗╔╗ ╦  ╔═╗╔═╗╦ ╦
@@ -348,11 +349,12 @@ foreach ($tableau as &$t) {
             echo "</td>";
         }
 
-
-
     echo "</tr></a>";
 }
 
 echo "</table>";
+
+echo "<h2>Statistiques</h2>";
+echo "Nombre d’entrées affichées : ".count($tableau) ;
 
 ?>
