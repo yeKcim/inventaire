@@ -88,10 +88,11 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
             if(empty($errors)==true) {
 
                 if ($filetoref!="" ) {
-					$m=str_replace('/', "_", $marques[$data[0]["marque"]][1]);
-					$r=str_replace('/', "_", $data[0]["reference"]);
+					$keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
+					$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
+		                        $r=str_replace('/', "_", $data[0]["reference"]);
 					$dossier=$racine."files/".$m."-".$r;
-				}
+		}
                 else $dossier=$racine."files/$i";
 
                 move_uploaded_file($file_tmp,"$dossier/".$file_name);
@@ -117,7 +118,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
         echo "<fieldset><legend>Fichiers globaux liés à la référence constructeur</legend>";
         	$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
-			$r=str_replace('/', "_", $data[0]["reference"]);
+		$r=str_replace('/', "_", $data[0]["reference"]);
             displayDir($i, "files/".$m."-".$r."/", $del=$write);
         echo "</fieldset>";
     }
