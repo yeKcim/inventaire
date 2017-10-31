@@ -1,5 +1,12 @@
 <?php
 
+/*stat*/
+$prix_total=0;
+$entretiens_late=0;
+$entretiens_soon=0;
+$entretiens_done=0;
+/*endstat*/
+
 /*
  █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
 ██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
@@ -83,9 +90,9 @@ foreach ($tableau_entretien as $l) {
             else                    $te[$l["e_id"]].="#4e9a06";
     }
     $te[$l["e_id"]].=";\" title=\"".$l["e_designation"]." (".dateformat($date_prochaine_intervention,"fr").")\"><strong>";
-    if ($retard>0)                  $te[$l["e_id"]].="⚠";
-    else {  if (-$retard<$f*0.1)    $te[$l["e_id"]].="⌛";
-            else                    $te[$l["e_id"]].="☑";
+    if ($retard>0)                  { $te[$l["e_id"]].="⚠"; /*stat*/$entretiens_late=$entretiens_late+1;/*endstat*/ }
+    else {  if (-$retard<$f*0.1)    { $te[$l["e_id"]].="⌛";/*stat*/$entretiens_soon=$entretiens_soon+1;/*endstat*/ }
+            else                    { $te[$l["e_id"]].="☑"; /*stat*/$entretiens_done=$entretiens_done+1;/*endstat*/ }
     }
     $te[$l["e_id"]].="</strong></span> ";
 
@@ -110,6 +117,7 @@ else $display_raison_sortie=0;
    ██║   ██║  ██║██████╔╝███████╗███████╗██║  ██║╚██████╔╝
    ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝
 */
+
 echo "<table id=\"listing\">";
 
 /*  ╔═╗╔╗╔╦╗╔═╗╔╦╗╔═╗  ╔╦╗╔═╗╔╗ ╦  ╔═╗╔═╗╦ ╦
@@ -265,7 +273,7 @@ foreach ($tableau as &$t) {
         if ($t["responsable_achat"]!="0") echo "Par ".$t["responsable_prenom"]." ".$t["responsable_nom"]." ";
         if ($t["date_achat"]!="0000-00-00") echo "le ".dateformat($t["date_achat"],"fr")."";
         echo "\">";
-        if ($t["prix"]!="0") echo "".$t["prix"]."€";
+        if ($t["prix"]!="0") { echo "".$t["prix"]."€"; /*stat*/$prix_total=$prix_total+$t["prix"];/*endstat*/}
         if ($t["contrat"]!="0")echo " sur ".$t["contrat_nom"]."";
         if ( ($t["prix"]=="0") && ($t["contrat"]=="0") ) echo "-";
         echo "</span>";
@@ -316,8 +324,10 @@ foreach ($tableau as &$t) {
 
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=journal&quick_name=Journal',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide journal\">";
 
-	if (array_key_exists("base_index", $t)) { $keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]); if (array_key_exists("0",$keys)) $key=$keys[0]; }
-	if ( isset($key) ) echo "<sup>".$tableau_journaux[$key]["nb_entree"]."</sup> <img src=\"mime-icons/txt.png\" />" ;
+	if (array_key_exists("base_index", $t)) {
+		$keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]);
+		if (array_key_exists("0",$keys)) echo "<sup>".$tableau_journaux[$keys[0]]["nb_entree"]."</sup> <img src=\"mime-icons/txt.png\" />" ;
+	}
 	else echo "-" ;
 
         echo "</span>";
@@ -354,7 +364,20 @@ foreach ($tableau as &$t) {
 
 echo "</table>";
 
-echo "<h2>Statistiques</h2>";
-echo "Nombre d’entrées affichées : ".count($tableau) ;
+/*stat*/
+//echo "<h2>Statistiques</h2>";
+echo "<br/><hr/>";
+echo "<ul>";
+echo "<li>Nombre d’entrées affichées : ".count($tableau)."</li>" ;
+echo "<li>Prix total (des entrées renseignées) : ".$prix_total." €</li>" ;
+echo "<li>Entretiens : ";
+	echo "<span style=\"color:#cc0000\">".$entretiens_late."⚠</span>";
+	echo " - ";
+	echo "<span style=\"color:#f57900\">".$entretiens_soon."⌛</span>";
+	echo " - ";
+	echo "<span style=\"color:#4e9a06\">".$entretiens_done."☑</span>";
+echo "</li>";
+echo "</ul>";
+/*endstat*/
 
 ?>
