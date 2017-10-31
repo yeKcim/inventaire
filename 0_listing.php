@@ -166,19 +166,17 @@ foreach ($tableau as &$t) {
 
         echo "</span>";
 
-	// ********** Intégration kid **********
+	// Intégration kid de
         $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
-
 	if ($t["integration"]!="0") {
-		 echo "<ul>";
-                 echo "<li style=\"list-style-type: '➡';\">&nbsp;";
-
+		echo "<ul>";
+                echo "<li style=\"list-style-type: '➡';\">&nbsp;";
 		$keys = array_keys(array_column($tableau_enfants, 'base_index'), $t["integration"]);
 		if (isset($keys[0])) quickdisplayincarac($tableau_enfants[$keys[0]]);
-                    echo "</li>";
-			 echo "</ul>";
+                echo "</li>";
+		echo "</ul>";
 	}
-	// ********* Intégration parent *********
+	// Intégration parent de
         elseif (array_key_exists("0", $keys)) {
 		if (array_key_exists($keys[0], $tableau_parents)) {
 	        	echo "<ul>";
