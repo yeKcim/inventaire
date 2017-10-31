@@ -31,7 +31,7 @@ $tableau = $sth->fetchAll(PDO::FETCH_ASSOC);
 //liste des base_index affichés
 $b_i="";
 foreach ($tableau as &$t) { $b_i.="".$t["base_index"].","; }
-$b_i=substr($b_i, 0, -1); // suppression du dernier caractère
+$b_i= ($b_i=="") ? "" : substr($b_i, 0, -1); // suppression du dernier caractère
 
 //liste des journaux correspondants
 $sth = $dbh->query("SELECT historique_id, COUNT(*) as nb_entree FROM historique, base WHERE historique_id=base_index AND base_index IN ($b_i) GROUP BY historique_id ORDER BY historique_id ASC;");
@@ -41,7 +41,11 @@ $tableau_journaux = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth = $dbh->query("SELECT base_index, integration, lab_id, categorie, reference, designation, sortie FROM base WHERE integration IN ($b_i) ORDER BY base_index ASC ; ");
 $tableau_parents = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-$sth = $dbh->query("SELECT base_index, integration, lab_id, categorie, reference, designation, sortie FROM base WHERE base_index IN ($b_i) ORDER BY base_index ASC ; ");
+//liste des base_index affichés
+$b_e="";
+foreach ($tableau as &$t) { $b_e.=($t["integration"]!="0") ? $t["integration"]."," : ""; }
+$b_e= ($b_e=="") ? "" : substr($b_e, 0, -1); // suppression du dernier caractère
+$sth = $dbh->query("SELECT base_index, lab_id, categorie, reference, designation, sortie FROM base WHERE base_index IN ($b_e) ORDER BY base_index ASC ; ");
 $tableau_enfants = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 //liste des caracs correspondantes
@@ -162,10 +166,30 @@ foreach ($tableau as &$t) {
 
         echo "</span>";
 
-	// ********** Intégration **********
+	// ********** Intégration kid **********
         $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
-	if ($t["integration"]!="0") integrationdisplay(array(0 => $t["base_index"]),$tableau_enfants,"↰"); // Cette référence est intégré dans
-        elseif (array_key_exists("0", $keys)) { if (array_key_exists($keys[0], $tableau_parents)) integrationdisplay($keys,$tableau_parents,"↳"); }// Cette référence intègre différentes entrées
+
+	if ($t["integration"]!="0") {
+		 echo "<ul>";
+                 echo "<li style=\"list-style-type: '➡';\">&nbsp;";
+
+		$keys = array_keys(array_column($tableau_enfants, 'base_index'), $t["integration"]);
+		if (isset($keys[0])) quickdisplayincarac($tableau_enfants[$keys[0]]);
+                    echo "</li>";
+			 echo "</ul>";
+	}
+	// ********* Intégration parent *********
+        elseif (array_key_exists("0", $keys)) {
+		if (array_key_exists($keys[0], $tableau_parents)) {
+	        	echo "<ul>";
+	        	foreach ($keys as $k) {
+                    		echo "<li style=\"list-style-type: '⬉';\">&nbsp;";
+				quickdisplayincarac($tableau_parents[$k]);
+                    		echo "</li>";
+        		}
+        		echo "</ul>";
+		}
+	}
 	else echo "&nbsp;";
         echo "</td>";
 

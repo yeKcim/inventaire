@@ -194,32 +194,24 @@ function return_last_id($col,$table) {
     return $t[0][$col];
 }
 
-function integrationdisplay($pourleselements,$tableau,$puce) {
-	global $categories;
-	echo "<ul>";
-	foreach ($pourleselements as $k) {
-		if (array_key_exists($k, $tableau)) {
-		    echo "<li style=\"list-style-type: '".$puce."';\">&nbsp;";
-		    if ($tableau[$k]["sortie"]=="1") echo "<strike>";
-		    echo "<a href=\"info.php?i=".$tableau[$k]["base_index"]."\" title=\"#".$tableau[$k]["base_index"]."\" target=\"_blank\">";
-		    echo $tableau[$k]["lab_id"];
-		    echo "</a>";
-			if (isset($tableau[$k]["categorie"])) {
-		            $keys = array_keys(array_column($categories, 'categorie_index'), $tableau[$k]["categorie"]);
-		            if (isset($keys[0])) {
-		                    echo "&nbsp;: ";
-		                    echo "<abbr title=\"Catégorie&nbsp;: ".$categories[$keys[0]]["categorie_lettres"]." (".$categories[$keys[0]]["categorie_nom"].") \">";
-		                    echo $tableau[$k]["designation"];
-		                    echo " </abbr>";
-		            }
-		    	}
-		    else echo "&nbsp;: ".$tableau[$k]["designation"]." ";
-		    if (isset($tableau[$k]["reference"])) echo " {".$tableau[$k]["reference"]."} ";
-		    if ($tableau[$k]["sortie"]=="1") echo "</strike>";
-		    echo "</li>";
-		}
-	}
-	echo "</ul>";
+function quickdisplayincarac ($t) {
+        global $categories;
+        if ($t["sortie"]=="1") echo "<strike>";
+        echo "<a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
+        echo $t["lab_id"];
+        echo "</a>";
+        if (isset($t["categorie"])) {
+            $keys = array_keys(array_column($categories, 'categorie_index'), $t["categorie"]);
+            if (isset($keys[0])) {
+                echo "&nbsp;: ";
+                echo "<abbr title=\"Catégorie&nbsp;: ".$categories[$keys[0]]["categorie_nom"]." [".$categories[$keys[0]]["categorie_lettres"]."] \">";
+                echo $t["designation"];
+                echo " </abbr>";
+             }
+        }
+        else echo "&nbsp;: ".$t["designation"]." ";
+        if (isset($t["reference"])) echo " {".$t["reference"]."} ";
+        if ($t["sortie"]=="1") echo "</strike>";
 }
 
 
