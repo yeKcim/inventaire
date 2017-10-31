@@ -146,6 +146,7 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
         echo "<label for=\"e_detail\" style=\"vertical-align: top;\"> Détails :</label>\n";
         echo "<textarea name=\"e_detail\" rows=\"4\" cols=\"33\"></textarea><br/>";
 
+	$error_emptyinput= (!isset($error_emptyinput)) ? "" : $error_emptyinput ;
         if ($error_emptyinput!="") echo "<p class=\"error_message\">$error_emptyinput</p>";
 
         /* ########### submit ########### */

@@ -132,15 +132,17 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 
         echo "<option ";
 
-	$keys = array_keys(array_column($car_of_cat, 'carac_caracteristique_id'), $c["carac"]); $key=$keys[0];
-	if (isset($keys[0])) echo "selected=\"selected\" ";
+	$keys = array_keys(array_column($car_of_cat, 'carac_caracteristique_id'), $c["carac"]);
+	if (array_key_exists("0",$keys)) echo "selected=\"selected\" ";
         //if (in_array($c["carac"], $car_of_cat)) echo "selected=\"selected\" ";
 
 
         echo "value=\"";
 
         /* ####### Label ####### */
-        echo "<label for='carac[".$c[0]."]'><abbr title='".str_replace("'", "’", $c["nom_carac"])."' >".str_replace("'", "’", $c["symbole_carac"])."</abbr> "; // TODO : ne supporte pas les apostrophe dans $c["nom_carac"] ! voir exemple avec « longueur d’onde »
+        echo "<label for='carac["; if (array_key_exists("0", $c)) echo $c[0]; echo "]'>";
+	echo "<abbr title='".str_replace("'", "’", $c["nom_carac"])."' >".str_replace("'", "’", $c["symbole_carac"])."</abbr> "; // TODO : ne supporte pas les apostrophe dans $c["nom_carac"] ! voir exemple avec « longueur d’onde »
+
         if ( ($c["unite_carac"]!="bool")&&($c["unite_carac"]!="") ) echo "(".str_replace("'", "’", $c["unite_carac"]).")"; // Si ce n’est pas un booléen on affiche l’unité
         echo " : </label>\n";
 

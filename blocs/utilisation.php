@@ -231,7 +231,6 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
     ╩╝╚╝╩ ╚═╝╚═╝╩╚═╩ ╩ ╩ ╩╚═╝╝╚╝  */
     echo "<fieldset><legend>Intégration (composant intégré à un autre ou faisant parti d’un lot)</legend>";
 
-	$keys = array_keys(array_column($lab_ids, 'base_index'), $data[0]["integration"]); $key=$keys[0];
         echo "<label for=\"integration\">Intégré dans :</label>\n";
 
         echo "<select name=\"integration\" id=\"integration\" >";
