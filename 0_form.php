@@ -33,7 +33,7 @@ $IOT_CMD= ($IOT!="") ? "AND sortie IN ($IOT)" : "AND sortie IN (0,2)" ;
 #########################################################################
 // $categories in tables_sql_commun.php
 selecteur_chosen("CAT", $categories, "Toutes catégories", "categorie_index", "categorie_nom", "categorie_lettres", "display()");
-$CAT_CMD= ($CAT!="") ? "AND categorie_index=$CAT" : "" ;
+$CAT_CMD= ($CAT!="") ? "AND categorie_index IN ($CAT)" : "" ;
 
 #########################################################################
 #                        TYC : type de contrat                          #
