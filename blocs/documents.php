@@ -14,13 +14,10 @@
 
 $max_size=file_upload_max_size();
 /* HOW-TO:
-To modify $max_size edit /etc/php/7.1/apache2/php.ini:
-	; Maximum allowed size for uploaded files.
-	upload_max_filesize = 40M
-	; Must be greater than or equal to upload_max_filesize
-	post_max_size = 40M
+To modify $max_size edit/add /etc/php/7.1/apache2/conf.d/00-user.ini:
+	upload_max_filesize = 15M
+	post_max_size = 15M
 sudo service apache2 restart
-
 */
 
 /* ########### POST ########### */
