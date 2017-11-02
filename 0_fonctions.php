@@ -61,6 +61,31 @@ function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0",$com
     echo "</select> ";
 }
 
+
+function selecteur_chosen($nom, $table, $intitule, $A="0", $B="1", $complement="0",$complement_display="") {
+    global $$nom;
+    echo "<select name=\"$nom\" onchange=\"submit();\" data-placeholder=\"Choose…\" class=\"chosen-select\" tabindex=\"0\">";
+    echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>";
+    foreach ($table as &$l){
+        $selected= ($$nom==$l[$A]) ? "selected > $nom =" : " > " ;
+        $complement_info= ( ($complement!=0)||(array_key_exists($complement, $l)) ) ? "$l[$complement]" : "";
+        $c= ($complement_display!="") ? "($complement_info)" : "$complement_info";
+        echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
+    }
+    echo "</select> ";
+    echo "<script type=\"text/javascript\">
+        var config = {
+          '.chosen-select'           : {no_results_text:'Aucun résultat pour :', width:\"250px\"},
+        }
+        for (var selector in config) {
+          $(selector).chosen(config[selector]);
+        }
+      </script>";
+
+}
+
+
+
 function option_selecteur($select, $table, $A="0", $B="1", $complement="0",$complement_display="") {
     foreach ($table as &$l){
         $selected= ($select==$l[$A]) ? "selected >" : " >" ;
