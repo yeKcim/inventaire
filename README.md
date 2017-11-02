@@ -11,9 +11,13 @@ Les parties administrative et technique sont clairement différenciées pour per
 
 ## Aperçu
 
-![Preview index](./README_preview_index.png)
-![Preview add](./README_preview_add.png)
-![Preview informations](./README_preview_informations.png)
+![Preview listing](./README_screenshot_listing.png)
+![Preview add](./README_screenshot_add.png)
+![Preview carac](./README_screenshot_carac.png)
+![Preview cat](./README_screenshot_cat.png)
+![Preview detail](./README_screenshot_detail.png)
+![Preview docs](./README_screenshot_docs.png)
+
 
 ## TODO
 
