@@ -6,9 +6,11 @@
 # Taille de fichiers
 Par défaut, la taille maximale des fichiers envoyés en POST est de 2 Mo. Pour modifier cette valeur :
 
-/etc/php5/apache2/conf.d/00-user.ini :
-    upload_max_filesize = 10M
-    post_max_size = 10M
+/etc/php/7.1/apache2/conf.d/00-user.ini :
+```
+upload_max_filesize = 10M
+post_max_size = 10M
+```
 
 ## Pour information
 
