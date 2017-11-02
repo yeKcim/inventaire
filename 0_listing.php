@@ -331,6 +331,7 @@ foreach ($tableau as &$t) {
 	if (array_key_exists("base_index", $t)) {
 		$keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]);
 		if (array_key_exists("0",$keys)) echo "<sup>".$tableau_journaux[$keys[0]]["nb_entree"]."</sup> <img src=\"mime-icons/txt.png\" />" ;
+		else echo "-" ;
 	}
 	else echo "-" ;
 
