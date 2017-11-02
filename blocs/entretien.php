@@ -101,7 +101,7 @@ if ($del_e_confirm=="Confirmer la suppression") {
 */
 // entretiens
 $sth = $dbh->query("SELECT e_index, e_frequence, e_lastdate, e_designation, e_detail, e_effectuerpar FROM entretien WHERE e_id=$i ORDER BY e_designation ASC ;");
-$entretiens = $sth->fetchAll(PDO::FETCH_ASSOC);
+$entretiens = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
 
 /*

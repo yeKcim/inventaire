@@ -31,7 +31,7 @@ if ($add_historique=="Ajouter") {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
     $sth = $dbh->query("SELECT historique_index FROM historique WHERE historique_date=\"".$date_info."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";");
-    $query_do_i_insert_histo = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $query_do_i_insert_histo = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
     if (!isset($query_do_i_insert_histo[0]) ) {
 	$sth = $dbh->query("INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".$date_info."\", \"".$histo."\", \"".$i."\");");
@@ -55,7 +55,7 @@ if ($del_h_confirm=="Confirmer la suppression") {
 */
 // historique
 $sth = $dbh->query("SELECT * FROM historique WHERE historique_id=$i ORDER BY historique_date DESC, historique_index DESC ;");
-$historique = $sth->fetchAll(PDO::FETCH_ASSOC);
+$historique = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
 
 

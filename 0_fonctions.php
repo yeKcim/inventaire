@@ -197,11 +197,11 @@ function new_lab_id($categorie) {
     global $dbh;
     // quelle est l’abbréviation de la catégorie ?
     $sth = $dbh->query("SELECT categorie_lettres FROM categorie WHERE categorie_index='".$categorie."' ;");
-    $tabbr = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $tabbr = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
     $abbr=$tabbr[0]["categorie_lettres"];
     // recherche du labid max
     $sth = $dbh->query("SELECT lab_id FROM base WHERE categorie='".$categorie."' ORDER BY lab_id ASC ;");
-    $allid = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $allid = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
     // on supprime les lettres des lab_id, on met les chiffres dans un tableau
     $allidnum=array();
     foreach ($allid as $a) array_push ( $allidnum, preg_replace('`[^0-9]`', '', $a["lab_id"]) );
@@ -215,7 +215,7 @@ function new_lab_id($categorie) {
 function return_last_id($col,$table) {
     global $dbh;
     $sth = $dbh->query("SELECT $col FROM $table ORDER BY $col DESC LIMIT 1 ;");
-    $t = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $t = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
     return $t[0][$col];
 }
 

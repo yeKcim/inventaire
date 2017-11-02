@@ -47,7 +47,7 @@ $TYC_CMD= ($TYC!="") ? "AND contrat_type_index=$TYC" : "" ;
 #########################################################################
 $LIM_CON= ($TYC!="") ? "AND contrat_type=\"$TYC\" " : "" ; // si type de contrat sélectionné, formulaire contrats se limite
 $sth = $dbh->query("SELECT contrat_index, contrat_nom, contrat_type FROM contrat, contrat_type WHERE contrat_index!=0 AND contrat_type_index!=0 AND contrat_type=contrat_type.contrat_type_index $LIM_CON ORDER BY contrat_nom ASC ;");
-$contrats = $sth->fetchAll(PDO::FETCH_ASSOC);
+$contrats = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 selecteur_chosen("CON", $contrats, "Tous contrats", "contrat_index", "contrat_nom");
 $CON_CMD= ($CON!="") ? "AND contrat_index=$CON" : "" ;
 
@@ -55,7 +55,7 @@ $CON_CMD= ($CON!="") ? "AND contrat_index=$CON" : "" ;
 #                      RES : Responsable achat                          #
 #########################################################################
 $sth = $dbh->query("SELECT DISTINCT (utilisateur_index) responsable_achat, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur, base WHERE responsable_achat=utilisateur_index AND utilisateur_index!=0 ORDER BY utilisateur_nom, utilisateur_prenom ASC ;");
-$responsables = $sth->fetchAll(PDO::FETCH_ASSOC);
+$responsables = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 selecteur_chosen("RES", $responsables, "Tous responsables achat", "responsable_achat", "utilisateur_nom", "utilisateur_prenom");
 $RES_CMD= ($RES!="") ? "AND responsable_achat=$RES" : "" ;
 
@@ -63,7 +63,7 @@ $RES_CMD= ($RES!="") ? "AND responsable_achat=$RES" : "" ;
 #                         UTL : Utilisateur                             #
 #########################################################################
 $sth = $dbh->query("SELECT DISTINCT(utilisateur_index) utilisateur_index, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur, base WHERE utilisateur=utilisateur_index AND utilisateur_index!=0 ORDER BY utilisateur_nom ASC ;");
-$utilisateurs = $sth->fetchAll(PDO::FETCH_ASSOC);
+$utilisateurs = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 selecteur_chosen("UTL", $utilisateurs, "Tous les utilisateurs", "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
 $UTL_CMD= ($UTL!="") ? "AND utilisateur=$UTL" : "" ;
 

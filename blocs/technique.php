@@ -21,23 +21,23 @@ $message="";
 */
 // tags
 $sth = $dbh->query("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
-$tags = $sth->fetchAll(PDO::FETCH_ASSOC);
+$tags = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
 if (!isset($fieldset_tags)) {
 	// tags_i les tags de $i
 	$sth = $dbh->query("SELECT tags_index FROM tags WHERE tags_id=$i ;");
-	$tags = $sth->fetchAll(PDO::FETCH_ASSOC);
+	$tags = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 }
 
 if (!isset($fieldset_compatibilite)) {
 	// compatibilité de $i
 	$sth = $dbh->query("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
-	$compatibilite = $sth->fetchAll(PDO::FETCH_ASSOC);
+	$compatibilite = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 }
 
 // tous les lab_id classé par catégorie
 $sth = $dbh->query("SELECT base_index, lab_id, categorie, categorie_lettres, categorie_nom FROM base, categorie WHERE categorie=categorie_index ORDER BY categorie_nom ASC ;");
-$labids_cat = $sth->fetchAll(PDO::FETCH_ASSOC);
+$labids_cat = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
 
 /*
@@ -71,7 +71,7 @@ if ( isset($_POST["technique_valid"]) ) {
     }
     // refaire compatibilité de $i
     $sth = $dbh->query("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
-    $compatibilite_query = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $compatibilite_query = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
     $compatibilite = array();
     foreach ($compatibilite_query as $c) {
     	$compatibilite[]= ($l["compatib_id1"]==$i) ? $l["compatib_id2"] : $l["compatib_id1"] ;
@@ -106,7 +106,7 @@ if ( isset($_POST["technique_valid"]) ) {
 	        $allnewtags_index="";
         	// tagnew_i les tags de $i
 		$sth = $dbh->query("SELECT tags_list_index FROM tags_list WHERE tags_list_nom IN ($allnewtagscomma) ;");
-		$table_tagnew_i = $sth->fetchAll(PDO::FETCH_ASSOC);
+		$table_tagnew_i = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 		foreach ($table_tagnew_i as $nt) $allnewtags_index.= "('".$nt["tags_list_index"]."','$i')," ;
 	        $allnewtags_index=substr($allnewtags_index, 0, -1); // suppression du dernier caractère
 		$sth = $dbh->query("INSERT INTO tags (tags_index, tags_id) VALUES $allnewtags_index ;");
@@ -126,11 +126,11 @@ if ( isset($_POST["technique_valid"]) ) {
     // refaire tags et tags de $i avant affichage
     // $tags_list
     $sth = $dbh->query("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
-    $tags = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $tags = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
     // tags_i les tags de $i
     $sth = $dbh->query("SELECT tags_index FROM tags WHERE tags_id=$i ;");
-    $tags_i = $sth->fetchAll(PDO::FETCH_ASSOC);
+    $tags_i = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
 
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔╦╗╔═╗╦═╗╔═╗ ╦ ╦╔═╗

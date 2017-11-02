@@ -21,13 +21,13 @@ $message="";
 
 // tutelles
 $sth = $dbh->query("SELECT * FROM tutelle WHERE tutelle_index!=0 ORDER BY tutelle_nom ASC ;");
-$tutelles = $sth->fetchAll(PDO::FETCH_ASSOC);
+$tutelles = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 // vendeur
 $sth = $dbh->query("SELECT * FROM vendeur WHERE vendeur_index!=0 ORDER BY vendeur_nom ASC ;");
-$vendeurs = $sth->fetchAll(PDO::FETCH_ASSOC);
+$vendeurs = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 // contrats
 $sth = $dbh->query("SELECT DISTINCT contrat_index, contrat_nom, contrat_type FROM contrat, contrat_type WHERE contrat_type!=0 AND contrat_index!=0 ORDER BY contrat_nom ASC ;");
-$contrats = $sth->fetchAll(PDO::FETCH_ASSOC);
+$contrats = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗
