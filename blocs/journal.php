@@ -76,7 +76,7 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
 
     echo "<fieldset><legend>Nouvelle information</legend>";
 
-        echo "<label for=\"date_info\">Date <abbr title=\"JJ/MM/AAAA\"><strong>ⓘ</strong></abbr>:</label>\n";
+        echo "<label for=\"date_info\">Date <abbr title=\"si aucun calendrier n’aide à la saisie : YYYY-MM-DD\"><strong>ⓘ</strong></abbr> :</label>\n";
         echo "<input value=\"".date("Y-m-d")."\" name=\"date_info\" type=\"date\" id=\"date_info\"/><br/>";
 
         echo "<label for=\"histo\" style=\"vertical-align: top;\"> Information :</label>\n";

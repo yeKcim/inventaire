@@ -242,7 +242,7 @@ else {
         echo "&nbsp; &nbsp;↳ Cochez les entretiens que vous souhaitez renseigner.<br/>";
 
         /* ########### Le ########### */
-        echo "<label for=\"e_effectuele\" style=\"vertical-align: top;\"> Le :</label>\n";
+        echo "<label for=\"e_effectuele\" style=\"vertical-align: top;\"> Le <abbr title=\"si aucun calendrier n’aide à la saisie : YYYY-MM-DD\"><strong>ⓘ</strong></abbr> :</label>\n";
         echo "<input value=\"".date("Y-m-d")."\" name=\"e_effectuele\" type=\"date\" id=\"e_effectuele\"><br/>";
 
         /* ########### Par ########### */

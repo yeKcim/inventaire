@@ -266,11 +266,11 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     echo "<fieldset><legend>Dates</legend>";
 
         /* ########### date_achat ########### */
-        echo "<label for=\"achat\">Achat <abbr title=\"si jour ou mois inconnu → 01\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<label for=\"achat\">Achat <abbr title=\"si aucun calendrier n’aide à la saisie : YYYY-MM-DD ; si jour ou mois inconnu → 01\"><strong>ⓘ</strong></abbr> :</label>\n";
 	echo "<input value=\"";		if ($data[0]["date_achat"]!="0000-00-00") echo $data[0]["date_achat"];		echo "\" name=\"date_achat\" type=\"date\" id=\"achat\"/><br/>";
 
         /* ########### garantie ########### */
-        echo "<label for=\"garantie\">Fin de garantie <abbr title=\"si jour ou mois inconnu → 01\"><strong>ⓘ</strong></abbr> :</label>\n";
+        echo "<label for=\"garantie\">Fin de garantie <abbr title=\"si aucun calendrier n’aide à la saisie : YYYY-MM-DD ; si jour ou mois inconnu → 01\"><strong>ⓘ</strong></abbr> :</label>\n";
         echo "<input value=\"";		if ($data[0]["garantie"]!="0000-00-00") echo $data[0]["garantie"];		echo "\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
 
     echo "</fieldset>";
