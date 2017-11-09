@@ -241,6 +241,33 @@ function quickdisplayincarac ($t) {
 
 
 
+function quickdisplayincarac_b ($t) {
+        global $categories;
+	$txt="";
+        if ($t["sortie"]=="1") $txt.="<strike>";
+        $txt.="<a href='info.php?i=".$t["base_index"]."' title='#".$t["base_index"]."' target='_blank'>";
+        $txt.=$t["lab_id"];
+        $txt.="</a>";
+        if (isset($t["categorie"])) {
+            $keys = array_keys(array_column($categories, 'categorie_index'), $t["categorie"]);
+            if (isset($keys[0])) {
+                $txt.="&nbsp;: ";
+                $txt.="<abbr title='Catégorie&nbsp;: ".$categories[$keys[0]]["categorie_nom"]." [".$categories[$keys[0]]["categorie_lettres"]."] '>";
+                $txt.=$t["designation"];
+                $txt.=" </abbr>";
+             }
+        }
+        else $txt.="&nbsp;: ".$t["designation"]." ";
+        if (isset($t["reference"])) $txt.=" {".$t["reference"]."} ";
+        if ($t["sortie"]=="1") $txt.="</strike>";
+	return $txt;
+}
+
+
+
+
+
+
 $message_error_add="<p class=\"error_message\" id=\"disappear_delay\">Une erreur inconnue est survenue. L’entrée n’a pas été ajoutée.</p>";
 $message_success_add="<p class=\"success_message\" id=\"disappear_delay\">L’entrée a été ajoutée à la base de donnée.</p>";
 

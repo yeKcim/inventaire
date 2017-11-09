@@ -20,7 +20,7 @@ $message="";
 */
 
 // tous les lab_id (utilisé uniquement pour intégration, TODO à supprimer)
-$sth = $dbh->query("SELECT base_index, lab_id FROM base WHERE base_index!=\"$i\" ORDER BY lab_id ASC ;");
+$sth = $dbh->query("SELECT base_index, lab_id, categorie, reference, designation, sortie FROM base WHERE base_index!=\"$i\" ORDER BY lab_id ASC ;");
 $lab_ids = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
 // raison_sortie
@@ -89,6 +89,24 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
     $modif_result = $dbh->query("UPDATE base SET utilisateur=\"".$utilisateur."\", localisation=\"".$localisation."\", sortie=\"".$sortie."\", integration=\"".$integration."\", raison_sortie=\"".$raison_sortie."\" $change_date_localisation WHERE base.base_index = $i;");
     $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
 
+
+    // Si l’integration change, ajout d’une entrée autotomatiquement dans le journal
+    if ($data[0]["integration"]!=$integration) {
+        $add_journal= "INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".date("y.m.d")."\", \"<!--auto-->" ;
+
+	$add_journal.= ($integration=="0") ? "Fin de l’intégration à :<br/> → " : "Intégration à :<br/> → " ;
+
+        $keys = ($integration=="0") ? array_keys(array_column($lab_ids, 'base_index'), $data[0]["integration"]) : array_keys(array_column($lab_ids, 'base_index'), $integration) ;
+        if (isset($keys[0])) $txt_in=quickdisplayincarac_b($lab_ids[$keys[0]]);
+	else $txt_in = ($integration=="0") ? "<a href='info.php?i=".$data[0]["integration"]."' target='_blank'>#".$data[0]["integration"]."</a>" : "<a href='info.php?i=".$integration."' target='_blank'>#".$integration."</a>";
+
+	$add_journal.=$txt_in."\", \"".$i."\");" ;
+        $sth = $dbh->query("$add_journal");
+        //$message. = (!isset($sth))? "<p class=\"error_message\" id=\"disappear_delay\">Une erreur inconnue est survenue. La modification n’a pas été ajoutée automatiquement au journal.</p>" : "<p class=\"success_message\" id=\"disappear_delay\">La modification a été auto$
+
+
+    }
+
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data[0]["utilisateur"]=$utilisateur;
     $data[0]["localisation"]=$localisation;
@@ -111,7 +129,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 
     echo "<h1>Utilisation</h1>";
 
-    echo $message;
+    echo $message ;
 
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
@@ -184,7 +202,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
     echo "</fieldset>";
 
 /*  ╦╔╗╔╦  ╦╔═╗╔╗╔╦╗╔═╗╦╦═╗╔═╗
-    ║║║║╚╗╔╝║╣ ║║║║ ╠═╣║╠╦╝║╣ 
+    ║║║║╚╗╔╝║╣ ║║║║ ╠═╣║╠╦╝║╣
     ╩╝╚╝ ╚╝ ╚═╝╝╚╝╩ ╩ ╩╩╩╚═╚═╝  */
     echo "<fieldset><legend>Inventaire</legend>";
 
@@ -234,7 +252,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo "<label for=\"integration\">Intégré dans :</label>\n";
 
         echo "<select name=\"integration\" id=\"integration\" >";
-        echo "<option value=\"0\" "; if ($data[0]["integration"]=="0") echo "selected"; echo ">— Aucune intégration spécifiée —</option>"; 
+        echo "<option value=\"0\" "; if ($data[0]["integration"]=="0") echo "selected"; echo ">— Aucune intégration spécifiée —</option>";
         option_selecteur($data[0]["integration"], $lab_ids, "base_index", "lab_id");
         echo "</select>";
 
