@@ -10,7 +10,7 @@
 
 
 /* ########### POST ########### */
-$arr = array("add_historique","del_h_confirm","h");
+$arr = array("add_historique","del_h_confirm","h","hide_auto");
 foreach ($arr as &$value) {
     $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
 }
@@ -54,7 +54,9 @@ if ($del_h_confirm=="Confirmer la suppression") {
 ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
 */
 // historique
-$sth = $dbh->query("SELECT * FROM historique WHERE historique_id=$i ORDER BY historique_date DESC, historique_index DESC ;");
+$hide_auto_cmd = ($hide_auto=="1") ? "AND `historique_texte` NOT LIKE '%<!--auto-->%'" : "" ;
+
+$sth = $dbh->query("SELECT * FROM historique WHERE historique_id=$i $hide_auto_cmd ORDER BY historique_date DESC, historique_index DESC ;");
 $historique = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
 
@@ -88,14 +90,23 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
 
     echo "</fieldset>";
 
-
     echo "<fieldset><legend>Historique - Remarques</legend>";
+
+    // bouton cacher/afficer les logs auto
+    echo "<p style=\"text-align:center\">";
+    echo "<select name=\"hide_auto\" onchange=\"submit();\" style=\"text-align:center;\">";
+    echo "<option value=\"1\"" ; if ($hide_auto=="1") echo "selected"; echo ">Cacher les entrées auto</option>";
+    echo "<option value=\"0\"" ; if ($hide_auto!="1") echo "selected"; echo ">Toutes les entrées :</option>";
+    echo "</select> ";
+    echo "</p>";
 
 
 if ( empty($historique[0]) ) echo "Aucune intervention spécifiée.";
 else {
+
     echo "<table style=\"border:none;\">";
     foreach ($historique as $h) {
+
         echo "<tr>";
         echo "<td style=\"padding-right: 10px; vertical-align: top;\"><strong>".dateformat($h["historique_date"],"fr")."</strong></td>";
         echo "<td>".$h["historique_texte"]."</td>";
@@ -104,6 +115,7 @@ else {
         else echo "&nbsp;";
         echo "</td>";
         echo "</tr>";
+
     }
     echo "</table>";
 
