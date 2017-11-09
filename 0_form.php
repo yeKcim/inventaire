@@ -12,7 +12,7 @@ echo "<form method=\"get\" action=\"?\">";
 #########################################################################
 //selecteur_chosen("IOT", $iot, "— Répertorié (sauf sorti déf.) —", "iot_index", "iot_nom");
 $iot=array();
-$iot[0]=array("iot_index"=> "0,2", "iot_nom" => "— Répertorié (sauf sorti déf.) —");
+$iot[0]=array("iot_index"=> "0,2", "iot_nom" => "— Inventaire —");
 $iot[1]=array("iot_index"=> "0", "iot_nom" => "Uniquement non sorti");
 $iot[2]=array("iot_index"=> "2", "iot_nom" => "Uniquement sorti temp (prêt, réparation,…)");
 $iot[3]=array("iot_index"=> "1", "iot_nom" => "Uniquement sorti définitivement");
