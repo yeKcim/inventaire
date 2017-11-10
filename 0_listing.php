@@ -228,7 +228,7 @@ foreach ($tableau as &$t) {
 
         $m=str_replace('/', "_", $t["marque_nom"]);
         $r=str_replace('/', "_", $t["reference"]);
-        $dir="files/".$m."-".$r;
+        $dir="files/$database/".$m."-".$r;
 
         if (file_exists("$racine$dir")) {
             if ( ! is_dir_empty("$racine$dir")) {
@@ -298,14 +298,14 @@ foreach ($tableau as &$t) {
         // ********** Fichiers **********
         echo "<td>";
 
-        $dir="files/".$t["base_index"]."/";
+        $dir="files/$database/".$t["base_index"]."/";
         if (file_exists("$racine$dir")) {
             if ( ! is_dir_empty("$racine$dir")) {
                 $files = scandir("$racine$dir");
                 if ($files != FALSE) {
                     foreach ($files as $f) {
                         if (($f!=".")&&($f!="..")) {
-                            echo "<a href=\"files/".$t["base_index"]."/".$f."\" target=\"_blank\" title=\"".$f."\">";
+                            echo "<a href=\"".$dir."/".$f."\" target=\"_blank\" title=\"".$f."\">";
                             icone($f);
                             echo "</a> ";}
                     }

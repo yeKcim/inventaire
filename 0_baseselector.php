@@ -25,7 +25,7 @@ echo "<select name=\"BASE\" onchange=\"submit();\" data-placeholder=\"Choose…\
   }
 echo "</select> ";
 
-if ($i!="") echo "<input id=\"i\" name=\"i\" type=\"hidden\" value=\"$i\">";
+if (isset($i)) { if ($i!="") echo "<input id=\"i\" name=\"i\" type=\"hidden\" value=\"$i\">"; }
 
 
 echo "<a href=\"\" title=\"Ajouter une nouvelle base d’inventaire\" target=\"_blank\">+</a>";

@@ -1,4 +1,5 @@
 <?php
+
 /*
 ██████╗  ██████╗  ██████╗██╗   ██╗███╗   ███╗███████╗███╗   ██╗████████╗███████╗
 ██╔══██╗██╔═══██╗██╔════╝██║   ██║████╗ ████║██╔════╝████╗  ██║╚══██╔══╝██╔════╝
@@ -88,9 +89,9 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 					$keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
 					$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
 		                        $r=str_replace('/', "_", $data[0]["reference"]);
-					$dossier=$racine."files/".$m."-".$r;
+					$dossier=$dossierdesfichiers.$database."/".$m."-".$r;
 		}
-                else $dossier=$racine."files/$i";
+                else $dossier=$dossierdesfichiers.$database."/".$i;
 
                 move_uploaded_file($file_tmp,"$dossier/".$file_name);
                 //echo "Fichier envoyé avec succès.<br/>";
@@ -109,14 +110,14 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     ╠╣ ║║  ╠═╣║║╣ ╠╦╝╚═╗
     ╚  ╩╚═╝╩ ╩╩╚═╝╩╚═╚═╝  */
     echo "<fieldset><legend>Fichiers de cette entrée</legend>";
-        displayDir($i, "files/$i/", $del=$write);
+        displayDir($database, $i, "$dossierdesfichiers$database/$i/", $del=$write);
     echo "</fieldset>";
 	$keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
     if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
         echo "<fieldset><legend>Fichiers globaux liés à la référence constructeur</legend>";
         	$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
 		$r=str_replace('/', "_", $data[0]["reference"]);
-            displayDir($i, "files/".$m."-".$r."/", $del=$write);
+            displayDir($database, $i, "".$dossierdesfichiers."".$database."/".$m."-".$r."/", $del=$write);
         echo "</fieldset>";
     }
 
@@ -132,7 +133,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     else {
         foreach ($references_similaires as $rs) {
             echo "<a href=\"info.php?i=".$rs["base_index"]."\" target=\"_blank\">#".$rs["base_index"]." (".$rs["lab_id"].")</a>&nbsp;: ";
-            displayDir($i, "files/".$rs["base_index"]."/");
+            displayDir($database, $i, "$dossierdesfichiers$database/".$rs["base_index"]."/");
             echo "<br/>";
         }
     }
