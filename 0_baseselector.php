@@ -7,7 +7,7 @@ $nb_base=0;
 $list_bases=array();
 while( ( $db = $dbs->fetchColumn( 0 ) ) !== false )
 {     if (strpos($db, $prefix) !== false ) {
-        $list_bases[]="<option value=\"".str_replace($prefix, "", $db)."\">".str_replace($prefix, "", $db)."</option>";
+        $list_bases[]="<option value=\"".str_replace($prefix, "", $db)."\">".strtoupper( str_replace($prefix, "", $db) )."</option>";
         $first_base = ($nb_base==0) ? str_replace($prefix, "", $db) : $first_base ;
 	$nb_base=$nb_base+1;
       }
