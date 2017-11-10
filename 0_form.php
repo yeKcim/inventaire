@@ -23,7 +23,6 @@ foreach ($iot as $i) {
 	echo ">".$i["iot_nom"]."</option>";
 }
 echo "</select> ";
-echo "<br/>";
 
 //$IOT= ($IOT=="") ? "1,2" : $IOT ;
 $IOT_CMD= ($IOT!="") ? "AND sortie IN ($IOT)" : "AND sortie IN (0,2)" ;
@@ -34,6 +33,20 @@ $IOT_CMD= ($IOT!="") ? "AND sortie IN ($IOT)" : "AND sortie IN (0,2)" ;
 // $categories in tables_sql_commun.php
 selecteur_chosen("CAT", $categories, "Toutes catégories", "categorie_index", "categorie_nom", "categorie_lettres", "display()");
 $CAT_CMD= ($CAT!="") ? "AND categorie_index IN ($CAT)" : "" ;
+
+
+#########################################################################
+#                           SEA : Recherche                             #
+#########################################################################
+echo " ";
+echo "  <input value=\"$SEA_textbox\" name=\"SEA\" type=\"text\" onFocus=\"if (this.value=='$SEA_textbox') {this.value=''}\">
+            <input value=\"Chercher\" type=\"submit\">";
+$SEA_CMD= ($SEA!="") ? "AND (lab_id LIKE '%$SEA%' OR categorie LIKE '%$SEA%' OR reference LIKE '%$SEA%' OR designation LIKE '%$SEA%' OR marque_nom LIKE '%$SEA%' OR vendeur_nom LIKE '%$SEA%' OR serial_number LIKE '%$SEA%' OR num_inventaire LIKE '%$SEA%' OR bon_commande LIKE '%$SEA%')" : "";
+
+
+echo " &nbsp; <a href=\"?BASE=".$database."\" title=\"RESET\">↺</a>";
+
+echo "<br/>";
 
 #########################################################################
 #                        TYC : type de contrat                          #
@@ -66,14 +79,6 @@ $sth = $dbh->query("SELECT DISTINCT(utilisateur_index) utilisateur_index, utilis
 $utilisateurs = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 selecteur_chosen("UTL", $utilisateurs, "Tous les utilisateurs", "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
 $UTL_CMD= ($UTL!="") ? "AND utilisateur=$UTL" : "" ;
-
-#########################################################################
-#                           SEA : Recherche                             #
-#########################################################################
-echo " ";
-echo "  <input value=\"$SEA_textbox\" name=\"SEA\" type=\"text\" onFocus=\"if (this.value=='$SEA_textbox') {this.value=''}\">
-	    <input value=\"Chercher\" type=\"submit\">";
-$SEA_CMD= ($SEA!="") ? "AND (lab_id LIKE '%$SEA%' OR categorie LIKE '%$SEA%' OR reference LIKE '%$SEA%' OR designation LIKE '%$SEA%' OR marque_nom LIKE '%$SEA%' OR vendeur_nom LIKE '%$SEA%' OR serial_number LIKE '%$SEA%' OR num_inventaire LIKE '%$SEA%' OR bon_commande LIKE '%$SEA%')" : "";
 
 // TODO tags
 
