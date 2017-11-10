@@ -117,7 +117,7 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
 
-    if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
+    if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=".$i."".$quick."\">";
 
 /*  ╔═╗╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗╦═╗╦╔═╗╔╦╗╦╔═╗ ╦ ╦╔═╗╔═╗
     ║  ╠═╣╠╦╝╠═╣║   ║ ║╣ ╠╦╝║╚═╗ ║ ║║═╬╗║ ║║╣ ╚═╗
@@ -195,7 +195,7 @@ echo "</fieldset>";
 
 
 
-    if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
+    if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=".$i."".$quick."\">";
 
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗
     ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣╠╦╝╠═╣║

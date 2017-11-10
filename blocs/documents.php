@@ -54,7 +54,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 
         /* ########### Form ########### */
         $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
-        if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\" enctype=\"multipart/form-data\">";
+        if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=".$i."".$quick."\" enctype=\"multipart/form-data\">";
 
         echo "<input value=\"".$data[0]["base_index"]."\" name=\"i\" type=\"hidden\">\n";
         /* echo "<form action=\"$racine$dir\" class=\"dropzone\"></form>";*/

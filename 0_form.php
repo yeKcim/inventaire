@@ -78,6 +78,9 @@ $SEA_CMD= ($SEA!="") ? "AND (lab_id LIKE '%$SEA%' OR categorie LIKE '%$SEA%' OR 
 // TODO tags
 
 echo "<br/><br/>";
+
+echo "<input id=\"BASE\" name=\"BASE\" type=\"hidden\" value=\"$database\">";
+
 echo "</form>";
 
 ?>

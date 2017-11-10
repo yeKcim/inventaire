@@ -119,7 +119,7 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
     echo $message;
 
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
-    if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
+    if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=".$i."".$quick."\">";
 
 
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦    ╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗╦╔═╗╔╗╔
@@ -230,7 +230,7 @@ else {
 
             // ***** La suppression *****
             echo "<td style=\"text-align:right;\">";
-            if ($write) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&e=".$e["e_index"]."".$quick."',width:280,height:110})\" title=\"cet entretien n’est plus nécessaire\">×</span>";
+            if ($write) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&e=".$e["e_index"]."".$quick."',width:280,height:110})\" title=\"cet entretien n’est plus nécessaire\">×</span>";
             else echo "&nbsp;";
             echo "</td>";
 

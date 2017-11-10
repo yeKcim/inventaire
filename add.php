@@ -1,6 +1,8 @@
 <?php
 $titre="Ajouter une entrée";
 require_once("./0_connect.php");
+if ($database=="") require_once("./0_baseselector.php");
+require_once("./0_connect_db.php");
 require_once("./0_tables_sql_commun.php");
 require_once("./0_head.php");
 ?>
@@ -188,7 +190,7 @@ if ( isset($_POST["add_valid"]) ) {
             $success.="<p class=\"success_message\">";
             $success.="L’entrée a été ajoutée à la base de donnée.<br/>";
             $success.="Vous pouvez directement ajouter une nouvelle entrée<br/>";
-            $success.="ou <a href=\"info.php?i=$i\" target=\"_blank\"><strong>→ Compléter les informations de ".$data["lab_id"]." #$i</strong></a>";
+            $success.="ou <a href=\"info.php?BASE=$database&i=$i\" target=\"_blank\"><strong>→ Compléter les informations de ".$data["lab_id"]." #$i</strong></a>";
             $success.="</p>";
 
             $data=array(

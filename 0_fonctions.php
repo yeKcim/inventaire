@@ -146,7 +146,7 @@ function displayDir($i, $dir, $del=FALSE) {
                     icone($f);
                     echo "<a href=\"$dir$f\" target=\"_blank\">$f</a>";
                     echo " (".formatBytes(filesize("$dir$f"),"0")."o)";
-                    if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&f=".$racine."".$dir."".$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";
+                    if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&f=".$racine."".$dir."".$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";
                     echo"</li>";
                 }
             }
@@ -222,7 +222,7 @@ function return_last_id($col,$table) {
 function quickdisplayincarac ($t) {
         global $categories;
         if ($t["sortie"]=="1") echo "<strike>";
-        echo "<a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
+        echo "<a href=\"info.php?BASE=$database&i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
         echo $t["lab_id"];
         echo "</a>";
         if (isset($t["categorie"])) {
@@ -245,7 +245,7 @@ function quickdisplayincarac_b ($t) {
         global $categories;
 	$txt="";
         if ($t["sortie"]=="1") $txt.="<strike>";
-        $txt.="<a href='info.php?i=".$t["base_index"]."' title='#".$t["base_index"]."' target='_blank'>";
+        $txt.="<a href='info.php?BASE=$database&i=".$t["base_index"]."' title='#".$t["base_index"]."' target='_blank'>";
         $txt.=$t["lab_id"];
         $txt.="</a>";
         if (isset($t["categorie"])) {

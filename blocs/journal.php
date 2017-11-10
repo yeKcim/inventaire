@@ -74,7 +74,7 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
     echo "<h1>Journal</h1>";
 
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
-    if ($write) echo "<form method=\"post\" action=\"?i=".$i."".$quick."\">";
+    if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=".$i."".$quick."\">";
 
     echo "<fieldset><legend>Nouvelle information</legend>";
 
@@ -111,7 +111,7 @@ else {
         echo "<td style=\"padding-right: 10px; vertical-align: top;\"><strong>".dateformat($h["historique_date"],"fr")."</strong></td>";
         echo "<td>".$h["historique_texte"]."</td>";
         echo "<td style=\"text-align:right;\">";
-        if ($write) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?i=$i&h=".$h["historique_index"]."".$quick."',width:280,height:110})\" title=\"supprimer cette entrée (".$h["historique_index"].") du journal\">×</span>";
+        if ($write) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&h=".$h["historique_index"]."".$quick."',width:280,height:110})\" title=\"supprimer cette entrée (".$h["historique_index"].") du journal\">×</span>";
         else echo "&nbsp;";
         echo "</td>";
         echo "</tr>";

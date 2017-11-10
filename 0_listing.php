@@ -148,7 +148,7 @@ foreach ($tableau as &$t) {
     echo "<tr>";
 
         // ********** Id Labo **********
-        echo "<td><a href=\"info.php?i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
+        echo "<td><a href=\"info.php?BASE=$database&i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
         echo "<strong>";
         if ($t["lab_id"]=="") echo "#".$t["base_index"].""; else echo $t["lab_id"];
         echo "</strong>";
@@ -163,7 +163,7 @@ foreach ($tableau as &$t) {
 
         // ********** Désignation **********
         echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
         if ($t["designation"]!="") echo $t["designation"];
         else echo "-";
         echo "</span>";
@@ -172,7 +172,7 @@ foreach ($tableau as &$t) {
         // ********** Caractéristiques **********
         echo "<td>";
 
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=caracteristiques&quick_name=Caractéristiques', width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide caracteristiques\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=caracteristiques&quick_name=Caractéristiques', width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide caracteristiques\">";
 
 	if (array_key_exists($t["base_index"], $tc)) echo substr($tc[$t["base_index"]], 0, -2);
         else echo "-";
@@ -207,7 +207,7 @@ foreach ($tableau as &$t) {
         // ********** Marque  **********
         echo "<td>";
 
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"";
         if ($t["vendeur"]!="-") echo "vendu par ".$t["vendeur_nom"]."";
         echo "\">";
 	if ($t["marque"]!="") echo $t["marque_nom"]; else echo "-";
@@ -217,7 +217,7 @@ foreach ($tableau as &$t) {
 
         // ********** Référence **********
         echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
         if ($t["reference"]!="") echo $t["reference"];
         else echo "-";
         echo "</span>";
@@ -240,7 +240,7 @@ foreach ($tableau as &$t) {
                             icone($f);
                             echo "</a> ";}
                     }
-               echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">";
+               echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">";
                     echo "+</span>";
                     $nofiles=false;
                 }
@@ -249,21 +249,21 @@ foreach ($tableau as &$t) {
         }
         else $nofiles=true;
 
-        if ($nofiles) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">-</span>";
+        if ($nofiles) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">-</span>";
 
 
         echo "</td>";
 
         // ********** Serial number **********
         echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
         if ($t["serial_number"]!="") echo $t["serial_number"]; else echo "-";
         echo "</span>";
         echo "</td>";
 
         // ********** N° d’inventaire **********
         echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
         if ($t["num_inventaire"]!="") echo $t["num_inventaire"]; else echo "-";
         echo "</span>";
         echo "</td>";
@@ -271,7 +271,7 @@ foreach ($tableau as &$t) {
         // ********** Achat **********
         echo "<td>";
 
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
 
         echo "<span title=\"";
         if ($t["responsable_achat"]!="0") echo "Par ".$t["responsable_prenom"]." ".$t["responsable_nom"]." ";
@@ -289,7 +289,7 @@ foreach ($tableau as &$t) {
         // ********** Entretiens **********
         echo "<td>";
 
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=entretien&quick_name=Entretien',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide entretien\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=entretien&quick_name=Entretien',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide entretien\">";
 	if (array_key_exists($t["base_index"], $te)) echo $te[$t["base_index"]]; else echo "-";
         echo "</span>";
 
@@ -309,7 +309,7 @@ foreach ($tableau as &$t) {
                             icone($f);
                             echo "</a> ";}
                     }
-               echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">";
+               echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">";
                     echo "+</span>";
                     $nofiles=false;
                 }
@@ -318,7 +318,7 @@ foreach ($tableau as &$t) {
         }
         else $nofiles=true;
 
-        if ($nofiles) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">-</span>";
+        if ($nofiles) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">-</span>";
 
 
         echo "</td>";
@@ -326,7 +326,7 @@ foreach ($tableau as &$t) {
         // ********** Journal **********
         echo "<td>";
 
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?i=".$t["base_index"]."&quick_page=journal&quick_name=Journal',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide journal\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=journal&quick_name=Journal',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide journal\">";
 
 	if (array_key_exists("base_index", $t)) {
 		$keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]);
@@ -341,7 +341,7 @@ foreach ($tableau as &$t) {
 
         // ********** Localisation **********
         echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
 
 	if (array_key_exists("utilisateur", $t)) { $keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]); if (array_key_exists("0",$keys)) $key=$keys[0]; }
         if ($t["utilisateur"]!=0) echo "<span title=\"Utilisé par ".$utilisateurs[$key]["utilisateur_prenom"]." ".$utilisateurs[$key]["utilisateur_nom"]." ";
@@ -358,7 +358,7 @@ foreach ($tableau as &$t) {
         // ********** État **********
         if ($IOT!="0") {
             echo "<td>";
-            echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()},closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
+            echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()},closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
 	    echo $t["raison_sortie_nom"];
             echo "</span>";
             echo "</td>";

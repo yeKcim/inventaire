@@ -7,6 +7,8 @@ foreach ($arr as &$value) {
 
 $titre="$quick_name #$i";
 require_once("./0_connect.php");
+if ($database=="") require_once("./0_baseselector.php");
+require_once("./0_connect_db.php");
 require_once("./0_tables_sql_commun.php");
 require_once("./0_head.php");
 ?>
