@@ -27,8 +27,7 @@ echo "</select> ";
 
 if (isset($i)) { if ($i!="") echo "<input id=\"i\" name=\"i\" type=\"hidden\" value=\"$i\">"; }
 
-
-echo "<a href=\"\" title=\"Ajouter une nouvelle base d’inventaire\" target=\"_blank\">+</a>";
+echo "<a href=\"database_add.php\" title=\"Ajouter une nouvelle base d’inventaire\" target=\"_blank\">+</a>";
 
 echo "</p>";
 echo "</form>";
