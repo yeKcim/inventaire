@@ -222,6 +222,7 @@ function return_last_id($col,$table) {
 
 function quickdisplayincarac ($t) {
         global $categories;
+	global $database;
         if ($t["sortie"]=="1") echo "<strike>";
         echo "<a href=\"info.php?BASE=$database&i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
         echo $t["lab_id"];
