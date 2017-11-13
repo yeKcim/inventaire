@@ -224,7 +224,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
                 echo "<label for=\"plus_categorie_nom\">Nom :</label>\n";
                 echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\"><br/>\n";
                 echo "<label for=\"plus_categorie_abbr\">Abbréviation <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
-                echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\">\n";
+                echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\"  pattern=\"^[A-Za-z]{4}$\" title=\"« 4 lettres max, pas de chiffres »\" >\n";
             echo "</fieldset>";
             echo "\n\n\n";
 
