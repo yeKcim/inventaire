@@ -130,11 +130,11 @@ function displayDir($database, $i, $dir, $del=FALSE) {
     // Si le dossier n’existe pas, on le crée
     if (!file_exists("$dir")) {
         mkdir("$dir", 0775);
-        echo "Dossier $dir créé. ";
+        echo "Dossier ".str_replace($dossierdesfichiers, "", "$dir")." créé. ";
     }
     // Si le dossier est vide on l’indique
     if (is_dir_empty("$dir")) {
-        echo "Aucun fichier trouvé dans $dir";
+        echo "Aucun fichier trouvé dans ".str_replace($dossierdesfichiers, "", "$dir")."";
     }
     // Si le dossier n’est pas vide on liste
     else {
@@ -146,9 +146,9 @@ function displayDir($database, $i, $dir, $del=FALSE) {
                     echo "<li>";
                     icone($f);
                     echo "<a href=\"".str_replace($racine, "", "$dir$f")."\" target=\"_blank\">$f</a>";
-                    echo " (".formatBytes(filesize("$dir$f"),"0")."o)";  			
-                    if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&f=".$racine."/".$database."/".$dir."".$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>"; // A VÉRIFIER 						
-                    echo"</li>";								
+                    echo " (".formatBytes(filesize("$dir$f"),"0")."o)";
+                    if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&f=".$dir.$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";
+                    echo"</li>";
                 }
             }
         echo "</ul>";

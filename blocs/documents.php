@@ -112,14 +112,17 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     echo "<fieldset><legend>Fichiers de cette entrée</legend>";
         displayDir($database, $i, "$dossierdesfichiers$database/$i/", $del=$write);
     echo "</fieldset>";
-	$keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
+
+    $keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
+    echo "<fieldset><legend>Fichiers globaux liés à la référence constructeur</legend>";
     if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
-        echo "<fieldset><legend>Fichiers globaux liés à la référence constructeur</legend>";
-        	$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
-		$r=str_replace('/', "_", $data[0]["reference"]);
-            displayDir($database, $i, "".$dossierdesfichiers."".$database."/".$m."-".$r."/", $del=$write);
-        echo "</fieldset>";
+       	$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
+	$r=str_replace('/', "_", $data[0]["reference"]);
+        displayDir($database, $i, "".$dossierdesfichiers."".$database."/".$m."-".$r."/", $del=$write);
     }
+    else echo "Vous devez renseigner « Marque » et « Référence fabriquant » pour activer cette fonction.";
+    echo "</fieldset>";
+
 
 /*  ╦═╗╔═╗╔═╗╔═╗╦═╗╔═╗╔╗╔╔═╗╔═╗╔═╗  ╔═╗╦╔╦╗╦ ╦  ╔═╗╦╦═╗╔═╗╔═╗
     ╠╦╝║╣ ╠╣ ║╣ ╠╦╝║╣ ║║║║  ║╣ ╚═╗  ╚═╗║║║║║ ║  ╠═╣║╠╦╝║╣ ╚═╗
