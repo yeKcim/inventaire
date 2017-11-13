@@ -54,8 +54,7 @@ else {
   echo "<p><strong>Ajouter une nouvelle base</strong></p>";
   echo "<form method=\"get\" action=\"?\">";
   echo "<label for=\"name_db\" style=\"vertical-align: top;\">Nom de l’inventaire :</label>\n";
-//  echo "<input name=\"name_db\" type=\"text\" id=\"name_db\" size=\"15\">";
-  echo "<input type=\"text\" name=\"name_db\" pattern=\"[a-z0-9A-Z]\" title=\"a-z0-9A-Z\" />";
+  echo "<input type=\"text\" name=\"name_db\" pattern=\"^[A-Za-z0-9_-]{20}$\" title=\"« 20 max alphanumérique - et _ »\" />";
 
   echo "<p><input name=\"add_db\" value=\"Créer\" type=\"submit\" class=\"little_button\" /></p>";
   echo "</form>";
