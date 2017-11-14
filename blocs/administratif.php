@@ -165,7 +165,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
         /* ########### prix ########### */
         echo "<label for=\"prix\">Prix (€) : </label>\n";
-        echo "<input value=\"";		echo ($data[0]["prix"]!="0") ? $data[0]["prix"] : "";		echo "\" name=\"prix\" type=\"text\" id=\"prix\"><br/>";
+        echo "<input value=\"";		echo ($data[0]["prix"]!="0") ? $data[0]["prix"] : "";		echo "\" name=\"prix\" type=\"text\" id=\"prix\" pattern=\"^[0-9]{1,10}$\"><br/>";
 
     echo "</fieldset>";
 
