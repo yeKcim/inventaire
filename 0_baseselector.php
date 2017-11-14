@@ -13,7 +13,7 @@ while( ( $db = $dbs->fetchColumn( 0 ) ) !== false )
       }
 }
 
-if ($nb_base=="0") echo "Aucun inventaire détecté !";
+if ($nb_base=="0") echo "<p style=\"text-align:center;\">Aucun inventaire détecté !</p>";
 elseif ($nb_base=="1") $database = ($BASE=="") ? $first_base : $BASE ;
 //else $database = ($BASE=="") ? $first_base : $BASE ;
 

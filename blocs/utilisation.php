@@ -188,7 +188,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
             echo "\n\n\n";
 
     /* ########### carte pour aider à localiser ########### */
-    $utilisation_localisation_help = "./blocs/utilisation_localisation_help.jpg";
+    $utilisation_localisation_help = "./$database/utilisation_localisation_help.jpg";
     if (file_exists("$utilisation_localisation_help")) {
 
         list($width, $height, $type) = getimagesize("$utilisation_localisation_help");
