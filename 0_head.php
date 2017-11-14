@@ -76,7 +76,17 @@
       });
     </script>
 
-
+<!--╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗ ╦  ╔═╗╔═╗
+     ║║╠═╣ ║ ╠═╣ ║ ╠═╣╠╩╗║  ║╣ ╚═╗
+    ═╩╝╩ ╩ ╩ ╩ ╩ ╩ ╩ ╩╚═╝╩═╝╚═╝╚═╝  -->
+	<link rel="stylesheet" type="text/css" href="datatables/jquery.dataTables.css">
+	<style>
+	  .dataTables_length label 		{width:auto;}
+	  .dataTables_filter label 		{width:auto;}
+	  table.dataTable tr.odd   		{background-color: #dedede;}
+	  table.dataTable tr.odd td.sorting_1 	{background-color: #D7DFE3;}
+	  table.dataTable tr.even td.sorting_1 	{background-color: #F5FBFF;}
+	</style>
 
 </head>
 

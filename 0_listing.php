@@ -123,23 +123,25 @@ echo "<table id=\"listing\">";
 /*  ╔═╗╔╗╔╦╗╔═╗╔╦╗╔═╗  ╔╦╗╔═╗╔╗ ╦  ╔═╗╔═╗╦ ╦
     ║╣ ║║║║ ║╣  ║ ║╣    ║ ╠═╣╠╩╗║  ║╣ ╠═╣║ ║
     ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝    */
+echo "<thead>";
 echo "<tr>";
-     echo "<th>Id Labo<br/>";                                            	orderbylink("lab_id");              echo "</td>";
-     echo "<th>Catégorie<br/>";                                          	orderbylink("categorie");           echo "</td>";
-     echo "<th style=\"background:#bab987;\">Désignation<br/>";          	orderbylink("designation");         echo "</td>";
-     echo "<th style=\"background:#a4b395;\">Caractéristiques<br/>";     	echo "&nbsp;";                      echo "</td>";
-     echo "<th style=\"background:#8AAA6D;\">Marque<br/>";               	orderbylink("marque");              echo "</td>";
-     echo "<th style=\"background:#8AAA6D;\">Référence fabricant<br/>";  	orderbylink("reference");           echo "</td>";
-     echo "<th style=\"background:#BA944D;\">Fichiers<br/>référence<br/>";   echo "&nbsp;";  echo "</td>";
-     echo "<th style=\"background:#8AAA6D;\">Numéro de série<br/>";      	orderbylink("serial_number");       echo "</td>";
-     echo "<th style=\"background:#bab987;\">n° d’inventaire<br/>";      	orderbylink("num_inventaire");      echo "</td>";
-     echo "<th style=\"background:#bab987;\">Achat<br/>";                	orderbylink("prix");                echo "</td>";
-     echo "<th style=\"background:#c19aaa;\">Entretiens<br/>";           	echo "&nbsp;";                      echo "</td>";
-     echo "<th style=\"background:#BA944D;\">Fichiers<br/>entrée<br/>"; 	echo "&nbsp;";                      echo "</td>";
-     echo "<th style=\"background:#a786a2;\">Journal<br/>";              	echo "&nbsp;";                      echo "</td>";
-     echo "<th style=\"background:#96a5bc;\">Localisation<br/>";         	orderbylink("localisation");        echo "</td>";
-    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">État<br/>";  	orderbylink("raison_sortie");       echo "</td>";
+     echo "<th>							Id Labo";                   	echo "</td>";
+     echo "<th>							Catégorie";                 	echo "</td>";
+     echo "<th style=\"background:#bab987;\">			Désignation";               	echo "</td>";
+     echo "<th style=\"background:#a4b395;\">			Caractéristiques";          	echo "</td>";
+     echo "<th style=\"background:#8AAA6D;\">			Marque";                    	echo "</td>";
+     echo "<th style=\"background:#8AAA6D;\">			Référence fabricant";       	echo "</td>";
+     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>référence";    	echo "</td>";
+     echo "<th style=\"background:#8AAA6D;\">			Numéro de série";           	echo "</td>";
+     echo "<th style=\"background:#bab987;\">			n° d’inventaire";           	echo "</td>";
+     echo "<th style=\"background:#bab987;\">			Achat";                     	echo "</td>";
+     echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</td>";
+     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>entrée";       	echo "</td>";
+     echo "<th style=\"background:#a786a2;\">			Journal";                   	echo "</td>";
+     echo "<th style=\"background:#96a5bc;\">			Localisation";              	echo "</td>";
+    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">	État";       			echo "</td>";
 echo "</tr>";
+echo "</thead>";
 
 /*  ╦  ╦╔═╗╔╗╔╔═╗╔═╗  ╔╦╗╔═╗  ╦═╗╔═╗╔═╗╦ ╦╦ ╔╦╗╔═╗╔╦╗╔═╗
     ║  ║║ ╦║║║║╣ ╚═╗   ║║║╣   ╠╦╝║╣ ╚═╗║ ║║  ║ ╠═╣ ║ ╚═╗
@@ -369,12 +371,29 @@ foreach ($tableau as &$t) {
 
 echo "</table>";
 
+?>
+  <script type="text/javascript" charset="utf8" src="datatables/jquery.dataTables.min.js"></script>
+  <script>
+  $(function(){
+	$("#listing").dataTable({
+             sPaginationType: "two_button",
+	     "bPaginate": true,
+	     "bLengthChange": true,
+	     "iDisplayLength": 25,
+
+	});
+  })
+  </script>
+
+
+
+<?php
 /*stat*/
 //echo "<h2>Statistiques</h2>";
-echo "<br/><hr/>";
+echo "<br/><br/><hr/>";
 echo "<ul>";
-echo "<li>Nombre d’entrées affichées : ".count($tableau)."</li>" ;
-echo "<li>Prix total (des entrées renseignées) : ".$prix_total." €</li>" ;
+echo "<li>Nombre d’entrées : ".count($tableau)."</li>" ;
+echo "<li>Prix total (des entrées renseignées) : ".number_format($prix_total, 0, ',', ' ')." €</li>" ;
 echo "<li>Entretiens : ";
 	echo "<span style=\"color:#cc0000\">".$entretiens_late."⚠</span>";
 	echo " - ";

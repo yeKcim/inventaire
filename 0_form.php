@@ -35,7 +35,7 @@ selecteur_chosen("CAT", $categories, "Toutes catégories", "categorie_index", "c
 $CAT_CMD= ($CAT!="") ? "AND categorie_index IN ($CAT)" : "" ;
 
 
-#########################################################################
+/*#########################################################################
 #                           SEA : Recherche                             #
 #########################################################################
 echo " ";
@@ -43,6 +43,12 @@ echo "  <input value=\"$SEA_textbox\" name=\"SEA\" type=\"text\" onFocus=\"if (t
             <input value=\"Chercher\" type=\"submit\">";
 $SEA_CMD= ($SEA!="") ? "AND (lab_id LIKE '%$SEA%' OR categorie LIKE '%$SEA%' OR reference LIKE '%$SEA%' OR designation LIKE '%$SEA%' OR marque_nom LIKE '%$SEA%' OR vendeur_nom LIKE '%$SEA%' OR serial_number LIKE '%$SEA%' OR num_inventaire LIKE '%$SEA%' OR bon_commande LIKE '%$SEA%')" : "";
 
+⇒ useless, datatables!
+*/
+
+#########################################################################
+#                             RESET BUTTON                              #
+#########################################################################
 
 echo " &nbsp; <a href=\"?BASE=".$database."\" title=\"RESET\">↺</a>";
 
