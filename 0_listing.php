@@ -377,9 +377,9 @@ echo "</table>";
   $(function(){
 	$("#listing").dataTable({
              sPaginationType: "two_button",
-	     "bPaginate": true,
-	     "bLengthChange": true,
-	     "iDisplayLength": 25,
+	     bPaginate: true,
+	     bLengthChange: true,
+	     iDisplayLength: 25,
 	     aaSorting: [],
 	});
   })
