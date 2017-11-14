@@ -14,11 +14,11 @@ $success="";
    ██║     ██╔══██╗██╔══╝  ██╔══██║   ██║   ██║██║   ██║██║╚██╗██║    ██╔══██╗██╔══██║╚════██║██╔══╝
    ╚██████╗██║  ██║███████╗██║  ██║   ██║   ██║╚██████╔╝██║ ╚████║    ██████╔╝██║  ██║███████║███████╗
     ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚══════╝ */
-if ( isset($_GET["add_db"]) ) {
+if ( isset($_POST["add_db"]) ) {
     $data=array();
     $arr = array("name_db");
     foreach ($arr as &$value) {
-        $$value= isset($_GET[$value]) ? htmlentities($_GET[$value]) : "" ;
+        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
     if ($name_db!="") {
 	// Création de la base
@@ -37,7 +37,7 @@ if ( isset($_GET["add_db"]) ) {
 	$add_tables = file_get_contents("./database_add.sql");
 	$qr = $dbh->exec($add_tables);
 	if ($qr) echo "<p class=\"error_message\">Erreur lors de la création des tables, merci de contacter votre administrateur.</p>";
-	else echo "<p class=\"success_message\">Tables ajoutées à $newdb.</p><p>Vous pouvez fermer cette fenêtre.</p>";
+	else echo "<p class=\"success_message\">Tables ajoutées à $newdb.</p><p>Vous pouvez fermer ce cadre.</p>";
 
     }
 }
@@ -52,9 +52,9 @@ if ( isset($_GET["add_db"]) ) {
 */
 else {
   echo "<p><strong>Ajouter une nouvelle base</strong></p>";
-  echo "<form method=\"get\" action=\"?\">";
+  echo "<form method=\"post\" action=\"?\">";
   echo "<label for=\"name_db\" style=\"vertical-align: top;\">Nom de l’inventaire :</label>\n";
-  echo "<input type=\"text\" name=\"name_db\" pattern=\"^[A-Za-z0-9_-]{20}$\" title=\"« 20 max alphanumérique - et _ »\" />";
+  echo "<input type=\"text\" name=\"name_db\" pattern=\"^[A-Za-z0-9_-]{1,20}$\" title=\"« 20 max alphanumérique - et _ »\" />";
 
   echo "<p><input name=\"add_db\" value=\"Créer\" type=\"submit\" class=\"little_button\" /></p>";
   echo "</form>";
