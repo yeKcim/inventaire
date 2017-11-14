@@ -47,6 +47,8 @@ post_max_size = 10M
 
 - [x] **Identifiant labo** : Possibilité de choisir l’identifiant manuellement.
 - [x] **Plusieurs inventaires**
+- [ ] **Datatables** : En français
+- [ ] **Caractéristiques** : Si affichage d’une catégorie unique, les caractéristiques sont affichées séparément sous forme de colonne triables par datatables
 - [ ] **Simplification de saisie** : duplication de fiches, ajouter une commande
 - [ ] **Intégration** : Si intégré, afficher un lien dans listing vers le conteneur. Mais également gérer les lots. Il peut arriver qu’un lot de filtre soit acheté et que l’un d’eux soit intégré dans un montage…
 - [ ] **Rangement** : Ajouter une case pour indiquer où ranger le matériel quand non utilisé.
