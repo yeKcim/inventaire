@@ -380,7 +380,7 @@ echo "</table>";
 	     "bPaginate": true,
 	     "bLengthChange": true,
 	     "iDisplayLength": 25,
-
+	     aaSorting: [],
 	});
   })
   </script>
