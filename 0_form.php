@@ -46,14 +46,7 @@ $SEA_CMD= ($SEA!="") ? "AND (lab_id LIKE '%$SEA%' OR categorie LIKE '%$SEA%' OR 
 ⇒ useless, datatables!
 */
 
-#########################################################################
-#                             RESET BUTTON                              #
-#########################################################################
-
-echo " &nbsp; <a href=\"?BASE=".$database."\" title=\"RESET\">↺</a>";
-
 echo "<br/>";
-
 #########################################################################
 #                        TYC : type de contrat                          #
 #########################################################################
@@ -85,6 +78,11 @@ $sth = $dbh->query("SELECT DISTINCT(utilisateur_index) utilisateur_index, utilis
 $utilisateurs = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 selecteur_chosen("UTL", $utilisateurs, "Tous les utilisateurs", "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
 $UTL_CMD= ($UTL!="") ? "AND utilisateur=$UTL" : "" ;
+
+#########################################################################
+#                             RESET BUTTON                              #
+#########################################################################
+echo " &nbsp; <a href=\"?BASE=".$database."\" title=\"RESET\">↺</a>";
 
 // TODO tags
 

@@ -34,9 +34,9 @@ $ALL_GET=str_replace(" ", "%20", $ALL_GET);
 
 $ORDER= ($ORDER=="") ? "ORDER BY categorie ASC, length(lab_id), lab_id ASC" : "$ORDER, base_index ASC";
 
-echo "<p style=\"text-align:right;\">";
-echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'add.php?BASE=$database',width:900,height:700,closejs:function(){location.reload()}})\"><input class=\"big_button\" value=\"Ajouter une nouvelle entrée\" type=\"submit\" /></span>";
-echo "</p>";
+//echo "<p style=\"text-align:right;\">";
+echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'add.php?BASE=$database',width:900,height:700,closejs:function(){location.reload()}})\"><input class=\"big_button\" value=\"Ajouter une nouvelle entrée\" type=\"submit\" style=\"float: right;\"/></span>";
+//echo "</p>";
 
 require_once("./0_form.php");
 require_once("./0_listing.php");
