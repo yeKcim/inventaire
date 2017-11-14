@@ -27,9 +27,7 @@ echo "</select> ";
 
 if (isset($i)) { if ($i!="") echo "<input id=\"i\" name=\"i\" type=\"hidden\" value=\"$i\">"; }
 
-echo "<a href=\"database_add.php\" title=\"Ajouter une nouvelle base d’inventaire\" target=\"_blank\">+</a>";
-
-echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',width:200,height:200,closejs:function(){location.reload()}})\">+</span>";
+echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',width:200,height:200,closejs:function(){location.reload()}})\" title=\"Ajouter une nouvelle base d’inventaire\">+</span>";
 
 echo "</p>";
 echo "</form>";
