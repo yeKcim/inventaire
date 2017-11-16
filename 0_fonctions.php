@@ -265,8 +265,13 @@ function quickdisplayincarac_b ($t) {
 	return $txt;
 }
 
-
-
+function spanquick($p,$i) {
+  global $database;
+  $s="<span id=\"linkbox\" ";
+  $s.="onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$i."&quick_page=".$p."&quick_name=".$p."', width:440,height:750,closejs:function(){location.reload()}})\"";
+  $s.="title=\"modification rapide ".$p."\">";
+  return $s;
+}
 
 
 

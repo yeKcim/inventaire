@@ -60,14 +60,40 @@ if ($b_e!="") {
 //liste des caracs correspondantes
 $sth = $dbh->query("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
 $table_carac = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-$tc=array();
+$tc=array(); $td_c=array(); $th_c="";
+$val=array();
 foreach ($table_carac as $l) {
+	$li=$l["base_index"]; $lc=$l["carac"];
+	if (!isset($val[$li])) $val[$li]=array();
         if ($l["unite_carac"]=="bool") { $unit=""; $value= ($l["carac_valeur"]=="1") ? "oui" : "non" ; }
         elseif ($l["carac_valeur"]=="∞") { $unit="" ; $value=$l["carac_valeur"];} // do not display unit if value is infinite
         else { $unit=$l["unite_carac"] ; $value=$l["carac_valeur"];}
         if (!array_key_exists($l["base_index"], $tc)) $tc[$l["base_index"]]="";
-        $tc[$l["base_index"]].="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l["symbole_carac"]."</span>:";
+	$nom_carac_abbr="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l["symbole_carac"]."</span>";
+        $tc[$l["base_index"]].=$nom_carac_abbr.":";
         $tc[$l["base_index"]].="<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; ";
+	$val[$li][$lc]=$value;
+}
+
+$th_c="";
+
+if ($CAT!="") {
+  // Si une seule catégorie est affichée on met les caractéristiques pertinentes dans un tableau
+  $sth = $dbh->query("SELECT DISTINCT carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND categorie=".$CAT." AND carac!=0 ORDER BY carac ASC ;");
+  $carac_categorie = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+
+  foreach ($carac_categorie as $cc) {
+    //on ajoute une case dans th
+    $th_c.="<th style=\"background:#a4b395;vertical-align:top;\">";
+    $th_c.="<span title=\"".$cc["nom_carac"]."\"><span style=\"color:#2e3436;\">".$cc["symbole_carac"]."</span>";
+    if ($cc["unite_carac"]!="") $th_c.="<br/>(".$cc["unite_carac"].")";
+    $th_c.="</th>";
+    //on ajoute une case dans tr
+    foreach ($val as $k => $v) {
+	if (!isset($val[$k]["echo"])) $val[$k]["echo"]="";
+	if (isset($v[$cc["carac"]])) $val[$k]["echo"].="<td>".spanquick("caracteristiques",$k)."".$v[$cc["carac"]]."</span></td>"; else $val[$k]["echo"].="<td>".spanquick("caracteristiques",$k)."-</span></td>";
+    }
+  }
 }
 
 //date du jour
@@ -125,21 +151,25 @@ echo "<table id=\"listing\">";
     ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝    */
 echo "<thead>";
 echo "<tr>";
-     echo "<th>							Id Labo";                   	echo "</td>";
-     echo "<th>							Catégorie";                 	echo "</td>";
-     echo "<th style=\"background:#bab987;\">			Désignation";               	echo "</td>";
-     echo "<th style=\"background:#a4b395;\">			Caractéristiques";          	echo "</td>";
-     echo "<th style=\"background:#8AAA6D;\">			Marque";                    	echo "</td>";
-     echo "<th style=\"background:#8AAA6D;\">			Référence fabricant";       	echo "</td>";
-     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>référence";    	echo "</td>";
-     echo "<th style=\"background:#8AAA6D;\">			Numéro de série";           	echo "</td>";
-     echo "<th style=\"background:#bab987;\">			n° d’inventaire";           	echo "</td>";
-     echo "<th style=\"background:#bab987;\">			Achat";                     	echo "</td>";
-     echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</td>";
-     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>entrée";       	echo "</td>";
-     echo "<th style=\"background:#a786a2;\">			Journal";                   	echo "</td>";
-     echo "<th style=\"background:#96a5bc;\">			Localisation";              	echo "</td>";
-    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">	État";       			echo "</td>";
+     echo "<th>							Id Labo";                   	echo "</th>";
+     echo "<th>							Catégorie";                 	echo "</th>";
+     echo "<th style=\"background:#bab987;\">			Désignation";               	echo "</th>";
+
+     if ($th_c!="") echo $th_c;
+     else echo "<th style=\"background:#a4b395;\">		Caractéristiques";          	echo "</th>";
+     if ($CAT!="") echo "<th style=\"background:rgb(150, 165, 188);\">Intégration</th>";
+
+     echo "<th style=\"background:#8AAA6D;\">			Marque";                    	echo "</th>";
+     echo "<th style=\"background:#8AAA6D;\">			Référence fabricant";       	echo "</th>";
+     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>référence";    	echo "</th>";
+     echo "<th style=\"background:#8AAA6D;\">			Numéro de série";           	echo "</th>";
+     echo "<th style=\"background:#bab987;\">			n° d’inventaire";           	echo "</th>";
+     echo "<th style=\"background:#bab987;\">			Achat";                     	echo "</th>";
+     echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</th>";
+     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>entrée";       	echo "</th>";
+     echo "<th style=\"background:#a786a2;\">			Journal";                   	echo "</th>";
+     echo "<th style=\"background:#96a5bc;\">			Localisation";              	echo "</th>";
+    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">	État";       			echo "</th>";
 echo "</tr>";
 echo "</thead>";
 
@@ -165,21 +195,33 @@ foreach ($tableau as &$t) {
 
         // ********** Désignation **********
         echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
+        echo spanquick("administratif",$t["base_index"]);
         if ($t["designation"]!="") echo $t["designation"];
         else echo "-";
         echo "</span>";
         echo "</td>";
 
         // ********** Caractéristiques **********
+if ($CAT=="") {
         echo "<td>";
 
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=caracteristiques&quick_name=Caractéristiques', width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide caracteristiques\">";
+	echo spanquick("caracteristiques",$t["base_index"]);
 
 	if (array_key_exists($t["base_index"], $tc)) echo substr($tc[$t["base_index"]], 0, -2);
         else echo "-";
 
         echo "</span>";
+
+}
+elseif ($th_c=="") echo "<td>".spanquick("caracteristiques",$t["base_index"])."-</span></td>";
+else {
+  if (isset($val[$t["base_index"]]["echo"])) echo $val[$t["base_index"]]["echo"];
+  else foreach ($carac_categorie as $c) echo "<td>".spanquick("caracteristiques",$t["base_index"])."-</span></td>";
+  // il faudra penser à remettre les parents/enfants
+}
+
+
+if ($CAT!="") echo "<td>".spanquick("utilisation",$t["base_index"])."-</span>";
 
 	// Intégration kid de
         $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
@@ -197,14 +239,20 @@ foreach ($tableau as &$t) {
 	        	echo "<ul>";
 	        	foreach ($keys as $k) {
                     		echo "<li style=\"list-style-type: '⬉';\">&nbsp;";
-				quickdisplayincarac($tableau_parents[$k]);
+				 quickdisplayincarac($tableau_parents[$k]);
                     		echo "</li>";
         		}
         		echo "</ul>";
 		}
 	}
-	else echo "&nbsp;";
-        echo "</td>";
+
+if ($CAT!="") echo "</td>";
+
+
+if ($CAT=="") echo "</td>";
+
+
+
 
         // ********** Marque  **********
         echo "<td>";
@@ -219,7 +267,7 @@ foreach ($tableau as &$t) {
 
         // ********** Référence **********
         echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
+        echo spanquick("technique",$t["base_index"]);
         if ($t["reference"]!="") echo $t["reference"];
         else echo "-";
         echo "</span>";
@@ -242,30 +290,29 @@ foreach ($tableau as &$t) {
                             icone($f);
                             echo "</a> ";}
                     }
-               echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">";
-                    echo "+</span>";
-                    $nofiles=false;
+                echo spanquick("documents",$t["base_index"])."+</span>";
+                $nofiles=false;
                 }
             }
             else $nofiles=true;
         }
         else $nofiles=true;
 
-        if ($nofiles) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">-</span>";
+        if ($nofiles) echo spanquick("documents",$t["base_index"])."-</span>";
 
 
         echo "</td>";
 
         // ********** Serial number **********
         echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide technique\">";
+        echo spanquick("technique",$t["base_index"]);
         if ($t["serial_number"]!="") echo $t["serial_number"]; else echo "-";
         echo "</span>";
         echo "</td>";
 
         // ********** N° d’inventaire **********
         echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
+        echo spanquick("administratif",$t["base_index"]);
         if ($t["num_inventaire"]!="") echo $t["num_inventaire"]; else echo "-";
         echo "</span>";
         echo "</td>";
@@ -273,7 +320,7 @@ foreach ($tableau as &$t) {
         // ********** Achat **********
         echo "<td>";
 
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=administratif&quick_name=Administratif',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide administratif\">";
+        echo spanquick("administratif",$t["base_index"]);
 
         echo "<span title=\"";
         if ($t["responsable_achat"]!="0") echo "Par ".$t["responsable_prenom"]." ".$t["responsable_nom"]." ";
@@ -291,7 +338,7 @@ foreach ($tableau as &$t) {
         // ********** Entretiens **********
         echo "<td>";
 
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=entretien&quick_name=Entretien',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide entretien\">";
+        echo spanquick("entretien",$t["base_index"]);
 	if (array_key_exists($t["base_index"], $te)) echo $te[$t["base_index"]]; else echo "-";
         echo "</span>";
 
@@ -311,16 +358,15 @@ foreach ($tableau as &$t) {
                             icone($f);
                             echo "</a> ";}
                     }
-               echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">";
-                    echo "+</span>";
-                    $nofiles=false;
+                echo spanquick("documents",$t["base_index"])."+</span>";
+                $nofiles=false;
                 }
             }
             else $nofiles=true;
         }
         else $nofiles=true;
 
-        if ($nofiles) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=documents&quick_name=Documents',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide documents\">-</span>";
+        if ($nofiles) echo spanquick("documents",$t["base_index"])."-</span>";
 
 
         echo "</td>";
@@ -328,7 +374,7 @@ foreach ($tableau as &$t) {
         // ********** Journal **********
         echo "<td>";
 
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({ iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=journal&quick_name=Journal',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide journal\">";
+        echo spanquick("journal",$t["base_index"]);
 
 	if (array_key_exists("base_index", $t)) {
 		$keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]);
@@ -343,7 +389,7 @@ foreach ($tableau as &$t) {
 
         // ********** Localisation **********
         echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
+        echo spanquick("utilisation",$t["base_index"]);
 
 	if (array_key_exists("utilisateur", $t)) { $keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]); if (array_key_exists("0",$keys)) $key=$keys[0]; }
         if ($t["utilisateur"]!=0) echo "<span title=\"Utilisé par ".$utilisateurs[$key]["utilisateur_prenom"]." ".$utilisateurs[$key]["utilisateur_nom"]." ";
@@ -360,7 +406,7 @@ foreach ($tableau as &$t) {
         // ********** État **********
         if ($IOT!="0") {
             echo "<td>";
-            echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=utilisation&quick_name=Utilisation',width:440,height:750,closejs:function(){location.reload()},closejs:function(){location.reload()}})\" title=\"modification rapide utilisation\">";
+            echo spanquick("utilisation",$t["base_index"]);
 	    echo $t["raison_sortie_nom"];
             echo "</span>";
             echo "</td>";
