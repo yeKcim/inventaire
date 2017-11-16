@@ -241,6 +241,20 @@ function quickdisplayincarac ($t) {
         if ($t["sortie"]=="1") echo "</strike>";
 }
 
+function quickdisplaymini ($t) {
+        global $categories;
+        global $database;
+        if ($t["sortie"]=="1") echo "<strike>";
+        echo "<a href=\"info.php?BASE=$database&i=".$t["base_index"]."\" title=\"#".$t["base_index"]."";
+        if (isset($t["designation"])) echo " ".$t["designation"]." ";
+        if (isset($t["reference"])) echo "{".$t["reference"]."} ";
+        echo "\" target=\"_blank\">";
+        echo $t["lab_id"];
+        echo "</a>";
+        if ($t["sortie"]=="1") echo "</strike>";
+}
+
+
 
 
 function quickdisplayincarac_b ($t) {

@@ -82,6 +82,8 @@ if ($CAT!="") {
   $sth = $dbh->query("SELECT DISTINCT carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND categorie=".$CAT." AND carac!=0 ORDER BY carac ASC ;");
   $carac_categorie = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
+  $style="background-color:rgba(212, 224, 200, 0.4);";
+
   foreach ($carac_categorie as $cc) {
     //on ajoute une case dans th
     $th_c.="<th style=\"background:#a4b395;vertical-align:top;\">";
@@ -91,7 +93,14 @@ if ($CAT!="") {
     //on ajoute une case dans tr
     foreach ($val as $k => $v) {
 	if (!isset($val[$k]["echo"])) $val[$k]["echo"]="";
-	if (isset($v[$cc["carac"]])) $val[$k]["echo"].="<td>".spanquick("caracteristiques",$k)."".$v[$cc["carac"]]."</span></td>"; else $val[$k]["echo"].="<td>".spanquick("caracteristiques",$k)."-</span></td>";
+	if (isset($v[$cc["carac"]])) {
+	    $val[$k]["echo"].="<td style=\"".$style."\">";
+	    $val[$k]["echo"].=spanquick("caracteristiques",$k)."".$v[$cc["carac"]]."</span></td>";
+	}
+	else {
+	    $val[$k]["echo"].="<td style=\"".$style."\">";
+	    $val[$k]["echo"].=spanquick("caracteristiques",$k)."-</span></td>";
+	}
     }
   }
 }
@@ -157,7 +166,7 @@ echo "<tr>";
 
      if ($th_c!="") echo $th_c;
      else echo "<th style=\"background:#a4b395;\">		Caractéristiques";          	echo "</th>";
-     if ($CAT!="") echo "<th style=\"background:rgb(150, 165, 188);\">Intégration</th>";
+     if ($CAT!="") echo "<th style=\"background:rgb(150, 165, 188);\">Intègre</th>";
 
      echo "<th style=\"background:#8AAA6D;\">			Marque";                    	echo "</th>";
      echo "<th style=\"background:#8AAA6D;\">			Référence fabricant";       	echo "</th>";
@@ -168,6 +177,7 @@ echo "<tr>";
      echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</th>";
      echo "<th style=\"background:#BA944D;\">			Fichiers<br/>entrée";       	echo "</th>";
      echo "<th style=\"background:#a786a2;\">			Journal";                   	echo "</th>";
+     echo "<th style=\"background:#96a5bc;\">                   Intégré à";                     echo "</th>";
      echo "<th style=\"background:#96a5bc;\">			Localisation";              	echo "</th>";
     if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">	État";       			echo "</th>";
 echo "</tr>";
@@ -202,7 +212,7 @@ foreach ($tableau as &$t) {
         echo "</td>";
 
         // ********** Caractéristiques **********
-if ($CAT=="") {
+    if ($CAT=="") {
         echo "<td>";
 
 	echo spanquick("caracteristiques",$t["base_index"]);
@@ -212,46 +222,31 @@ if ($CAT=="") {
 
         echo "</span>";
 
-}
-elseif ($th_c=="") echo "<td>".spanquick("caracteristiques",$t["base_index"])."-</span></td>";
-else {
-  if (isset($val[$t["base_index"]]["echo"])) echo $val[$t["base_index"]]["echo"];
-  else foreach ($carac_categorie as $c) echo "<td>".spanquick("caracteristiques",$t["base_index"])."-</span></td>";
-  // il faudra penser à remettre les parents/enfants
-}
+    }
+    elseif ($th_c=="") echo "<td style=\"".$style."\">".spanquick("caracteristiques",$t["base_index"])."-</span></td>";
+    else {
+	if (isset($val[$t["base_index"]]["echo"])) echo $val[$t["base_index"]]["echo"];
+	else foreach ($carac_categorie as $c) echo "<td style=\"".$style."\">".spanquick("caracteristiques",$t["base_index"])."-</span></td>";
+    }
 
 
-if ($CAT!="") echo "<td>".spanquick("utilisation",$t["base_index"])."-</span>";
+    if ($CAT!="") echo "<td>";
 
-	// Intégration kid de
         $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
-	if ($t["integration"]!="0") {
-		echo "<ul>";
-                echo "<li style=\"list-style-type: '➡';\">&nbsp;";
-		$keys = array_keys(array_column($tableau_enfants, 'base_index'), $t["integration"]);
-		if (isset($keys[0])) quickdisplayincarac($tableau_enfants[$keys[0]]);
-                echo "</li>";
-		echo "</ul>";
-	}
-	// Intégration parent de
-        elseif (array_key_exists("0", $keys)) {
-		if (array_key_exists($keys[0], $tableau_parents)) {
-	        	echo "<ul>";
-	        	foreach ($keys as $k) {
-                    		echo "<li style=\"list-style-type: '⬉';\">&nbsp;";
-				 quickdisplayincarac($tableau_parents[$k]);
-                    		echo "</li>";
-        		}
-        		echo "</ul>";
-		}
-	}
+        // Intégration parent de
+        if (array_key_exists("0", $keys)) {
+            if (array_key_exists($keys[0], $tableau_parents)) {
+               if ($CAT!="") { foreach ($keys as $k) {echo "⬉&nbsp;"; quickdisplaymini($tableau_parents[$k]); echo "<br/>";}  }
+               else {
+                 echo "<ul>";
+                 foreach ($keys as $k) { echo "<li style=\"list-style-type: '⬉';\">&nbsp;"; quickdisplayincarac($tableau_parents[$k]); echo "</li>";}
+                 echo "</ul>";
+               }
+            }
+        }
+        else echo "-";
 
-if ($CAT!="") echo "</td>";
-
-
-if ($CAT=="") echo "</td>";
-
-
+echo "</td>";
 
 
         // ********** Marque  **********
@@ -386,6 +381,18 @@ if ($CAT=="") echo "</td>";
         echo "</span>";
 
         echo "</td>";
+
+        // ********** Intégré à **********
+        echo "<td>";
+        $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
+        if ($t["integration"]!="0") {
+		echo spanquick("utilisation",$t["base_index"])."➡</span>&nbsp;";
+                $keys = array_keys(array_column($tableau_enfants, 'base_index'), $t["integration"]);
+                if (isset($keys[0])) quickdisplaymini($tableau_enfants[$keys[0]]);
+        }
+	else echo spanquick("utilisation",$t["base_index"])."-</span>";
+        echo "</td>";
+
 
         // ********** Localisation **********
         echo "<td>";
