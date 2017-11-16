@@ -16,9 +16,15 @@ Les sections « administratif » et « technique » sont clairement diff
 ![Preview listing](./README_screenshot_listing.png)
 ![Preview add](./README_screenshot_add.png)
 ![Preview carac](./README_screenshot_carac.png)
-![Preview cat](./README_screenshot_cat.png)
 ![Preview detail](./README_screenshot_detail.png)
 ![Preview docs](./README_screenshot_docs.png)
+
+Si l’on affiche qu’une seule catégorie, les caractéristiques se séparent en différentes colonnes :
+![Preview cat](./README_screenshot_catform.png)
+![Preview cat](./README_screenshot_cat.png)
+
+L’ajout d’un inventaire se fait en toute simplicité :
+![Preview addinv](./README_screenshot_addinv.png)
 
 
 ## Installation
