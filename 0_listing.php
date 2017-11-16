@@ -82,7 +82,7 @@ if ($CAT!="") {
   $sth = $dbh->query("SELECT DISTINCT carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND categorie=".$CAT." AND carac!=0 ORDER BY carac ASC ;");
   $carac_categorie = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
-  $style="background-color:rgba(212, 224, 200, 0.4);";
+  $style="background-color:rgba(212, 224, 200, 0.45);";
 
   foreach ($carac_categorie as $cc) {
     //on ajoute une case dans th
@@ -93,14 +93,17 @@ if ($CAT!="") {
     //on ajoute une case dans tr
     foreach ($val as $k => $v) {
 	if (!isset($val[$k]["echo"])) $val[$k]["echo"]="";
+	$val[$k]["echo"].="<td style=\"".$style."\">".spanquick("caracteristiques",$k);
 	if (isset($v[$cc["carac"]])) {
-	    $val[$k]["echo"].="<td style=\"".$style."\">";
-	    $val[$k]["echo"].=spanquick("caracteristiques",$k)."".$v[$cc["carac"]]."</span></td>";
+																
+	    //todo:on ajoute la valeur numérique en commentaire ou cachée
+	    //$val[$k]["echo"].="<strike>".vnum($v[$cc["carac"]])."</strike> ";
+	    $val[$k]["echo"].="<span style=\"display:none;\">".vnum($v[$cc["carac"]])."</span> ";
+	    $val[$k]["echo"].=$v[$cc["carac"]];
+																
 	}
-	else {
-	    $val[$k]["echo"].="<td style=\"".$style."\">";
-	    $val[$k]["echo"].=spanquick("caracteristiques",$k)."-</span></td>";
-	}
+	else $val[$k]["echo"].="-";
+	$val[$k]["echo"].="</span></td>";
     }
   }
 }
