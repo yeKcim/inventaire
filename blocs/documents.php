@@ -117,7 +117,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     echo "<fieldset><legend>Fichiers globaux liés à la référence constructeur</legend>";
     if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
        	$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
-	$r=str_replace('/', "_", $data[0]["reference"]);
+	    $r=str_replace('/', "_", $data[0]["reference"]);
         displayDir($database, $i, "".$dossierdesfichiers."".$database."/".$m."-".$r."/", $del=$write);
     }
     else echo "Vous devez renseigner « Marque » et « Référence fabriquant » pour activer cette fonction.";
