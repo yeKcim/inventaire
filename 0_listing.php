@@ -438,11 +438,12 @@ echo "</table>";
         "fnStateLoad": function (oSettings) {
             return JSON.parse( localStorage.getItem('DataTables') );
         },
-         sPaginationType: "two_button",
-	     bPaginate: true,
-	     bLengthChange: true,
-	     iDisplayLength: 25,
-	     aaSorting: [],
+        "iCookieDuration": 60, // 2 minute
+        sPaginationType: "two_button",
+	    bPaginate: true,
+	    bLengthChange: true,
+	    iDisplayLength: 25,
+	    aaSorting: [],
 	});
   })
   </script>
