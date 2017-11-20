@@ -218,13 +218,12 @@ foreach ($tableau as &$t) {
     if ($CAT=="") {
         echo "<td>";
 
-	echo spanquick("caracteristiques",$t["base_index"]);
+	    echo spanquick("caracteristiques",$t["base_index"]);
 
-	if (array_key_exists($t["base_index"], $tc)) echo substr($tc[$t["base_index"]], 0, -2);
+	    if (array_key_exists($t["base_index"], $tc)) echo substr($tc[$t["base_index"]], 0, -2);
         else echo "-";
 
         echo "</span>";
-
     }
     elseif ($th_c=="") echo "<td style=\"".$style."\">".spanquick("caracteristiques",$t["base_index"])."-</span></td>";
     else {
@@ -247,7 +246,7 @@ foreach ($tableau as &$t) {
                }
             }
         }
-        else echo "-";
+        else { if ($CAT!="") echo "<a href=\"\" title=\"todo\">-</a>";}
 
 echo "</td>";
 
