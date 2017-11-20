@@ -104,7 +104,8 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
 if ( empty($historique[0]) ) echo "Aucune intervention spécifiée.";
 else {
 
-    echo "<table style=\"border:none;\">";
+    echo "\n<table id=\"log\" style=\"border:none;\">\n";
+
     foreach ($historique as $h) {
 
         echo "<tr>";
@@ -114,11 +115,10 @@ else {
         if ($write) echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&h=".$h["historique_index"]."".$quick."',width:280,height:110})\" title=\"supprimer cette entrée (".$h["historique_index"].") du journal\">×</span>";
         else echo "&nbsp;";
         echo "</td>";
-        echo "</tr>";
+        echo "</tr>\n";
 
     }
-    echo "</table>";
-
+    echo "</table>\n\n";
     }
 
     echo "</fieldset>";
