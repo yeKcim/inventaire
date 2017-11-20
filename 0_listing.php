@@ -431,7 +431,13 @@ echo "</table>";
   <script>
   $(function(){
 	$("#listing").dataTable({
-	     stateSave: true, // ne fonctionne pas ?
+        "bStateSave": true,
+        "fnStateSave": function (oSettings, oData) {
+            localStorage.setItem( 'DataTables', JSON.stringify(oData) );
+        },
+        "fnStateLoad": function (oSettings) {
+            return JSON.parse( localStorage.getItem('DataTables') );
+        },
          sPaginationType: "two_button",
 	     bPaginate: true,
 	     bLengthChange: true,
