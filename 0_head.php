@@ -10,32 +10,30 @@
         echo $titre; ?>
     </title>
     <link rel="stylesheet" type="text/css" href="./style.css">
-    
+
     <!-- ascii : http://patorjk.com/software/taag/#p=display&h=2&v=0&f=ANSI%20Shadow&t= -->
-    
+
 <!-- ╦╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
      ║║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚╝╚═╝╚╚═╝╚═╝╩╚═ ╩   -->
     <script src="jquery.min.js" type="text/javascript"></script>
-    
+
 <!--╔╦╗╦╔╗╔╦ ╦╔╗ ╔═╗═╗ ╦
      ║ ║║║║╚╦╝╠╩╗║ ║╔╩╦╝
      ╩ ╩╝╚╝ ╩ ╚═╝╚═╝╩ ╚═
      tinybox pour les popup layout -->
     <script type="text/javascript" src="tinybox/tinybox.js"></script>
     <link rel="stylesheet" href="tinybox/tinybox.css" />
-    
-    
+
 <!--╔╦╗╦═╗╔═╗╔═╗╔═╗╔═╗╔╗╔╔═╗
-     ║║╠╦╝║ ║╠═╝╔═╝║ ║║║║║╣ 
+     ║║╠╦╝║ ║╠═╝╔═╝║ ║║║║║╣
     ═╩╝╩╚═╚═╝╩  ╚═╝╚═╝╝╚╝╚═╝
     dropzone pour drag&drop uploader    -->
     <script src="dropzone/dropzone.js"></script>
     <link rel="stylesheet" href="dropzone/dropzone.css">
-    
 
 <!--╔╦╗╦╔═╗╔═╗╦  ╔═╗╦ ╦   ╦ ╦╦╔╦╗╔═╗
-     ║║║╚═╗╠═╝║  ╠═╣╚╦╝ █ ╠═╣║ ║║║╣ 
+     ║║║╚═╗╠═╝║  ╠═╣╚╦╝ █ ╠═╣║ ║║║╣
     ═╩╝╩╚═╝╩  ╩═╝╩ ╩ ╩    ╩ ╩╩═╩╝╚═╝    -->
     <script type="text/javascript">
         // <![CDATA[
@@ -60,9 +58,9 @@
         }
         // ]]>
     </script>
-    
+
 <!--╔═╗╦ ╦╔═╗╔═╗╔═╗╔═╗╔╗╔     ╔╦╗╦ ╦╦ ╔╦╗╦  ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗
-    ║  ╠═╣║ ║║ ║╚═╗║╣ ║║║  o  ║║║║ ║║  ║ ║  ╚═╗║╣ ║  ║╣ ║   ║ 
+    ║  ╠═╣║ ║║ ║╚═╗║╣ ║║║  o  ║║║║ ║║  ║ ║  ╚═╗║╣ ║  ║╣ ║   ║
     ╚═╝╩ ╩╚═╝╚═╝╚═╝╚═╝╝╚╝  o  ╩ ╩╚═╝╩═╝╩ ╩  ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩   -->
     <script src="chosen/chosen.jquery.js" type="text/javascript"></script>
     <link rel="stylesheet" href="chosen/chosen.css">
@@ -70,7 +68,7 @@
 <!--╔╦╗╦╔═╗╔═╗╔═╗╔═╗╔═╗╔═╗╦═╗  ╔╦╗╔═╗╦  ╔═╗╦ ╦
      ║║║╚═╗╠═╣╠═╝╠═╝║╣ ╠═╣╠╦╝   ║║║╣ ║  ╠═╣╚╦╝
     ═╩╝╩╚═╝╩ ╩╩  ╩  ╚═╝╩ ╩╩╚═  ═╩╝╚═╝╩═╝╩ ╩ ╩   -->
-    <script type="text/javascript"> 
+    <script type="text/javascript">
       $(document).ready( function() {
         $('#disappear_delay').delay(2000).fadeOut();
       });
