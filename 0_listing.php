@@ -432,7 +432,8 @@ echo "</table>";
   <script>
   $(function(){
 	$("#listing").dataTable({
-             sPaginationType: "two_button",
+	     stateSave: true, // ne fonctionne pas ?
+         sPaginationType: "two_button",
 	     bPaginate: true,
 	     bLengthChange: true,
 	     iDisplayLength: 25,
