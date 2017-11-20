@@ -21,24 +21,27 @@ if ( isset($_POST["add_db"]) ) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
     if ($name_db!="") {
-	// Création de la base
-	$newdb=$prefix.$name_db;
-	try {
-    	  $dbh = new PDO("mysql:host=$connecthost", $connectlogin, $connectpasse);
-    	  $dbh->exec("CREATE DATABASE `$newdb`;")
-    	  or die(print_r($dbh->errorInfo(), true));
-  	} catch (PDOException $e) {  die("DB ERROR: ". $e->getMessage());  }
-  	echo "<p class=\"success_message\">Base $newdb créée avec succès.</p>";
+	    // Création de la base
+	    $newdb=$prefix.$name_db;
+	    try {
+    	      $dbh = new PDO("mysql:host=$connecthost", $connectlogin, $connectpasse);
+    	      $dbh->exec("CREATE DATABASE `$newdb`;")
+    	      or die(print_r($dbh->errorInfo(), true));
+  	    } catch (PDOException $e) {  die("DB ERROR: ". $e->getMessage());  }
+  	    echo "<p class=\"success_message\">Base $newdb créée avec succès.</p>";
 
-	// Insertion des tables
-	$database=$name_db;
-	require_once("./0_connect_db.php");
-	require_once("./0_fonctions.php");
-	$add_tables = file_get_contents("./database_add.sql");
-	$qr = $dbh->exec($add_tables);
-	if ($qr) echo "<p class=\"error_message\">Erreur lors de la création des tables, merci de contacter votre administrateur.</p>";
-	else echo "<p class=\"success_message\">Tables ajoutées à $newdb.</p><p>Vous pouvez fermer ce cadre.</p>";
+	    // Insertion des tables
+	    $database=$name_db;
+	    require_once("./0_connect_db.php");
+	    require_once("./0_fonctions.php");
+	    $add_tables = file_get_contents("./database_add.sql");
+	    $qr = $dbh->exec($add_tables);
+	    if ($qr) echo "<p class=\"error_message\">Erreur lors de la création des tables, merci de contacter votre administrateur.</p>";
+	    else echo "<p class=\"success_message\">Tables ajoutées à $newdb.</p><p>Vous pouvez fermer ce cadre.</p>";
 
+        // Création du dossier correspondant à la nouvelle base dans files/
+        $dir="".$dossierdesfichiers.$name_db;
+        if (!file_exists("$dir")) mkdir("$dir", 0775);
     }
 }
 
