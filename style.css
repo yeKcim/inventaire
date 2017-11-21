@@ -5,6 +5,7 @@ a                   { text-decoration: none; color:#3465a4; }
 table               { border: 0px solid #555753; border-collapse: collapse; width: 100%; font-size: 1em;}
 tr:nth-child(odd)    { background-color:#ddd; }
 tr:nth-child(even)    { background-color:#fff; }
+th {background: #717171; color: #ffffff;}
 
 #listing th, #listing td     { padding: 2px; border-left: 1px solid #eee; }
 #listing th         {text-align: center; border-bottom: 0px solid #555753; background: #a1a1a1; color: #fff;}

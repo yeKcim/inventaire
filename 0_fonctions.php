@@ -132,18 +132,22 @@ function displayDir($database, $i, $dir, $del=FALSE) {
     else {
         $files = scandir("$dir");
         if ($files != FALSE) {
-        echo "<ul>";
+        echo "<table>";
+        
+        echo "<th style=\"text-align:left;\">Fichier</th><th width=\"15%\">Taille</th>";
+        if ($del)  echo "<th width=\"15%\">Suppr.</th>";
+        
             foreach ($files as $f) {
                 if (($f!=".")&&($f!="..")) {
-                    echo "<li>";
+                    echo "<tr><td>";
                     echo icone($f);
-                    echo "<a href=\"".str_replace($racine, "", "$dir$f")."\" target=\"_blank\">$f</a>";
-                    echo " (".formatBytes(filesize("$dir$f"),"0")."o)";
-                    if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&f=".$dir.$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";
-                    echo"</li>";
+                    echo "<a href=\"".str_replace($racine, "", "$dir$f")."\" target=\"_blank\">$f</a></td>";
+                    echo "<td style=\"text-align:right;\">".formatBytes(filesize("$dir$f"),"0")."o</td>";
+                    if ($del) echo "<td style=\"text-align:center;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&f=".$dir.$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span></td>";
+                    echo"</tr>";
                 }
             }
-        echo "</ul>";
+        echo "</table>";
         }
     }
 }

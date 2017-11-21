@@ -106,6 +106,8 @@ else {
 
     echo "\n<table id=\"log\" style=\"border:none;\">\n";
 
+    echo "<tr><th style=\"text-align:left\">Date</th><th style=\"text-align:left\">Information</th><th>Suppr</th></tr>";
+
     foreach ($historique as $h) {
 
         echo "<tr>";

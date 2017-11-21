@@ -135,6 +135,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     if ( (!$references_similaires) || ($data[0]["reference"]=="") || ($data[0]["marque"]=="0") || ($data[0]["categorie"]=="0") )echo "Aucune référence correspondante trouvée";
     else {
         echo "<table>";
+        echo "<tr><th style=\"text-align:left\">Ref</th><th style=\"text-align:left\">Fichiers</th></tr>";
         foreach ($references_similaires as $rs) {
             echo "<tr>";
             echo "<td width=\"20%\"><a href=\"info.php?i=".$rs["base_index"]."\" target=\"_blank\">";
