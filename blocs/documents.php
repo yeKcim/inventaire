@@ -134,11 +134,17 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     $references_similaires = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
     if ( (!$references_similaires) || ($data[0]["reference"]=="") || ($data[0]["marque"]=="0") || ($data[0]["categorie"]=="0") )echo "Aucune référence correspondante trouvée";
     else {
+        echo "<table>";
         foreach ($references_similaires as $rs) {
-            echo "<a href=\"info.php?i=".$rs["base_index"]."\" target=\"_blank\">#".$rs["base_index"]." (".$rs["lab_id"].")</a>&nbsp;: ";
-            echo display_dir_compact("$dossierdesfichiers$database/".$rs["base_index"]."/");
-            echo "<br/>";
+            echo "<tr>";
+            echo "<td width=\"20%\"><a href=\"info.php?i=".$rs["base_index"]."\" target=\"_blank\">";
+            if ($rs["lab_id"]=="") echo "#".$rs["base_index"].""; else echo "<span title=\"#".$rs["base_index"]."\">".$rs["lab_id"]."</span>";
+            echo "</a></td><td>";
+            $ddir=display_dir_compact("$dossierdesfichiers$database/".$rs["base_index"]."/");
+            if ($ddir) echo display_dir_compact("$dossierdesfichiers$database/".$rs["base_index"]."/"); else echo "Aucun fichier";
+            echo "</td></tr>";
         }
+        echo "</table>";
     }
     echo "</fieldset>";
 
