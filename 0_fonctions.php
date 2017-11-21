@@ -106,14 +106,6 @@ function option_selecteur($select, $table, $A="0", $B="1", $complement="0",$comp
 ╚═════╝  ╚═════╝ ╚══════╝╚══════╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
 */
 
-function icone($file) {
-    $info = new SplFileInfo($file);
-    if ("mime-icons/".$info->getExtension().".png" != FALSE) {
-        echo "<img src=\"mime-icons/".$info->getExtension().".png\" /> ";
-    }
-    else echo "<img src=\"mime-icons/unknown.png\" /> ";
-}
-
 function is_dir_empty($dir) {
     if (!is_readable($dir)) return NULL;
     $handle = opendir($dir);
@@ -144,7 +136,7 @@ function displayDir($database, $i, $dir, $del=FALSE) {
             foreach ($files as $f) {
                 if (($f!=".")&&($f!="..")) {
                     echo "<li>";
-                    icone($f);
+                    echo icone($f);
                     echo "<a href=\"".str_replace($racine, "", "$dir$f")."\" target=\"_blank\">$f</a>";
                     echo " (".formatBytes(filesize("$dir$f"),"0")."o)";
                     if ($del) echo " <span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&f=".$dir.$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>";
@@ -154,8 +146,45 @@ function displayDir($database, $i, $dir, $del=FALSE) {
         echo "</ul>";
         }
     }
-
 }
+
+
+
+function icone($file) {
+    $info = new SplFileInfo($file);
+    if ("mime-icons/".$info->getExtension().".png" != FALSE) {
+        $r="<img src=\"mime-icons/".$info->getExtension().".png\" /> ";
+    }
+    else $r="<img src=\"mime-icons/unknown.png\" /> ";
+    return $r;
+}
+
+
+function display_dir_compact($d) {
+    global $database; global $racine;
+    $dir=str_replace("$racine", "", $d);
+    $r="";
+    if (file_exists("$d")) {
+        if ( ! is_dir_empty("$d")) {
+            $files = scandir("$d");
+            if ($files != FALSE) {
+                foreach ($files as $f) {
+                    if (($f!=".")&&($f!="..")) {
+                        $r.="<a href=\"$dir/$f\" target=\"_blank\" title=\"".$f."\">";
+                        $r.=icone($f);
+                        $r.="</a> ";}
+                }
+            }
+            else $r=false;
+        }
+        else $r=false;
+    }
+    return $r;
+}
+
+
+
+
 
 
 /*
@@ -221,24 +250,23 @@ function return_last_id($col,$table) {
 }
 
 function quickdisplayincarac ($t) {
-        global $categories;
-	global $database;
-        if ($t["sortie"]=="1") echo "<strike>";
-        echo "<a href=\"info.php?BASE=$database&i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
-        echo $t["lab_id"];
-        echo "</a>";
-        if (isset($t["categorie"])) {
-            $keys = array_keys(array_column($categories, 'categorie_index'), $t["categorie"]);
-            if (isset($keys[0])) {
-                echo "&nbsp;: ";
-                echo "<abbr title=\"Catégorie&nbsp;: ".$categories[$keys[0]]["categorie_nom"]." [".$categories[$keys[0]]["categorie_lettres"]."] \">";
-                echo $t["designation"];
-                echo " </abbr>";
-             }
-        }
-        else echo "&nbsp;: ".$t["designation"]." ";
-        if (isset($t["reference"])) echo " {".$t["reference"]."} ";
-        if ($t["sortie"]=="1") echo "</strike>";
+    global $categories; global $database;
+    if ($t["sortie"]=="1") echo "<strike>";
+    echo "<a href=\"info.php?BASE=$database&i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
+    echo $t["lab_id"];
+    echo "</a>";
+    if (isset($t["categorie"])) {
+        $keys = array_keys(array_column($categories, 'categorie_index'), $t["categorie"]);
+        if (isset($keys[0])) {
+            echo "&nbsp;: ";
+            echo "<abbr title=\"Catégorie&nbsp;: ".$categories[$keys[0]]["categorie_nom"]." [".$categories[$keys[0]]["categorie_lettres"]."] \">";
+            echo $t["designation"];
+            echo " </abbr>";
+         }
+    }
+    else echo "&nbsp;: ".$t["designation"]." ";
+    if (isset($t["reference"])) echo " {".$t["reference"]."} ";
+    if ($t["sortie"]=="1") echo "</strike>";
 }
 
 function quickdisplaymini ($t) {
@@ -255,7 +283,7 @@ function quickdisplaymini ($t) {
 }
 
 function quickdisplayincarac_b ($t) {
-        global $categories;
+    global $categories;
 	$txt="";
         if ($t["sortie"]=="1") $txt.="<strike>";
         $txt.="<a href='info.php?BASE=$database&i=".$t["base_index"]."' title='#".$t["base_index"]."' target='_blank'>";

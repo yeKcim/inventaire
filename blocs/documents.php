@@ -136,7 +136,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     else {
         foreach ($references_similaires as $rs) {
             echo "<a href=\"info.php?i=".$rs["base_index"]."\" target=\"_blank\">#".$rs["base_index"]." (".$rs["lab_id"].")</a>&nbsp;: ";
-            displayDir($database, $i, "$dossierdesfichiers$database/".$rs["base_index"]."/");
+            echo display_dir_compact("$dossierdesfichiers$database/".$rs["base_index"]."/");
             echo "<br/>";
         }
     }

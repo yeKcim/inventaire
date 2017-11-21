@@ -278,25 +278,11 @@ echo "</td>";
         $dir="files/$database/".$m."-".$r;
 
         if (file_exists("$racine$dir")) {
-            if ( ! is_dir_empty("$racine$dir")) {
-                $files = scandir("$racine$dir");
-                if ($files != FALSE) {
-                    foreach ($files as $f) {
-                        if (($f!=".")&&($f!="..")) {
-                            echo "<a href=\"$dir/$f\" target=\"_blank\" title=\"".$f."\">";
-                            icone($f);
-                            echo "</a> ";}
-                    }
-                echo spanquick("documents",$t["base_index"])."+</span>";
-                $nofiles=false;
-                }
-            }
-            else $nofiles=true;
+            $ddir=display_dir_compact("$racine$dir");
+            if ($ddir) echo $ddir; else $nofiles=true;
         }
         else $nofiles=true;
-
         if ($nofiles) echo spanquick("documents",$t["base_index"])."-</span>";
-
 
         echo "</td>";
 
@@ -344,27 +330,13 @@ echo "</td>";
         // ********** Fichiers **********
         echo "<td>";
 
-        $dir="files/$database/".$t["base_index"]."/";
+        $dir="files/$database/".$t["base_index"]."";
         if (file_exists("$racine$dir")) {
-            if ( ! is_dir_empty("$racine$dir")) {
-                $files = scandir("$racine$dir");
-                if ($files != FALSE) {
-                    foreach ($files as $f) {
-                        if (($f!=".")&&($f!="..")) {
-                            echo "<a href=\"".$dir."/".$f."\" target=\"_blank\" title=\"".$f."\">";
-                            icone($f);
-                            echo "</a> ";}
-                    }
-                echo spanquick("documents",$t["base_index"])."+</span>";
-                $nofiles=false;
-                }
-            }
-            else $nofiles=true;
+            $ddir=display_dir_compact("$racine$dir");
+            if ($ddir) echo $ddir; else $nofiles=true;
         }
         else $nofiles=true;
-
         if ($nofiles) echo spanquick("documents",$t["base_index"])."-</span>";
-
 
         echo "</td>";
 
