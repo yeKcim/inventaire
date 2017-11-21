@@ -398,31 +398,28 @@ echo "</td>";
 
 echo "</table>";
 
-?>
-  <script type="text/javascript" charset="utf8" src="datatables/jquery.dataTables.min.js"></script>
-  <script>
-  $(function(){
-	$("#listing").dataTable({
-        "bStateSave": true,
-        "fnStateSave": function (oSettings, oData) {
-            localStorage.setItem( 'DataTables', JSON.stringify(oData) );
-        },
-        "fnStateLoad": function (oSettings) {
-            return JSON.parse( localStorage.getItem('DataTables') );
-        },
-        "iCookieDuration": 60, // 2 minute
-        sPaginationType: "two_button",
-	    bPaginate: true,
-	    bLengthChange: true,
-	    iDisplayLength: 25,
-	    aaSorting: [],
-	});
-  })
-  </script>
+//active datatables for this table
+echo "<script type=\"text/javascript\" charset=\"utf8\" src=\"datatables/jquery.dataTables.min.js\"></script>\n";
+echo " <script>\n";
+  echo "\$(function(){\n";
+    echo "\$(\"#listing\").dataTable({\n";
+        echo "\"bStateSave\": true,\n";
+        echo "\"fnStateSave\": function (oSettings, oData) {\n";
+            echo "localStorage.setItem( 'DataTables', JSON.stringify(oData) );\n";
+        echo "},\n";
+        echo "\"fnStateLoad\": function (oSettings) {\n";
+            echo "return JSON.parse( localStorage.getItem('DataTables') );\n";
+        echo "},\n";
+        echo "\"iCookieDuration\": 60,\n"; // 2 minute
+        echo "sPaginationType: \"two_button\",\n";
+        echo "bPaginate: true,\n";
+        echo "bLengthChange: true,\n";
+        echo "iDisplayLength: 25,\n";
+        echo "aaSorting: [],\n";
+    echo "});\n";
+  echo "})\n";
+  echo "</script>\n";
 
-
-
-<?php
 /*stat*/
 //echo "<h2>Statistiques</h2>";
 echo "<br/><br/><hr/>";
