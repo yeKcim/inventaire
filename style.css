@@ -7,6 +7,18 @@ tr:nth-child(odd)    { background-color:#ddd; }
 tr:nth-child(even)    { background-color:#fff; }
 th {background: #717171; color: #ffffff;}
 
+#bloc table.dataTable thead th {
+    padding: 2px;
+    border-bottom: 1px solid black;
+    font-weight: bold;
+    cursor: pointer;
+    *cursor: hand;
+    background:#727272;
+}
+
+table.dataTable td { padding: 2px; }
+
+
 #listing th, #listing td     { padding: 2px; border-left: 1px solid #eee; }
 #listing th         {text-align: center; border-bottom: 0px solid #555753; background: #a1a1a1; color: #fff;}
 #listing td         { text-align: left;}

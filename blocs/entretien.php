@@ -167,15 +167,15 @@ else {
 
         $today=date("Y-m-d");
 
-        echo "<table style=\"border:none;\">";
+        echo "<table id=\"entretien\" style=\"border:none;\">";
 
-        echo "<tr>";
-            echo "<th>&nbsp;</th>";
+        echo "<thead><tr>";
+            echo "<th width=\"3%\">&nbsp;</th>";
             echo "<th style=\"text-align:left;\">Désignation</th>";
             echo "<th style=\"text-align:left;\">Fréquence</th>";
-            echo "<th style=\"text-align:left;\">Prochaine intervention</th>";
-            echo "<th>&nbsp;</th>";
-        echo "</tr>";
+            echo "<th style=\"text-align:left;\">Proch. intervention</th>";
+            echo "<th width=\"3%\">&nbsp;</th>";
+        echo "</tr></thead>";
 
         foreach ($entretiens as $e) {
 
@@ -238,8 +238,9 @@ else {
         }
 
         echo "</table>";
+        echodatatables("entretien");
 
-        echo "&nbsp; &nbsp;↳ Cochez les entretiens que vous souhaitez renseigner.<br/>";
+        echo "<br/>&nbsp; &nbsp;↳ Cochez les entretiens renseignés.<br/>";
 
         /* ########### Le ########### */
         echo "<label for=\"e_effectuele\" style=\"vertical-align: top;\"> Le <abbr title=\"si aucun calendrier n’aide à la saisie : YYYY-MM-DD\"><strong>ⓘ</strong></abbr> :</label>\n";

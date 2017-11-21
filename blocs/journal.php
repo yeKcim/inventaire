@@ -106,7 +106,10 @@ else {
 
     echo "\n<table id=\"log\" style=\"border:none;\">\n";
 
-    echo "<tr><th style=\"text-align:left\">Date</th><th style=\"text-align:left\">Information</th><th>Suppr</th></tr>";
+    echo "<thead><tr>";
+        echo "<th width=\"15%\" style=\"text-align:left\">Date</th>";
+        echo "<th style=\"text-align:left\">Information</th>";
+        echo "<th width=\"4%\" style=\"text-align:right\">Suppr</th></tr></thead>";
 
     foreach ($historique as $h) {
 
@@ -121,6 +124,7 @@ else {
 
     }
     echo "</table>\n\n";
+    echodatatables("log");
     }
 
     echo "</fieldset>";

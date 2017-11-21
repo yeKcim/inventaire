@@ -96,6 +96,29 @@ function option_selecteur($select, $table, $A="0", $B="1", $complement="0",$comp
 }
 
 
+function echodatatables($tableid) {
+echo "<script type=\"text/javascript\" charset=\"utf8\" src=\"datatables/jquery.dataTables.min.js\"></script>\n";
+echo " <script>\n";
+  echo "\$(function(){\n";
+    echo "\$(\"#".$tableid."\").dataTable({\n";
+//        echo "\"bStateSave\": true,\n";
+//        echo "\"fnStateSave\": function (oSettings, oData) {\n";
+//            echo "localStorage.setItem( 'DataTables', JSON.stringify(oData) );\n";
+//        echo "},\n";
+//        echo "\"fnStateLoad\": function (oSettings) {\n";
+//            echo "return JSON.parse( localStorage.getItem('DataTables') );\n";
+//        echo "},\n";
+//        echo "\"iCookieDuration\": 60,\n"; // 2 minute
+        echo "sPaginationType: \"two_button\",\n";
+        echo "bPaginate: true,\n";
+        echo "bLengthChange: true,\n";
+        echo "iDisplayLength: 10,\n";
+        echo "aaSorting: [],\n";
+    echo "});\n";
+  echo "})\n";
+  echo "</script>\n";
+}
+
 
 /*
 ██████╗  ██████╗ ███████╗███████╗██╗███████╗██████╗ ███████╗
@@ -132,35 +155,39 @@ function displayDir($database, $i, $dir, $del=FALSE) {
     else {
         $files = scandir("$dir");
         if ($files != FALSE) {
-        echo "<table>";
-        
+        $tableid=str_replace('/', "", $dir);
+        echo "\n\n<table id=\"".$tableid."\">";
+        echo "<thead><tr>";
         echo "<th width=\"5%\"><span title=\"Type\">.*</span></th>";
         echo "<th style=\"text-align:left;\">Fichier</th>";
         echo "<th width=\"15%\">Taille</th>";
         if ($del)  echo "<th width=\"10%\">Suppr.</th>";
-        
+        echo "</tr></thead>\n";
             foreach ($files as $f) {
                 if (($f!=".")&&($f!="..")) {
                     echo "<tr>";
-                    echo "<td>".icone($f)."</td>";
+                    echo "<td><span style=\"display:none;\">".extension($f)."</span>".icone($f)."</td>";
                     echo "<td><a href=\"".str_replace($racine, "", "$dir$f")."\" target=\"_blank\">$f</a></td>";
-                    echo "<td style=\"text-align:right;\">".formatBytes(filesize("$dir$f"),"0")."o</td>";
+                    echo "<td style=\"text-align:right;\"><span style=\"display:none;\">".filesize("$dir$f")."</span>".formatBytes(filesize("$dir$f"),"0")."o</td>";
                     if ($del) echo "<td style=\"text-align:center;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&f=".$dir.$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span></td>";
-                    echo"</tr>";
+                    echo"</tr>\n";
                 }
             }
         echo "</table>";
+        echodatatables($tableid);
         }
     }
 }
 
 
-
-function icone($file) {
+function extension($file) {
     $info = new SplFileInfo($file);
-    if ("mime-icons/".$info->getExtension().".png" != FALSE) {
-        $r="<img src=\"mime-icons/".$info->getExtension().".png\" /> ";
-    }
+    return $info->getExtension();
+}
+
+
+function icone($f) {
+    if ("mime-icons/".extension($f).".png" != FALSE) $r="<img src=\"mime-icons/".extension($f).".png\" /> ";
     else $r="<img src=\"mime-icons/unknown.png\" /> ";
     return $r;
 }
