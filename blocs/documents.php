@@ -146,7 +146,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
             echo "</td></tr>";
         }
         echo "</table>";
-        echodatatables("simreffiles");
+        echodatatables("simreffiles","5");
     }
     echo "</fieldset>";
 

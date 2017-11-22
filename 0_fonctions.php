@@ -96,11 +96,12 @@ function option_selecteur($select, $table, $A="0", $B="1", $complement="0",$comp
 }
 
 
-function echodatatables($tableid) {
+function echodatatables($tableid,$iDisplayLength="10") {
 echo "<script type=\"text/javascript\" charset=\"utf8\" src=\"datatables/jquery.dataTables.min.js\"></script>\n";
 echo " <script>\n";
   echo "\$(function(){\n";
     echo "\$(\"#".$tableid."\").dataTable({\n";
+        echo "\"lengthMenu\": [5, 10, 25, 50 ],\n"; // ne fonctionne pas ?
 //        echo "\"bStateSave\": true,\n";
 //        echo "\"fnStateSave\": function (oSettings, oData) {\n";
 //            echo "localStorage.setItem( 'DataTables', JSON.stringify(oData) );\n";
@@ -112,7 +113,7 @@ echo " <script>\n";
         echo "sPaginationType: \"two_button\",\n";
         echo "bPaginate: true,\n";
         echo "bLengthChange: true,\n";
-        echo "iDisplayLength: 10,\n";
+        echo "iDisplayLength: ".$iDisplayLength.",\n";
         echo "aaSorting: [],\n";
     echo "});\n";
   echo "})\n";
@@ -166,7 +167,7 @@ function displayDir($database, $i, $dir, $del=FALSE) {
             foreach ($files as $f) {
                 if (($f!=".")&&($f!="..")) {
                     echo "<tr>";
-                    echo "<td><span style=\"display:none;\">".extension($f)."</span>".icone($f)."</td>";
+                    echo "<td><span style=\"display:none;\">".extension($f)."</span><span title=\"".extension($f)."\">".icone($f)."</span></td>";
                     echo "<td><a href=\"".str_replace($racine, "", "$dir$f")."\" target=\"_blank\">$f</a></td>";
                     echo "<td style=\"text-align:right;\"><span style=\"display:none;\">".filesize("$dir$f")."</span>".formatBytes(filesize("$dir$f"),"0")."o</td>";
                     if ($del) echo "<td style=\"text-align:center;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&f=".$dir.$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span></td>";
@@ -174,7 +175,7 @@ function displayDir($database, $i, $dir, $del=FALSE) {
                 }
             }
         echo "</table>";
-        echodatatables($tableid);
+        echodatatables($tableid,"5");
         }
     }
 }
