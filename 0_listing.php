@@ -283,6 +283,7 @@ echo "</td>";
         }
         else $nofiles=true;
         if ($nofiles) echo spanquick("documents",$t["base_index"])."-</span>";
+        else echo spanquick("documents",$t["base_index"])."+</span>";
 
         echo "</td>";
 
@@ -337,6 +338,7 @@ echo "</td>";
         }
         else $nofiles=true;
         if ($nofiles) echo spanquick("documents",$t["base_index"])."-</span>";
+        else echo spanquick("documents",$t["base_index"])."+</span>";
 
         echo "</td>";
 
