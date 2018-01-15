@@ -195,7 +195,11 @@ foreach ($tableau as &$t) {
         // ********** Id Labo **********
         echo "<td><a href=\"info.php?BASE=$database&i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
         echo "<strong>";
-        if ($t["lab_id"]=="") echo "#".$t["base_index"].""; else echo $t["lab_id"];
+        if ($t["lab_id"]=="") echo "#".$t["base_index"]."";
+        else {
+            echo "<span style=\"display:none;\">".preg_replace("/[^a-zA-Z]+/", "", $t["lab_id"])."-".sprintf( "%06d", preg_replace("/[^0-9]+/", "", $t["lab_id"]) )."</span> ";
+            echo $t["lab_id"];
+        }
         echo "</strong>";
         echo "</a></td>";
 
