@@ -180,9 +180,10 @@ echo "<tr>";
      echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</th>";
      echo "<th style=\"background:#BA944D;\">			Fichiers<br/>entrée";       	echo "</th>";
      echo "<th style=\"background:#a786a2;\">			Journal";                   	echo "</th>";
-     echo "<th style=\"background:#96a5bc;\">                   Intégré à";                     echo "</th>";
+     echo "<th style=\"background:#96a5bc;\">           Intégré à";                     echo "</th>";
      echo "<th style=\"background:#96a5bc;\">			Localisation";              	echo "</th>";
     if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">	État";       			echo "</th>";
+     echo "<th>                                         &nbsp;";                        echo "</th>";
 echo "</tr>";
 echo "</thead>";
 
@@ -394,12 +395,27 @@ echo "</td>";
         if ($IOT!="0") {
             echo "<td>";
             echo spanquick("utilisation",$t["base_index"]);
-	    echo $t["raison_sortie_nom"];
+	        echo $t["raison_sortie_nom"];
             echo "</span>";
             echo "</td>";
         }
 
-    echo "</tr></a>";
+
+                                
+        // ********** Outils **********
+        echo "<td>";
+        echo spanquick("dupliquer",$t["base_index"]);
+        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'duplicate.php?BASE=$database&i=".$t["base_index"]."',width:440,height:750,closejs:function(){location.reload()}})\" title=\"Dupliquer cette entrée\">";
+        echo "✚";
+        echo "</span>";
+        echo "</td>";
+                                
+
+
+
+
+    echo "</tr>";
+
 }
 
 echo "</table>";
