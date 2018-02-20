@@ -404,7 +404,6 @@ echo "</td>";
                                 
         // ********** Outils **********
         echo "<td>";
-        echo spanquick("dupliquer",$t["base_index"]);
         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'duplicate.php?BASE=$database&i=".$t["base_index"]."',width:440,height:750,closejs:function(){location.reload()}})\" title=\"Dupliquer cette entrée\">";
         echo "✚";
         echo "</span>";
