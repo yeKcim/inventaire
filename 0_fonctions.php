@@ -131,6 +131,7 @@ echo " <script>\n";
 */
 
 function is_dir_empty($dir) {
+    $dir=str_replace("&", "&amp;", $dir);
     if (!is_readable($dir)) return NULL;
     $handle = opendir($dir);
     while (false !== ($entry = readdir($handle))) {
@@ -142,6 +143,7 @@ function is_dir_empty($dir) {
 function displayDir($database, $i, $dir, $del=FALSE) {
     global $racine;
     global $dossierdesfichiers;
+    $dir=str_replace("&", "&amp;", $dir);
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     // Si le dossier n’existe pas, on le crée
     if (!file_exists("$dir")) {
@@ -197,6 +199,7 @@ function icone($f) {
 function display_dir_compact($d) {
     global $database; global $racine;
     $dir=str_replace("$racine", "", $d);
+    $dir=str_replace("&","&amp;",$dir);
     $r="";
     if (file_exists("$d")) {
         if ( ! is_dir_empty("$d")) {
