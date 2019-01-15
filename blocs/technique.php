@@ -225,8 +225,10 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
                 echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\"><br/>\n";
 
                 $deja_abrev=dejadanslabase("SELECT DISTINCT `categorie_lettres` FROM `categorie` ;");
+
                 echo "<label for=\"plus_categorie_abbr\">Abbréviation <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
-                echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($deja_abrev))\S+[A-Za-z]$\" required x-moz-errormessage=\"Abbréviation (1 à 4 caractères) déjà utilisée ?\" >\n";
+              echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($dejaabrev))\S+[A-Za-z]$\" "; if ($data[0]["categorie"]=="plus_categorie") echo "required "; echo "x-moz-errormessage=\"Abbréviation (1 à 4 caractères) déjà utilisée ?\" >\n";
+
             echo "</fieldset>";
             echo "\n\n\n";
 
@@ -272,7 +274,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "<select name=\"marque\" onchange=\"display(this,'plus_marque','plus_marque');\" id=\"marque\">";
         echo "<option value=\"0\" "; if ($data[0]["marque"]=="0") echo "selected"; echo ">— Aucune marque spécifiée —</option>"; 
         option_selecteur($data[0]["marque"], $marques, "marque_index", "marque_nom");
-        echo "<option value=\"plus_marque\" "; if ($data[0]["marque"]=="plus_marque") echo "selected"; echo ">Nouvelle marque :</option>";
+        echo "<option value=\"plus_marque\" "; if (isset($data[0]["marque"])) { if ($data[0]["marque"]=="plus_marque") echo "selected";} echo ">Nouvelle marque :</option>";
         echo "</select><br/>";
 
             /* ########### + marque ########### */
