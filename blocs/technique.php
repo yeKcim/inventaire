@@ -151,7 +151,7 @@ if ( isset($_POST["technique_valid"]) ) {
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝    */
     if ($categorie=="plus_categorie") {
 	$sth = $dbh->query("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$plus_categorie_abbr."\",\"".$plus_categorie_nom."\") ;");
-        /* TODO : prévoir le cas où le vendeur existe déjà */
+        /* TODO : prévoir le cas où la catégorie existe déjà */
 	$categorie=return_last_id("categorie_index","categorie");
 
         // on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
@@ -223,8 +223,10 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             echo "<fieldset id=\"plus_categorie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Catégorie</legend>";
                 echo "<label for=\"plus_categorie_nom\">Nom :</label>\n";
                 echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\"><br/>\n";
+
+                $deja_abrev=dejadanslabase("SELECT DISTINCT `categorie_lettres` FROM `categorie` ;");
                 echo "<label for=\"plus_categorie_abbr\">Abbréviation <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
-                echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\"  pattern=\"^[A-Za-z]{1,4}$\" title=\"« 4 lettres max, pas de chiffres »\" >\n";
+                echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($deja_abrev))\S+[A-Za-z]$\" required x-moz-errormessage=\"Abbréviation (1 à 4 caractères) déjà utilisée ?\" >\n";
             echo "</fieldset>";
             echo "\n\n\n";
 

@@ -373,6 +373,24 @@ function vnum($s) {
 }
 
 
+function dejadanslabase($select) {
+    // $s="$sSELECT DISTINCT `categorie_lettres` FROM `categorie` ;"
+    global $dbh;
+    $abr = $dbh->query("$select");
+    $abrev = ($abr) ? $abr->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+    $listab="";
+    foreach ($abrev as $a) {
+        $listab.=$a["categorie_lettres"];
+            $listab.="|";
+    }
+    $listab=substr("$listab", 0, -1);
+
+    return $listab;
+}
+
+
+
+
 
 
 
