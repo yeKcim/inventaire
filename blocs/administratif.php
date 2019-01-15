@@ -234,7 +234,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### responsable_achat ########### */
         echo "<label for=\"responsable_achat\">Acheteur ";
 
-	$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $data[0]["responsable_achat"]); $key=$keys[0];
+	$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $data[0]["responsable_achat"]); if (isset($keys[0])) {$key=$keys[0];}
 
         if ( ($data[0]["responsable_achat"]!="0")&&(($data[0]["responsable_achat"]!="")) ) {
             echo "<a href=\"mailto:".$utilisateurs[$key]["utilisateur_mail"]."\" title=\"".$utilisateurs[$key]["utilisateur_mail"]."\"><strong>✉</strong></a> ";
