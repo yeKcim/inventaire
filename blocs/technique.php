@@ -214,8 +214,8 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "<label for=\"categorie\">Catégorie : </label>\n";
         echo "<select name=\"categorie\" onchange=\"display(this,'plus_categorie','plus_categorie');\" id=\"categorie\">";
         echo "<option value=\"0\" "; if ($data[0]["categorie"]=="0") echo "selected"; echo ">— Aucune catégorie spécifiée —</option>";
+        echo "<option value=\"plus_categorie\" "; if ($data[0]["categorie"]=="plus_categorie") echo "selected"; echo ">— Nouvelle catégorie : —</option>";
         option_selecteur($data[0]["categorie"], $categories, "categorie_index", "categorie_nom", "categorie_lettres", "display()");
-        echo "<option value=\"plus_categorie\" "; if ($data[0]["categorie"]=="plus_categorie") echo "selected"; echo ">Nouvelle catégorie :</option>";
         echo "</select><br/>";
 
             /* ########### + categorie ########### */
@@ -273,8 +273,8 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "<label for=\"marque\">Marque : </label>\n";
         echo "<select name=\"marque\" onchange=\"display(this,'plus_marque','plus_marque');\" id=\"marque\">";
         echo "<option value=\"0\" "; if ($data[0]["marque"]=="0") echo "selected"; echo ">— Aucune marque spécifiée —</option>"; 
+        echo "<option value=\"plus_marque\" "; if (isset($data[0]["marque"])) { if ($data[0]["marque"]=="plus_marque") echo "selected";} echo ">− Nouvelle marque : −</option>";
         option_selecteur($data[0]["marque"], $marques, "marque_index", "marque_nom");
-        echo "<option value=\"plus_marque\" "; if (isset($data[0]["marque"])) { if ($data[0]["marque"]=="plus_marque") echo "selected";} echo ">Nouvelle marque :</option>";
         echo "</select><br/>";
 
             /* ########### + marque ########### */

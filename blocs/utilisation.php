@@ -142,9 +142,8 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         /* ########### utilisateur ########### */
         echo "<label for=\"utilisateur\">Utilisateur : </label>\n";
         echo "<select name=\"utilisateur\" onchange=\"display(this,'plus_utilisateur','plus_utilisateur');\" id=\"utilisateur\">";
-        echo "<option value=\"0\" "; if ($data[0]["utilisateur"]=="0") echo "selected"; echo ">— Aucun utilisateur spécifié —</option>"; 
-	option_selecteur($data[0]["utilisateur"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
-        echo "<option value=\"plus_utilisateur\" "; if ($data[0]["utilisateur"]=="plus_utilisateur") echo "selected"; echo ">Nouvel utilisateur :</option>";
+        echo "<option value=\"0\" "; if ($data[0]["utilisateur"]=="0") echo "selected"; echo ">— Aucun utilisateur spécifié —</option>";        echo "<option value=\"plus_utilisateur\" "; if ($data[0]["utilisateur"]=="plus_utilisateur") echo "selected"; echo ">− Nouvel utilisateur : −</option>";
+    	option_selecteur($data[0]["utilisateur"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
         echo "</select><br/>";
 
             /* ########### + utilisateur ########### */
@@ -168,9 +167,10 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         /* ########### localisation ########### */
         echo "<label for=\"localisation\">Localisation : </label>\n";
         echo "<select name=\"localisation\" onchange=\"display(this,'plus_localisation','plus_localisation');\" > id=\"localisation\"";
-        echo "<option value=\"0\" "; if ($data[0]["localisation"]=="0") echo "selected"; echo ">— Aucune localisation spécifiée —</option>"; 
+        echo "<option value=\"0\" "; if ($data[0]["localisation"]=="0") echo "selected"; echo ">— Aucune localisation spécifiée —</option>";
+        echo "<option value=\"plus_localisation\" "; if ($data[0]["localisation"]=="plus_localisation") echo "selected"; echo ">− Nouvelle localisation : −</option>";
+
         option_selecteur($data[0]["localisation"], $localisations, "localisation_index", "localisation_batiment", "localisation_piece");
-        echo "<option value=\"plus_localisation\" "; if ($data[0]["localisation"]=="plus_localisation") echo "selected"; echo ">Nouvelle localisation :</option>";
         echo "</select>";
 
         if ( ($data[0]["date_localisation"]!="") && ($data[0]["date_localisation"]!="0000-00-00") )
@@ -226,8 +226,8 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo "<label for=\"raison_sortie\">Raison de sortie : </label>\n"; /* seulement si sortie… !!! */
         echo "<select name=\"raison_sortie\" onchange=\"display(this,'plus_raison_sortie','plus_raison_sortie');\" id=\"raison_sortie\">";
         echo "<option value=\"0\" "; if ($data[0]["raison_sortie"]=="0") echo "selected"; echo ">— Aucune raison spécifiée —</option>";
+        echo "<option value=\"plus_raison_sortie\" "; if ($data[0]["raison_sortie"]=="plus_raison_sortie") echo "selected"; echo ">−Nouvelle raison : −</option>";
         option_selecteur($data[0]["raison_sortie"], $raison_sorties, "raison_sortie_index", "raison_sortie_nom");
-        echo "<option value=\"plus_raison_sortie\" "; if ($data[0]["raison_sortie"]=="plus_raison_sortie") echo "selected"; echo ">Nouvelle raison :</option>";
         echo "</select>";
         echo "</span>";
 
