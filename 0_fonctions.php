@@ -375,16 +375,18 @@ function vnum($s) {
 
 function dejadanslabase($select) {
     // $s="$sSELECT DISTINCT `categorie_lettres` FROM `categorie` ;"
+    // Ne pas oublier les ` car ils servent à récupérer une info !
     global $dbh;
     $abr = $dbh->query("$select");
     $abrev = ($abr) ? $abr->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
     $listab="";
+    $distinct = explode("`", $select);
+    $d=$distinct[1];
     foreach ($abrev as $a) {
-        $listab.=$a["categorie_lettres"];
+        $listab.="".$a["$d"]."";
             $listab.="|";
     }
     $listab=substr("$listab", 0, -1);
-
     return $listab;
 }
 

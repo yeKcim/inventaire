@@ -159,7 +159,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
                 echo "<input value=\"\" name=\"plus_utilisateur_mail\" type=\"text\"><br/>\n";
 
                 echo "<label for=\"plus_utilisateur_phone\"><abbr title=\"juste les chiffres sans séparateur\">Téléphone</abbr> :</label>\n";
-                echo "<input value=\"\" name=\"plus_utilisateur_phone\" type=\"text\">\n";
+                echo "<input value=\"\" name=\"plus_utilisateur_phone\" type=\"number\">\n";
 
             echo "</fieldset>";
             echo "\n\n\n";
@@ -237,7 +237,9 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
                     echo "\n\n\n";
                     echo "<fieldset id=\"plus_raison_sortie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvellle raison de sortie</legend>";
                         echo "<label for=\"plus_raison_sortie_nom\">Raison :</label>\n";
-                        echo "<input value=\"\" name=\"plus_raison_sortie_nom\" type=\"text\">\n";
+                        
+                        $deja_raison=dejadanslabase("SELECT DISTINCT `raison_sortie_nom` FROM `raison_sortie`");
+                        echo "<input value=\"\" name=\"plus_raison_sortie_nom\" type=\"text\"  pattern=\"^(?!(".$deja_raison.")$)\S+$\" x-moz-errormessage=\"Déjà dans la base\" />\n";
                     echo "</fieldset>";
                     echo "\n\n\n";
 
