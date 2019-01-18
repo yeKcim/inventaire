@@ -159,7 +159,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<fieldset id=\"plus_vendeur\" class=\"subfield\" style=\"display: none;\"><legend  class=\"subfield\">Nouveau Vendeur</legend>";
             echo "<label for=\"plus_vendeur_nom\">Nom :</label>\n";
                     $deja_vendeur=dejadanslabase("SELECT DISTINCT `vendeur_nom` FROM `vendeur` ");
-            		echo "<input value=\"\" name=\"plus_vendeur_nom\" type=\"text\" pattern=\"^(?!(".$deja_vendeur.")$)\S+$\" x-moz-errormessage=\"Déjà dans la base\"  /><br/>\n";
+            		echo "<input value=\"\" name=\"plus_vendeur_nom\" type=\"text\" pattern=\"^(?!(".$deja_vendeur.")$).*$\" x-moz-errormessage=\"Déjà dans la base\"  /><br/>\n";
             echo "<label for=\"plus_vendeur_web\">Site web :</label>\n";   	echo "<input value=\"\" name=\"plus_vendeur_web\" type=\"text\"><br/>\n";
             echo "<label for=\"plus_vendeur_remarque\">Remarque :</label>\n";	echo "<input value=\"\" name=\"plus_vendeur_remarque\" type=\"text\"><br/>\n";
         echo "</fieldset>";
@@ -190,7 +190,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
             echo "<label for=\"plus_contrat_nom\">Nom :</label>\n";
             $deja_contrat=dejadanslabase("SELECT DISTINCT `contrat_nom` FROM `contrat`");
-            echo "<input value=\"\" name=\"plus_contrat_nom\" type=\"text\"  pattern=\"^(?!(".$deja_contrat.")$)\S+$\" x-moz-errormessage=\"Déjà dans la base\" /><br/>\n";
+            echo "<input value=\"\" name=\"plus_contrat_nom\" type=\"text\" pattern=\"^(?!(".$deja_contrat.")$).*$\" x-moz-errormessage=\"Déjà dans la base\" /><br/>\n";
 
             echo "<label for=\"contrat_type\">Type de contrat :</label>\n";
                echo "<select name=\"contrat_type\" onchange=\"display(this,'plus_contrat_type','plus_contrat_type');\" id=\"contrat_type\">";
@@ -205,7 +205,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
                         echo "<label for=\"plus_contrat_type_nom\">Type :</label>\n";
                         
                         $deja_contrattype=dejadanslabase("SELECT DISTINCT `contrat_type_cat` FROM `contrat_type`");
-                        echo "<input value=\"\" name=\"plus_contrat_type_nom\" type=\"text\"  pattern=\"^(?!(".$deja_contrattype.")$)\S+$\" x-moz-errormessage=\"Déjà dans la base\"  / >\n";
+                        echo "<input value=\"\" name=\"plus_contrat_type_nom\" type=\"text\"  pattern=\"^(?!(".$deja_contrattype.")$).*$\" x-moz-errormessage=\"Déjà dans la base\"  / >\n";
                     echo "</fieldset>";
                     echo "\n\n\n";
 
@@ -226,7 +226,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
                 echo "<label for=\"plus_tutelle\">Tutelle :</label>\n";
                 
                 $deja_tut=dejadanslabase("SELECT DISTINCT `tutelle_nom` FROM `tutelle`");
-                echo "<input value=\"\" name=\"plus_tutelle\" type=\"text\" pattern=\"^(?!(".$deja_tut.")$)\S+$\" x-moz-errormessage=\"Déjà dans la base\"  / >\n";
+                echo "<input value=\"\" name=\"plus_tutelle\" type=\"text\" pattern=\"^(?!(".$deja_tut.")$).*$\" x-moz-errormessage=\"Déjà dans la base\"  / >\n";
             echo "</fieldset>";
             echo "\n\n\n";
 

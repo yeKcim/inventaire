@@ -223,7 +223,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             echo "<fieldset id=\"plus_categorie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Catégorie</legend>";
                 echo "<label for=\"plus_categorie_nom\">Nom :</label>\n";
                 $deja_catnom=dejadanslabase("SELECT DISTINCT `categorie_nom` FROM `categorie` ");
-                echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\" pattern=\"^(?!(".$deja_catnom.")$)\S+$\" x-moz-errormessage=\"Déjà dans la base\" /><br/>\n";
+                echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\" pattern=\"^(?!(".$deja_catnom.")$).*$\" x-moz-errormessage=\"Déjà dans la base\" /><br/>\n";
 
                 echo "<label for=\"plus_categorie_abbr\">Abbréviation <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
                 $deja_abrev=dejadanslabase("SELECT DISTINCT `categorie_lettres` FROM `categorie` ;");
@@ -283,7 +283,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
                 echo "<label for=\"plus_marque_nom\">Nom :</label>\n";
 
                 $deja_marque=dejadanslabase("SELECT DISTINCT `marque_nom` FROM `marque` ");
-                echo "<input value=\"\" name=\"plus_marque_nom\" type=\"text\"  pattern=\"^(?!(".$deja_marque.")$)\S+$\" x-moz-errormessage=\"Déjà dans la base\" / >\n";
+                echo "<input value=\"\" name=\"plus_marque_nom\" type=\"text\"  pattern=\"^(?!(".$deja_marque.")$).*$\" x-moz-errormessage=\"Déjà dans la base\" / >\n";
             echo "</fieldset>";
             echo "\n\n\n";
 
