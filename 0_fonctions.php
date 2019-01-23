@@ -190,7 +190,7 @@ function extension($file) {
 
 
 function icone($f) {
-    if ("mime-icons/".extension($f).".png" != FALSE) $r="<img src=\"mime-icons/".extension($f).".png\" /> ";
+    if ("mime-icons/".extension($f).".png" != FALSE) $r="<img src=\"mime-icons/".mb_strtolower(extension($f)).".png\" /> ";
     else $r="<img src=\"mime-icons/unknown.png\" /> ";
     return $r;
 }
