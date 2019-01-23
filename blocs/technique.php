@@ -251,7 +251,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 			}
 		echo "</option>";
 		echo "<option value=\"manual_id\" ";
-		echo ">Manuel (non fonctionnel)</option>";
+		echo ">Manuel</option>";
         echo "</select><br/>";
 
         /* ########### + id_manuel ########### */
