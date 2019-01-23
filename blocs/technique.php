@@ -257,7 +257,13 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         /* ########### + id_manuel ########### */
         echo "\n\n\n";
         echo "<fieldset id=\"manual_id\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Id Manuel</legend>";
-            echo "<label for=\"id_man\">Id :</label>\n";	echo "<input value=\"\" name=\"id_man\" type=\"text\">\n";
+            echo "<label for=\"id_man\">Id :</label>\n";
+            
+            
+            $deja_idman=dejadanslabase("SELECT DISTINCT `lab_id` FROM `base` ;");
+            echo "<input value=\"\" name=\"id_man\" type=\"text\" pattern=\"^(?!(".$deja_idman.")$).*$\" x-moz-errormessage=\"Déjà dans la base\" / >\n";
+            
+            
         echo "</fieldset>";
         echo "\n\n\n";
         echo "<br/>";
