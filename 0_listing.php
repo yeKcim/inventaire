@@ -206,7 +206,7 @@ foreach ($tableau as &$t) {
 
         // ********** Catégorie **********
         echo "<td>";
-	if ($CAT=="") echo "<a href=\"?CAT=".$t["categorie"]."\" style=\"color:#000;\" title=\"Afficher les entrées de la catégorie [".$t["categorie_lettres"]."]\">";
+	if ($CAT=="") echo "<a href=\"?BASE=$database&CAT=".$t["categorie"]."\" style=\"color:#000;\" title=\"Afficher les entrées de la catégorie [".$t["categorie_lettres"]."]\">";
 	echo $t["categorie_nom"];
 	if ($CAT=="") echo "</a>";
 	echo "</td>";
