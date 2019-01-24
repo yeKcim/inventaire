@@ -282,6 +282,13 @@ echo "</td>";
         $r=str_replace('/', "_", $t["reference"]);
         $dir="files/$database/".$m."-".$r;
 
+        
+            //$dir=str_replace("&", "&amp;", $dir);
+            $dir=str_replace("&", "amp", $dir);
+            $dir=str_replace(";", "semicolon", $dir);
+        
+
+
         if (file_exists("$racine$dir")) {
             $ddir=display_dir_compact("$racine$dir");
             if ($ddir) echo $ddir; else $nofiles=true;

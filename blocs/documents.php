@@ -93,7 +93,13 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 		}
                 else $dossier=$dossierdesfichiers.$database."/".$i;
 
-                $dossier=str_replace("&", "&amp;", $dossier);
+                
+                
+                    //$dossier=str_replace("&", "&amp;", $dossier);
+                    $dossier=str_replace("&", "amp", $dossier);
+                    $dossier=str_replace(";", "semicolon", $dossier);
+                
+                
                 move_uploaded_file($file_tmp,"$dossier/".$file_name);
                 //echo "Fichier envoyé avec succès.<br/>";
                 echo "<p class=\"success_message\" id=\"disappear_delay\">Fichier envoyé avec succès.</p>";
