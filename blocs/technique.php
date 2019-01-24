@@ -52,7 +52,7 @@ if ( isset($_POST["technique_valid"]) ) {
 
     $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "lab_id", "id_man", "marque", "plus_marque", "plus_marque_nom", "reference", "serial_number", "plus_tags");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
     }
 
 

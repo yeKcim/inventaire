@@ -46,7 +46,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
     $arr = array("utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
     }
 
     if ($utilisateur=="plus_utilisateur") {

@@ -12,7 +12,7 @@
 /* ########### POST ########### */
 $arr = array("add_historique","del_h_confirm","h","hide_auto");
 foreach ($arr as &$value) {
-    $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+    $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
 }
 
 
@@ -28,7 +28,7 @@ foreach ($arr as &$value) {
 if ($add_historique=="Ajouter") {
     $arr = array("date_info", "histo");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
     }
     $sth = $dbh->query("SELECT historique_index FROM historique WHERE historique_date=\"".$date_info."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";");
     $query_do_i_insert_histo = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;

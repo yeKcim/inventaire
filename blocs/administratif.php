@@ -41,7 +41,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
     $arr = array("designation","vendeur","plus_vendeur_nom","plus_vendeur_web","plus_vendeur_remarque","prix","contrat","plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "bon_commande", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
     }
 
     /* ########### Ajout d’un nouveau vendeur ########### */

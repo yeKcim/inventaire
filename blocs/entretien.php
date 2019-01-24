@@ -25,7 +25,7 @@ $message="";
 if ( isset($_POST["add_entretien"]) ) {
     $arr = array("e_frequence", "e_frequence_multipli", "e_designation", "e_detail");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
     }
 
     if ( ($e_designation=="")||($e_frequence=="") ) $error_emptyinput="Fréquence et Désignation sont des champs obligatoires";
@@ -46,7 +46,7 @@ $modif_entretien= isset($_POST["modif_entretien"]) ? htmlentities($_POST["modif_
 if ($modif_entretien!="") {
     $arr = array("e_effectuele", "e_effectuerpar", "plus_intervant_prenom", "plus_intervant_nom", "plus_intervant_mail", "plus_intervant_phone");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
     }
 
     if ($e_effectuerpar=="plus_intervant") {

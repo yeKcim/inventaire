@@ -49,7 +49,7 @@ if ( isset($_POST["new_carac_valid"]) ) {
     // Création d’une nouvelle caracteristique
     $arr = array("nom_carac", "unite_carac", "symbole_carac");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
     }
     // Si au moins un champ de « Nouvelle caracteristique » est rempli :
     if ( ($nom_carac!="")||($symbole_carac!="") ) {
