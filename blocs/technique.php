@@ -227,7 +227,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
                 echo "<label for=\"plus_categorie_abbr\">Abbréviation <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
                 $deja_abrev=dejadanslabase("SELECT DISTINCT `categorie_lettres` FROM `categorie` ;");
-                echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($deja_abrev))\S+[A-Za-z]$\" "; if ($data[0]["categorie"]=="plus_categorie") echo "required "; echo "x-moz-errormessage=\"Abbréviation (1 à 4 caractères) déjà utilisée ?\" >\n";
+                echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\" ^(?!($deja_abrev))([A-Za-z]{1,4})$\" "; if ($data[0]["categorie"]=="plus_categorie") echo "required "; echo "x-moz-errormessage=\"Abbréviation (1 à 4 caractères) déjà utilisée ?\" >\n";
 
             echo "</fieldset>";
             echo "\n\n\n";
