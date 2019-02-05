@@ -24,9 +24,9 @@ $quick= ( isset($_GET["quick_page"]) ) ? "quick_page=".$_GET["quick_page"]."&qui
 if ($f!="") {
     echo "<form method=\"post\" action=\"?".$quick."i=".$i."&BASE=".$BASE."\">";
         echo "<p style=\"text-align:center\"><strong>Nouveau nom :</strong></p>";
-        echo "<p style=\"text-align:center\"><input name='newname' value='".$f."' type='text'\" size=\"32\" pattern=\"^[A-Za-z0-9_-.]{1,32}$\"/> </p>";
-        echo "<input name='oldname' value='".$f."' type='hidden'\">";
-        echo "<input name='dir' value='".$dir."' type='hidden'\">";
+        echo "<p style=\"text-align:center\"><input name='newname' value=\"".$f."\" type='text'\" size=\"32\" pattern=\"^[A-Za-z0-9_-.]{1,32}$\"/> </p>";
+        echo "<input name='oldname' value=\"".$f."\" type='hidden'\">";
+        echo "<input name='dir' value=\"".$dir."\" type='hidden'\">";
         echo "<p style=\"text-align:center\"><input name='mv_f_confirm' value='Renommer' type='submit'\"> </p>";
     echo "</form>";
 }
