@@ -27,12 +27,41 @@ foreach ($arr as &$value) {
     $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
 }
 
+$arr = array("move","filename");
+foreach ($arr as &$value) {
+    $$value= isset($_GET[$value]) ? htmlentities($_GET[$value]) : "" ;
+}
+
 /* ########### Suppression d’un fichier ########### */
 if ($del_f_confirm=="Confirmer la suppression") {
     // Si le dossier trash n’existe pas, on le crée
     if (!file_exists("$trash")) mkdir("$trash", 0775);
     $nomdel=date("Ymdhms")."-".str_replace('/', "_", $f);
     rename("$f","$trash/$nomdel");
+}
+
+if ($move!="") {
+    $movefrom=str_replace("$dossierdesfichiers$database/", "", $move);
+    if ($movefrom=="$i/") {
+        $keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
+        if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
+
+            $m=$marques[$keys[0]]["marque_nom"];
+            $r=$data[0]["reference"];
+
+            $m=str_replace('/', "_", $m);
+            $m=str_replace("&", "amp", $m);
+            $m=str_replace(";", "semicolon", $m);
+
+            $r=str_replace('/', "_", $r);
+            $r=str_replace("&", "amp", $r);
+            $r=str_replace(";", "semicolon", $r);
+        }
+        $moveto="$m-$r/";
+    }
+    else $moveto="$i/";
+    rename("$dossierdesfichiers$database/$movefrom$filename", "$dossierdesfichiers$database/$moveto$filename");
+
 }
 
 
@@ -66,9 +95,14 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 
         echo "<input type=\"file\" name=\"fichier\" style=\"border:0px solid #cc0000;\"/><br/>";
 
-        if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") )
+        if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
             echo "<br/><input type=\"checkbox\" name=\"filetoref\" value=\"1\"> Fichier global lié à la référence fabricant.<br/>";
-        else echo "<br/><em>Vous pouvez uniquement envoyer un document lié à cette entrée. Pour envoyer un fichier global lié à la référence constructeur il est nécessaire de renseigner la marque et la référence fabricant.</em><br/>";
+            $mv=TRUE;
+        }
+        else {
+            echo "<br/><em>Vous pouvez uniquement envoyer un document lié à cette entrée. Pour envoyer un fichier global lié à la référence constructeur il est nécessaire de renseigner la marque et la référence fabricant.</em><br/>";
+            $mv=FALSE;
+        }
         echo "</p>";
 
         /* ########### Ajout d’un fichier ########### */
@@ -117,7 +151,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     ╠╣ ║║  ╠═╣║║╣ ╠╦╝╚═╗
     ╚  ╩╚═╝╩ ╩╩╚═╝╩╚═╚═╝  */
     echo "<fieldset><legend>Fichiers de cette entrée</legend>";
-        displayDir($database, $i, "$dossierdesfichiers$database/$i/", $del=$write);
+        displayDir($database, $i, "$dossierdesfichiers$database/$i/", $del=$write, $allowmv=$mv);
     echo "</fieldset>";
 
     $keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
@@ -125,7 +159,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
        	$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
 	    $r=str_replace('/', "_", $data[0]["reference"]);
-        displayDir($database, $i, "".$dossierdesfichiers."".$database."/".$m."-".$r."/", $del=$write);
+        displayDir($database, $i, "".$dossierdesfichiers."".$database."/".$m."-".$r."/", $del=$write, $allowmv=$mv);
     }
     else echo "Vous devez renseigner « Marque » et « Référence fabriquant » pour activer cette fonction.";
     echo "</fieldset>";

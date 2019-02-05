@@ -140,7 +140,7 @@ function is_dir_empty($dir) {
     return TRUE;
 }
 
-function displayDir($database, $i, $dir, $del=FALSE) {
+function displayDir($database, $i, $dir, $del=FALSE, $allowmv=FALSE) {
     global $racine;
     global $dossierdesfichiers;
     
@@ -168,7 +168,7 @@ function displayDir($database, $i, $dir, $del=FALSE) {
         echo "<th width=\"5%\"><span title=\"Type\">.*</span></th>";
         echo "<th style=\"text-align:left;\">Fichier</th>";
         echo "<th width=\"15%\">Taille</th>";
-        if ($del)  echo "<th width=\"10%\">Suppr.</th>";
+        if ($del)  echo "<th width=\"10%\">&nbsp;</th>";
         echo "</tr></thead>\n";
             foreach ($files as $f) {
                 if (($f!=".")&&($f!="..")) {
@@ -176,7 +176,10 @@ function displayDir($database, $i, $dir, $del=FALSE) {
                     echo "<td><span style=\"display:none;\">".extension($f)."</span><span title=\"".extension($f)."\">".icone($f)."</span></td>";
                     echo "<td><a href=\"".str_replace($racine, "", "$dir$f")."\" target=\"_blank\">$f</a></td>";
                     echo "<td style=\"text-align:right;\"><span style=\"display:none;\">".filesize("$dir$f")."</span>".formatBytes(filesize("$dir$f"),"0")."o</td>";
-                    if ($del) echo "<td style=\"text-align:center;\"><span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&f=".$dir.$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span></td>";
+                    if ($del) echo "<td style=\"text-align:center;\">";
+                        if ($allowmv) echo "<a href=\"quick.php?BASE=$database&i=$i&quick_page=documents&quick_name=documents&move=$dir&filename=$f\" title=\"déplacer ce fichier (".$f.")\">⇆</a>&nbsp;";
+                        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&f=".$dir.$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>
+                        </td>";
                     echo"</tr>\n";
                 }
             }
