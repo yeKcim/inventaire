@@ -39,7 +39,7 @@ if ($mv_f_confirm=="Renommer") {
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
     }
-    rename("$dir/$oldname", "$dir/$newname");
+    rename("".html_entity_decode($dir)."/".html_entity_decode($oldname)."", "".html_entity_decode($dir)."/".html_entity_decode($newname)."");
     
 }
 
