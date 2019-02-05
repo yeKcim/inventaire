@@ -177,6 +177,7 @@ function displayDir($database, $i, $dir, $del=FALSE, $allowmv=FALSE) {
                     echo "<td><a href=\"".str_replace($racine, "", "$dir$f")."\" target=\"_blank\">$f</a></td>";
                     echo "<td style=\"text-align:right;\"><span style=\"display:none;\">".filesize("$dir$f")."</span>".formatBytes(filesize("$dir$f"),"0")."o</td>";
                     if ($del) echo "<td style=\"text-align:center;\">";
+                        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_rename_confirm.php?BASE=$database&i=$i&dir=".$dir."&f=".$f."".$quick."',width:280,height:110})\" title=\"renommer fichier (".$f.")\">✍</span>&nbsp;";
                         if ($allowmv) echo "<a href=\"quick.php?BASE=$database&i=$i&quick_page=documents&quick_name=documents&move=$dir&filename=$f\" title=\"déplacer ce fichier (".$f.")\">⇆</a>&nbsp;";
                         echo "<span id=\"linkbox\" onclick=\"TINY.box.show({url:'0_del_confirm.php?BASE=$database&i=$i&f=".$dir.$f."".$quick."',width:280,height:110})\" title=\"supprimer ce fichier (".$f.")\">×</span>
                         </td>";

@@ -22,7 +22,7 @@ sudo service apache2 restart
 */
 
 /* ########### POST ########### */
-$arr = array("del_f_confirm","f","filetoref");
+$arr = array("del_f_confirm","f","filetoref","mv_f_confirm");
 foreach ($arr as &$value) {
     $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
 }
@@ -31,6 +31,21 @@ $arr = array("move","filename");
 foreach ($arr as &$value) {
     $$value= isset($_GET[$value]) ? htmlentities($_GET[$value]) : "" ;
 }
+
+
+/* ########### Renommer un fichier ########### */
+if ($mv_f_confirm=="Renommer") {
+    $arr = array("newname","oldname","dir");
+    foreach ($arr as &$value) {
+        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+    }
+    rename("$dir/$oldname", "$dir/$newname");
+    
+}
+
+
+
+
 
 /* ########### Suppression d’un fichier ########### */
 if ($del_f_confirm=="Confirmer la suppression") {
