@@ -41,7 +41,7 @@ if ( isset($_POST["add_db"]) ) {
 
         // Création du dossier correspondant à la nouvelle base dans files/
         $dir="".$dossierdesfichiers.$name_db;
-        if (!file_exists("$dir")) mkdir("$dir", 0775);
+        if (!file_exists("$dir")) { $umask_bak=umask(0); mkdir("$dir", 0775); umask($umask_bak); }
     }
 }
 

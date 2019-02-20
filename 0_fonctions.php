@@ -151,7 +151,9 @@ function displayDir($database, $i, $dir, $del=FALSE, $allowmv=FALSE) {
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     // Si le dossier n’existe pas, on le crée
     if (!file_exists("$dir")) {
+        $umask_bak=umask(0);
         mkdir("$dir", 0775);
+        umask($umask_bak);
         echo "Dossier ".str_replace($dossierdesfichiers, "", "$dir")." créé. ";
     }
     // Si le dossier est vide on l’indique

@@ -50,7 +50,7 @@ if ($mv_f_confirm=="Renommer") {
 /* ########### Suppression d’un fichier ########### */
 if ($del_f_confirm=="Confirmer la suppression") {
     // Si le dossier trash n’existe pas, on le crée
-    if (!file_exists("$trash")) mkdir("$trash", 0775);
+    if (!file_exists("$trash")) { $umask_bak=umask(0); mkdir("$trash", 0775); umask($umask_bak); }
     $nomdel=date("Ymdhms")."-".str_replace('/', "_", $f);
     rename("$f","$trash/$nomdel");
 }
