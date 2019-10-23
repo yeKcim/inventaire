@@ -28,21 +28,21 @@ $copyid= isset($_GET["i"]) ? htmlentities($_GET["i"]) : "" ;
 $paste=array();
 
 // $copy
-$sth = $dbh->query("SELECT categorie,reference,designation,tutelle,contrat,bon_commande,vendeur,marque,date_achat,responsable_achat,garantie,prix FROM base WHERE base_index=$copyid ;");
+$sth = $dbh->query("SELECT categorie,reference,designation,tutelle,contrat,bon_commande,vendeur,marque,date_achat,responsable_achat,garantie,prix,sortie,raison_sortie FROM base WHERE base_index=$copyid ;");
 $copy = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 $paste["lab_id"]=new_lab_id($copy[0]["categorie"]);
 
 $paste["id"]=return_last_id("base_index", "base") + 1;
 
 // #################### INSERT IN BASE ####################
-$paste["base"]="INSERT INTO base (base_index, lab_id, categorie,reference,designation,tutelle,contrat,bon_commande,vendeur,marque,date_achat,responsable_achat,garantie,prix) VALUES (\"".$paste["id"]."\", \"".$paste["lab_id"]."\", \"".$copy[0]["categorie"]."\", \"".$copy[0]["reference"]."\", \"".$copy[0]["designation"]."\", \"".$copy[0]["tutelle"]."\", \"".$copy[0]["contrat"]."\", \"".$copy[0]["bon_commande"]."\", \"".$copy[0]["vendeur"]."\", \"".$copy[0]["marque"]."\", \"".$copy[0]["date_achat"]."\", \"".$copy[0]["responsable_achat"]."\", \"".$copy[0]["garantie"]."\", \"".$copy[0]["prix"]."\") ;";
+$paste["base"]=str_replace("\"\"", "NULL","INSERT INTO base (base_index, lab_id, categorie,reference,designation,tutelle,contrat,bon_commande,vendeur,marque,date_achat,responsable_achat,garantie,prix,sortie,raison_sortie) VALUES (\"".$paste["id"]."\", \"".$paste["lab_id"]."\", \"".$copy[0]["categorie"]."\", \"".$copy[0]["reference"]."\", \"".$copy[0]["designation"]."\", \"".$copy[0]["tutelle"]."\", \"".$copy[0]["contrat"]."\", \"".$copy[0]["bon_commande"]."\", \"".$copy[0]["vendeur"]."\", \"".$copy[0]["marque"]."\", \"".$copy[0]["date_achat"]."\", \"".$copy[0]["responsable_achat"]."\", \"".$copy[0]["garantie"]."\", \"".$copy[0]["prix"]."\", \"".$copy[0]["sortie"]."\", \"".$copy[0]["raison_sortie"]."\") ;");
 
 // #################### INSERT IN CARAC ####################
 $sth = $dbh->query("SELECT carac_valeur, carac_caracteristique_id FROM carac WHERE carac_id=$copyid ;");
 $copy_carac = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 $VALUES="";
 foreach ($copy_carac as $cc) {$VALUES.= "(\"".$cc["carac_valeur"]."\", \"".$paste["id"]."\",\"".$cc["carac_caracteristique_id"]."\"),";}
-if ($VALUES!="") $paste["carac"]="INSERT INTO `carac` (`carac_valeur`, `carac_id`, `carac_caracteristique_id`) VALUES ".rtrim($VALUES,",")." ;";
+if ($VALUES!="") $paste["carac"]=str_replace("\"\"", "NULL", "INSERT INTO `carac` (`carac_valeur`, `carac_id`, `carac_caracteristique_id`) VALUES ".rtrim($VALUES,",")." ;");
 else $paste["carac"]="";
 
 // #################### INSERT IN COMPATIB ####################
@@ -54,7 +54,7 @@ foreach ($copy_compatibilite as $cc) {
     $B= ($cc["compatib_id2"]==$copyid) ? $paste["id"] : $cc["compatib_id2"];
     $VALUES.= "(\"".$A."\", \"".$B."\"),";
 }
-if ($VALUES!="") $paste["compatibilite"]="INSERT INTO `compatibilite` (`compatib_id1`, `compatib_id2`) VALUES ".rtrim($VALUES,",")." ;";
+if ($VALUES!="") $paste["compatibilite"]=str_replace("\"\"", "NULL", "INSERT INTO `compatibilite` (`compatib_id1`, `compatib_id2`) VALUES ".rtrim($VALUES,",")." ;");
 else $paste["compatibilite"]="";
 
 // #################### INSERT IN ENTRETIEN ####################
@@ -62,7 +62,7 @@ $sth = $dbh->query("SELECT e_frequence, e_lastdate, e_designation, e_detail, e_e
 $copy_entretien = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 $VALUES="";
 foreach ($copy_entretien as $ce) {$VALUES.= "(\"".$paste["id"]."\", \"".$ce[e_frequence]."\", \"".$ce[e_lastdate]."\", \"".$ce[e_designation]."\", \"".$ce[e_detail]."\"),";}
-if ($VALUES!="") $paste["entretien"]="INSERT INTO `entretien` (`e_id`, `e_frequence`, `e_lastdate`, `e_designation`, `e_detail`) VALUES ".rtrim($VALUES,",")." ;";
+if ($VALUES!="") $paste["entretien"]=str_replace("\"\"", "NULL", "INSERT INTO `entretien` (`e_id`, `e_frequence`, `e_lastdate`, `e_designation`, `e_detail`) VALUES ".rtrim($VALUES,",")." ;");
 else $paste["entretien"]="";
 
 // #################### INSERT IN TAGS ####################

@@ -30,8 +30,8 @@ L’ajout d’un inventaire se fait en toute simplicité :
 ## Installation
 
 ### Pré-requis
-* PHP (testé avec php 7.1)
-* MySQL (testé avec mysql 15.1)
+* PHP (testé avec php 7.4)
+* MySQL (testé avec mariadb 10.3)
 
 ### Installation
 * Remplir 0_config.php selon vos paramètres

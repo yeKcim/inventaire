@@ -27,32 +27,33 @@ if ( isset($_POST["add_valid"]) ) {
     $data=array();
     $arr = array("lab_id", "id_man", "categorie", "plus_categorie_nom", "plus_categorie_abbr", "marque", "plus_marque_nom", "reference", "serial_number", "plus_tags", "designation", "vendeur", "plus_vendeur_nom", "plus_vendeur_web", "plus_vendeur_remarque", "prix", "contrat", "plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "bon_commande", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie", "utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
     foreach ($arr as &$value) {
-        $data["$value"]= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+        //$data["$value"]= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+        $data["$value"]= isset($_POST[$value]) ? htmlentities($_POST[$value]) : NULL ;
     }
 
     // ╦  ╦╔═╗╦═╗╦╔═╗╦╔═╗╔═╗╔╦╗╦╔═╗╔╗╔  ╔╦╗╦╔╗╔╦╔╦╗╦ ╦╔╦╗  ╦╔╗╔╔═╗╦ ╦╔╦╗
     // ╚╗╔╝║╣ ╠╦╝║╠╣ ║║  ╠═╣ ║ ║║ ║║║║  ║║║║║║║║║║║║ ║║║║  ║║║║╠═╝║ ║ ║
     //  ╚╝ ╚═╝╩╚═╩╚  ╩╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝  ╩ ╩╩╝╚╝╩╩ ╩╚═╝╩ ╩  ╩╝╚╝╩  ╚═╝ ╩
-    if ( ($data["categorie"]=="0")&&($data["designation"]=="") ) $error.="<p class=\"error_message\">Merci de remplir au minimum Administratif→Désignation ou Technique→Catégorie</p>";
+    if ( ($data["categorie"]=="0")&&($data["designation"]==NULL) ) $error.="<p class=\"error_message\">Merci de remplir au minimum Administratif→Désignation ou Technique→Catégorie</p>";
 
 
 
     // ╔═╗╦  ╦╔╦╗   ╔╦╗╔═╗╔╗╔  ╔═╗╔═╗╔╦╗  ╔╦╗╔═╗╔═╗╦╔╗╔╦
     // ╚═╗║  ║ ║║   ║║║╠═╣║║║  ║╣ ╚═╗ ║    ║║║╣ ╠╣ ║║║║║
     // ╚═╝╩  ╩═╩╝═══╩ ╩╩ ╩╝╚╝  ╚═╝╚═╝ ╩   ═╩╝╚═╝╚  ╩╝╚╝╩
-    if ( ($data["lab_id"]=="manual_id")&&($data["id_man"]=="") ) $error.="<p class=\"error_message\">L’id manuel ne peut pas être laissé vide</p>";
+    if ( ($data["lab_id"]=="manual_id")&&($data["id_man"]==NULL) ) $error.="<p class=\"error_message\">L’id manuel ne peut pas être laissé vide</p>";
 
 
     // ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╦  ╦╔═╗╔╗╔╔╦╗╔═╗╦ ╦╦═╗
     // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ╚╗╔╝║╣ ║║║ ║║║╣ ║ ║╠╦╝
     // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝   ╚╝ ╚═╝╝╚╝═╩╝╚═╝╚═╝╩╚═
     if ($data["vendeur"]=="plus_vendeur") {
-        if ($data["plus_vendeur_nom"]=="") {
+        if ($data["plus_vendeur_nom"]==NULL) {
             $error.="<p class=\"error_message\">Merci de remplir au minimum le nom du nouveau vendeur</p>";
             $data["vendeur"]="0";
         }
         else {
-	    $sth = $dbh->query("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$data["plus_vendeur_nom"]."\",\"".$data["plus_vendeur_web"]."\",\"".$data["plus_vendeur_remarque"]."\") ;");
+	    $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$data["plus_vendeur_nom"]."\",\"".$data["plus_vendeur_web"]."\",\"".$data["plus_vendeur_remarque"]."\") ;"));
             // TODO : prévoir le cas où existe déjà
 	    $data["vendeur"]=return_last_id("vendeur_index","vendeur");
             // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
@@ -64,12 +65,12 @@ if ( isset($_POST["add_valid"]) ) {
     // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║   ║ ╚╦╝╠═╝║╣   ║  ║ ║║║║║ ╠╦╝╠═╣ ║
     // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝   ╩  ╩ ╩  ╚═╝  ╚═╝╚═╝╝╚╝╩ ╩╚═╩ ╩ ╩
     if ($data["contrat_type"]=="plus_contrat_type") {
-        if ($data["plus_contrat_type_nom"]=="") {
+        if ($data["plus_contrat_type_nom"]==NULL) {
             $error.="<p class=\"error_message\">Merci de spécifier un type de contrat</p>";
             $data["contrat_type"]="0";
         }
         else {
-            $sth = $dbh->query("INSERT INTO contrat_type (contrat_type_cat) VALUES (\"".$data["plus_contrat_type_nom"]."\") ;");
+            $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO contrat_type (contrat_type_cat) VALUES (\"".$data["plus_contrat_type_nom"]."\") ;"));
             /* TODO : prévoir le cas où existe déjà */
 	    $data["contrat_type"]=return_last_id("contrat_type_index","contrat_type");
             // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
@@ -81,12 +82,12 @@ if ( isset($_POST["add_valid"]) ) {
     // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ║  ║ ║║║║║ ╠╦╝╠═╣ ║
     // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╚═╝╚═╝╝╚╝╩ ╩╚═╩ ╩ ╩
     if ($data["contrat"]=="plus_contrat") {
-        if ($data["plus_contrat_nom"]=="") {
+        if ($data["plus_contrat_nom"]=NULL) {
             $error.="<p class=\"error_message\">Merci de spécifier le nom du nouveau contrat</p>";
             $data["contrat"]="0";
         }
         else {
-            $sth = $dbh->query("INSERT INTO contrat (contrat_nom, contrat_type) VALUES (\"".$data["plus_contrat_nom"]."\",\"".$data["contrat_type"]."\") ;");
+            $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO contrat (contrat_nom, contrat_type) VALUES (\"".$data["plus_contrat_nom"]."\",\"".$data["contrat_type"]."\") ;"));
             /* TODO : prévoir le cas où existe déjà */
 	    $data["contrat"]=return_last_id("contrat_index","contrat");
             // on ajoute cette entrée dans le tableau des contrats (utilisé pour le select)
@@ -99,12 +100,12 @@ if ( isset($_POST["add_valid"]) ) {
     // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣    ║ ║ ║ ║ ║╣ ║  ║  ║╣
     // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝   ╩ ╚═╝ ╩ ╚═╝╩═╝╩═╝╚═╝
     if ($data["tutelle"]=="plus_tutelle") {
-        if ($data["plus_tutelle"]=="") {
+        if ($data["plus_tutelle"]==NULL) {
             $error.="<p class=\"error_message\">Merci de spécifier un nom de nouvelle tutelle</p>";
             $data["tutelle"]="0";
         }
         else {
-            $sth = $dbh->query("INSERT INTO tutelle (tutelle_nom) VALUES (\"".$data["plus_tutelle"]."\") ;");
+            $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO tutelle (tutelle_nom) VALUES (\"".$data["plus_tutelle"]."\") ;"));
             /* TODO : prévoir le cas où existe déjà */
 	    $data["tutelle"]=return_last_id("tutelle_index","tutelle");
             // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
@@ -116,7 +117,7 @@ if ( isset($_POST["add_valid"]) ) {
     // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ║    ╠═╣║  ╠═╣║╣  ║ ║╣ ║ ║╠╦╝
     // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝  ╩ ╩╚═╝╩ ╩╚═╝ ╩ ╚═╝╚═╝╩╚═
     if ($data["responsable_achat"]=="plus_responsable_achat") {
-        if ($data["plus_responsable_achat_nom"]=="") {
+        if ($data["plus_responsable_achat_nom"]==NULL) {
             $error.="<p class=\"error_message\">Merci de spécifier au moins un nom pour le nouveau responsable d’achat</p>";
             $data["responsable_achat"]="0";
         }
@@ -124,7 +125,7 @@ if ( isset($_POST["add_valid"]) ) {
             $data["plus_responsable_achat_nom"]=mb_strtoupper($data["plus_responsable_achat_nom"]);
             $data["plus_responsable_achat_phone"]=phone_display("".$data["plus_responsable_achat_phone"]."","");
 
-	    $sth = $dbh->query("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$data["plus_responsable_achat_nom"]."\", \"".$data["plus_responsable_achat_prenom"]."\",\"".$data["plus_responsable_achat_mail"]."\",\"".$data["plus_responsable_achat_phone"]."\") ; ");
+	    $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$data["plus_responsable_achat_nom"]."\", \"".$data["plus_responsable_achat_prenom"]."\",\"".$data["plus_responsable_achat_mail"]."\",\"".$data["plus_responsable_achat_phone"]."\") ; "));
             /* TODO : prévoir le cas où existe déjà */
 	    $data["responsable_achat"]=return_last_id("utilisateur_index","utilisateur");
             // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
@@ -136,12 +137,12 @@ if ( isset($_POST["add_valid"]) ) {
     // ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣
     // ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩ ╩╩ ╩╩╚═╚═╝╚╚═╝╚═╝
     if ($data["marque"]=="plus_marque") {
-        if ($data["plus_marque_nom"]=="") {
+        if ($data["plus_marque_nom"]==NULL) {
             $error.="<p class=\"error_message\">Merci de spécifier un nom de nouvelle marque</p>";
             $data["marque"]="0";
         }
         else {
-	    $sth = $dbh->query("INSERT INTO marque (marque_nom) VALUES (\"".$data["plus_marque_nom"]."\") ;");
+	    $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO marque (marque_nom) VALUES (\"".$data["plus_marque_nom"]."\") ;"));
             /* TODO : prévoir le cas où existe déjà */
             $data["marque"]=return_last_id("marque_index","marque");
 	    // on ajoute cette entrée dans le tableau des marques (utilisé pour le select)
@@ -153,7 +154,7 @@ if ( isset($_POST["add_valid"]) ) {
     //  ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣
     //  ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝
     if ($data["categorie"]=="plus_categorie") {
-        if ( ($data["plus_categorie_nom"]=="") || ($data["plus_categorie_abbr"]=="") ) {
+        if ( ($data["plus_categorie_nom"]==NULL) || ($data["plus_categorie_abbr"]==NULL) ) {
             $error.="<p class=\"error_message\">Merci de spécifier un nom et une abbréviation pour la nouvelle catégorie</p>";
             $data["categorie"]="0";
         }
@@ -162,7 +163,7 @@ if ( isset($_POST["add_valid"]) ) {
         //    $data["categorie"]="0";
         //} Cette fonction pose problème pour les caractères spéciaux, TODO trouver une méthode pour interdire les chiffres…
         else {
-            $sth = $dbh->query("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$data["plus_categorie_abbr"]."\",\"".$data["plus_categorie_nom"]."\") ;") ;
+            $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$data["plus_categorie_abbr"]."\",\"".$data["plus_categorie_nom"]."\") ;")) ;
             /* TODO : prévoir le cas où existe déjà */
 	    $data["categorie"]=return_last_id("categorie_index", "categorie");
             // on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
@@ -174,8 +175,8 @@ if ( isset($_POST["add_valid"]) ) {
     if ($data["lab_id"]=="manual_id")  $data["lab_id"]=$data["id_man"];
     else $data["lab_id"]=new_lab_id($data["categorie"]);
 
-    $data["date_achat"]=($data["date_achat"]=="") ? "0000-00-00" : $data["date_achat"];
-    $data["garantie"]=($data["garantie"]=="") ? "0000-00-00" : $data["garantie"];
+    $data["date_achat"]=($data["date_achat"]==NULL) ? "0000-00-00" : $data["date_achat"];
+    $data["garantie"]=($data["garantie"]==NULL) ? "0000-00-00" : $data["garantie"];
     // TODO : vérifier que les dates sont bien au bon format !
 
     if ($error=="") {
@@ -184,7 +185,9 @@ if ( isset($_POST["add_valid"]) ) {
         // ╚═╝╩ ╩╩═╝╚═╝╚═╝╩═╝  ═╩╝╚═╝  ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╩
 	$i=return_last_id("base_index", "base") + 1;
 
-	$add_result = $dbh->query("INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES (\"".$i."\", \"".$data["lab_id"]."\", \"".$data["categorie"]."\", \"".$data["serial_number"]."\", \"".$data["reference"]."\", \"".$data["designation"]."\", \"0\", \"0\", \"0000-00-00\", \"".$data["tutelle"]."\", \"".$data["contrat"]."\", \"".$data["bon_commande"]."\", \"".$data["num_inventaire"]."\", \"".$data["vendeur"]."\", \"".$data["marque"]."\", \"".$data["date_achat"]."\", \"".$data["responsable_achat"]."\", \"".$data["garantie"]."\", \"".$data["prix"]."\", \"0000-00-00\",  \"0\", \"0\", \"0\") ;" );
+    $insert=str_replace("\"\"", "NULL", "INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES (\"".$i."\", \"".$data["lab_id"]."\", \"".$data["categorie"]."\", \"".$data["serial_number"]."\", \"".$data["reference"]."\", \"".$data["designation"]."\", \"0\", \"0\", \"0000-00-00\", \"".$data["tutelle"]."\", \"".$data["contrat"]."\", \"".$data["bon_commande"]."\", \"".$data["num_inventaire"]."\", \"".$data["vendeur"]."\", \"".$data["marque"]."\", \"".$data["date_achat"]."\", \"".$data["responsable_achat"]."\", \"".$data["garantie"]."\", \"".$data["prix"]."\", \"0000-00-00\",  \"0\", \"0\", \"0\") ;");
+
+	$add_result = $dbh->query($insert);
         if (!isset($add_result)) $error.=$message_error_add;
         else {
             $success.="<p class=\"success_message\">";
@@ -200,7 +203,7 @@ if ( isset($_POST["add_valid"]) ) {
                 "tutelle"=>"0",                "contrat"=>"0",              "bon_commande"=>"",
                 "num_inventaire"=>"",
                 "vendeur"=>"0",                "marque"=>"0",               "date_achat"=>"",
-                "responsable_achat"=>"0",      "garantie"=>"",              "prix"=>"",
+                "responsable_achat"=>"0",      "garantie"=>"",              "prix"=>"0",
                 "date_sortie"=>"",             "sortie"=>"",                "raison_sortie"=>"",
                 "integration"=>""   );
         }
