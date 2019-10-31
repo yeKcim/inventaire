@@ -33,7 +33,7 @@ if ( isset($_POST["carac_valid"]) ) {
             $allc.= ($cd!="") ? "(\"$cd\",\"$i\",\"$ck\")," : "";
         }
         $allc=substr($allc, 0, -1); // suppression du dernier caractère
-	$modif_result = $dbh->query("INSERT INTO carac (carac_valeur, carac_id, carac_caracteristique_id) VALUES $allc ;");
+	$modif_result = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO carac (carac_valeur, carac_id, carac_caracteristique_id) VALUES $allc ;"));
 	$message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
 
     }
@@ -63,7 +63,7 @@ if ( isset($_POST["new_carac_valid"]) ) {
        /* Récupère le nombre de lignes qui correspond à la requête SELECT */
         if ($count_carac[0]["COUNT(*)"]!=0) $message.="<p class=\"error_message\">Nom ou symbôle déjà utilisé.</p>";
         else {
-	    $sth = $dbh->query("INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); ");
+	    $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO caracteristiques (nom_carac, unite_carac, symbole_carac) VALUES (\"".$nom_carac."\", \"".$unite_carac."\", \"".$symbole_carac."\"); "));
             if ( isset($sth) ) {
                 $message.="<p class=\"success_message\" id=\"disappear_delay\">La nouvelle caractéristique a été ajoutée.</p>";
                 $nom_carac=""; $unite_carac=""; $symbole_carac="";

@@ -67,7 +67,7 @@ if ( isset($_POST["technique_valid"]) ) {
         $allc="";
         foreach ($_POST["compatibilite"] as $c) $allc.= "(".$c[0].",$i),";
         $allc=substr($allc, 0, -1); // suppression du dernier caractère
-	$sth = $dbh->query("INSERT INTO compatibilite (compatib_id1, compatib_id2) VALUES $allc ; ");
+	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO compatibilite (compatib_id1, compatib_id2) VALUES $allc ; "));
     }
     // refaire compatibilité de $i
     $sth = $dbh->query("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
@@ -137,7 +137,7 @@ if ( isset($_POST["technique_valid"]) ) {
     ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩ ╩╩ ╩╩╚═╚═╝╚╚═╝╚═╝  */
     if ($marque=="plus_marque") {
-	$sth = $dbh->query("INSERT INTO marque (marque_nom) VALUES ('".$plus_marque_nom."') ;");
+	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO marque (marque_nom) VALUES ('".$plus_marque_nom."') ;"));
         /* TODO : prévoir le cas où la marque existe déjà */
 	$marque=return_last_id("marque_index","marque");
 
@@ -150,7 +150,7 @@ if ( isset($_POST["technique_valid"]) ) {
     ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝    */
     if ($categorie=="plus_categorie") {
-	$sth = $dbh->query("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$plus_categorie_abbr."\",\"".$plus_categorie_nom."\") ;");
+	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$plus_categorie_abbr."\",\"".$plus_categorie_nom."\") ;"));
         /* TODO : prévoir le cas où la catégorie existe déjà */
 	$categorie=return_last_id("categorie_index","categorie");
 
@@ -176,7 +176,7 @@ if ( isset($_POST["technique_valid"]) ) {
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    $modif_result = $dbh->query("UPDATE base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$lab_id."' WHERE base.base_index = $i;");
+    $modif_result = $dbh->query(str_replace("\"\"", "NULL","UPDATE base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$lab_id."' WHERE base.base_index = $i;"));
     $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…

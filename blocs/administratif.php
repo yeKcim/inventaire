@@ -47,7 +47,7 @@ if ( isset($_POST["administratif_valid"]) ) {
     /* ########### Ajout d’un nouveau vendeur ########### */
     if ($vendeur=="plus_vendeur") {
         // TODO : Si les infos sont vides !
-	$sth = $dbh->query("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ;");
+	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ;"));
         /* TODO : prévoir le cas où le vendeur existe déjà */
 	$vendeur=return_last_id("vendeur_index","vendeur");
         // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
@@ -55,7 +55,7 @@ if ( isset($_POST["administratif_valid"]) ) {
     }
 
     if ($contrat_type=="plus_contrat_type") {
-	$sth = $dbh->query("INSERT INTO contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ;");
+	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ;"));
         /* TODO : prévoir le cas où le type de contrat existe déjà */
 	$contrat_type=return_last_id("contrat_type_index","contrat_type");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
@@ -63,7 +63,7 @@ if ( isset($_POST["administratif_valid"]) ) {
     }
 
     if ($contrat=="plus_contrat") {
-        $sth = $dbh->query("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;");
+        $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;"));
         /* TODO : prévoir le cas où le contrat existe déjà */
 	$contrat=return_last_id("contrat_index","contrat");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
@@ -71,7 +71,7 @@ if ( isset($_POST["administratif_valid"]) ) {
     }
 
     if ($tutelle=="plus_tutelle") {
-        $sth = $dbh->query("INSERT INTO tutelle (tutelle_nom) VALUES ('".$plus_tutelle."') ;");
+        $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO tutelle (tutelle_nom) VALUES ('".$plus_tutelle."') ;"));
         /* TODO : prévoir le cas où le contrat existe déjà */
 	$tutelle=return_last_id("tutelle_index","tutelle");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
@@ -81,7 +81,7 @@ if ( isset($_POST["administratif_valid"]) ) {
     if ($responsable_achat=="plus_responsable_achat") {
         $plus_responsable_achat_nom=mb_strtoupper($plus_responsable_achat_nom);
         $plus_responsable_achat_phone=phone_display("$plus_responsable_achat_phone","");
-        $sth = $dbh->query("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; ");
+        $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; "));
         /* TODO : prévoir le cas où le contrat existe déjà */
 	$responsable_achat=return_last_id("utilisateur_index","utilisateur");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
@@ -93,7 +93,11 @@ if ( isset($_POST["administratif_valid"]) ) {
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    $modif_result = $dbh->query("UPDATE base SET designation=\"".$designation."\", vendeur=\"".$vendeur."\", prix=\"".$prix."\", contrat=\"".$contrat."\", date_achat=\"".$date_achat."\", garantie=\"".$garantie."\", bon_commande=\"".$bon_commande."\", num_inventaire=\"".$num_inventaire."\", tutelle=\"".$tutelle."\", responsable_achat=\"".$responsable_achat."\" WHERE base.base_index = $i;");
+    $date_achat=($date_achat==NULL) ? "0000-00-00" : $date_achat;
+    $garantie=($garantie==NULL) ? "0000-00-00" : $garantie;
+
+    $modif_result = $dbh->query(str_replace("\"\"", "NULL","UPDATE base SET designation=\"".$designation."\", vendeur=\"".$vendeur."\", prix=\"".$prix."\", contrat=\"".$contrat."\", date_achat=\"".$date_achat."\", garantie=\"".$garantie."\", bon_commande=\"".$bon_commande."\", num_inventaire=\"".$num_inventaire."\", tutelle=\"".$tutelle."\", responsable_achat=\"".$responsable_achat."\" WHERE base.base_index = $i;"));
+
     $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…

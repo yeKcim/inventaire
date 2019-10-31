@@ -31,7 +31,8 @@ if ( isset($_POST["add_entretien"]) ) {
     if ( ($e_designation=="")||($e_frequence=="") ) $error_emptyinput="Fréquence et Désignation sont des champs obligatoires";
     else {
         $e_frequence=$e_frequence*$e_frequence_multipli;
-        $add_result = $dbh->query("INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\");");
+
+        $add_result = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\"));"));
         $error_emptyinput="";
         $message.= ($add_result!=1) ? $message_error_add : $message_success_add;
     }
@@ -53,7 +54,7 @@ if ($modif_entretien!="") {
         $plus_intervant_nom=mb_strtoupper($plus_intervant_nom);
         $plus_intervant_phone=phone_display("$plus_intervant_phone","");
 
-        $modif_result = $dbh->query("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_intervant_nom."', '".$plus_intervant_prenom."','".$plus_intervant_mail."','".$plus_intervant_phone."') ;");
+        $modif_result = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_intervant_nom."', '".$plus_intervant_prenom."','".$plus_intervant_mail."','".$plus_intervant_phone."') ;"));
         /* TODO : prévoir le cas où la personne existe déjà */
 
         if (!isset($modif_result)) $message.=$message_error_add;
@@ -70,7 +71,10 @@ if ($modif_entretien!="") {
         foreach ($_POST["ebox"] as $ek => $ed) $alle.=" e_index = $ek OR";
         $alle=substr($alle, 0, -2);
         $effectuepar_sql= ($e_effectuerpar!="0") ? ", e_effectuerpar = '$e_effectuerpar'" : "";
-	$modif_result = $dbh->query("UPDATE entretien SET e_lastdate = '".$e_effectuele."' $effectuepar_sql WHERE $alle ;");
+
+        $e_effectuele=($e_effectuele==NULL) ? "0000-00-00" : $e_effectuele;
+        
+	$modif_result = $dbh->query(str_replace("\"\"", "NULL","UPDATE entretien SET e_lastdate = '".$e_effectuele."' $effectuepar_sql WHERE $alle ;"));
 	$message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
     }
     else $error_noebox="Vous devez cocher au moins une case d’entretien";

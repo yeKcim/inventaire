@@ -52,7 +52,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
     if ($utilisateur=="plus_utilisateur") {
         $plus_utilisateur_nom=mb_strtoupper($plus_utilisateur_nom);
         $plus_utilisateur_phone=phone_display("$plus_utilisateur_phone","");
-	$sth = $dbh->query("INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$plus_utilisateur_nom."\", \"".$plus_utilisateur_prenom."\",\"".$plus_utilisateur_mail."\",\"".$plus_utilisateur_phone."\") ;");
+	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$plus_utilisateur_nom."\", \"".$plus_utilisateur_prenom."\",\"".$plus_utilisateur_mail."\",\"".$plus_utilisateur_phone."\") ;"));
         /* TODO : prévoir le cas où le contrat existe déjà */
 	$utilisateur=return_last_id("utilisateur_index","utilisateur");
 
@@ -61,7 +61,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
     }
 
     if ($localisation=="plus_localisation") {
-        $sth = $dbh->query("INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES (\"".$plus_localisation_bat."\", \"".$plus_localisation_piece."\" );");
+        $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES (\"".$plus_localisation_bat."\", \"".$plus_localisation_piece."\" );"));
         /* TODO : prévoir le cas où la nouvelle localisation existe déjà */
 	$localisation=return_last_id("localisation_index","localisation");
         // on ajoute cette entrée dans le tableau des localisations (utilisé pour le select)
@@ -70,7 +70,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
 
     if ($raison_sortie=="plus_raison_sortie") {
-        $sth = $dbh->query("INSERT INTO raison_sortie (raison_sortie_nom) VALUES (\"".$plus_raison_sortie_nom."\");");
+        $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO raison_sortie (raison_sortie_nom) VALUES (\"".$plus_raison_sortie_nom."\");"));
         /* TODO : prévoir le cas où le contrat existe déjà */
 	$raison_sortie=return_last_id("raison_sortie_index","raison_sortie");
         // on ajoute cette entrée dans le tableau des raisons de sortie (utilisé pour le select)
@@ -86,7 +86,7 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
     // Si la localisation change, on modifie la date de localisation pour mettre aujourd’hui
     $change_date_localisation= ($data[0]["localisation"]==$localisation) ? "" : ", date_localisation=\"".date("y.m.d")."\"";
 
-    $modif_result = $dbh->query("UPDATE base SET utilisateur=\"".$utilisateur."\", localisation=\"".$localisation."\", sortie=\"".$sortie."\", integration=\"".$integration."\", raison_sortie=\"".$raison_sortie."\" $change_date_localisation WHERE base.base_index = $i;");
+    $modif_result = $dbh->query(str_replace("\"\"", "NULL","UPDATE base SET utilisateur=\"".$utilisateur."\", localisation=\"".$localisation."\", sortie=\"".$sortie."\", integration=\"".$integration."\", raison_sortie=\"".$raison_sortie."\" $change_date_localisation WHERE base.base_index = $i;"));
     $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
 
 
@@ -101,7 +101,7 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 	else $txt_in = ($integration=="0") ? "<a href='info.php?i=".$data[0]["integration"]."' target='_blank'>#".$data[0]["integration"]."</a>" : "<a href='info.php?i=".$integration."' target='_blank'>#".$integration."</a>";
 
 	$add_journal.=$txt_in."\", \"".$i."\");" ;
-        $sth = $dbh->query("$add_journal");
+        $sth = $dbh->query(str_replace("\"\"", "NULL","$add_journal"));
         //$message. = (!isset($sth))? "<p class=\"error_message\" id=\"disappear_delay\">Une erreur inconnue est survenue. La modification n’a pas été ajoutée automatiquement au journal.</p>" : "<p class=\"success_message\" id=\"disappear_delay\">La modification a été auto$
 
 
@@ -258,8 +258,9 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         option_selecteur($data[0]["integration"], $lab_ids, "base_index", "lab_id");
         echo "</select>";
 
-        if ( ($data[0]["integration"]!="0") && ($data[0]["integration"]!="") )
+        if (isset($data[0]["integration"])) { if ( ($data[0]["integration"]!="0") && ($data[0]["integration"]!="") )
             echo " <a href=\"info.php?i=".$data[0]["integration"]."\" target=\"_blank\"><strong>↗</strong></a>";
+        }
 
         if (!empty($kids) ) {
             echo "<br/>Parent de :\n";

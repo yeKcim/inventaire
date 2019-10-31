@@ -34,7 +34,8 @@ if ($add_historique=="Ajouter") {
     $query_do_i_insert_histo = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
     if (!isset($query_do_i_insert_histo[0]) ) {
-	$sth = $dbh->query("INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".$date_info."\", \"".$histo."\", \"".$i."\");");
+        $historique_date=($historique_date==NULL) ? "0000-00-00" : $historique_date;
+	    $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".$date_info."\", \"".$histo."\", \"".$i."\");"));
     }
     else {/* TODO: écrire un message comme quoi l’entrée était déjà dans la base donc n’a pas été ajoutée*/}
 }
