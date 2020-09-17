@@ -98,7 +98,7 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 
         $keys = ($integration=="0") ? array_keys(array_column($lab_ids, 'base_index'), $data[0]["integration"]) : array_keys(array_column($lab_ids, 'base_index'), $integration) ;
         if (isset($keys[0])) $txt_in=quickdisplayincarac_b($lab_ids[$keys[0]]);
-	else $txt_in = ($integration=="0") ? "<a href='info.php?i=".$data[0]["integration"]."' target='_blank'>#".$data[0]["integration"]."</a>" : "<a href='info.php?i=".$integration."' target='_blank'>#".$integration."</a>";
+	else $txt_in = ($integration=="0") ? "<a href='info.php?BASE=".$database."&i=".$data[0]["integration"]."' target='_blank'>#".$data[0]["integration"]."</a>" : "<a href='info.php?BASE=".$database."&i=".$integration."' target='_blank'>#".$integration."</a>";
 
 	$add_journal.=$txt_in."\", \"".$i."\");" ;
         $sth = $dbh->query(str_replace("\"\"", "NULL","$add_journal"));
@@ -259,7 +259,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo "</select>";
 
         if (isset($data[0]["integration"])) { if ( ($data[0]["integration"]!="0") && ($data[0]["integration"]!="") )
-            echo " <a href=\"info.php?i=".$data[0]["integration"]."\" target=\"_blank\"><strong>↗</strong></a>";
+            echo " <a href=\"info.php?BASE=".$database."&i=".$data[0]["integration"]."\" target=\"_blank\"><strong>↗</strong></a>";
         }
 
         if (!empty($kids) ) {
