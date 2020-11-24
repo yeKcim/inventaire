@@ -47,7 +47,8 @@ if ( isset($_POST["administratif_valid"]) ) {
     /* ########### Ajout d’un nouveau vendeur ########### */
     if ($vendeur=="plus_vendeur") {
         // TODO : Si les infos sont vides !
-	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ;"));
+//$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ;")); ##### Si on met NULL dans web, ça déconne
+    $sth = $dbh->query("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ;");
         /* TODO : prévoir le cas où le vendeur existe déjà */
 	$vendeur=return_last_id("vendeur_index","vendeur");
         // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
@@ -63,7 +64,8 @@ if ( isset($_POST["administratif_valid"]) ) {
     }
 
     if ($contrat=="plus_contrat") {
-        $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;"));
+//$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;")); ##### Si on met NULL, ça déconne
+        $sth = $dbh->query("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;");
         /* TODO : prévoir le cas où le contrat existe déjà */
 	$contrat=return_last_id("contrat_index","contrat");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
