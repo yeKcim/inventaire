@@ -59,7 +59,7 @@ if ($b_e!="") {
 
 //liste des caracs correspondantes
 $sth = $dbh->query("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
-$table_carac = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+$table_carac = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array() ;
 $tc=array(); $td_c=array(); $th_c="";
 $val=array();
 foreach ($table_carac as $l) {
@@ -113,7 +113,7 @@ $today=date("Y-m-d");
 
 //liste des entretiens correspondants
 $sth = $dbh->query("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
-$tableau_entretien = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+$tableau_entretien = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array() ;
 $te=array();
 foreach ($tableau_entretien as $l) {
     $f=$l["e_frequence"];
