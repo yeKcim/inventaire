@@ -286,7 +286,7 @@ function new_lab_id($categorie) {
     // on supprime les lettres des lab_id, on met les chiffres dans un tableau
     $allidnum=array();
     foreach ($allid as $a) array_push ( $allidnum, preg_replace('`[^0-9]`', '', $a["lab_id"]) );
-    $newid=max($allidnum)+1;
+    $newid= ($allid) ? max($allidnum)+1 : 1 ;
     $new_lab_id="".$abbr."".$newid."";
     // TODO : Vérifier avant qu’aucune autre entrée ainsi nommée n’existe ! dans le cas d’un nommage manuel
     $new_lab_id = ($categorie==0) ? "" : $new_lab_id;
@@ -297,7 +297,8 @@ function return_last_id($col,$table) {
     global $dbh;
     $sth = $dbh->query("SELECT $col FROM $table ORDER BY $col DESC LIMIT 1 ;");
     $t = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-    return $t[0][$col];
+    $r = ($t) ? $t[0][$col] : FALSE ;
+    return $r;
 }
 
 function quickdisplayincarac ($t) {

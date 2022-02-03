@@ -213,9 +213,9 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         /* ########### categorie ########### */
         echo "<label for=\"categorie\">Catégorie : </label>\n";
         echo "<select name=\"categorie\" onchange=\"display(this,'plus_categorie','plus_categorie');\" id=\"categorie\">";
-        echo "<option value=\"0\" "; if ($data[0]["categorie"]=="0") echo "selected"; echo ">— Aucune catégorie spécifiée —</option>";
-        echo "<option value=\"plus_categorie\" "; if ($data[0]["categorie"]=="plus_categorie") echo "selected"; echo ">— Nouvelle catégorie : —</option>";
-        option_selecteur($data[0]["categorie"], $categories, "categorie_index", "categorie_nom", "categorie_lettres", "display()");
+        echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["categorie"]=="0") echo "selected";} echo ">— Aucune catégorie spécifiée —</option>";
+        echo "<option value=\"plus_categorie\" "; if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "selected";} echo ">— Nouvelle catégorie : —</option>";
+        if (isset($data[0])) option_selecteur($data[0]["categorie"], $categories, "categorie_index", "categorie_nom", "categorie_lettres", "display()");
         echo "</select><br/>";
 
             /* ########### + categorie ########### */
@@ -227,7 +227,9 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
                 echo "<label for=\"plus_categorie_abbr\">Abbréviation <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
                 $deja_abrev=dejadanslabase("SELECT DISTINCT `categorie_lettres` FROM `categorie` ;");
-                echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($deja_abrev))([A-Za-z]{1,4})$\" "; if ($data[0]["categorie"]=="plus_categorie") echo "required "; echo "x-moz-errormessage=\"Abbréviation (1 à 4 caractères) déjà utilisée ?\" >\n";
+				echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($deja_abrev))([A-Za-z]{1,4})$\" ";
+					if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "required ";}
+				echo "x-moz-errormessage=\"Abbréviation (1 à 4 caractères) déjà utilisée ?\" >\n";
 
             echo "</fieldset>";
             echo "\n\n\n";
@@ -238,18 +240,18 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "Identifiant labo :</label>\n";
 
 	echo "<select name=\"lab_id\" onchange=\"display(this,'manual_id','manual_id');\" id=\"lab_id\">";
-		echo "<option value=\"".$data[0]["lab_id"]."\" ";
+		 echo "<option value=\""; if (isset($data[0])) echo $data[0]["lab_id"]; echo"\" ";
 
 			$lab_id = (!isset($lab_id)) ? "" : $lab_id;
 			$id_man = (!isset($id_man)) ? "" : $id_man;
 
-			if ($lab_id==$data[0]["lab_id"]) echo "selected";	echo ">";
+			if (isset($data[0])) {if ($lab_id==$data[0]["lab_id"]) echo "selected";}	echo ">";
 			if (isset($fieldset_tags)) echo "Auto";
 			else {
 			    if ($id_man=="") echo $data[0]["lab_id"];
 			    else echo "$id_man";
-			}
-		echo "</option>";
+			
+		echo "</option>"; }
 		echo "<option value=\"manual_id\" ";
 		echo ">Manuel</option>";
         echo "</select><br/>";
@@ -258,12 +260,12 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "\n\n\n";
         echo "<fieldset id=\"manual_id\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Id Manuel</legend>";
             echo "<label for=\"id_man\">Id :</label>\n";
-            
-            
+
+
             $deja_idman=dejadanslabase("SELECT DISTINCT `lab_id` FROM `base` ;");
             echo "<input value=\"\" name=\"id_man\" type=\"text\" pattern=\"^(?!(".$deja_idman.")$).*$\" x-moz-errormessage=\"Déjà dans la base\" / >\n";
-            
-            
+
+
         echo "</fieldset>";
         echo "\n\n\n";
         echo "<br/>";
@@ -278,9 +280,9 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         /* ########### marque ########### */
         echo "<label for=\"marque\">Marque : </label>\n";
         echo "<select name=\"marque\" onchange=\"display(this,'plus_marque','plus_marque');\" id=\"marque\">";
-        echo "<option value=\"0\" "; if ($data[0]["marque"]=="0") echo "selected"; echo ">— Aucune marque spécifiée —</option>";
+		echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["marque"]=="0") echo "selected";} echo ">— Aucune marque spécifiée —</option>";
         echo "<option value=\"plus_marque\" "; if (isset($data[0]["marque"])) { if ($data[0]["marque"]=="plus_marque") echo "selected";} echo ">− Nouvelle marque : −</option>";
-        option_selecteur($data[0]["marque"], $marques, "marque_index", "marque_nom");
+        if (isset($data[0])) option_selecteur($data[0]["marque"], $marques, "marque_index", "marque_nom");
         echo "</select><br/>";
 
             /* ########### + marque ########### */
@@ -294,11 +296,11 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             echo "\n\n\n";
 
         /* ########### reference ########### */
-        echo "<label for=\"reference\">Référence : </label>\n";			echo "<input value=\"".$data[0]["reference"]."\" name=\"reference\" type=\"text\" id=\"reference\">";
+        echo "<label for=\"reference\">Référence : </label>\n";			echo "<input value=\""; if (isset($data[0])) echo $data[0]["reference"]; echo "\" name=\"reference\" type=\"text\" id=\"reference\">";
         echo "<br/>";
 
         /* ########### serial_number ########### */
-        echo "<label for=\"serial_number\">Numéro de série : </label>\n";	echo "<input value=\"".$data[0]["serial_number"]."\" name=\"serial_number\" type=\"text\" id=\"serial_number\"><br/>";
+        echo "<label for=\"serial_number\">Numéro de série : </label>\n";	echo "<input value=\""; if (isset($data[0])) echo $data[0]["serial_number"]; echo "\" name=\"serial_number\" type=\"text\" id=\"serial_number\"><br/>";
 
     echo "</fieldset>";
 
