@@ -143,20 +143,22 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### designation ########### */
         echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation :</label>\n";
         echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"34\"";
-        echo "value=\"";	echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";	echo "\" ><br/>\n";
+        echo "value=\""; if (isset($data[0])) { echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";} echo "\" ><br/>\n";
 
         /* ########### vendeur ########### */
         echo "<label for=\"vendeur\">Vendeur ";
-        if ( ($data[0]["vendeur"]!="0")&&(($data[0]["vendeur"]!="")) ) {
+
+		if (isset($data[0])) {
+		if ( ($data[0]["vendeur"]!="0")&&(($data[0]["vendeur"]!="")) ) {
 	    $keys = array_keys(array_column($vendeurs, 'vendeur_index'), $data[0]["vendeur"]); $key=$keys[0];
             echo " <a href=\"".$vendeurs[$key]["vendeur_web"]."\" title=\"site web\" target=\"_blank\"><strong>↗</strong></a>";
             echo "<abbr title=\"".$vendeurs[$key]["vendeur_remarques"]."\"><strong>ⓘ</strong></abbr>";
-        }
+        }}
         echo " :</label>\n";
         echo "<select name=\"vendeur\" id=\"vendeur\" onchange=\"display(this,'plus_vendeur','plus_vendeur');\" >";
-        echo "<option value=\"0\" "; if ($data[0]["vendeur"]=="0") echo "selected"; echo ">— Aucun vendeur spécifié —</option>";
-        echo "<option value=\"plus_vendeur\" "; if ($data[0]["vendeur"]=="plus_vendeur") echo "selected"; echo ">− Nouveau vendeur : −</option>";
-        option_selecteur($data[0]["vendeur"], $vendeurs, "vendeur_index", "vendeur_nom");
+        echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["vendeur"]=="0") echo "selected";} echo ">— Aucun vendeur spécifié —</option>";
+        echo "<option value=\"plus_vendeur\" "; if (isset($data[0])) {if ($data[0]["vendeur"]=="plus_vendeur") echo "selected";} echo ">− Nouveau vendeur : −</option>";
+        if (isset($data[0])) option_selecteur($data[0]["vendeur"], $vendeurs, "vendeur_index", "vendeur_nom");
         echo "</select>";
         echo "<br/>";
 
@@ -173,7 +175,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
         /* ########### prix ########### */
         echo "<label for=\"prix\">Prix (€) : </label>\n";
-        echo "<input value=\"";		echo ($data[0]["prix"]!="0") ? $data[0]["prix"] : "";		echo "\" name=\"prix\" type=\"text\" id=\"prix\" pattern=\"^[0-9]{1,10}$\"><br/>";
+        echo "<input value=\""; if(isset($data[0])) {echo ($data[0]["prix"]!="0") ? $data[0]["prix"] : "";} echo "\" name=\"prix\" type=\"text\" id=\"prix\" pattern=\"^[0-9]{1,10}$\"><br/>";
 
     echo "</fieldset>";
 
@@ -185,9 +187,9 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### contrat ########### */
         echo "<label for=\"contrat\">Contrat : </label>\n";
         echo "<select name=\"contrat\" onchange=\"display(this,'plus_contrat','plus_contrat');\" id=\"contrat\">";
-        echo "<option value=\"0\" "; if ($data[0]["contrat"]=="0") echo "selected"; echo ">— Aucun contrat spécifié —</option>";
-        echo "<option value=\"plus_contrat\" "; if ($data[0]["contrat"]=="plus_contrat") echo "selected"; echo ">− Nouveau contrat : −</option>";
-        option_selecteur($data[0]["contrat"], $contrats, "contrat_index", "contrat_nom");
+        echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["contrat"]=="0") echo "selected";} echo ">— Aucun contrat spécifié —</option>";
+        echo "<option value=\"plus_contrat\" "; if (isset($data[0])) {if ($data[0]["contrat"]=="plus_contrat") echo "selected";} echo ">− Nouveau contrat : −</option>";
+        if (isset($data[0])) option_selecteur($data[0]["contrat"], $contrats, "contrat_index", "contrat_nom");
         echo "</select><br/>";
 
         /* ########### + contrat ########### */
@@ -221,9 +223,9 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### tutelle ########### */
         echo "<label for=\"tutelle\">Tutelle : </label>\n";
         echo "<select name=\"tutelle\" onchange=\"display(this,'plus_tutelle','plus_tutelle');\" id=\"tutelle\">";
-        echo "<option value=\"0\" "; if ($data[0]["tutelle"]=="") echo "selected"; echo ">— Aucune tutelle spécifiée —</option>";
-        echo "<option value=\"plus_tutelle\" "; if ($data[0]["tutelle"]=="plus_tutelle") echo "selected"; echo ">− Nouvelle tutelle : −</option>";
-        option_selecteur($data[0]["tutelle"], $tutelles, "tutelle_index", "tutelle_nom");
+        echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["tutelle"]=="") echo "selected";} echo ">— Aucune tutelle spécifiée —</option>";
+        echo "<option value=\"plus_tutelle\" "; if (isset($data[0])) { if ($data[0]["tutelle"]=="plus_tutelle") echo "selected";} echo ">− Nouvelle tutelle : −</option>";
+        if (isset($data[0])) option_selecteur($data[0]["tutelle"], $tutelles, "tutelle_index", "tutelle_nom");
         echo "</select><br/>";
 
             /* ########### + tutelle ########### */
@@ -238,29 +240,31 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
         /* ########### bon de commande ########### */
         echo "<label for=\"bon_commande\">Bon de commande : </label>\n";
-        echo "<input value=\"".$data[0]["bon_commande"]."\" name=\"bon_commande\" type=\"text\" id=\"bon_commande\">";
+        echo "<input value=\""; if (isset($data[0])) echo $data[0]["bon_commande"]; echo "\" name=\"bon_commande\" type=\"text\" id=\"bon_commande\">";
         echo "<br/>";
 
         /* ########### num_inventaire ########### */
         echo "<label for=\"num_inventaire\">N° d’inventaire : </label>\n";
-        echo "<input value=\"".$data[0]["num_inventaire"]."\" name=\"num_inventaire\" type=\"text\" id=\"num_inventaire\">";
+        echo "<input value=\""; if (isset($data[0])) echo $data[0]["num_inventaire"]; echo "\" name=\"num_inventaire\" type=\"text\" id=\"num_inventaire\">";
         echo "<br/>";
 
         /* ########### responsable_achat ########### */
         echo "<label for=\"responsable_achat\">Acheteur ";
 
-	$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $data[0]["responsable_achat"]); if (isset($keys[0])) {$key=$keys[0];}
+		$d= (isset($data[0])) ? $data[0]["responsable_achat"] : "";
+		$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $d); if (isset($keys[0])) {$key=$keys[0];}
 
-        if ( ($data[0]["responsable_achat"]!="0")&&(($data[0]["responsable_achat"]!="")) ) {
+		if (isset($data[0]))
+		{ if ( ($data[0]["responsable_achat"]!="0")&&(($data[0]["responsable_achat"]!="")) ) {
             echo "<a href=\"mailto:".$utilisateurs[$key]["utilisateur_mail"]."\" title=\"".$utilisateurs[$key]["utilisateur_mail"]."\"><strong>✉</strong></a> ";
             echo "<abbr title=\"".phone_display("".$utilisateurs[$key]["utilisateur_phone"]."",".")."\"><strong>☏</strong></abbr>";
-        }
+        }}
 
         echo ": </label>\n";
         echo "<select name=\"responsable_achat\" onchange=\"display(this,'plus_responsable_achat','plus_responsable_achat');\" id=\"responsable_achat\">";
-        echo "<option value=\"0\" "; if ($data[0]["responsable_achat"]=="0") echo "selected"; echo ">— Aucun responsable achat spécifié —</option>";
-        echo "<option value=\"plus_responsable_achat\" "; if ($data[0]["responsable_achat"]=="plus_responsable_achat") echo "selected"; echo ">− Nouveau responsable achat : −</option>";
-        option_selecteur($data[0]["responsable_achat"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
+        echo "<option value=\"0\" "; if (isset($data[0])) { if ($data[0]["responsable_achat"]=="0") echo "selected";} echo ">— Aucun responsable achat spécifié —</option>";
+        echo "<option value=\"plus_responsable_achat\" "; if (isset($data[0])) {if ($data[0]["responsable_achat"]=="plus_responsable_achat") echo "selected";} echo ">− Nouveau responsable achat : −</option>";
+        if (isset($data[0])) option_selecteur($data[0]["responsable_achat"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
         echo "</select>";
 
             /* ########### + responsable_achat ########### */
@@ -282,11 +286,11 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
         /* ########### date_achat ########### */
         echo "<label for=\"achat\">Achat <abbr title=\"si aucun calendrier n’aide à la saisie : YYYY-MM-DD ; si jour ou mois inconnu → 01\"><strong>ⓘ</strong></abbr> :</label>\n";
-	echo "<input value=\"";		if ($data[0]["date_achat"]!="0000-00-00") echo $data[0]["date_achat"];		echo "\" name=\"date_achat\" type=\"date\" id=\"achat\"/><br/>";
+	echo "<input value=\"";		if (isset($data[0])) {if ($data[0]["date_achat"]!="0000-00-00") echo $data[0]["date_achat"];} echo "\" name=\"date_achat\" type=\"date\" id=\"achat\"/><br/>";
 
         /* ########### garantie ########### */
         echo "<label for=\"garantie\">Fin de garantie <abbr title=\"si aucun calendrier n’aide à la saisie : YYYY-MM-DD ; si jour ou mois inconnu → 01\"><strong>ⓘ</strong></abbr> :</label>\n";
-        echo "<input value=\"";		if ($data[0]["garantie"]!="0000-00-00") echo $data[0]["garantie"];		echo "\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
+        echo "<input value=\""; if (isset($data[0])) {if ($data[0]["garantie"]!="0000-00-00") echo $data[0]["garantie"];} echo "\" name=\"garantie\" type=\"date\" id=\"garantie\" /><br/>";
 
     echo "</fieldset>";
 
