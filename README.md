@@ -33,6 +33,8 @@ L’ajout d’un inventaire se fait en toute simplicité :
 * PHP (testé avec php 7.4)
 * MySQL (testé avec mariadb 10.3)
 
+Sous debian, par exemple, j’ai lancé `sudo apt install mariadb-server apache2 php{,-mysql,-php-gettext}`
+
 ### Installation
 * Remplir 0_config.php selon vos paramètres
 * Un message indiquant qu’aucune base n’est détecté s’affiche, cliquer sur +
@@ -42,7 +44,7 @@ L’ajout d’un inventaire se fait en toute simplicité :
 ### Taille de fichiers
 Par défaut, la taille maximale des fichiers envoyés en POST est de 2 Mo. Pour modifier cette valeur :
 
-/etc/php/7.1/apache2/conf.d/00-user.ini :
+/etc/php/7.4/apache2/conf.d/00-user.ini :
 ```
 upload_max_filesize = 10M
 post_max_size = 10M
