@@ -297,7 +297,7 @@ function return_last_id($col,$table) {
     global $dbh;
     $sth = $dbh->query("SELECT $col FROM $table ORDER BY $col DESC LIMIT 1 ;");
     $t = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-    $r = ($t) ? $t[0][$col] : FALSE ;
+    $r = ($t) ? $t[0][$col] : 0 ;
     return $r;
 }
 
