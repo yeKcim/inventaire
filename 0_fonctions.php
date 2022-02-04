@@ -48,20 +48,6 @@ function phone_display($n, $display) {
 ╚══════╝╚══════╝╚══════╝╚══════╝ ╚═════╝   ╚═╝
 */
 
-function selecteur($nom, $table, $intitule, $A="0", $B="1", $complement="0",$complement_display="") {
-    global $$nom;
-    echo "<select name=\"$nom\" onchange=\"submit();\">";
-    echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>";
-    foreach ($table as &$l){
-        $selected= ($$nom==$l[$A]) ? "selected > $nom =" : " > " ;
-        $complement_info= ( ($complement!=0)||(array_key_exists($complement, $l)) ) ? "$l[$complement]" : "";
-	$c= ($complement_display!="") ? "($complement_info)" : "$complement_info";
-        echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
-    }
-    echo "</select> ";
-}
-
-
 function selecteur_chosen($nom, $table, $intitule, $A="0", $B="1", $complement="0",$complement_display="") {
     global $$nom;
     echo "<select name=\"$nom\" onchange=\"submit();\" data-placeholder=\"Choose…\" class=\"chosen-select\" tabindex=\"0\" >";
@@ -87,12 +73,18 @@ function selecteur_chosen($nom, $table, $intitule, $A="0", $B="1", $complement="
 
 
 function option_selecteur($select, $table, $A="0", $B="1", $complement="0",$complement_display="") {
-    foreach ($table as &$l){
-        $selected= ($select==$l[$A]) ? "selected >" : " >" ;
-	$complement_info= ( ($complement!=0)||(array_key_exists($complement, $l)) ) ? "$l[$complement]" : "" ;
-	$c= ($complement_display!="") ? "($complement_info)" : "$complement_info";
-        echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
-    }
+    # Chaque entrée du tableau fourni est affiché sous forme d’option pour un sélecteur avec un selected sur une entrée spécifique
+    ## select             : entrée à selectionner
+    ## table              : tabeau avec toutes les entrées à proposer
+    ## A                  : ?
+    ## B                  : ?
+    ## complement         : ?
+    ## complement_display : ?
+	foreach ($table as &$l){
+		$complement_info= ( ($complement!=0)||(array_key_exists($complement, $l)) ) ? "$l[$complement]" : "" ;
+		$c= ($complement_display!="") ? "($complement_info)" : "$complement_info";
+		echo "<option value=\"$l[$A]\" "; echo ($select==$l[$A]) ? "selected >" : " >"; echo "$l[$B] $c</option>";
+	}
 }
 
 

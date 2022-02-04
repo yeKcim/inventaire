@@ -26,7 +26,7 @@ $tutelles = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 $sth = $dbh->query("SELECT * FROM vendeur WHERE vendeur_index!=0 ORDER BY vendeur_nom ASC ;");
 $vendeurs = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 // contrats
-$sth = $dbh->query("SELECT DISTINCT contrat_index, contrat_nom, contrat_type FROM contrat, contrat_type WHERE contrat_type!=0 AND contrat_index!=0 ORDER BY contrat_nom ASC ;");
+$sth = $dbh->query("SELECT DISTINCT contrat_index, contrat_nom, contrat_type FROM contrat, contrat_type WHERE contrat_index!=0 ORDER BY contrat_nom ASC ;");
 $contrats = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 
 /*
@@ -65,7 +65,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
     if ($contrat=="plus_contrat") {
 //$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;")); ##### Si on met NULL, ça déconne
-        $sth = $dbh->query("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;");
+		$sth = $dbh->query("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;");
         /* TODO : prévoir le cas où le contrat existe déjà */
 	$contrat=return_last_id("contrat_index","contrat");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
@@ -264,7 +264,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<select name=\"responsable_achat\" onchange=\"display(this,'plus_responsable_achat','plus_responsable_achat');\" id=\"responsable_achat\">";
         echo "<option value=\"0\" "; if (isset($data[0])) { if ($data[0]["responsable_achat"]=="0") echo "selected";} echo ">— Aucun responsable achat spécifié —</option>";
         echo "<option value=\"plus_responsable_achat\" "; if (isset($data[0])) {if ($data[0]["responsable_achat"]=="plus_responsable_achat") echo "selected";} echo ">− Nouveau responsable achat : −</option>";
-        option_selecteur( (isset($data[0])) ? $data[0]["responsable_achat"] : "" , $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom"); ############################ DEBUG ###############################
+        option_selecteur( (isset($data[0])) ? $data[0]["responsable_achat"] : "" , $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
         echo "</select>";
 
             /* ########### + responsable_achat ########### */
