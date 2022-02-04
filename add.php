@@ -34,7 +34,8 @@ if ( isset($_POST["add_valid"]) ) {
     // ╦  ╦╔═╗╦═╗╦╔═╗╦╔═╗╔═╗╔╦╗╦╔═╗╔╗╔  ╔╦╗╦╔╗╔╦╔╦╗╦ ╦╔╦╗  ╦╔╗╔╔═╗╦ ╦╔╦╗
     // ╚╗╔╝║╣ ╠╦╝║╠╣ ║║  ╠═╣ ║ ║║ ║║║║  ║║║║║║║║║║║║ ║║║║  ║║║║╠═╝║ ║ ║
     //  ╚╝ ╚═╝╩╚═╩╚  ╩╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝  ╩ ╩╩╝╚╝╩╩ ╩╚═╝╩ ╩  ╩╝╚╝╩  ╚═╝ ╩
-    if ( ($data["categorie"]=="0")&&($data["designation"]==NULL) ) $error.="<p class=\"error_message\">Merci de remplir au minimum Administratif→Désignation ou Technique→Catégorie</p>";
+
+	if ( ($data["categorie"]=="0")||($data["designation"]==NULL) ) $error.="<p class=\"error_message\">Merci de remplir au minimum Administratif→Désignation et Technique→Catégorie</p>";
 
 
 
@@ -177,7 +178,9 @@ if ( isset($_POST["add_valid"]) ) {
 
     $data["date_achat"]=($data["date_achat"]==NULL) ? "0000-00-00" : $data["date_achat"];
     $data["garantie"]=($data["garantie"]==NULL) ? "0000-00-00" : $data["garantie"];
-    // TODO : vérifier que les dates sont bien au bon format !
+	// TODO : vérifier que les dates sont bien au bon format !
+	
+	$data["prix"]=($data["prix"]==NULL) ? "0" : $data["prix"]; //prix ne peut être NULL
 
     if ($error=="") {
         // ╔═╗╔═╗╦  ╔═╗╦ ╦╦    ╔╦╗╦ ╦  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╦
@@ -185,10 +188,7 @@ if ( isset($_POST["add_valid"]) ) {
         // ╚═╝╩ ╩╩═╝╚═╝╚═╝╩═╝  ═╩╝╚═╝  ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╩
 	$i=return_last_id("base_index", "base") + 1;
 
-    $insert=str_replace("\"\"", "NULL", "SELECT ".$prefix."".$database." INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES (\"".$i."\", \"".$data["lab_id"]."\", \"".$data["categorie"]."\", \"".$data["serial_number"]."\", \"".$data["reference"]."\", \"".$data["designation"]."\", \"0\", \"0\", \"0000-00-00\", \"".$data["tutelle"]."\", \"".$data["contrat"]."\", \"".$data["bon_commande"]."\", \"".$data["num_inventaire"]."\", \"".$data["vendeur"]."\", \"".$data["marque"]."\", \"".$data["date_achat"]."\", \"".$data["responsable_achat"]."\", \"".$data["garantie"]."\", \"".$data["prix"]."\", \"0000-00-00\",  \"0\", \"0\", \"0\") ;");
-
-
-	echo "<p>bob:".$insert."</p>";
+	$insert="USE ".$dbname."; INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES (\"".$i."\", \"".$data["lab_id"]."\", \"".$data["categorie"]."\", \"".$data["serial_number"]."\", \"".$data["reference"]."\", \"".$data["designation"]."\", \"0\", \"0\", \"0000-00-00\", \"".$data["tutelle"]."\", \"".$data["contrat"]."\", \"".$data["bon_commande"]."\", \"".$data["num_inventaire"]."\", \"".$data["vendeur"]."\", \"".$data["marque"]."\", \"".$data["date_achat"]."\", \"".$data["responsable_achat"]."\", \"".$data["garantie"]."\", \"".$data["prix"]."\", \"0000-00-00\",  \"0\", \"0\", \"0\") ;";
 
 	$add_result = $dbh->query($insert);
         if (!isset($add_result)) $error.=$message_error_add;
@@ -231,7 +231,7 @@ else { // Initialisation de toutes les variable
         "tutelle"=>"0",                "contrat"=>"0",              "bon_commande"=>"",
         "num_inventaire"=>"",
         "vendeur"=>"0",                "marque"=>"0",               "date_achat"=>"",
-        "responsable_achat"=>"0",      "garantie"=>"",              "prix"=>"",
+        "responsable_achat"=>"0",      "garantie"=>"",              "prix"=>"0",
         "date_sortie"=>"",             "sortie"=>"",                "raison_sortie"=>"",
         "integration"=>""   );
 }

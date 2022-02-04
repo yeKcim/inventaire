@@ -158,7 +158,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<select name=\"vendeur\" id=\"vendeur\" onchange=\"display(this,'plus_vendeur','plus_vendeur');\" >";
         echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["vendeur"]=="0") echo "selected";} echo ">— Aucun vendeur spécifié —</option>";
         echo "<option value=\"plus_vendeur\" "; if (isset($data[0])) {if ($data[0]["vendeur"]=="plus_vendeur") echo "selected";} echo ">− Nouveau vendeur : −</option>";
-        if (isset($data[0])) option_selecteur($data[0]["vendeur"], $vendeurs, "vendeur_index", "vendeur_nom");
+        option_selecteur( (isset($data[0])) ? $data[0]["vendeur"] : "" , $vendeurs, "vendeur_index", "vendeur_nom");
         echo "</select>";
         echo "<br/>";
 
@@ -189,7 +189,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<select name=\"contrat\" onchange=\"display(this,'plus_contrat','plus_contrat');\" id=\"contrat\">";
         echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["contrat"]=="0") echo "selected";} echo ">— Aucun contrat spécifié —</option>";
         echo "<option value=\"plus_contrat\" "; if (isset($data[0])) {if ($data[0]["contrat"]=="plus_contrat") echo "selected";} echo ">− Nouveau contrat : −</option>";
-        if (isset($data[0])) option_selecteur($data[0]["contrat"], $contrats, "contrat_index", "contrat_nom");
+        option_selecteur( (isset($data[0])) ? $data[0]["contrat"] : "", $contrats, "contrat_index", "contrat_nom");
         echo "</select><br/>";
 
         /* ########### + contrat ########### */
@@ -225,7 +225,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<select name=\"tutelle\" onchange=\"display(this,'plus_tutelle','plus_tutelle');\" id=\"tutelle\">";
         echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["tutelle"]=="") echo "selected";} echo ">— Aucune tutelle spécifiée —</option>";
         echo "<option value=\"plus_tutelle\" "; if (isset($data[0])) { if ($data[0]["tutelle"]=="plus_tutelle") echo "selected";} echo ">− Nouvelle tutelle : −</option>";
-        if (isset($data[0])) option_selecteur($data[0]["tutelle"], $tutelles, "tutelle_index", "tutelle_nom");
+        option_selecteur( (isset($data[0])) ? $data[0]["tutelle"] : "" , $tutelles, "tutelle_index", "tutelle_nom");
         echo "</select><br/>";
 
             /* ########### + tutelle ########### */
@@ -264,7 +264,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<select name=\"responsable_achat\" onchange=\"display(this,'plus_responsable_achat','plus_responsable_achat');\" id=\"responsable_achat\">";
         echo "<option value=\"0\" "; if (isset($data[0])) { if ($data[0]["responsable_achat"]=="0") echo "selected";} echo ">— Aucun responsable achat spécifié —</option>";
         echo "<option value=\"plus_responsable_achat\" "; if (isset($data[0])) {if ($data[0]["responsable_achat"]=="plus_responsable_achat") echo "selected";} echo ">− Nouveau responsable achat : −</option>";
-        if (isset($data[0])) option_selecteur($data[0]["responsable_achat"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
+        option_selecteur( (isset($data[0])) ? $data[0]["responsable_achat"] : "" , $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom"); ############################ DEBUG ###############################
         echo "</select>";
 
             /* ########### + responsable_achat ########### */
