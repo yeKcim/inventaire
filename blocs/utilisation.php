@@ -239,7 +239,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
                         echo "<label for=\"plus_raison_sortie_nom\">Raison :</label>\n";
 
                         $deja_raison=dejadanslabase("SELECT DISTINCT `raison_sortie_nom` FROM `raison_sortie`");
-                        echo "<input value=\"\" name=\"plus_raison_sortie_nom\" type=\"text\"  pattern=\"^(?!(".$deja_raison.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" />\n";
+                        echo "<input value=\"\" name=\"plus_raison_sortie_nom\" type=\"text\"  pattern=\"^(?!(".$deja_raison.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" />\n";
                     echo "</fieldset>";
                     echo "\n\n\n";
 
