@@ -73,7 +73,7 @@ function selecteur_chosen($nom, $table, $intitule, $A="0", $B="1", $complement="
 
 
 function option_selecteur($select, $table, $A="0", $B="1", $complement="0",$complement_display="") {
-    # Chaque entrée du tableau fourni est affiché sous forme d’option pour un sélecteur avec un selected sur une entrée spécifique
+	# Chaque entrée du tableau fourni est affiché sous forme d’option pour un sélecteur avec un selected sur une entrée spécifique
     ## select             : entrée à selectionner
     ## table              : tabeau avec toutes les entrées à proposer
     ## A                  : ?
