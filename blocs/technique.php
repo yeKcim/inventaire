@@ -223,13 +223,13 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             echo "<fieldset id=\"plus_categorie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Catégorie</legend>";
                 echo "<label for=\"plus_categorie_nom\">Nom :</label>\n";
                 $deja_catnom=dejadanslabase("SELECT DISTINCT `categorie_nom` FROM `categorie` ");
-                echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\" pattern=\"^(?!(".$deja_catnom.")$).*$\" x-moz-errormessage=\"Déjà dans la base\" /><br/>\n";
+                echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\" pattern=\"^(?!(".$deja_catnom.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" /><br/>\n";
 
                 echo "<label for=\"plus_categorie_abbr\">Abbréviation <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
                 $deja_abrev=dejadanslabase("SELECT DISTINCT `categorie_lettres` FROM `categorie` ;");
 				echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($deja_abrev))([A-Za-z]{1,4})$\" ";
 					if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "required ";}
-				echo "x-moz-errormessage=\"Abbréviation (1 à 4 caractères) déjà utilisée ?\" >\n";
+				echo "oninvalid=\"setCustomValidity('Abbréviation (1 à 4 caractères) déjà utilisée ?')\" >\n";
 
             echo "</fieldset>";
             echo "\n\n\n";
@@ -263,8 +263,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
 
             $deja_idman=dejadanslabase("SELECT DISTINCT `lab_id` FROM `base` ;");
-            echo "<input value=\"\" name=\"id_man\" type=\"text\" pattern=\"^(?!(".$deja_idman.")$).*$\" x-moz-errormessage=\"Déjà dans la base\" / >\n";
-
+			echo "<input value=\"\" name=\"id_man\" type=\"text\" pattern=\"^(?!(".$deja_idman.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" /} \n";
 
         echo "</fieldset>";
         echo "\n\n\n";
@@ -275,13 +274,13 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 /*  ╦═╗╔═╗╔═╗╔═╗╦═╗╔═╗╔╗╔╔═╗╔═╗  ╔═╗╔═╗╔╗╔╔═╗╔╦╗╦═╗╦ ╦╔═╗╔╦╗╔═╗╦ ╦╦═╗
     ╠╦╝║╣ ╠╣ ║╣ ╠╦╝║╣ ║║║║  ║╣   ║  ║ ║║║║╚═╗ ║ ╠╦╝║ ║║   ║ ║╣ ║ ║╠╦╝
     ╩╚═╚═╝╚  ╚═╝╩╚═╚═╝╝╚╝╚═╝╚═╝  ╚═╝╚═╝╝╚╝╚═╝ ╩ ╩╚═╚═╝╚═╝ ╩ ╚═╝╚═╝╩╚═   */
-    echo "<fieldset><legend>Références Constructeur</legend>";
+    echo "<fieldset><legend>références constructeur</legend>";
 
         /* ########### marque ########### */
-        echo "<label for=\"marque\">Marque : </label>\n";
+        echo "<label for=\"marque\">marque : </label>\n";
         echo "<select name=\"marque\" onchange=\"display(this,'plus_marque','plus_marque');\" id=\"marque\">";
-		echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["marque"]=="0") echo "selected";} echo ">— Aucune marque spécifiée —</option>";
-        echo "<option value=\"plus_marque\" "; if (isset($data[0]["marque"])) { if ($data[0]["marque"]=="plus_marque") echo "selected";} echo ">− Nouvelle marque : −</option>";
+		echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["marque"]=="0") echo "selected";} echo ">— aucune marque spécifiée —</option>";
+        echo "<option value=\"plus_marque\" "; if (isset($data[0]["marque"])) { if ($data[0]["marque"]=="plus_marque") echo "selected";} echo ">− nouvelle marque : −</option>";
         option_selecteur(  (isset($data[0])) ? $data[0]["marque"] : ""  , $marques, "marque_index", "marque_nom");
         echo "</select><br/>";
 
@@ -291,7 +290,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
                 echo "<label for=\"plus_marque_nom\">Nom :</label>\n";
 
                 $deja_marque=dejadanslabase("SELECT DISTINCT `marque_nom` FROM `marque` ");
-                echo "<input value=\"\" name=\"plus_marque_nom\" type=\"text\"  pattern=\"^(?!(".$deja_marque.")$).*$\" x-moz-errormessage=\"Déjà dans la base\" / >\n";
+                echo "<input value=\"\" name=\"plus_marque_nom\" type=\"text\"  pattern=\"^(?!(".$deja_marque.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" / >\n";
             echo "</fieldset>";
             echo "\n\n\n";
 

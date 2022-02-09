@@ -237,9 +237,9 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
                     echo "\n\n\n";
                     echo "<fieldset id=\"plus_raison_sortie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvellle raison de sortie</legend>";
                         echo "<label for=\"plus_raison_sortie_nom\">Raison :</label>\n";
-                        
+
                         $deja_raison=dejadanslabase("SELECT DISTINCT `raison_sortie_nom` FROM `raison_sortie`");
-                        echo "<input value=\"\" name=\"plus_raison_sortie_nom\" type=\"text\"  pattern=\"^(?!(".$deja_raison.")$).*$\" x-moz-errormessage=\"Déjà dans la base\" />\n";
+                        echo "<input value=\"\" name=\"plus_raison_sortie_nom\" type=\"text\"  pattern=\"^(?!(".$deja_raison.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" />\n";
                     echo "</fieldset>";
                     echo "\n\n\n";
 
