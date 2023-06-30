@@ -359,25 +359,28 @@ function spanquick($p,$i) {
 function vnum($s) {
     $last_char=substr($s, -1);
     $f_char=substr_replace($s, "", -1);
-    $f_char=number_format($f_char);
-    //if (is_numeric($f_char))
-  switch ($last_char) { // https://fr.wikipedia.org/wiki/Pr%C3%A9fixes_du_Syst%C3%A8me_international_d%27unit%C3%A9s
-    case "P": $v_num = $f_char*10^15;  break;
-    case "T": $v_num = $f_char*10^12;  break;
-    case "G": $v_num = $f_char*10^9;   break;
-    case "M": $v_num = $f_char*10^6;   break;
-    case "k": $v_num = $f_char*10^3;   break;
-    case "c": $v_num = $f_char*10^-2;  break;
-    case "m": $v_num = $f_char*10^-3;  break;
-    case "µ": $v_num = $f_char*10^-6;  break;
-    case "μ": $v_num = $f_char*10^-6;  break;
-    case "n": $v_num = $f_char*10^-9;  break;
-    case "p": $v_num = $f_char*10^-12; break;
-    case "f": $v_num = $f_char*10^-15; break;
-    default: $v_num=$s;
-  }
-  return $v_num;
+    //$f_char=number_format($f_char);
+    if (is_numeric($f_char)) {
+        switch ($last_char) { // https://fr.wikipedia.org/wiki/Pr%C3%A9fixes_du_Syst%C3%A8me_international_d%27unit%C3%A9s
+            case "P": $v_num = $f_char*10^15;  break;
+            case "T": $v_num = $f_char*10^12;  break;
+            case "G": $v_num = $f_char*10^9;   break;
+            case "M": $v_num = $f_char*10^6;   break;
+            case "k": $v_num = $f_char*10^3;   break;
+            case "c": $v_num = $f_char*10^-2;  break;
+            case "m": $v_num = $f_char*10^-3;  break;
+            case "µ": $v_num = $f_char*10^-6;  break;
+            case "μ": $v_num = $f_char*10^-6;  break;
+            case "n": $v_num = $f_char*10^-9;  break;
+            case "p": $v_num = $f_char*10^-12; break;
+            case "f": $v_num = $f_char*10^-15; break;
+            default: $v_num=$s;
+        }
+    }
+    else $v_num="";
+    return $v_num;
 }
+
 
 
 function dejadanslabase($select) {
