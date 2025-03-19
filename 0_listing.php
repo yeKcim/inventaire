@@ -34,6 +34,7 @@ $ORDER ;
 
 $sth = $dbh->query($table);
 $tableau = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
+if ($sth) $sth->closeCursor();
 
 //liste des base_index affichés
 $b_i="";
@@ -44,14 +45,17 @@ if (!empty($b_i)) {
 	//liste des journaux correspondants
 	$sth = $dbh->query("SELECT historique_id, COUNT(*) as nb_entree FROM historique, base WHERE historique_id=base_index AND base_index IN ($b_i) GROUP BY historique_id ORDER BY historique_id ASC;");
 	$tableau_journaux = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
+	if ($sth) $sth->closeCursor();
 	
 	//liste des ensembles parmi les éléments affichés
 $sth = $dbh->query("SELECT base_index, integration, lab_id, categorie, reference, designation, sortie FROM base WHERE integration IN ($b_i) ORDER BY base_index ASC ; ");
 $tableau_parents = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
 
 	//liste des caracs correspondantes
 	$sth = $dbh->query("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
 	$table_carac = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array() ;
+	if ($sth) $sth->closeCursor();
 	$tc=array(); $td_c=array(); $th_c="";
 	$val=array();
 	foreach ($table_carac as $l) {
@@ -70,6 +74,7 @@ $tableau_parents = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 	//liste des entretiens correspondants
 	$sth = $dbh->query("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
 	$tableau_entretien = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array() ;
+	if ($sth) $sth->closeCursor();
 	$te=array();
 	foreach ($tableau_entretien as $l) {
 	    $f=$l["e_frequence"];
@@ -107,6 +112,7 @@ if ($b_e!="") {
 	$b_e=substr($b_e, 0, -1); // suppression du dernier caractère
 	$sth = $dbh->query("SELECT base_index, lab_id, categorie, reference, designation, sortie FROM base WHERE base_index IN ($b_e) ORDER BY base_index ASC ; ");
 	$tableau_enfants = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+	if ($sth) $sth->closeCursor();
 } else {
 	    $tableau_enfants = [];
 }
@@ -117,6 +123,7 @@ if ($CAT!="") {
   // Si une seule catégorie est affichée on met les caractéristiques pertinentes dans un tableau
   $sth = $dbh->query("SELECT DISTINCT carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND categorie=".$CAT." AND carac!=0 ORDER BY carac ASC ;");
   $carac_categorie = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+  if ($sth) $sth->closeCursor();
 
   $style="background-color:rgba(212, 224, 200, 0.45);";
 
@@ -154,6 +161,7 @@ if ($IOT!="0") {
     $raison_sortie=array();
     $sth = $dbh->query("SELECT * FROM raison_sortie WHERE raison_sortie_index!=0");
     $raison_sortie = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+    if ($sth) $sth->closeCursor();
     $display_raison_sortie=1;
 }
 else $display_raison_sortie=0;

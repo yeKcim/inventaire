@@ -19,15 +19,20 @@ $message="";
 ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
 */
 
+if ($sth) $sth->closeCursor();
+
 // tutelles
 $sth = $dbh->query("SELECT * FROM tutelle WHERE tutelle_index!=0 ORDER BY tutelle_nom ASC ;");
 $tutelles = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
 // vendeur
 $sth = $dbh->query("SELECT * FROM vendeur WHERE vendeur_index!=0 ORDER BY vendeur_nom ASC ;");
 $vendeurs = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
 // contrats
 $sth = $dbh->query("SELECT DISTINCT contrat_index, contrat_nom, contrat_type FROM contrat, contrat_type WHERE contrat_index!=0 ORDER BY contrat_nom ASC ;");
 $contrats = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
 
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗
@@ -47,12 +52,12 @@ if ( isset($_POST["administratif_valid"]) ) {
     /* ########### Ajout d’un nouveau vendeur ########### */
     if ($vendeur=="plus_vendeur") {
         // TODO : Si les infos sont vides !
-//$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ;")); ##### Si on met NULL dans web, ça déconne
     $sth = $dbh->query("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ;");
         /* TODO : prévoir le cas où le vendeur existe déjà */
 	$vendeur=return_last_id("vendeur_index","vendeur");
         // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
 	array_push($vendeurs, array("vendeur_index" => $vendeur, "vendeur_nom" => $plus_vendeur_nom, "vendeur_web" => $plus_vendeur_web, "vendeur_remarques" =>$plus_vendeur_remarque ) );
+	if ($sth) $sth->closeCursor();
     }
 
     if ($contrat_type=="plus_contrat_type") {
@@ -61,15 +66,16 @@ if ( isset($_POST["administratif_valid"]) ) {
 	$contrat_type=return_last_id("contrat_type_index","contrat_type");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
         array_push($types_contrats, array("contrat_type_index" => $contrat_type, "contrat_type_cat" => $plus_contrat_type_nom ) );
+        if ($sth) $sth->closeCursor();
     }
 
     if ($contrat=="plus_contrat") {
-//$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;")); ##### Si on met NULL, ça déconne
-		$sth = $dbh->query("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;");
+	$sth = $dbh->query("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;");
         /* TODO : prévoir le cas où le contrat existe déjà */
 	$contrat=return_last_id("contrat_index","contrat");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
         array_push($contrats, array("contrat_nom" => $plus_contrat_nom, "contrat_type" => $contrat_type ) );
+        if ($sth) $sth->closeCursor();
     }
 
     if ($tutelle=="plus_tutelle") {
@@ -78,6 +84,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 	$tutelle=return_last_id("tutelle_index","tutelle");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
         array_push($tutelles, array("tutelle_index" => $tutelle, "tutelle_nom" => $plus_tutelle ) );
+        if ($sth) $sth->closeCursor();
     }
 
     if ($responsable_achat=="plus_responsable_achat") {
@@ -88,6 +95,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 	$responsable_achat=return_last_id("utilisateur_index","utilisateur");
         // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
         array_push($utilisateurs, array("utilisateur_index" => $responsable_achat, "utilisateur_nom" => $plus_responsable_achat_nom, "utilisateur_prenom" => $plus_responsable_achat_prenom, "utilisateur_mail" => $plus_responsable_achat_mail, "utilisateur_phone" => $plus_responsable_achat_phone) );
+        if ($sth) $sth->closeCursor();
     }
 
 // TODO : prix avec une virgule ou un point ?

@@ -272,9 +272,11 @@ function new_lab_id($categorie) {
     $sth = $dbh->query("SELECT categorie_lettres FROM categorie WHERE categorie_index='".$categorie."' ;");
     $tabbr = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
     $abbr=$tabbr[0]["categorie_lettres"];
+    if ($sth) $sth->closeCursor();
     // recherche du labid max
     $sth = $dbh->query("SELECT lab_id FROM base WHERE categorie='".$categorie."' ORDER BY lab_id ASC ;");
     $allid = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+    if ($sth) $sth->closeCursor();
     // on supprime les lettres des lab_id, on met les chiffres dans un tableau
     $allidnum=array();
     foreach ($allid as $a) array_push ( $allidnum, preg_replace('`[^0-9]`', '', $a["lab_id"]) );
@@ -290,6 +292,7 @@ function return_last_id($col,$table) {
     $sth = $dbh->query("SELECT $col FROM $table ORDER BY $col DESC LIMIT 1 ;");
     $t = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
     $r = ($t) ? $t[0][$col] : 0 ;
+    if ($sth) $sth->closeCursor();
     return $r;
 }
 
@@ -389,6 +392,7 @@ function dejadanslabase($select) {
     global $dbh;
     $abr = $dbh->query("$select");
     $abrev = ($abr) ? $abr->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+    if ($abr) $abr->closeCursor();
     $listab="";
     $distinct = explode("`", $select);
     $d=$distinct[1];

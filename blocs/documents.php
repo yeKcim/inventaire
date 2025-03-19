@@ -188,6 +188,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
     // Array references_similaires
     $sth = $dbh->query("SELECT base_index, lab_id FROM base WHERE reference=\"".$data[0]["reference"]."\" AND marque=".$data[0]["marque"]." AND categorie=".$data[0]["categorie"]." AND base_index!=$i ORDER BY base_index ASC ;");
     $references_similaires = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+    if ($sth) $sth->closeCursor();
     if ( (!$references_similaires) || ($data[0]["reference"]=="") || ($data[0]["marque"]=="0") || ($data[0]["categorie"]=="0") )echo "Aucune référence correspondante trouvée";
     else {
         echo "<table id=\"simreffiles\">";

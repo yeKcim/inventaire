@@ -58,6 +58,7 @@ if ( isset($_POST["new_carac_valid"]) ) {
             // Si la nouvelle carac existe déjà (nom ou symbôle)
 	    $sth = $dbh->query("SELECT COUNT(*) FROM caracteristiques WHERE nom_carac=\"$nom_carac\" OR symbole_carac=\"$symbole_carac\" ;");
 	    $count_carac = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+	    if ($sth) $sth->closeCursor();
 	    $count_carac[0]["COUNT(*)"];
 	}
        /* Récupère le nombre de lignes qui correspond à la requête SELECT */
@@ -87,14 +88,17 @@ if ( isset($_POST["new_carac_valid"]) ) {
 // allcaracs
 $sth = $dbh->query("SELECT * FROM caracteristiques WHERE carac!=0 ORDER BY nom_carac ASC ;");
 $allcaracs = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
 
 // caracs de i
 $sth = $dbh->query("SELECT carac, carac_valeur FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index='$i' AND carac!=0 ORDER BY base.base_index ASC, carac ASC ;");
 $caracs_i = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
 
 // caracs_of_categorie
 $sth = $dbh->query("SELECT DISTINCT carac_caracteristique_id FROM carac, caracteristiques, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND categorie='".$data[0]["categorie"]."'");
 $car_of_cat = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
 
 // Cas de création d’une nouvelle caracteristique, pour garder les champs remplis en cas d’erreur
 $arr = array("nom_carac", "unite_carac", "symbole_carac");

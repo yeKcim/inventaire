@@ -22,17 +22,22 @@ $message="";
 // tous les lab_id (utilisé uniquement pour intégration, TODO à supprimer)
 $sth = $dbh->query("SELECT base_index, lab_id, categorie, reference, designation, sortie FROM base WHERE base_index!=\"$i\" ORDER BY lab_id ASC ;");
 $lab_ids = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
 
 // raison_sortie
 $sth = $dbh->query("SELECT * FROM raison_sortie WHERE raison_sortie_index!=0 ORDER BY raison_sortie_nom ASC ;");
 $raison_sorties = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
 
 // localisation
 $sth = $dbh->query("SELECT * FROM localisation WHERE localisation_index!=0 ORDER BY localisation_batiment ASC, localisation_piece ASC ;");
 $localisations = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
+
 // tous les enfants
 $sth = $dbh->query("SELECT base_index, lab_id, designation FROM base WHERE integration=\"$i\" ORDER BY lab_id ASC ;");
 $kids = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
 
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗

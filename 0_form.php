@@ -62,6 +62,7 @@ $sth = $dbh->query("SELECT contrat_index, contrat_nom, contrat_type FROM contrat
 $contrats = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 selecteur_chosen("CON", $contrats, "Tous contrats", "contrat_index", "contrat_nom");
 $CON_CMD= ($CON!="") ? "AND contrat_index=$CON" : "" ;
+if ($sth) $sth->closeCursor();
 
 #########################################################################
 #                      RES : Responsable achat                          #
@@ -70,6 +71,7 @@ $sth = $dbh->query("SELECT DISTINCT (utilisateur_index) responsable_achat, utili
 $responsables = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 selecteur_chosen("RES", $responsables, "Tous responsables achat", "responsable_achat", "utilisateur_nom", "utilisateur_prenom");
 $RES_CMD= ($RES!="") ? "AND responsable_achat=$RES" : "" ;
+if ($sth) $sth->closeCursor();
 
 #########################################################################
 #                         UTL : Utilisateur                             #
@@ -78,6 +80,7 @@ $sth = $dbh->query("SELECT DISTINCT(utilisateur_index) utilisateur_index, utilis
 $utilisateurs = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 selecteur_chosen("UTL", $utilisateurs, "Tous les utilisateurs", "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
 $UTL_CMD= ($UTL!="") ? "AND utilisateur=$UTL" : "" ;
+if ($sth) $sth->closeCursor();
 
 #########################################################################
 #                             RESET BUTTON                              #

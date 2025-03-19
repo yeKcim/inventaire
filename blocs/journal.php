@@ -32,6 +32,7 @@ if ($add_historique=="Ajouter") {
     }
     $sth = $dbh->query("SELECT historique_index FROM historique WHERE historique_date=\"".$date_info."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";");
     $query_do_i_insert_histo = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+    if ($sth) $sth->closeCursor();
 
     if (!isset($query_do_i_insert_histo[0]) ) {
         $historique_date=($historique_date==NULL) ? "0000-00-00" : $historique_date;
@@ -59,6 +60,7 @@ $hide_auto_cmd = ($hide_auto=="1") ? "AND `historique_texte` NOT LIKE '%<!--auto
 
 $sth = $dbh->query("SELECT * FROM historique WHERE historique_id=$i $hide_auto_cmd ORDER BY historique_date DESC, historique_index DESC ;");
 $historique = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+if ($sth) $sth->closeCursor();
 
 
 
