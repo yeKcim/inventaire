@@ -144,7 +144,7 @@ function displayDir($database, $i, $dir, $del=FALSE, $allowmv=FALSE) {
     // Si le dossier n’existe pas, on le crée
     if (!file_exists("$dir")) {
         $umask_bak=umask(0);
-        mkdir("$dir", 0775);
+        mkdir("$dir", 0775, true);
         umask($umask_bak);
         echo "Dossier ".str_replace($dossierdesfichiers, "", "$dir")." créé. ";
     }

@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8*/;
 
 --
 -- Base de données :  `inventaire_optique-dop`
@@ -28,29 +28,29 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `base` (
   `base_index` int(11) NOT NULL,
-  `lab_id` tinytext NOT NULL COMMENT 'Sous la forme P1, L4, Mod2, POG23 Commence par categorie_lettres Identifiant donné par l’équipe',
+  `lab_id` tinytext COMMENT 'Sous la forme P1, L4, Mod2, POG23 Commence par categorie_lettres Identifiant donné par l’équipe',
   `categorie` int(11) NOT NULL,
   `serial_number` text NOT NULL,
-  `reference` text NOT NULL COMMENT 'Référence du composant chez vendeur ou fabriquant',
-  `designation` text NOT NULL,
+  `reference` text COMMENT 'Référence du composant chez vendeur ou fabriquant',
+  `designation` text ,
   `utilisateur` int(11) NOT NULL COMMENT 'Sous la forme adresse mail',
   `localisation` int(11) NOT NULL,
   `date_localisation` date NOT NULL COMMENT 'Date à laquelle la localisation à été renseignée (rempli automatiquement)',
   `tutelle` int(11) NOT NULL,
   `contrat` int(11) NOT NULL,
-  `bon_commande` text NOT NULL,
-  `num_inventaire` text NOT NULL COMMENT 'Numéro d’inventaire des tutelles',
+  `bon_commande` text ,
+  `num_inventaire` text COMMENT 'Numéro d’inventaire des tutelles',
   `vendeur` int(11) NOT NULL,
   `marque` int(11) NOT NULL,
   `date_achat` date NOT NULL,
   `responsable_achat` int(11) NOT NULL,
   `garantie` date NOT NULL COMMENT 'date de fin de garantie',
-  `prix` decimal(11,0) NOT NULL,
+  `prix` decimal(11,0) ,
   `date_sortie` date NOT NULL COMMENT 'date à laquelle le produit est sortie de base de données',
-  `sortie` tinyint(1) NOT NULL COMMENT '0 pour non sortie 1 pour sortie définitive 2 pour sortie temporaire',
-  `raison_sortie` int(11) NOT NULL,
+  `sortie` tinyint(1) COMMENT '0 pour non sortie 1 pour sortie définitive 2 pour sortie temporaire',
+  `raison_sortie` int(11),
   `integration` int(11) NOT NULL COMMENT 'Si le composant est intégré dans un ensemble qui est répertorié'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -63,7 +63,7 @@ CREATE TABLE `carac` (
   `carac_valeur` text NOT NULL COMMENT 'Différentes possibilités : λ=1550 λ= 800 1024 1550 (si plusieurs valeurs, séparées par espaces) λ=800-1500 (si intervalle, séparées par -)',
   `carac_id` int(11) NOT NULL,
   `carac_caracteristique_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 
@@ -75,10 +75,10 @@ CREATE TABLE `carac` (
 
 CREATE TABLE `caracteristiques` (
   `carac` int(11) NOT NULL,
-  `nom_carac` text NOT NULL,
-  `unite_carac` text NOT NULL,
-  `symbole_carac` tinytext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='le type de caractéristique (λ, matériau, ω₀,…)';
+  `nom_carac` text,
+  `unite_carac` text,
+  `symbole_carac` tinytext
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='le type de caractéristique (λ, matériau, ω₀,…)';
 
 --
 -- Contenu de la table `caracteristiques`
@@ -97,7 +97,7 @@ CREATE TABLE `categorie` (
   `categorie_index` int(11) NOT NULL,
   `categorie_lettres` tinytext NOT NULL,
   `categorie_nom` tinytext NOT NULL COMMENT 'Polariseur, Photodiode, Laser, Coupleur,…'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Contenu de la table `categorie`
@@ -117,7 +117,7 @@ CREATE TABLE `compatibilite` (
   `compatib_index` int(11) NOT NULL,
   `compatib_id1` int(11) NOT NULL,
   `compatib_id2` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- --------------------------------------------------------
@@ -130,7 +130,7 @@ CREATE TABLE `contrat` (
   `contrat_index` int(11) NOT NULL,
   `contrat_nom` text NOT NULL COMMENT 'Nom du contrat CPER, ANR, ASTRID,… sur laquelle le composant a été acheté (Ex : OSMOTUS, PHENIX,…',
   `contrat_type` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Contenu de la table `contrat`
@@ -148,7 +148,7 @@ INSERT INTO `contrat` (`contrat_index`, `contrat_nom`, `contrat_type`) VALUES
 CREATE TABLE `contrat_type` (
   `contrat_type_index` int(11) NOT NULL,
   `contrat_type_cat` text NOT NULL COMMENT 'ANR, ASTRID, CPER,…'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Contenu de la table `contrat_type`
@@ -169,9 +169,9 @@ CREATE TABLE `entretien` (
   `e_frequence` int(11) NOT NULL,
   `e_lastdate` date NOT NULL,
   `e_designation` text NOT NULL,
-  `e_detail` longtext NOT NULL,
+  `e_detail` longtext,
   `e_effectuerpar` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- --------------------------------------------------------
@@ -185,7 +185,7 @@ CREATE TABLE `historique` (
   `historique_date` date NOT NULL,
   `historique_texte` text NOT NULL,
   `historique_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- --------------------------------------------------------
@@ -198,7 +198,7 @@ CREATE TABLE `localisation` (
   `localisation_index` int(11) NOT NULL,
   `localisation_batiment` text NOT NULL,
   `localisation_piece` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Contenu de la table `localisation`
@@ -216,7 +216,7 @@ INSERT INTO `localisation` (`localisation_index`, `localisation_batiment`, `loca
 CREATE TABLE `marque` (
   `marque_index` int(11) NOT NULL,
   `marque_nom` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Contenu de la table `marque`
@@ -234,7 +234,7 @@ INSERT INTO `marque` (`marque_index`, `marque_nom`) VALUES
 CREATE TABLE `raison_sortie` (
   `raison_sortie_index` int(11) NOT NULL,
   `raison_sortie_nom` text NOT NULL COMMENT 'raison pour laquelle le produit est sorti de base de données (perte, casse, intégration définitive, réparation en cours…)'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Contenu de la table `raison_sortie`
@@ -257,7 +257,7 @@ INSERT INTO `raison_sortie` (`raison_sortie_index`, `raison_sortie_nom`) VALUES
 CREATE TABLE `tags` (
   `tags_index` int(11) NOT NULL,
   `tags_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- --------------------------------------------------------
@@ -269,7 +269,7 @@ CREATE TABLE `tags` (
 CREATE TABLE `tags_list` (
   `tags_list_index` int(11) NOT NULL,
   `tags_list_nom` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- --------------------------------------------------------
@@ -281,7 +281,7 @@ CREATE TABLE `tags_list` (
 CREATE TABLE `tutelle` (
   `tutelle_index` int(11) NOT NULL,
   `tutelle_nom` text NOT NULL COMMENT 'CNRS, Université Rennes 1,…'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Contenu de la table `tutelle`
@@ -299,10 +299,10 @@ INSERT INTO `tutelle` (`tutelle_index`, `tutelle_nom`) VALUES
 CREATE TABLE `utilisateur` (
   `utilisateur_index` int(11) NOT NULL,
   `utilisateur_nom` tinytext NOT NULL,
-  `utilisateur_prenom` tinytext NOT NULL,
-  `utilisateur_mail` tinytext NOT NULL,
-  `utilisateur_phone` tinytext NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `utilisateur_prenom` tinytext,
+  `utilisateur_mail` tinytext,
+  `utilisateur_phone` tinytext
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Contenu de la table `utilisateur`
@@ -320,9 +320,9 @@ INSERT INTO `utilisateur` (`utilisateur_index`, `utilisateur_nom`, `utilisateur_
 CREATE TABLE `vendeur` (
   `vendeur_index` int(11) NOT NULL,
   `vendeur_nom` text NOT NULL,
-  `vendeur_web` text NOT NULL COMMENT 'adresse du site web',
-  `vendeur_remarques` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `vendeur_web` text COMMENT 'adresse du site web',
+  `vendeur_remarques` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Contenu de la table `vendeur`

@@ -13,7 +13,12 @@ while( ( $db = $dbs->fetchColumn( 0 ) ) !== false )
       }
 }
 
-if ($nb_base=="0") echo "<p style=\"text-align:center;\">Aucun inventaire détecté !</p>";
+if ($nb_base=="0") {
+	echo "<p style=\"text-align:center;\">Aucun inventaire détecté !<br/>";
+	echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',width:200,height:200,closejs:function(){location.reload()}})\" title=\"Ajouter une nouvelle base d’inventaire\">+</span>";
+	echo "</p>";
+	exit();
+}
 elseif ($nb_base=="1") $database = ($BASE=="") ? $first_base : $BASE ;
 //else $database = ($BASE=="") ? $first_base : $BASE ;
 
@@ -31,6 +36,7 @@ echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',wi
 
 echo "</p>";
 echo "</form>";
+
 
 ?>
 

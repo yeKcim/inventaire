@@ -40,13 +40,65 @@ $b_i="";
 foreach ($tableau as &$t) { $b_i.="".$t["base_index"].","; }
 $b_i= ($b_i=="") ? "" : substr($b_i, 0, -1); // suppression du dernier caractère
 
-//liste des journaux correspondants
-$sth = $dbh->query("SELECT historique_id, COUNT(*) as nb_entree FROM historique, base WHERE historique_id=base_index AND base_index IN ($b_i) GROUP BY historique_id ORDER BY historique_id ASC;");
-$tableau_journaux = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
-
-//liste des ensembles parmi les éléments affichés
+if (!empty($b_i)) {
+	//liste des journaux correspondants
+	$sth = $dbh->query("SELECT historique_id, COUNT(*) as nb_entree FROM historique, base WHERE historique_id=base_index AND base_index IN ($b_i) GROUP BY historique_id ORDER BY historique_id ASC;");
+	$tableau_journaux = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
+	
+	//liste des ensembles parmi les éléments affichés
 $sth = $dbh->query("SELECT base_index, integration, lab_id, categorie, reference, designation, sortie FROM base WHERE integration IN ($b_i) ORDER BY base_index ASC ; ");
 $tableau_parents = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+
+	//liste des caracs correspondantes
+	$sth = $dbh->query("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
+	$table_carac = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array() ;
+	$tc=array(); $td_c=array(); $th_c="";
+	$val=array();
+	foreach ($table_carac as $l) {
+		$li=$l["base_index"]; $lc=$l["carac"];
+		if (!isset($val[$li])) $val[$li]=array();
+		if ($l["unite_carac"]=="bool") { $unit=""; $value= ($l["carac_valeur"]=="1") ? "oui" : "non" ; }
+		elseif ($l["carac_valeur"]=="∞") { $unit="" ; $value=$l["carac_valeur"];} // do not display unit if value is infinite
+		else { $unit=$l["unite_carac"] ; $value=$l["carac_valeur"];}
+		if (!array_key_exists($l["base_index"], $tc)) $tc[$l["base_index"]]="";
+		$nom_carac_abbr="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l["symbole_carac"]."</span>";
+		$tc[$l["base_index"]].=$nom_carac_abbr.":";
+		$tc[$l["base_index"]].="<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; ";
+		$val[$li][$lc]=$value;
+	}
+	
+	//liste des entretiens correspondants
+	$sth = $dbh->query("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
+	$tableau_entretien = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array() ;
+	$te=array();
+	foreach ($tableau_entretien as $l) {
+	    $f=$l["e_frequence"];
+	    $date_derniere_intervention=$l["e_lastdate"];
+	    $date_prochaine_intervention = date("Y-m-d", strtotime($date_derniere_intervention." +$f days") );
+	    $retard = round( ( strtotime($today) - strtotime($date_prochaine_intervention) ) / 86400 );
+
+	    $te[$l["e_id"]]=(array_key_exists($l["e_id"], $te)) ? $te[$l["e_id"]] : "";
+	    $te[$l["e_id"]].="<span style=\"color:";
+	    if ($retard>0)                  $te[$l["e_id"]].="#cc0000";
+	    else {  if (-$retard<$f*0.1)    $te[$l["e_id"]].="#f57900";
+		    else                    $te[$l["e_id"]].="#4e9a06";
+	    }
+	    $te[$l["e_id"]].=";\" title=\"".$l["e_designation"]." (".dateformat($date_prochaine_intervention,"fr").")\"><strong>";
+	    if ($retard>0)                  { $te[$l["e_id"]].="⚠"; /*stat*/$entretiens_late=$entretiens_late+1;/*endstat*/ }
+	    else {  if (-$retard<$f*0.1)    { $te[$l["e_id"]].="⌛";/*stat*/$entretiens_soon=$entretiens_soon+1;/*endstat*/ }
+		    else                    { $te[$l["e_id"]].="☑"; /*stat*/$entretiens_done=$entretiens_done+1;/*endstat*/ }
+	    }
+	    $te[$l["e_id"]].="</strong></span> ";
+
+	}
+
+} else {
+	    $tableau_journaux = [];
+	    $tableau_parents = [];
+	    $tableau_entretien = [];
+}
+
+
 
 //liste des base_index affichés
 $b_e="";
@@ -55,24 +107,8 @@ if ($b_e!="") {
 	$b_e=substr($b_e, 0, -1); // suppression du dernier caractère
 	$sth = $dbh->query("SELECT base_index, lab_id, categorie, reference, designation, sortie FROM base WHERE base_index IN ($b_e) ORDER BY base_index ASC ; ");
 	$tableau_enfants = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-}
-
-//liste des caracs correspondantes
-$sth = $dbh->query("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
-$table_carac = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array() ;
-$tc=array(); $td_c=array(); $th_c="";
-$val=array();
-foreach ($table_carac as $l) {
-	$li=$l["base_index"]; $lc=$l["carac"];
-	if (!isset($val[$li])) $val[$li]=array();
-        if ($l["unite_carac"]=="bool") { $unit=""; $value= ($l["carac_valeur"]=="1") ? "oui" : "non" ; }
-        elseif ($l["carac_valeur"]=="∞") { $unit="" ; $value=$l["carac_valeur"];} // do not display unit if value is infinite
-        else { $unit=$l["unite_carac"] ; $value=$l["carac_valeur"];}
-        if (!array_key_exists($l["base_index"], $tc)) $tc[$l["base_index"]]="";
-	$nom_carac_abbr="<span title=\"".$l["nom_carac"]."\"><span style=\"color:#2e3436;\">".$l["symbole_carac"]."</span>";
-        $tc[$l["base_index"]].=$nom_carac_abbr.":";
-        $tc[$l["base_index"]].="<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; ";
-	$val[$li][$lc]=$value;
+} else {
+	    $tableau_enfants = [];
 }
 
 $th_c="";
@@ -110,31 +146,6 @@ if ($CAT!="") {
 
 //date du jour
 $today=date("Y-m-d");
-
-//liste des entretiens correspondants
-$sth = $dbh->query("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
-$tableau_entretien = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array() ;
-$te=array();
-foreach ($tableau_entretien as $l) {
-    $f=$l["e_frequence"];
-    $date_derniere_intervention=$l["e_lastdate"];
-    $date_prochaine_intervention = date("Y-m-d", strtotime($date_derniere_intervention." +$f days") );
-    $retard = round( ( strtotime($today) - strtotime($date_prochaine_intervention) ) / 86400 );
-
-    $te[$l["e_id"]]=(array_key_exists($l["e_id"], $te)) ? $te[$l["e_id"]] : "";
-    $te[$l["e_id"]].="<span style=\"color:";
-    if ($retard>0)                  $te[$l["e_id"]].="#cc0000";
-    else {  if (-$retard<$f*0.1)    $te[$l["e_id"]].="#f57900";
-            else                    $te[$l["e_id"]].="#4e9a06";
-    }
-    $te[$l["e_id"]].=";\" title=\"".$l["e_designation"]." (".dateformat($date_prochaine_intervention,"fr").")\"><strong>";
-    if ($retard>0)                  { $te[$l["e_id"]].="⚠"; /*stat*/$entretiens_late=$entretiens_late+1;/*endstat*/ }
-    else {  if (-$retard<$f*0.1)    { $te[$l["e_id"]].="⌛";/*stat*/$entretiens_soon=$entretiens_soon+1;/*endstat*/ }
-            else                    { $te[$l["e_id"]].="☑"; /*stat*/$entretiens_done=$entretiens_done+1;/*endstat*/ }
-    }
-    $te[$l["e_id"]].="</strong></span> ";
-
-}
 
 /*#######################################################################
 #          Si du matériel sorti est affiché, afficher état              #
