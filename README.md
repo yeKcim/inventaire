@@ -30,8 +30,8 @@ L’ajout d’un inventaire se fait en toute simplicité :
 ## Installation
 
 ### Pré-requis
-* PHP (testé avec php 8.2)
-* MySQL (testé avec mariadb 10.11.3)
+* PHP (testé avec php 8.4.4)
+* MySQL (testé avec mariadb 11.7.2)
 
 Sous debian, par exemple, j’ai lancé `sudo apt install mariadb-server apache2 php{,-mysql,-php-gettext} phpmyadmin`
 
