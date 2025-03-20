@@ -46,7 +46,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 
     $arr = array("designation","vendeur","plus_vendeur_nom","plus_vendeur_web","plus_vendeur_remarque","prix","contrat","plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "bon_commande", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
+        $$value= isset($_POST[$value]) ? trim($_POST[$value]) : "" ;
     }
 
     /* ########### Ajout d’un nouveau vendeur ########### */
@@ -199,7 +199,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<option value=\"plus_contrat\" "; if (isset($data[0])) {if ($data[0]["contrat"]=="plus_contrat") echo "selected";} echo ">− Nouveau contrat : −</option>";
         option_selecteur( (isset($data[0])) ? $data[0]["contrat"] : "", $contrats, "contrat_index", "contrat_nom");
         echo "</select><br/>";
-
+        
         /* ########### + contrat ########### */
         echo "\n\n\n";
         echo "<fieldset id=\"plus_contrat\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau Contrat</legend>";
