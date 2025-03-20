@@ -134,7 +134,7 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
     echo "<fieldset><legend>Nouvel entretien</legend>";
 
             /* ########### frequence ########### */
-        echo "<label for=\"e_frequence\">Fréquence : </label>\n";
+        echo "<label for=\"e_frequence\">Fréquence* : </label>\n";
         echo "<input value=\"\" name=\"e_frequence\" type=\"text\" id=\"e_frequence\" size=\"4\">";
 
         echo "<select name=\"e_frequence_multipli\" id=\"e_frequence_multipli\">";
