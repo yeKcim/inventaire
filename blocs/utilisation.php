@@ -282,6 +282,8 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
     if ($write) echo "<p style=\"text-align:center;\"><input name=\"utilisation_valid\" value=\"Enregistrer\" type=\"submit\" class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser
 
     if ($write) echo "</form>";
+    
+    echo "<p style=\"text-align:right;\"><small>* champ obligatoire</small></p>"; 
 
 echo "</div>";
 

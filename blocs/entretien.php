@@ -288,6 +288,8 @@ else {
     echo "</fieldset>";
 
     if ($write) echo "</form>";
+    
+    echo "<p style=\"text-align:right;\"><small>* champ obligatoire</small></p>"; 
 
 echo "</div>";
 

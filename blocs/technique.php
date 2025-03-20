@@ -270,11 +270,14 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "<br/>";
 
     echo "</fieldset>";
+    
+echo "</fieldset>";
+
 
 /*  ╦═╗╔═╗╔═╗╔═╗╦═╗╔═╗╔╗╔╔═╗╔═╗  ╔═╗╔═╗╔╗╔╔═╗╔╦╗╦═╗╦ ╦╔═╗╔╦╗╔═╗╦ ╦╦═╗
     ╠╦╝║╣ ╠╣ ║╣ ╠╦╝║╣ ║║║║  ║╣   ║  ║ ║║║║╚═╗ ║ ╠╦╝║ ║║   ║ ║╣ ║ ║╠╦╝
     ╩╚═╚═╝╚  ╚═╝╩╚═╚═╝╝╚╝╚═╝╚═╝  ╚═╝╚═╝╝╚╝╚═╝ ╩ ╩╚═╚═╝╚═╝ ╩ ╚═╝╚═╝╩╚═   */
-    echo "<fieldset><legend>références constructeur</legend>";
+    echo "<fieldset><legend>Référence constructeur</legend>";
 
         /* ########### marque ########### */
         echo "<label for=\"marque\">marque : </label>\n";
@@ -382,6 +385,10 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
     if ($write) echo "</form>";
 
+echo "<p style=\"text-align:right;\"><small>* champ obligatoire</small></p>"; 
+
 echo "</div>";
+
+
 
 ?>
