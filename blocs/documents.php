@@ -127,7 +127,9 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
             $file_size =$_FILES['fichier']['size'];
             $file_tmp =$_FILES['fichier']['tmp_name'];
             $file_type=$_FILES['fichier']['type'];
-            $file_ext=mb_strtolower(end(explode('.',$_FILES['fichier']['name'])));
+            
+            $parts = explode('.', $_FILES['fichier']['name']);
+            $file_ext = mb_strtolower(end($parts));
 
             if(in_array($file_ext,$extensions)== false) $errors[]="Extension non permise.";
             if ( ($file_size > $max_size)||($file_size == 0) ) $errors[]="La taille du fichier doit être au maximum de ".formatBytes($max_size)."o.";
