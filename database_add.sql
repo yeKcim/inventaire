@@ -170,7 +170,7 @@ CREATE TABLE `entretien` (
   `e_lastdate` date NOT NULL,
   `e_designation` text NOT NULL,
   `e_detail` longtext,
-  `e_effectuerpar` int(11) NOT NULL
+  `e_effectuerpar` int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 

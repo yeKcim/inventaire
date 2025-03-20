@@ -25,16 +25,17 @@ $message="";
 if ( isset($_POST["add_entretien"]) ) {
     $arr = array("e_frequence", "e_frequence_multipli", "e_designation", "e_detail");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
+        $$value= isset($_POST[$value]) ? trim($_POST[$value]) : "" ;
     }
 
     if ( ($e_designation=="")||($e_frequence=="") ) $error_emptyinput="Fréquence et Désignation sont des champs obligatoires";
     else {
         $e_frequence=$e_frequence*$e_frequence_multipli;
 
-        $add_result = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\"));"));
+        $add_result = $dbh->query("INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\")");        
+        
         $error_emptyinput="";
-        $message.= ($add_result!=1) ? $message_error_add : $message_success_add;
+        $message.= ($add_result!=1) ? $message_success_add : $message_error_add;
     }
 }
 
@@ -42,12 +43,12 @@ if ( isset($_POST["add_entretien"]) ) {
 /*  ╔╦╗╔═╗╔╦╗╦╔═╗  ╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗╦╔═╗╔╗╔
     ║║║║ ║ ║║║╠╣   ║╣ ║║║║ ╠╦╝║╣  ║ ║║╣ ║║║
     ╩ ╩╚═╝═╩╝╩╚    ╚═╝╝╚╝╩ ╩╚═╚═╝ ╩ ╩╚═╝╝╚╝    */
-$modif_entretien= isset($_POST["modif_entretien"]) ? htmlentities($_POST["modif_entretien"]) : "" ;
+$modif_entretien= isset($_POST["modif_entretien"]) ? $_POST["modif_entretien"] : "" ;
 
 if ($modif_entretien!="") {
     $arr = array("e_effectuele", "e_effectuerpar", "plus_intervant_prenom", "plus_intervant_nom", "plus_intervant_mail", "plus_intervant_phone");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
+        $$value= isset($_POST[$value]) ? trim($_POST[$value]) : "" ;
     }
 
     if ($e_effectuerpar=="plus_intervant") {
@@ -86,12 +87,12 @@ if ($modif_entretien!="") {
     ╚═╝╚═╝╩  ╩  ╩╚═╩╩ ╩  ╚═╝╝╚╝╩ ╩╚═╚═╝ ╩ ╩╚═╝╝╚╝   */
 $arr = array("e_del", "del_e_confirm");
 foreach ($arr as &$value) {
-    $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+    $$value= isset($_POST[$value]) ? $_POST[$value] : "" ;
 }
 
 if ($del_e_confirm=="Confirmer la suppression") {
     $delresult = $dbh->exec("DELETE FROM entretien WHERE e_index=$e_del AND e_id=$i;");
-    $message.=($del_result!="") ? $message_error_del : $message_success_del;
+    $message.=($delresult!="") ? $message_success_del : $message_error_del;
 }
 
 
@@ -218,7 +219,10 @@ else {
                 else echo "<span style=\"color:#3a4a46;\">";
             }
 
-	    $keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $e["e_effectuerpar"]); $key=$keys[0];;
+	    $keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $e["e_effectuerpar"]);
+	    
+	    if ( array_key_exists(0,$keys) ) $key=$keys[0];;
+	    
             echo "<abbr title=\"dernier entretien effectué ";
             if ($e["e_effectuerpar"]!=0) echo "par ".$utilisateurs["$key"]["utilisateur_prenom"]." ".$utilisateurs["$key"]["utilisateur_nom"]." ";
             echo "le ".dateformat($date_derniere_intervention,"fr")."\">";
