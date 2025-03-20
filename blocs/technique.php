@@ -211,7 +211,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
     echo "<fieldset><legend>Référence interne</legend>";
 
         /* ########### categorie ########### */
-        echo "<label for=\"categorie\">Catégorie : </label>\n";
+        echo "<label for=\"categorie\">Catégorie* : </label>\n";
         echo "<select name=\"categorie\" onchange=\"display(this,'plus_categorie','plus_categorie');\" id=\"categorie\">";
         echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["categorie"]=="0") echo "selected";} echo ">— Aucune catégorie spécifiée —</option>";
         echo "<option value=\"plus_categorie\" "; if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "selected";} echo ">— Nouvelle catégorie : —</option>";
@@ -221,11 +221,11 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             /* ########### + categorie ########### */
             echo "\n\n\n";
             echo "<fieldset id=\"plus_categorie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Catégorie</legend>";
-                echo "<label for=\"plus_categorie_nom\">Nom :</label>\n";
+                echo "<label for=\"plus_categorie_nom\">Nom* :</label>\n";
                 $deja_catnom=dejadanslabase("SELECT DISTINCT `categorie_nom` FROM `categorie` ");
                 echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\" pattern=\"^(?!(".$deja_catnom.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /><br/>\n";
 
-                echo "<label for=\"plus_categorie_abbr\">Abbréviation <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
+                echo "<label for=\"plus_categorie_abbr\">Abbréviation* <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
                 $deja_abrev=dejadanslabase("SELECT DISTINCT `categorie_lettres` FROM `categorie` ;");
 				echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($deja_abrev))([A-Za-z]{1,4})$\" ";
 					if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "required ";}
@@ -259,7 +259,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         /* ########### + id_manuel ########### */
         echo "\n\n\n";
         echo "<fieldset id=\"manual_id\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Id Manuel</legend>";
-            echo "<label for=\"id_man\">Id :</label>\n";
+            echo "<label for=\"id_man\">Id* :</label>\n";
 
 
             $deja_idman=dejadanslabase("SELECT DISTINCT `lab_id` FROM `base` ;");
@@ -287,7 +287,7 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
             /* ########### + marque ########### */
             echo "\n\n\n";
             echo "<fieldset id=\"plus_marque\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Marque</legend>";
-                echo "<label for=\"plus_marque_nom\">Nom :</label>\n";
+                echo "<label for=\"plus_marque_nom\">Nom* :</label>\n";
 
                 $deja_marque=dejadanslabase("SELECT DISTINCT `marque_nom` FROM `marque` ");
                 echo "<input value=\"\" name=\"plus_marque_nom\" type=\"text\"  pattern=\"^(?!(".$deja_marque.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" / >\n";

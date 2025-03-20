@@ -149,7 +149,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     echo "<fieldset><legend>Produit</legend>";
 
         /* ########### designation ########### */
-        echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation :</label>\n";
+        echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation* :</label>\n";
         echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"34\"";
         echo "value=\""; if (isset($data[0])) { echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";} echo "\" ><br/>\n";
 
@@ -173,7 +173,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### + vendeur ########### */
         echo "\n\n\n";
         echo "<fieldset id=\"plus_vendeur\" class=\"subfield\" style=\"display: none;\"><legend  class=\"subfield\">Nouveau Vendeur</legend>";
-            echo "<label for=\"plus_vendeur_nom\">Nom :</label>\n";
+            echo "<label for=\"plus_vendeur_nom\">Nom* :</label>\n";
                 $deja_vendeur=dejadanslabase("SELECT DISTINCT `vendeur_nom` FROM `vendeur` ");
                 echo "<input value=\"\" name=\"plus_vendeur_nom\" type=\"text\" pattern=\"^(?!(".$deja_vendeur.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /><br/>\n";
             echo "<label for=\"plus_vendeur_web\">Site web :</label>\n";   	echo "<input value=\"\" name=\"plus_vendeur_web\" type=\"text\"><br/>\n";
@@ -204,7 +204,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "\n\n\n";
         echo "<fieldset id=\"plus_contrat\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau Contrat</legend>";
 
-            echo "<label for=\"plus_contrat_nom\">Nom :</label>\n";
+            echo "<label for=\"plus_contrat_nom\">Contrat* :</label>\n";
             $deja_contrat=dejadanslabase("SELECT DISTINCT `contrat_nom` FROM `contrat`");
             echo "<input value=\"\" name=\"plus_contrat_nom\" type=\"text\" pattern=\"^(?!(".$deja_contrat.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\"  oninput=\"setCustomValidity('')\" /><br/>\n";
 
@@ -218,7 +218,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
                     /* ########### + type contrat ########### */
                     echo "\n\n\n";
                     echo "<fieldset id=\"plus_contrat_type\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau Type de contrat</legend>";
-                        echo "<label for=\"plus_contrat_type_nom\">Type :</label>\n";
+                        echo "<label for=\"plus_contrat_type_nom\">Type* :</label>\n";
 
                         $deja_contrattype=dejadanslabase("SELECT DISTINCT `contrat_type_cat` FROM `contrat_type`");
                         echo "<input value=\"\" name=\"plus_contrat_type_nom\" type=\"text\"  pattern=\"^(?!(".$deja_contrattype.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\"  oninput=\"setCustomValidity('')\" / >\n";
@@ -239,7 +239,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
             /* ########### + tutelle ########### */
             echo "\n\n\n";
             echo "<fieldset id=\"plus_tutelle\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle tutelle</legend>";
-                echo "<label for=\"plus_tutelle\">Tutelle :</label>\n";
+                echo "<label for=\"plus_tutelle\">Tutelle* :</label>\n";
 
                 $deja_tut=dejadanslabase("SELECT DISTINCT `tutelle_nom` FROM `tutelle`");
                 echo "<input value=\"\" name=\"plus_tutelle\" type=\"text\" pattern=\"^(?!(".$deja_tut.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\"  oninput=\"setCustomValidity('')\"  / >\n";
@@ -247,7 +247,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
             echo "\n\n\n";
 
         /* ########### bon de commande ########### */
-        echo "<label for=\"bon_commande\">Bon de commande : </label>\n";
+        echo "<label for=\"bon_commande\"><abbr title=\"Bon de commande\">BDC</abbr>&nbsp;: </label>\n";
         echo "<input value=\""; if (isset($data[0])) echo $data[0]["bon_commande"]; echo "\" name=\"bon_commande\" type=\"text\" id=\"bon_commande\">";
         echo "<br/>";
 
@@ -279,7 +279,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
             echo "\n\n\n";
             echo "<fieldset id=\"plus_responsable_achat\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau responsable achat</legend>";
                 echo "<label for=\"plus_responsable_achat_prenom\">Prénom :</label>\n";				echo "<input value=\"\" name=\"plus_responsable_achat_prenom\" type=\"text\"><br/>\n";
-                echo "<label for=\"plus_responsable_achat_nom\">NOM :</label>\n";				echo "<input value=\"\" name=\"plus_responsable_achat_nom\" type=\"text\"><br/>\n";
+                echo "<label for=\"plus_responsable_achat_nom\">NOM* :</label>\n";				echo "<input value=\"\" name=\"plus_responsable_achat_nom\" type=\"text\"><br/>\n";
                 echo "<label for=\"plus_responsable_achat_mail\">Mail :</label>\n";				echo "<input value=\"\" name=\"plus_responsable_achat_mail\" type=\"text\"><br/>\n";
                 echo "<label for=\"plus_responsable_achat_phone\"><abbr title=\"juste les chiffres sans séparateur\">Téléphone</abbr> :</label>\n";	echo "<input value=\"\" name=\"plus_responsable_achat_phone\" type=\"number\" /><br/>\n";
             echo "</fieldset>";

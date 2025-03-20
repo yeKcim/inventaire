@@ -144,7 +144,7 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
         echo "</select> <br/>";
 
             /* ########### Désignation ########### */
-        echo "<label for=\"e_designation\">Désignation : </label>\n";
+        echo "<label for=\"e_designation\">Désignation* : </label>\n";
         echo "<input value=\"\" name=\"e_designation\" type=\"text\" id=\"e_designation\"><br/>";
 
         /* ########### Détails ########### */
