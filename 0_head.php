@@ -93,7 +93,7 @@
 		$(document).ready(function() {
 		  $(".restricted-input").on("input", function() {
 			var originalValue = $(this).val();
-		    var filteredValue = originalValue.replace(/[^\p{L}0-9_-]/gu, '');
+			var filteredValue = originalValue.replace(/[^A-Za-z0-9_-]/g, '');
 			if (originalValue !== filteredValue) {
 			  $(this).val(filteredValue);
 			}
