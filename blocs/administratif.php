@@ -50,15 +50,24 @@ if ( isset($_POST["administratif_valid"]) ) {
     }
 
     /* ########### Ajout d’un nouveau vendeur ########### */
-    if ($vendeur=="plus_vendeur") {
-        // TODO : Si les infos sont vides !
-    $sth = $dbh->query("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$plus_vendeur_nom."\",\"".$plus_vendeur_web."\",\"".$plus_vendeur_remarque."\") ;");
-        /* TODO : prévoir le cas où le vendeur existe déjà */
-	$vendeur=return_last_id("vendeur_index","vendeur");
-        // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
-	array_push($vendeurs, array("vendeur_index" => $vendeur, "vendeur_nom" => $plus_vendeur_nom, "vendeur_web" => $plus_vendeur_web, "vendeur_remarques" =>$plus_vendeur_remarque ) );
-	if ($sth) $sth->closeCursor();
-    }
+	if ($vendeur == "plus_vendeur") {
+    if (!empty($plus_vendeur_nom)) { // Vérifier que le nom n’est pas vide
+        $sth = $dbh->prepare("INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (?, ?, ?)");
+        $sth->execute([$plus_vendeur_nom, $plus_vendeur_web, $plus_vendeur_remarque]);
+
+        $vendeur = return_last_id("vendeur_index", "vendeur");
+
+        // Ajout dans le tableau des vendeurs
+        $vendeurs[] = [
+            "vendeur_index" => $vendeur,
+            "vendeur_nom" => $plus_vendeur_nom,
+            "vendeur_web" => $plus_vendeur_web,
+            "vendeur_remarques" => $plus_vendeur_remarque
+        ];
+    } 	else {
+       		echo "<p class='error_message'>Erreur : Le nom du vendeur est vide.</p>";
+    	}
+	}
 
     if ($contrat_type=="plus_contrat_type") {
 	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO contrat_type (contrat_type_cat) VALUES ('".$plus_contrat_type_nom."') ;"));
@@ -68,21 +77,31 @@ if ( isset($_POST["administratif_valid"]) ) {
         array_push($types_contrats, array("contrat_type_index" => $contrat_type, "contrat_type_cat" => $plus_contrat_type_nom ) );
         if ($sth) $sth->closeCursor();
     }
+    
+/* ########### Ajout d’un nouveau contrat ########### */
+	if ($contrat == "plus_contrat") {
+		if (!empty($plus_contrat_nom)) { // Vérifier que le nom n’est pas vide
+		    $sth = $dbh->prepare("INSERT INTO contrat (contrat_nom, contrat_type) VALUES (?, ?)");
+		    $sth->execute([$plus_contrat_nom, $contrat_type]);
 
-    if ($contrat=="plus_contrat") {
-	$sth = $dbh->query("INSERT INTO contrat (contrat_nom, contrat_type) VALUES ('".$plus_contrat_nom."','".$contrat_type."') ;");
-        /* TODO : prévoir le cas où le contrat existe déjà */
-	$contrat=return_last_id("contrat_index","contrat");
-        // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-        array_push($contrats, array("contrat_nom" => $plus_contrat_nom, "contrat_type" => $contrat_type ) );
-        if ($sth) $sth->closeCursor();
-    }
+		    $contrat = return_last_id("contrat_index", "contrat");
+
+		    // Ajout dans le tableau des contrats
+		    $contrats[] = [
+		        "contrat_index" => $contrat,
+		        "contrat_nom" => $plus_contrat_nom,
+		        "contrat_type" => $contrat_type
+		    ];
+		} else {
+		    echo "<p class='error_message'>Erreur : Le nom du contrat est vide.</p>";
+		}
+	}
 
     if ($tutelle=="plus_tutelle") {
         $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO tutelle (tutelle_nom) VALUES ('".$plus_tutelle."') ;"));
         /* TODO : prévoir le cas où le contrat existe déjà */
 	$tutelle=return_last_id("tutelle_index","tutelle");
-        // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
+        // on ajoute cette entrée dans le tableau des tutelles (utilisé pour le select)
         array_push($tutelles, array("tutelle_index" => $tutelle, "tutelle_nom" => $plus_tutelle ) );
         if ($sth) $sth->closeCursor();
     }
@@ -199,6 +218,9 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<option value=\"plus_contrat\" "; if (isset($data[0])) {if ($data[0]["contrat"]=="plus_contrat") echo "selected";} echo ">− Nouveau contrat : −</option>";
         option_selecteur( (isset($data[0])) ? $data[0]["contrat"] : "", $contrats, "contrat_index", "contrat_nom");
         echo "</select><br/>";
+        
+##################################################################$
+        
         
         /* ########### + contrat ########### */
         echo "\n\n\n";
