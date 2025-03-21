@@ -18,7 +18,7 @@ if ( isset($_POST["add_db"]) ) {
     $data=array();
     $arr = array("name_db");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities($_POST[$value]) : "" ;
+        $$value= isset($_POST[$value]) ? $_POST[$value] : "" ;
     }
     if ($name_db!="") {
 	    // Création de la base
@@ -41,15 +41,15 @@ if ( isset($_POST["add_db"]) ) {
 
         // Création du dossier correspondant à la nouvelle base dans files/
         $dir="".$dossierdesfichiers.$name_db;
-	if (!file_exists($dir)) {
-	    $umask_bak = umask(0);
-	    if (!mkdir($dir, 0775, true)) {
-		$error = error_get_last();
-		umask($umask_bak);
-		die("Erreur lors de la création du dossier '$dir' : " . $error['message']);
-	    }
-	    umask($umask_bak);
-	}
+		if (!file_exists($dir)) {
+			$umask_bak = umask(0);
+			if (!mkdir($dir, 0775, true)) {
+			$error = error_get_last();
+			umask($umask_bak);
+			die("Erreur lors de la création du dossier '$dir' : " . $error['message']);
+			}
+			umask($umask_bak);
+		}
     }
 }
 
@@ -65,7 +65,7 @@ else {
   echo "<p><strong>Ajouter une nouvelle base</strong></p>";
   echo "<form method=\"post\" action=\"?\">";
   echo "<label for=\"name_db\" style=\"vertical-align: top;\">Nom de l’inventaire :</label>\n";
-  echo "<input type=\"text\" name=\"name_db\" pattern=\"^[A-Za-z0-9_-]{1,20}$\" title=\"« 20 max alphanumérique - et _ »\" />";
+  echo "<input type=\"text\" name=\"name_db\" class=\"restricted-input\" pattern=\"[A-Za-z0-9_-]{1,20}\" required title=\"« 20 max alphanumérique - et _ »\" />";
 
   echo "<p><input name=\"add_db\" value=\"Créer\" type=\"submit\" class=\"little_button\" /></p>";
   echo "</form>";

@@ -1,5 +1,5 @@
 <?php
-$BASE= isset($_GET["BASE"]) ? htmlentities($_GET["BASE"]) : "" ;
+$BASE= isset($_GET["BASE"]) ? $_GET["BASE"] : "" ;
 
 echo "<form method=\"get\" action=\"?\">";
 
@@ -7,16 +7,15 @@ $nb_base=0;
 $list_bases=array();
 while( ( $db = $dbs->fetchColumn( 0 ) ) !== false )
 {     if (strpos($db, $prefix) !== false ) {
-        $list_bases[]="<option value=\"".str_replace($prefix, "", $db)."\">".strtoupper( str_replace($prefix, "", $db) )."</option>";
+        $list_bases[]="<option value=\"".str_replace($prefix, "", $db)."\">".mb_strtoupper( str_replace($prefix, "", $db) )."</option>";
         $first_base = ($nb_base==0) ? str_replace($prefix, "", $db) : $first_base ;
 	$nb_base=$nb_base+1;
       }
 }
 
 if ($nb_base=="0") {
-	echo "<p style=\"text-align:center;\">Aucun inventaire détecté !<br/>";
-	echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',width:200,height:200,closejs:function(){location.reload()}})\" title=\"Ajouter une nouvelle base d’inventaire\">+</span>";
-	echo "</p>";
+	echo "<p style=\"text-align:center;\">Aucun inventaire détecté !</p>";
+	echo "<p style=\"text-align:center;\"><span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',width:200,height:200,closejs:function(){location.reload()}})\" title=\"Ajouter une nouvelle base d’inventaire\">Créer la première base</span></p>";
 	exit();
 }
 elseif ($nb_base=="1") $database = ($BASE=="") ? $first_base : $BASE ;
@@ -37,6 +36,7 @@ echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',wi
 echo "</p>";
 echo "</form>";
 
+if ($database=="") exit();
 
 ?>
 

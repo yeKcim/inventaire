@@ -85,6 +85,21 @@
 	  table.dataTable tr.odd td.sorting_1 	{background-color: #D7DFE3;}
 	  table.dataTable tr.even td.sorting_1 	{background-color: #F5FBFF;}
 	</style>
+	
+<!--╔═╗╔╦╗╔═╗╔═╗╔═╗╦ ╦╔═╗  ╔═╗╔═╗╦╔═╗╦╔═╗  ╔═╗╔═╗╦═╗╔╦╗╔═╗╦╔╗╔╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗╦═╗╔═╗╔═╗
+	║╣ ║║║╠═╝║╣ ║  ╠═╣║╣   ╚═╗╠═╣║╚═╗║║╣   ║  ║╣ ╠╦╝ ║ ╠═╣║║║║╚═╗  ║  ╠═╣╠╦╝╠═╣║   ║ ║╣ ╠╦╝║╣ ╚═╗
+	╚═╝╩ ╩╩  ╚═╝╚═╝╩ ╩╚═╝  ╚═╝╩ ╩╩╚═╝╩╚═╝  ╚═╝╚═╝╩╚═ ╩ ╩ ╩╩╝╚╝╚═╝  ╚═╝╩ ╩╩╚═╩ ╩╚═╝ ╩ ╚═╝╩╚═╚═╝╚═╝ -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+		  $(".restricted-input").on("input", function() {
+			var originalValue = $(this).val();
+		    var filteredValue = originalValue.replace(/[^\p{L}0-9_-]/gu, '');
+			if (originalValue !== filteredValue) {
+			  $(this).val(filteredValue);
+			}
+		  });
+		});
+	</script>
 
 </head>
 
