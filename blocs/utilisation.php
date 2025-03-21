@@ -51,7 +51,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
     $arr = array("utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
+        $$value= isset($_POST[$value]) ? trim($_POST[$value]) : "" ;
     }
 
     if ($utilisateur=="plus_utilisateur") {
@@ -67,10 +67,12 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
     if ($localisation=="plus_localisation") {
         $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES (\"".$plus_localisation_bat."\", \"".$plus_localisation_piece."\" );"));
+        
         /* TODO : prévoir le cas où la nouvelle localisation existe déjà */
 	$localisation=return_last_id("localisation_index","localisation");
+	
         // on ajoute cette entrée dans le tableau des localisations (utilisé pour le select)
-	array_push($vendeurs, array("localisation_index" => $localisation, "localisation_batiment" => $plus_localisation_bat, "localisation_piece" => $plus_localisation_piece ) );
+	array_push($localisations, array("localisation_index" => $localisation, "localisation_batiment" => $plus_localisation_bat, "localisation_piece" => $plus_localisation_piece ) );
     }
 
 
@@ -147,7 +149,8 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         /* ########### utilisateur ########### */
         echo "<label for=\"utilisateur\">Utilisateur : </label>\n";
         echo "<select name=\"utilisateur\" onchange=\"display(this,'plus_utilisateur','plus_utilisateur');\" id=\"utilisateur\">";
-        echo "<option value=\"0\" "; if ($data[0]["utilisateur"]=="0") echo "selected"; echo ">— Aucun utilisateur spécifié —</option>";        echo "<option value=\"plus_utilisateur\" "; if ($data[0]["utilisateur"]=="plus_utilisateur") echo "selected"; echo ">− Nouvel utilisateur : −</option>";
+        echo "<option value=\"0\" "; if ($data[0]["utilisateur"]=="0") echo "selected"; echo ">— Aucun utilisateur spécifié —</option>";
+        echo "<option value=\"plus_utilisateur\" "; if ($data[0]["utilisateur"]=="plus_utilisateur") echo "selected"; echo ">− Nouvel utilisateur : −</option>";
     	option_selecteur($data[0]["utilisateur"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
         echo "</select><br/>";
 
