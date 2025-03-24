@@ -7,6 +7,9 @@ $entretiens_soon=0;
 $entretiens_done=0;
 /*endstat*/
 
+//date du jour
+$today=date("Y-m-d");
+
 /*
  █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
 ██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
@@ -150,9 +153,6 @@ if ($CAT!="") {
     }
   }
 }
-
-//date du jour
-$today=date("Y-m-d");
 
 /*#######################################################################
 #          Si du matériel sorti est affiché, afficher état              #
