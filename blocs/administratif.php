@@ -230,13 +230,14 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /* ########### + vendeur ########### */
         echo "\n\n\n";
         echo "<fieldset id=\"plus_vendeur\" class=\"subfield\" style=\"display: none;\"><legend  class=\"subfield\">Nouveau Vendeur</legend>";
-            echo "<label for=\"plus_vendeur_nom\">Nom* :</label>\n";
-                $deja_vendeur=dejadanslabase("SELECT DISTINCT `vendeur_nom` FROM `vendeur` ");
-                echo "<input value=\"\" name=\"plus_vendeur_nom\" type=\"text\" pattern=\"^(?!(".$deja_vendeur.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /><br/>\n";
-            echo "<label for=\"plus_vendeur_web\">Site web :</label>\n";   	echo "<input value=\"\" name=\"plus_vendeur_web\" type=\"text\"><br/>\n";
-            echo "<label for=\"plus_vendeur_remarque\">Remarque :</label>\n";	echo "<input value=\"\" name=\"plus_vendeur_remarque\" type=\"text\"><br/>\n";
+            echo "<label for=\"plus_vendeur_nom\">Nom :</label>\n";
+                    $deja_vendeur=dejadanslabase("SELECT DISTINCT `vendeur_nom` FROM `vendeur` ");
+                    echo "<input value=\"\" name=\"plus_vendeur_nom\" type=\"text\" pattern=\"^(?!(||".$deja_vendeur.")$).*$\" x-moz-errormessage=\"Déjà dans la base\"  /><br/>\n";
+            echo "<label for=\"plus_vendeur_web\">Site web :</label>\n";    echo "<input value=\"\" name=\"plus_vendeur_web\" type=\"text\"><br/>\n";
+            echo "<label for=\"plus_vendeur_remarque\">Remarque :</label>\n";   echo "<input value=\"\" name=\"plus_vendeur_remarque\" type=\"text\"><br/>\n";
         echo "</fieldset>";
         echo "\n\n\n";
+
 
         /* ########### prix ########### */
         echo "<label for=\"prix\">Prix (€) : </label>\n";
