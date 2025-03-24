@@ -209,7 +209,7 @@ echo "</fieldset>";
     // TODO des catégories de caractéristiques ?
     echo "Si la caractéristique n’est pas présente dans la liste ci-dessus…<br/>";
 
-    echo "<label for=\"nom_carac\">Nom :</label>\n";
+    echo "<label for=\"nom_carac\">Nom* :</label>\n";
     echo "<input value=\"$nom_carac\" name=\"nom_carac\" type=\"text\"><br/>\n";
 
     echo "<label for=\"unite_carac\">";
@@ -218,7 +218,7 @@ echo "</fieldset>";
     echo "<input value=\"$unite_carac\" name=\"unite_carac\" type=\"text\"><br/>\n";
 
     echo "<label for=\"symbole_carac\">";
-    echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle</abbr>";
+    echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle* </abbr>";
     echo ":</label>\n";
     echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\"><br/>\n";
 
@@ -229,6 +229,8 @@ echo "</fieldset>";
     if ($write) echo "<p style=\"text-align:center;\"><input name=\"new_carac_valid\" value=\"Ajouter\" type=\"submit\"  class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser ?
 
     if ($write) echo "</form>";
+    
+        echo "<p style=\"text-align:right;\"><small>* champ obligatoire</small></p>"; 
 
     echo "</fieldset>";
 
