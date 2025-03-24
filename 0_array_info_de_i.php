@@ -1,18 +1,15 @@
 <?php
-$i= ( !isset($i) ) ? htmlentities($_GET["i"]) : $i ; // GET i
+// Vérifie si 'i' est présent dans $_GET, sinon définit une valeur par défaut (ici 0)
+$i = isset($_GET["i"]) ? (int)$_GET["i"] : 0;
 
-/*
- █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
-██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
-███████║██████╔╝██████╔╝███████║ ╚████╔╝
-██╔══██║██╔══██╗██╔══██╗██╔══██║  ╚██╔╝
-██║  ██║██║  ██║██║  ██║██║  ██║   ██║
-╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
-*/
+// Prépare la requête SQL avec un paramètre nommé pour éviter les injections
+$stmt = $dbh->prepare("SELECT * FROM base WHERE base_index = :index");
+$stmt->bindParam(':index', $i, PDO::PARAM_INT);
 
-/* ########### INFORMATIONS COMPOSANT ########### */
-// Tous les résultats dans un array
-$sth = $dbh->query("SELECT * FROM base WHERE base_index=$i ;");
-$data = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-if ($sth) $sth->closeCursor();
+// Exécute la requête
+$stmt->execute();
+
+// Récupère tous les résultats dans un tableau associatif
+$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt->closeCursor();
 ?>
