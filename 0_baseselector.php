@@ -22,12 +22,25 @@ elseif ($nb_base=="1") $database = ($BASE=="") ? $first_base : $BASE ;
 //else $database = ($BASE=="") ? $first_base : $BASE ;
 
 echo "<p style=\"text-align:center;\">";
-echo "<select name=\"BASE\" onchange=\"submit();\" data-placeholder=\"Choose…\" class=\"chosen-select\" tabindex=\"0\">";
+echo "<select name=\"BASE\" onchange=\"submit();\" class=\"select2\" tabindex=\"0\" id=\"selectbase\">";
   echo "<option value=\"\">− Sélectionnez une base −</option>";
   foreach ($list_bases as $d) {
         echo str_replace("value=\"".str_replace($prefix, "", $database)."\">", "value=\"".str_replace($prefix, "", $database)."\" selected>", $d);
   }
 echo "</select> ";
+
+  echo "  
+  <script>
+    $(document).ready(function() {
+      $('#selectbase').select2({
+        placeholder: \"Sélectionnez une base\",
+      });
+    });
+  </script>";
+
+
+
+
 
 if (isset($i)) { if ($i!="") echo "<input id=\"i\" name=\"i\" type=\"hidden\" value=\"$i\">"; }
 
