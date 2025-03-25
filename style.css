@@ -45,6 +45,7 @@ fieldset {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 15px;
+    line-height: 2.4em;
  }
  
 legend { font-size: 1em; margin-bottom:0px; margin-left:5px; font-weight: bold; color:#2e3436; }

@@ -207,7 +207,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
         /* ########### designation ########### */
         echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation* :</label>\n";
-        echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"34\"";
+        echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"31px\"";
         echo "value=\""; if (isset($data[0])) { echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";} echo "\" ><br/>\n";
 
         /* ########### vendeur ########### */
@@ -225,6 +225,15 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<option value=\"plus_vendeur\" "; if (isset($data[0])) {if ($data[0]["vendeur"]=="plus_vendeur") echo "selected";} echo ">− Nouveau vendeur : −</option>";
         option_selecteur( (isset($data[0])) ? $data[0]["vendeur"] : "" , $vendeurs, "vendeur_index", "vendeur_nom");
         echo "</select>";
+        /*select2 pour recherche */
+        echo "<script>
+			$(document).ready(function() {
+				$('#vendeur').select2({
+    				width: '270px'
+				});
+			});
+		</script>";
+        
         echo "<br/>";
 
         /* ########### + vendeur ########### */
@@ -256,7 +265,17 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["contrat"]=="0") echo "selected";} echo ">— Aucun contrat spécifié —</option>";
         echo "<option value=\"plus_contrat\" "; if (isset($data[0])) {if ($data[0]["contrat"]=="plus_contrat") echo "selected";} echo ">− Nouveau contrat : −</option>";
         option_selecteur( (isset($data[0])) ? $data[0]["contrat"] : "", $contrats, "contrat_index", "contrat_nom");
-        echo "</select><br/>";
+        echo "</select>";
+        /*select2 pour recherche */
+        echo "<script>
+			$(document).ready(function() {
+				$('#contrat').select2({
+    				width: '270px'
+				});
+			});
+		</script>";
+		
+        echo "<br/>";
         
 ##################################################################$
         
@@ -274,7 +293,14 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
                    echo "<option value=\"0\" selected >— Aucun type de contrat spécifié —</option>";
                    echo "<option value=\"plus_contrat_type\" >− Nouveau type de contrat : −</option>";
                    option_selecteur("0", $types_contrats, "contrat_type_index", "contrat_type_cat");
-               echo "</select><br/>";
+               echo "</select>";
+               /*select2 pour recherche */
+				echo "<script>
+					$(document).ready(function() {
+						$('#contrat_type').select2();
+					});
+				</script>";
+               echo "<br/>";
 
                     /* ########### + type contrat ########### */
                     echo "\n\n\n";
@@ -295,7 +321,17 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["tutelle"]=="") echo "selected";} echo ">— Aucune tutelle spécifiée —</option>";
         echo "<option value=\"plus_tutelle\" "; if (isset($data[0])) { if ($data[0]["tutelle"]=="plus_tutelle") echo "selected";} echo ">− Nouvelle tutelle : −</option>";
         option_selecteur( (isset($data[0])) ? $data[0]["tutelle"] : "" , $tutelles, "tutelle_index", "tutelle_nom");
-        echo "</select><br/>";
+        echo "</select>";
+        /*select2 pour recherche */
+        echo "<script>
+			$(document).ready(function() {
+				$('#tutelle').select2({
+    				width: '270px'
+				});
+			});
+		</script>";
+
+        echo "<br/>";
 
             /* ########### + tutelle ########### */
             echo "\n\n\n";
@@ -309,12 +345,12 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
         /* ########### bon de commande ########### */
         echo "<label for=\"bon_commande\"><abbr title=\"Bon de commande\">BDC</abbr>&nbsp;: </label>\n";
-        echo "<input value=\""; if (isset($data[0])) echo $data[0]["bon_commande"]; echo "\" name=\"bon_commande\" type=\"text\" id=\"bon_commande\">";
+        echo "<input value=\""; if (isset($data[0])) echo $data[0]["bon_commande"]; echo "\" name=\"bon_commande\" type=\"text\" id=\"bon_commande\" size=\"31px\">";
         echo "<br/>";
 
         /* ########### num_inventaire ########### */
         echo "<label for=\"num_inventaire\">N° d’inventaire : </label>\n";
-        echo "<input value=\""; if (isset($data[0])) echo $data[0]["num_inventaire"]; echo "\" name=\"num_inventaire\" type=\"text\" id=\"num_inventaire\">";
+        echo "<input value=\""; if (isset($data[0])) echo $data[0]["num_inventaire"]; echo "\" name=\"num_inventaire\" type=\"text\" id=\"num_inventaire\" size=\"31px\">";
         echo "<br/>";
 
         /* ########### responsable_achat ########### */
