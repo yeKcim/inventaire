@@ -77,14 +77,62 @@
 <!--╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗ ╦  ╔═╗╔═╗
      ║║╠═╣ ║ ╠═╣ ║ ╠═╣╠╩╗║  ║╣ ╚═╗
     ═╩╝╩ ╩ ╩ ╩ ╩ ╩ ╩ ╩╚═╝╩═╝╚═╝╚═╝  -->
-	<link rel="stylesheet" type="text/css" href="datatables/jquery.dataTables.css">
+	<script src="datatables/datatables.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="datatables/datatables.css">
+	
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.3.2/css/fixedHeader.dataTables.min.css">
+<script src="https://cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeader.min.js"></script>
+
+
 	<style>
-	  .dataTables_length label 		{width:auto;}
-	  .dataTables_filter label 		{width:auto;}
-	  table.dataTable tr.odd   		{background-color: #dedede;}
-	  table.dataTable tr.odd td.sorting_1 	{background-color: #D7DFE3;}
-	  table.dataTable tr.even td.sorting_1 	{background-color: #F5FBFF;}
+		#listing input {
+	  		width: 100%; /* Occupe toute la largeur du <td> */
+			box-sizing: border-box;
+			margin-top:10px;
+			margin-bottom:10px;
+		}
+		#listing input::placeholder {
+			font-size: 0.7em;
+			text-align: center;
+		}
+		
+		/* Appliquer sticky aux cellules de l'en-tête */
+		#listing thead th {
+			position: sticky;
+			top: 0;
+			/*background-color: #fff; /* Pour masquer le contenu qui défile derrière */
+			z-index: 2;
+		}
 	</style>
+	<script>
+		$(document).ready(function () {
+			new DataTable('#listing', {
+				initComplete: function () {
+				    this.api()
+				        .columns()
+				        .every(function () {
+				            let column = this;
+				            // Supprime les espaces en début et fin de chaîne
+				            let title = column.footer().textContent.trim();
+
+				            // Créer un champ input dans le footer
+				            let input = document.createElement('input');
+				            input.placeholder = title;
+				            // Facultatif : forcer l'alignement du texte à gauche
+				            input.style.textAlign = "left";
+				            column.footer().replaceChildren(input);
+
+				            // Event listener pour la recherche
+				            input.addEventListener('keyup', () => {
+				                if (column.search() !== input.value) {
+				                    column.search(input.value).draw();
+				                }
+				            });
+				        });
+				}
+			});
+		});
+	</script>
 	
 <!--╔═╗╔╦╗╔═╗╔═╗╔═╗╦ ╦╔═╗  ╔═╗╔═╗╦╔═╗╦╔═╗  ╔═╗╔═╗╦═╗╔╦╗╔═╗╦╔╗╔╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗╦═╗╔═╗╔═╗
 	║╣ ║║║╠═╝║╣ ║  ╠═╣║╣   ╚═╗╠═╣║╚═╗║║╣   ║  ║╣ ╠╦╝ ║ ╠═╣║║║║╚═╗  ║  ╠═╣╠╦╝╠═╣║   ║ ║╣ ╠╦╝║╣ ╚═╗

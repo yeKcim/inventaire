@@ -440,32 +440,46 @@ echo "</td>";
 
 
     echo "</tr>";
+    
+
+    
 
 }
 
+
+
+
+    echo "<tfoot>";
+echo "<tr>";
+     echo "<th>							Id Labo";                   	echo "</th>";
+     echo "<th>							Catégorie";                 	echo "</th>";
+     echo "<th style=\"background:#bab987;\">			Désignation";               	echo "</th>";
+
+     if ($th_c!="") echo $th_c;
+     else echo "<th style=\"background:#a4b395;\">		Caractéristiques";          	echo "</th>";
+     if ($CAT!="") echo "<th style=\"background:rgb(150, 165, 188);\">Intègre</th>";
+
+     echo "<th style=\"background:#8AAA6D;\">			Marque";                    	echo "</th>";
+     echo "<th style=\"background:#8AAA6D;\">			Référence fabricant";       	echo "</th>";
+     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>référence";    	echo "</th>";
+     echo "<th style=\"background:#8AAA6D;\">			Numéro de série";           	echo "</th>";
+     echo "<th style=\"background:#bab987;\">			n° d’inventaire";           	echo "</th>";
+     echo "<th style=\"background:#bab987;\">			Achat";                     	echo "</th>";
+     echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</th>";
+     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>entrée";       	echo "</th>";
+     echo "<th style=\"background:#a786a2;\">			Journal";                   	echo "</th>";
+     echo "<th style=\"background:#96a5bc;\">           Intégré à";                     echo "</th>";
+     echo "<th style=\"background:#96a5bc;\">			Localisation";              	echo "</th>";
+    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">	État";       			echo "</th>";
+     echo "<th>                                         &nbsp;";                        echo "</th>";
+echo "</tr>";
+echo "</tfoot>";
+
 echo "</table>";
 
-//active datatables for this table
-echo "<script type=\"text/javascript\" charset=\"utf8\" src=\"datatables/jquery.dataTables.min.js\"></script>\n";
-echo " <script>\n";
-  echo "\$(function(){\n";
-    echo "\$(\"#listing\").dataTable({\n";
-        echo "\"bStateSave\": true,\n";
-        echo "\"fnStateSave\": function (oSettings, oData) {\n";
-            echo "localStorage.setItem( 'DataTables', JSON.stringify(oData) );\n";
-        echo "},\n";
-        echo "\"fnStateLoad\": function (oSettings) {\n";
-            echo "return JSON.parse( localStorage.getItem('DataTables') );\n";
-        echo "},\n";
-        echo "\"iCookieDuration\": 60,\n"; // 2 minute
-        echo "sPaginationType: \"two_button\",\n";
-        echo "bPaginate: true,\n";
-        echo "bLengthChange: true,\n";
-        echo "iDisplayLength: 25,\n";
-        echo "aaSorting: [],\n";
-    echo "});\n";
-  echo "})\n";
-  echo "</script>\n";
+
+
+
 
 /*stat*/
 //echo "<h2>Statistiques</h2>";

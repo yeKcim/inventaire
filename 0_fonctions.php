@@ -89,7 +89,7 @@ function option_selecteur($select, $table, $A="0", $B="1", $complement="0",$comp
 
 
 function echodatatables($tableid,$iDisplayLength="10") {
-echo "<script type=\"text/javascript\" charset=\"utf8\" src=\"datatables/jquery.dataTables.min.js\"></script>\n";
+echo "<script type=\"text/javascript\" charset=\"utf8\" src=\"datatables/datatables.js\"></script>\n";
 echo " <script>\n";
   echo "\$(function(){\n";
     echo "\$(\"#".$tableid."\").dataTable({\n";
