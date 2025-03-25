@@ -335,14 +335,48 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<option value=\"plus_responsable_achat\" "; if (isset($data[0])) {if ($data[0]["responsable_achat"]=="plus_responsable_achat") echo "selected";} echo ">− Nouveau responsable achat : −</option>";
         option_selecteur( (isset($data[0])) ? $data[0]["responsable_achat"] : "" , $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
         echo "</select>";
+        /*select2 pour recherche */
+        echo "<script>
+			$(document).ready(function() {
+				$('#responsable_achat').select2({
+    				width: '270px'
+				});
+			});
+		</script>";
+        
+        
+        
+        
 
             /* ########### + responsable_achat ########### */
             echo "\n\n\n";
             echo "<fieldset id=\"plus_responsable_achat\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouveau responsable achat</legend>";
                 echo "<label for=\"plus_responsable_achat_prenom\">Prénom :</label>\n";			echo "<input value=\"\" name=\"plus_responsable_achat_prenom\" type=\"text\"><br/>\n";
                 echo "<label for=\"plus_responsable_achat_nom\">NOM* :</label>\n";				echo "<input value=\"\" name=\"plus_responsable_achat_nom\" type=\"text\"><br/>\n";
-                echo "<label for=\"plus_responsable_achat_mail\">Mail :</label>\n";				echo "<input value=\"\" name=\"plus_responsable_achat_mail\" type=\"text\"><br/>\n";
-                echo "<label for=\"plus_responsable_achat_phone\"><abbr title=\"juste les chiffres sans séparateur\">Téléphone</abbr> :</label>\n";	echo "<input value=\"\" name=\"plus_responsable_achat_phone\" type=\"number\" /><br/>\n";
+                echo "<label for=\"plus_responsable_achat_mail\">Mail :</label>\n";				
+                
+                echo "<input type=\"text\" id=\"email\" name=\"plus_responsable_achat_mail\" />
+				  <script src=\"jquery.inputmask.min.js\"></script>
+				  <script>
+					$(document).ready(function(){
+					  $(\"#email\").inputmask({ alias: \"email\" });
+					});
+				  </script><br/>\n";
+                
+                
+                echo "<label for=\"plus_responsable_achat_phone\"><abbr title=\"juste les chiffres sans séparateur\">Téléphone</abbr> :</label>\n";
+                echo" <input type=\"tel\" id=\"phone\" name=\"plus_responsable_achat_phone\" />
+				<script src=\"jquery.inputmask.min.js\"></script>
+				  <script>
+					$(document).ready(function(){
+					  $(\"#phone\").inputmask(\"99 99 99 99 99\"); // Masque pour numéro de téléphone
+					});
+				  </script><br/>\n";
+                
+                
+                
+                
+                
             echo "</fieldset>";
             echo "\n\n\n";
 
