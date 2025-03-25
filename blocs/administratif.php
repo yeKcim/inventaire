@@ -152,7 +152,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 	$sth->execute([
 		':designation'       => ($designation       === "" ? null : $designation),
 		':vendeur'           => ($vendeur           === "" ? "0" : $vendeur),
-		':prix'              => ($prix              === "" ? null : $prix),
+		':prix'              => ($prix              === "" ? "0" : $prix),
 		':contrat'           => ($contrat           === "" ? "0" : $contrat),
 		':date_achat'        => ($date_achat        === "" ? null : $date_achat),
 		':garantie'          => ($garantie          === "" ? null : $garantie),
