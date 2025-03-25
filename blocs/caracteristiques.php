@@ -171,25 +171,17 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 
     echo "\n</select>\n\n";
     
-        echo "\n\n\n\n\n\n\n\n\n";
-  echo "  
-    <select id=\"mySelect\" name=\"options[]\" multiple=\"multiple\" style=\"width:300px;\">
-      <option value=\"option1\">Option 1</option>
-      <option value=\"option2\">Option 2</option>
-      <option value=\"option3\">Option 3</option>
-      <option value=\"option4\">Option 4</option>
-    </select>
 
+  echo "  
   <script>
     $(document).ready(function() {
-      $('#mySelect').select2({
+      $('#multiple').select2({
         placeholder: \"Sélectionnez des options\",
         allowClear: true
       });
     });
   </script>";
     
-            echo "\n\n\n\n\n\n\n\n\n";
 
 
 echo "<fieldset id=\"caracs\" class=\"subfield\"><legend class=\"subfield\">Caractéristiques :</legend>";
