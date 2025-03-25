@@ -130,7 +130,7 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 
     echo "<label for=\"significatives[]\">Significatives : </label>\n";
 
-    echo "\n<select data-placeholder=\"Caractéristiques significatives\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"significatives[]\" id=\"multiple\">\n"; // TODO : Ne pas effacer les case en dessous lorsque l’on modifie "Significatives" (cases remplies mais non sauvegarder)
+    echo "\n<select data-placeholder=\"Caractéristiques significatives\" style=\"width:250px;\" class=\"select2\"  multiple=\"multiple\" tabindex=\"6\" name=\"significatives[]\" id=\"multiple\">\n"; // TODO : Ne pas effacer les case en dessous lorsque l’on modifie "Significatives" (cases remplies mais non sauvegarder)
 
     foreach ($allcaracs as $c) {
 
