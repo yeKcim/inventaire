@@ -126,11 +126,11 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 /*  ╔═╗╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗╦═╗╦╔═╗╔╦╗╦╔═╗ ╦ ╦╔═╗╔═╗
     ║  ╠═╣╠╦╝╠═╣║   ║ ║╣ ╠╦╝║╚═╗ ║ ║║═╬╗║ ║║╣ ╚═╗
     ╚═╝╩ ╩╩╚═╩ ╩╚═╝ ╩ ╚═╝╩╚═╩╚═╝ ╩ ╩╚═╝╚╚═╝╚═╝╚═╝   */
-    echo "<fieldset><legend>Caractéristiques</legend>";
+    echo "\n<fieldset><legend>Caractéristiques</legend>\n\n";
 
-    echo "<label for=\"significatives[]\">Significatives : </label>";
+    echo "<label for=\"significatives[]\">Significatives : </label>\n";
 
-    echo "<select data-placeholder=\"Caractéristiques significatives\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"significatives[]\" id=\"multiple\">"; // TODO : Ne pas effacer les case en dessous lorsque l’on modifie "Significatives" (cases remplies mais non sauvegarder)
+    echo "\n<select data-placeholder=\"Caractéristiques significatives\" style=\"width:250px;\" class=\"chosen-select\"  multiple=\"multiple\" tabindex=\"6\" name=\"significatives[]\" id=\"multiple\">\n"; // TODO : Ne pas effacer les case en dessous lorsque l’on modifie "Significatives" (cases remplies mais non sauvegarder)
 
     foreach ($allcaracs as $c) {
 
@@ -145,7 +145,7 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 
         /* ####### Label ####### */
         echo "<label for='carac["; if (array_key_exists("0", $c)) echo $c[0]; echo "]'>";
-	echo "<abbr title='".str_replace("'", "’", $c["nom_carac"])."' >".str_replace("'", "’", $c["symbole_carac"])."</abbr> "; // TODO : ne supporte pas les apostrophe dans $c["nom_carac"] ! voir exemple avec « longueur d’onde »
+		echo "<abbr title='".str_replace("'", "’", $c["nom_carac"])."' >".str_replace("'", "’", $c["symbole_carac"])."</abbr> "; // TODO : ne supporte pas les apostrophe dans $c["nom_carac"] ! voir exemple avec « longueur d’onde »
 
         if ( ($c["unite_carac"]!="bool")&&($c["unite_carac"]!="") ) echo "(".str_replace("'", "’", $c["unite_carac"]).")"; // Si ce n’est pas un booléen on affiche l’unité
         echo " : </label>\n";
@@ -153,14 +153,14 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 	$keys = array_keys(array_column($caracs_i, 'carac'), $c["carac"]);
 
         if ($c["unite_carac"]=="bool") {
-            echo "<select name='carac[".$c["carac"]."]' id='carac[".$c["carac"]."]'>";
-            echo "<option value=''>Non renseigné</option>";
-            echo "<option value='1' "; if ($caracs_i[$keys[0]]["carac_valeur"]=="1") echo 'selected'; echo ">Oui</option>";
-            echo "<option value='0' "; if ($caracs_i[$keys[0]]["carac_valeur"]=="0") echo 'selected'; echo ">Non</option>";
-            echo "</select>";
+            echo "\n\t<select name='carac[".$c["carac"]."]' id='carac[".$c["carac"]."]'>";
+            echo "\n\t\t<option value=''>Non renseigné</option>";
+            echo "\n\t\t<option value='1' "; if ($caracs_i[$keys[0]]["carac_valeur"]=="1") echo 'selected'; echo ">Oui</option>";
+            echo "\n\t\t<option value='0' "; if ($caracs_i[$keys[0]]["carac_valeur"]=="0") echo 'selected'; echo ">Non</option>";
+            echo "\n\t</select>\n";
         }
         else {
-	    echo "<input value='";
+	    echo "\t<input value='";
 	    if (array_key_exists("0",$keys)) echo str_replace("'", "’", $caracs_i[$keys[0]]["carac_valeur"]);
 	    echo "' name='carac[".$c["carac"]."]' type='text' id='carac[".$c["carac"]."]'>";
 	}
@@ -169,15 +169,29 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
         echo "</option>";
     }
 
-    echo "</select>";
-    echo "<script type=\"text/javascript\">
-        var config = {
-          '.chosen-select'           : {no_results_text:'Oops, nothing found!', width:\"250px\"},
-        }
-        for (var selector in config) {
-          $(selector).chosen(config[selector]);
-        }
-      </script>";
+    echo "\n</select>\n\n";
+    
+        echo "\n\n\n\n\n\n\n\n\n";
+  echo "  
+    <select id=\"mySelect\" name=\"options[]\" multiple=\"multiple\" style=\"width:300px;\">
+      <option value=\"option1\">Option 1</option>
+      <option value=\"option2\">Option 2</option>
+      <option value=\"option3\">Option 3</option>
+      <option value=\"option4\">Option 4</option>
+    </select>
+
+  <script>
+    $(document).ready(function() {
+      $('#mySelect').select2({
+        placeholder: \"Sélectionnez des options\",
+        allowClear: true
+      });
+    });
+  </script>";
+    
+            echo "\n\n\n\n\n\n\n\n\n";
+
+
 echo "<fieldset id=\"caracs\" class=\"subfield\"><legend class=\"subfield\">Caractéristiques :</legend>";
     echo "<pi></pi>";
 echo "</fieldset>";
@@ -233,7 +247,6 @@ echo "</fieldset>";
         echo "<p style=\"text-align:right;\"><small>* champ obligatoire</small></p>"; 
 
     echo "</fieldset>";
-
 
 echo "</div>";
 
