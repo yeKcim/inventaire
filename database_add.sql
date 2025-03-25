@@ -30,7 +30,7 @@ CREATE TABLE `base` (
   `base_index` int(11) NOT NULL,
   `lab_id` tinytext COMMENT 'Sous la forme P1, L4, Mod2, POG23 Commence par categorie_lettres Identifiant donné par l’équipe',
   `categorie` int(11) NOT NULL,
-  `serial_number` text NOT NULL,
+  `serial_number` text,
   `reference` text COMMENT 'Référence du composant chez vendeur ou fabriquant',
   `designation` text ,
   `utilisateur` int(11) NOT NULL COMMENT 'Sous la forme adresse mail',
