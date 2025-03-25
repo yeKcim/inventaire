@@ -238,8 +238,8 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo "<script>
 			$(document).ready(function() {
 				$('#etat').select2({
-        			minimumResultsForSearch: Infinity
-      			});
+					minimumResultsForSearch: Infinity
+				});
 			});
 		</script>";
 
