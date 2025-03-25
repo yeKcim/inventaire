@@ -152,7 +152,14 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo "<option value=\"0\" "; if ($data[0]["utilisateur"]=="0") echo "selected"; echo ">— Aucun utilisateur spécifié —</option>";
         echo "<option value=\"plus_utilisateur\" "; if ($data[0]["utilisateur"]=="plus_utilisateur") echo "selected"; echo ">− Nouvel utilisateur : −</option>";
     	option_selecteur($data[0]["utilisateur"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
-        echo "</select><br/>";
+        echo "</select><br/>\n";
+        /*select2 pour recherche */
+        echo "<script>
+			$(document).ready(function() {
+				$('#utilisateur').select2();
+			});
+		</script>";
+
 
             /* ########### + utilisateur ########### */
             echo "\n\n\n";
@@ -174,12 +181,18 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 
         /* ########### localisation ########### */
         echo "<label for=\"localisation\">Localisation : </label>\n";
-        echo "<select name=\"localisation\" onchange=\"display(this,'plus_localisation','plus_localisation');\" > id=\"localisation\"";
+        echo "<select name=\"localisation\" onchange=\"display(this,'plus_localisation','plus_localisation');\" id=\"localisation\" >";
         echo "<option value=\"0\" "; if ($data[0]["localisation"]=="0") echo "selected"; echo ">— Aucune localisation spécifiée —</option>";
         echo "<option value=\"plus_localisation\" "; if ($data[0]["localisation"]=="plus_localisation") echo "selected"; echo ">− Nouvelle localisation : −</option>";
 
         option_selecteur($data[0]["localisation"], $localisations, "localisation_index", "localisation_batiment", "localisation_piece");
         echo "</select>";
+		/*select2 pour recherche */
+        echo "<script>
+			$(document).ready(function() {
+				$('#localisation').select2();
+			});
+		</script>";
 
         if ( ($data[0]["date_localisation"]!="") && ($data[0]["date_localisation"]!="0000-00-00") )
             echo " <abbr title=\"le ".dateformat($data[0]["date_localisation"],"fr")."\"><strong>ⓘ</strong></abbr>";
@@ -221,6 +234,14 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
             echo "<option value=\"1\" "; if ($data[0]["sortie"]=="1") echo "selected"; echo ">Sortie définitive d’inventaire</option>";
             echo "<option value=\"2\" "; if ($data[0]["sortie"]=="2") echo "selected"; echo ">Sortie temporaire d’inventaire</option>";
         echo "</select>";
+        /*select2 pour recherche */
+        echo "<script>
+			$(document).ready(function() {
+				$('#etat').select2({
+        			minimumResultsForSearch: Infinity
+      			});
+			});
+		</script>";
 
         if ( ($data[0]["sortie"]!="0") && ($data[0]["date_sortie"]!="") && ($data[0]["date_sortie"]!="0000-00-00") )
         echo " <abbr title=\"le ".dateformat($data[0]["date_sortie"],"fr")."\"><strong>ⓘ</strong></abbr>"; /* seulement si sortie… !!! */
@@ -265,6 +286,12 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo "<option value=\"0\" "; if ($data[0]["integration"]=="0") echo "selected"; echo ">— Aucune intégration spécifiée —</option>";
         option_selecteur($data[0]["integration"], $lab_ids, "base_index", "lab_id");
         echo "</select>";
+        /*select2 pour recherche */
+          echo "<script>
+			$(document).ready(function() {
+			  $('#integration').select2();
+			});
+		  </script>";
 
         if (isset($data[0]["integration"])) { if ( ($data[0]["integration"]!="0") && ($data[0]["integration"]!="") )
             echo " <a href=\"info.php?BASE=".$database."&i=".$data[0]["integration"]."\" target=\"_blank\"><strong>↗</strong></a>";
