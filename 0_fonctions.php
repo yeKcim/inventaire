@@ -48,9 +48,9 @@ function phone_display($n, $display) {
 ╚══════╝╚══════╝╚══════╝╚══════╝ ╚═════╝   ╚═╝
 */
 
-function selecteur_chosen($nom, $table, $intitule, $A="0", $B="1", $complement="0",$complement_display="") {
+function selecteur_selectwo($nom, $table, $intitule, $A="0", $B="1", $complement="0",$complement_display="") {
     global $$nom;
-    echo "<select name=\"$nom\" onchange=\"submit();\" data-placeholder=\"Choose…\" class=\"chosen-select\" tabindex=\"0\" >";
+    echo "<select name=\"$nom\" onchange=\"submit();\" class=\"select2\" tabindex=\"0\" id=\"$nom\" >";
     echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>";
     foreach ($table as &$l){
         $selected= ($$nom==$l[$A]) ? "selected > $nom =" : " > " ;
@@ -59,14 +59,15 @@ function selecteur_chosen($nom, $table, $intitule, $A="0", $B="1", $complement="
         echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
     }
     echo "</select> ";
-    echo "<script type=\"text/javascript\">
-        var config = {
-          '.chosen-select'           : {no_results_text:'Aucun résultat pour :', width:\"250px\"},
-        }
-        for (var selector in config) {
-          $(selector).chosen(config[selector]);
-        }
-      </script>";
+	/*select2 pour recherche */
+        echo "<script>
+			$(document).ready(function() {
+				$('#".$nom."').select2({
+					placeholder: \"".$intitule."\",
+					allowClear: true
+				});
+			});
+		</script>";
 
 }
 
