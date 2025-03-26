@@ -217,6 +217,13 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
         echo "<option value=\"plus_categorie\" "; if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "selected";} echo ">— Nouvelle catégorie : —</option>";
         option_selecteur(  (isset($data[0])) ? $data[0]["categorie"] : ""  , $categories, "categorie_index", "categorie_nom", "categorie_lettres", "display()");
         echo "</select><br/>";
+		/*select2 pour recherche */
+		echo "<script>
+			\$j(document).ready(function() {
+				\$j('#categorie').select2({width: '270px'});
+			});
+		</script>";
+        
 
             /* ########### + categorie ########### */
             echo "\n\n\n";
@@ -255,6 +262,14 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 		echo "<option value=\"manual_id\" ";
 		echo ">Manuel</option>";
         echo "</select><br/>";
+        /*select2 pour recherche */
+		echo "<script>
+			\$j(document).ready(function() {
+				\$j('#lab_id').select2({
+					width: '200px',
+					minimumResultsForSearch: Infinity,});
+			});
+		</script>";
 
         /* ########### + id_manuel ########### */
         echo "\n\n\n";
@@ -286,6 +301,12 @@ echo "</fieldset>";
         echo "<option value=\"plus_marque\" "; if (isset($data[0]["marque"])) { if ($data[0]["marque"]=="plus_marque") echo "selected";} echo ">− nouvelle marque : −</option>";
         option_selecteur(  (isset($data[0])) ? $data[0]["marque"] : ""  , $marques, "marque_index", "marque_nom");
         echo "</select><br/>";
+		/*select2 pour recherche */
+		echo "<script>
+			\$j(document).ready(function() {
+				\$j('#marque').select2({width: '270px'});
+			});
+		</script>";        
 
             /* ########### + marque ########### */
             echo "\n\n\n";

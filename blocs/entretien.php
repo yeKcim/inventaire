@@ -143,6 +143,12 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
         echo "<option value=\"30\" selected>mois</option>";
         echo "<option value=\"365\">ans</option>";
         echo "</select> <br/>";
+        /*select2 pour recherche */
+		echo "<script>
+			\$j(document).ready(function() {
+				\$j('#e_frequence_multipli').select2({minimumResultsForSearch: Infinity});
+			});
+		</script>";
 
             /* ########### Désignation ########### */
         echo "<label for=\"e_designation\">Désignation* : </label>\n";
@@ -262,6 +268,12 @@ else {
         option_selecteur($e["e_effectuerpar"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
         echo "<option value=\"plus_intervant\" "; if ($e["e_effectuerpar"]=="plus_intervant") echo "selected"; echo ">Nouvel intervenant :</option>";
         echo "</select><br/>";
+        /*select2 pour recherche */
+		echo "<script>
+			\$j(document).ready(function() {
+				\$j('#e_effectuerpar').select2({width: '270px'});
+			});
+		</script>";
 
             /* ########### + utilisateur ########### */
             echo "\n\n\n";
@@ -271,12 +283,24 @@ else {
 
                 echo "<label for=\"plus_intervant_nom\">Nom :</label>\n";
                 echo "<input value=\"\" name=\"plus_intervant_nom\" type=\"text\">\n";
-
-                echo "<label for=\"plus_intervant_mail\">Mail :</label>\n";
-                echo "<input value=\"\" name=\"plus_intervant_mail\" type=\"text\">\n";
-
+                
+                 echo "<label for=\"plus_intervant_mail\">Mail :</label>\n";
+                 echo "<input type=\"text\" id=\"email\" name=\"plus_intervant_mail\" />
+				  <script>
+					\$j(document).ready(function(){
+					  \$j(\"#email\").inputmask({ alias: \"email\" });
+					});
+				  </script><br/>\n";
+                
                 echo "<label for=\"plus_intervant_phone\">Téléphone :</label>\n";
-                echo "<input value=\"\" name=\"plus_intervant_phone\" type=\"text\">\n";
+                echo" <input type=\"tel\" id=\"phone\" name=\"plus_intervant_phone\" />
+				  <script>
+					\$j(document).ready(function(){
+					  \$j(\"#phone\").inputmask(\"99 99 99 99 99\"); // Masque pour numéro de téléphone
+					});
+				  </script><br/>\n";               
+                
+
 
             echo "</fieldset>";
             echo "\n\n\n";

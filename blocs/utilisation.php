@@ -180,7 +180,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 				  </script><br/>\n";
                 
                 
-                echo "<label for=\"plus_utilisateur_phone\"><abbr title=\"juste les chiffres sans séparateur\">Téléphone</abbr> :</label>\n";
+                echo "<label for=\"plus_utilisateur_phone\">Téléphone :</label>\n";
                 echo" <input type=\"tel\" id=\"phone\" name=\"plus_utilisateur_phone\" />
 				  <script>
 					\$j(document).ready(function(){

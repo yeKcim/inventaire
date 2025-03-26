@@ -399,7 +399,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 				  </script><br/>\n";
                 
                 
-                echo "<label for=\"plus_responsable_achat_phone\"><abbr title=\"juste les chiffres sans séparateur\">Téléphone</abbr> :</label>\n";
+                echo "<label for=\"plus_responsable_achat_phone\">Téléphone :</label>\n";
                 echo" <input type=\"tel\" id=\"phone\" name=\"plus_responsable_achat_phone\" />
 				  <script>
 					\$j(document).ready(function(){
