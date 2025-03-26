@@ -24,11 +24,17 @@ foreach ($iot as $i) {
 }
 echo "</select> ";
 /*select2 pour recherche */
-        echo "<script>
-			$(document).ready(function() {
-				$('#iot').select2({minimumResultsForSearch: Infinity});
-			});
-		</script>";
+echo "<script>
+\$j(document).ready(function() {
+	\$j('#iot').select2({
+		minimumResultsForSearch: Infinity
+	});
+});
+</script>";		
+		
+		
+		
+		
 
 //$IOT= ($IOT=="") ? "1,2" : $IOT ;
 $IOT_CMD= ($IOT!="") ? "AND sortie IN ($IOT)" : "AND sortie IN (0,2)" ;

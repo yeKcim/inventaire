@@ -153,11 +153,20 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 	$keys = array_keys(array_column($caracs_i, 'carac'), $c["carac"]);
 
         if ($c["unite_carac"]=="bool") {
-            echo "\n\t<select name='carac[".$c["carac"]."]' id='carac[".$c["carac"]."]'>";
+            echo "\n\t<select name='carac[".$c["carac"]."]' id='carac_".$c["carac"]."_'>";
             echo "\n\t\t<option value=''>Non renseigné</option>";
             echo "\n\t\t<option value='1' "; if ($caracs_i[$keys[0]]["carac_valeur"]=="1") echo 'selected'; echo ">Oui</option>";
             echo "\n\t\t<option value='0' "; if ($caracs_i[$keys[0]]["carac_valeur"]=="0") echo 'selected'; echo ">Non</option>";
             echo "\n\t</select>\n";
+            /*select2 pour recherche */
+			echo "<script>
+			\$j(document).ready(function() {
+				\$j('#carac_".$c["carac"]."_').select2({
+					minimumResultsForSearch: Infinity
+				});
+			});
+			</script>";
+						
         }
         else {
 	    echo "\t<input value='";
@@ -171,13 +180,12 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
 
     echo "\n</select>\n\n";
     /*select2 pour recherche */
-	  echo "  
-	  <script>
-		$(document).ready(function() {
-		  $('#multiple').select2({
-		    placeholder: \"Sélectionnez les caractéristiques significatives\",
-		    allowClear: true
-		  });
+	  echo "<script>
+		\$j(document).ready(function() {
+			\$j('#multiple').select2({
+				placeholder: \"Sélectionnez les caractéristiques significatives\",
+		    	allowClear: true
+			});
 		});
 	  </script>";
     

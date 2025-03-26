@@ -137,20 +137,22 @@ if ($CAT!="") {
     if ($cc["unite_carac"]!="") $th_c.="<br/>(".$cc["unite_carac"].")";
     $th_c.="</th>";
     //on ajoute une case dans tr
-    foreach ($val as $k => $v) {
-	if (!isset($val[$k]["echo"])) $val[$k]["echo"]="";
-	$val[$k]["echo"].="<td style=\"".$style."\">".spanquick("caracteristiques",$k);
-	if (isset($v[$cc["carac"]])) {
-																
-	    //todo:on ajoute la valeur numérique en commentaire ou cachée
-	    //$val[$k]["echo"].="<strike>".vnum($v[$cc["carac"]])."</strike> ";
-	    $val[$k]["echo"].="<span style=\"display:none;\">".vnum($v[$cc["carac"]])."</span> ";
-	    $val[$k]["echo"].=$v[$cc["carac"]];
-																
+    if (is_array($val)) {
+			foreach ($val as $k => $v) {
+			if (!isset($val[$k]["echo"])) $val[$k]["echo"]="";
+			$val[$k]["echo"].="<td style=\"".$style."\">".spanquick("caracteristiques",$k);
+			if (isset($v[$cc["carac"]])) {
+																		
+				//todo:on ajoute la valeur numérique en commentaire ou cachée
+				//$val[$k]["echo"].="<strike>".vnum($v[$cc["carac"]])."</strike> ";
+				$val[$k]["echo"].="<span style=\"display:none;\">".vnum($v[$cc["carac"]])."</span> ";
+				$val[$k]["echo"].=$v[$cc["carac"]];
+																		
+			}
+			else $val[$k]["echo"].="-";
+			$val[$k]["echo"].="</span></td>";
+			}
 	}
-	else $val[$k]["echo"].="-";
-	$val[$k]["echo"].="</span></td>";
-    }
   }
 }
 

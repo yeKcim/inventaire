@@ -60,15 +60,14 @@ function selecteur_selectwo($nom, $table, $intitule, $A="0", $B="1", $complement
     }
     echo "</select> ";
 	/*select2 pour recherche */
-        echo "<script>
-			$(document).ready(function() {
-				$('#".$nom."').select2({
+		echo "<script>
+			\$j(document).ready(function() {
+				\$j('#".$nom."').select2({
 					placeholder: \"".$intitule."\",
 					allowClear: true
 				});
 			});
 		</script>";
-
 }
 
 

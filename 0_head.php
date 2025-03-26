@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 <html lang="fr" dir="ltr" xml:lang="fr" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -17,6 +17,8 @@
      ║║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚╝╚═╝╚╚═╝╚═╝╩╚═ ╩   -->
     <script src="jquery.min.js" type="text/javascript"></script>
+	<script>window.$j = jQuery.noConflict();</script>
+    <script src="jquery.inputmask.min.js"></script>
 
 <!--╔╦╗╦╔╗╔╦ ╦╔╗ ╔═╗═╗ ╦
      ║ ║║║║╚╦╝╠╩╗║ ║╔╩╦╝
@@ -63,8 +65,8 @@
      ║║║╚═╗╠═╣╠═╝╠═╝║╣ ╠═╣╠╦╝   ║║║╣ ║  ╠═╣╚╦╝
     ═╩╝╩╚═╝╩ ╩╩  ╩  ╚═╝╩ ╩╩╚═  ═╩╝╚═╝╩═╝╩ ╩ ╩   -->
     <script type="text/javascript">
-      $(document).ready( function() {
-        $('#disappear_delay').delay(2000).fadeOut();
+      $j(document).ready( function() {
+        $j('#disappear_delay').delay(2000).fadeOut();
       });
     </script>
 
@@ -74,8 +76,8 @@
 	<script src="datatables/datatables.js" type="text/javascript"></script>
 	<link rel="stylesheet" type="text/css" href="datatables/datatables.css">
 	
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.3.2/css/fixedHeader.dataTables.min.css">
-<script src="https://cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeader.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="datatables/fixedHeader.dataTables.min.css">
+	<script src="datatables/dataTables.fixedHeader.min.js"></script>
 
 
 	<style>
@@ -99,54 +101,56 @@
 		}
 	</style>
 	<script>
-		$(document).ready(function () {
-			new DataTable('#listing', {
-				initComplete: function () {
-				    this.api()
-				        .columns()
-				        .every(function () {
-				            let column = this;
-				            // Supprime les espaces en début et fin de chaîne
-				            let title = column.footer().textContent.trim();
+	  $j(document).ready(function () {
+		new DataTable('#listing', {
+		  initComplete: function () {
+		    this.api()
+		      .columns()
+		      .every(function () {
+		        let column = this;
+		        // Supprime les espaces en début et fin de chaîne
+		        let title = column.footer().textContent.trim();
 
-				            // Créer un champ input dans le footer
-				            let input = document.createElement('input');
-				            input.placeholder = title;
-				            // Facultatif : forcer l'alignement du texte à gauche
-				            input.style.textAlign = "left";
-				            column.footer().replaceChildren(input);
+		        // Créer un champ input dans le footer
+		        let input = document.createElement('input');
+		        input.placeholder = title;
+		        // Facultatif : forcer l'alignement du texte à gauche
+		        input.style.textAlign = "left";
+		        column.footer().replaceChildren(input);
 
-				            // Event listener pour la recherche
-				            input.addEventListener('keyup', () => {
-				                if (column.search() !== input.value) {
-				                    column.search(input.value).draw();
-				                }
-				            });
-				        });
-				}
-			});
+		        // Event listener pour la recherche
+		        input.addEventListener('keyup', () => {
+		          if (column.search() !== input.value) {
+		            column.search(input.value).draw();
+		          }
+		        });
+		      });
+		  }
 		});
+	  });
 	</script>
+
 
 <!--╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗ ╔╦╗╦ ╦╔═╗     ╔╦╗╦ ╦╦ ╔╦╗╦╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗
 	╚═╗║╣ ║  ║╣ ║   ║───║ ║║║║ ║  o  ║║║║ ║║  ║ ║╚═╗║╣ ║  ║╣ ║   ║ 
 	╚═╝╚═╝╩═╝╚═╝╚═╝ ╩   ╩ ╚╩╝╚═╝  o  ╩ ╩╚═╝╩═╝╩ ╩╚═╝╚═╝╩═╝╚═╝╚═╝ ╩   -->
   	<link href="select2/select2.min.css" rel="stylesheet" />
     <script src="select2/select2.min.js"></script>
+	<script>$j.fn.select2 = $.fn.select2; /* Réassocie Select2 à $j une fois pour toutes */</script>
     	
 <!--╔═╗╔╦╗╔═╗╔═╗╔═╗╦ ╦╔═╗  ╔═╗╔═╗╦╔═╗╦╔═╗  ╔═╗╔═╗╦═╗╔╦╗╔═╗╦╔╗╔╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗╦═╗╔═╗╔═╗
 	║╣ ║║║╠═╝║╣ ║  ╠═╣║╣   ╚═╗╠═╣║╚═╗║║╣   ║  ║╣ ╠╦╝ ║ ╠═╣║║║║╚═╗  ║  ╠═╣╠╦╝╠═╣║   ║ ║╣ ╠╦╝║╣ ╚═╗
 	╚═╝╩ ╩╩  ╚═╝╚═╝╩ ╩╚═╝  ╚═╝╩ ╩╩╚═╝╩╚═╝  ╚═╝╚═╝╩╚═ ╩ ╩ ╩╩╝╚╝╚═╝  ╚═╝╩ ╩╩╚═╩ ╩╚═╝ ╩ ╚═╝╩╚═╚═╝╚═╝ -->
 	<script type="text/javascript">
-		$(document).ready(function() {
-		  $(".restricted-input").on("input", function() {
-			var originalValue = $(this).val();
-			var filteredValue = originalValue.replace(/[^A-Za-z0-9_-]/g, '');
-			if (originalValue !== filteredValue) {
-			  $(this).val(filteredValue);
-			}
-		  });
+	  $j(document).ready(function() {
+		$j(".restricted-input").on("input", function() {
+		  var originalValue = $j(this).val();
+		  var filteredValue = originalValue.replace(/[^A-Za-z0-9_-]/g, '');
+		  if (originalValue !== filteredValue) {
+		    $j(this).val(filteredValue);
+		  }
 		});
+	  });
 	</script>
 
 </head>

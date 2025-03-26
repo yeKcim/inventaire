@@ -27,19 +27,15 @@ echo "<select name=\"BASE\" onchange=\"submit();\" class=\"select2\" tabindex=\"
   foreach ($list_bases as $d) {
         echo str_replace("value=\"".str_replace($prefix, "", $database)."\">", "value=\"".str_replace($prefix, "", $database)."\" selected>", $d);
   }
+  
 echo "</select> ";
-
-  echo "  
-  <script>
-    $(document).ready(function() {
-      $('#selectbase').select2({
-        placeholder: \"Sélectionnez une base\",
-      });
-    });
-  </script>";
-
-
-
+echo "<script>
+\$j(document).ready(function() {
+	\$j('#selectbase').select2({
+		placeholder: \"Sélectionnez une base\"
+	});
+});
+</script>";
 
 
 if (isset($i)) { if ($i!="") echo "<input id=\"i\" name=\"i\" type=\"hidden\" value=\"$i\">"; }
