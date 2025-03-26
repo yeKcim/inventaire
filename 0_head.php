@@ -17,7 +17,8 @@
      ║║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚╝╚═╝╚╚═╝╚═╝╩╚═ ╩   -->
     <script src="jquery.min.js" type="text/javascript"></script>
-	<script>window.$j = jQuery.noConflict();</script>
+	<script>window.$j = jQuery.noConflict(); /* Pour select2 */</script>
+	<script>window.$d = jQuery.noConflict(); /* Pour datatables */</script>
     <script src="jquery.inputmask.min.js"></script>
 
 <!--╔╦╗╦╔╗╔╦ ╦╔╗ ╔═╗═╗ ╦
@@ -73,6 +74,11 @@
 <!--╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗ ╦  ╔═╗╔═╗
      ║║╠═╣ ║ ╠═╣ ║ ╠═╣╠╩╗║  ║╣ ╚═╗
     ═╩╝╩ ╩ ╩ ╩ ╩ ╩ ╩ ╩╚═╝╩═╝╚═╝╚═╝  -->
+    
+    
+
+        
+        
 	<script src="datatables/datatables.js" type="text/javascript"></script>
 	<link rel="stylesheet" type="text/css" href="datatables/datatables.css">
 	
@@ -129,6 +135,7 @@
 		});
 	  });
 	</script>
+	<script>$d.fn.DataTable = $.fn.DataTable; /* Associer DataTables à $d */</script>
 
 
 <!--╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗ ╔╦╗╦ ╦╔═╗     ╔╦╗╦ ╦╦ ╔╦╗╦╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗

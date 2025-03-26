@@ -228,7 +228,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /*select2 pour recherche */
         echo "<script>
 			\$j(document).ready(function() {
-				$('#vendeur').select2({
+				\$j('#vendeur').select2({
     				width: '270px'
 				});
 			});
@@ -269,7 +269,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /*select2 pour recherche */
         echo "<script>
 			\$j(document).ready(function() {
-				$('#contrat').select2({
+				\$j('#contrat').select2({
     				width: '270px'
 				});
 			});
@@ -297,7 +297,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
                /*select2 pour recherche */
 				echo "<script>
 					\$j(document).ready(function() {
-						$('#contrat_type').select2();
+						\$j('#contrat_type').select2();
 					});
 				</script>";
                echo "<br/>";
@@ -325,7 +325,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /*select2 pour recherche */
         echo "<script>
 			\$j(document).ready(function() {
-				$('#tutelle').select2({
+				\$j('#tutelle').select2({
     				width: '270px'
 				});
 			});
@@ -374,7 +374,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         /*select2 pour recherche */
         echo "<script>
 			\$j(document).ready(function() {
-				$('#responsable_achat').select2({
+				\$j('#responsable_achat').select2({
     				width: '270px'
 				});
 			});

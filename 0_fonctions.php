@@ -91,22 +91,14 @@ function option_selecteur($select, $table, $A="0", $B="1", $complement="0",$comp
 function echodatatables($tableid,$iDisplayLength="10") {
 echo "<script type=\"text/javascript\" charset=\"utf8\" src=\"datatables/datatables.js\"></script>\n";
 echo " <script>\n";
-  echo "\$(function(){\n";
-    echo "\$(\"#".$tableid."\").dataTable({\n";
-        echo "\"lengthMenu\": [5, 10, 25, 50 ],\n"; // ne fonctionne pas ?
-//        echo "\"bStateSave\": true,\n";
-//        echo "\"fnStateSave\": function (oSettings, oData) {\n";
-//            echo "localStorage.setItem( 'DataTables', JSON.stringify(oData) );\n";
-//        echo "},\n";
-//        echo "\"fnStateLoad\": function (oSettings) {\n";
-//            echo "return JSON.parse( localStorage.getItem('DataTables') );\n";
-//        echo "},\n";
-//        echo "\"iCookieDuration\": 60,\n"; // 2 minute
-        echo "sPaginationType: \"two_button\",\n";
-        echo "bPaginate: true,\n";
-        echo "bLengthChange: true,\n";
-        echo "iDisplayLength: ".$iDisplayLength.",\n";
-        echo "aaSorting: [],\n";
+  echo "\$d(function(){\n";
+    echo "\$d(\"#".$tableid."\").DataTable({\n";
+		echo "\"lengthMenu\": [5, 10, 25, 50],";
+		echo "\"pagingType\": \"simple\",";
+		echo "\"paging\": true,";
+		echo "\"lengthChange\": true,";
+		echo "\"pageLength\": 5,";
+		echo "\"order\": []";
     echo "});\n";
   echo "})\n";
   echo "</script>\n";
