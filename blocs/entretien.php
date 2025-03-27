@@ -32,10 +32,23 @@ if ( isset($_POST["add_entretien"]) ) {
     else {
         $e_frequence=$e_frequence*$e_frequence_multipli;
 
-        $add_result = $dbh->query("INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail) VALUES ($i,\"$e_frequence\", \"".date("Y-m-d")."\", \"".$e_designation."\", \"".$e_detail."\")");        
+	// Préparation de la requête d'insertion
+	$sth = $dbh->prepare("
+		INSERT INTO entretien (e_id, e_frequence, e_lastdate, e_designation, e_detail)
+		VALUES (:e_id, :e_frequence, :e_lastdate, :e_designation, :e_detail)
+	");
+
+	// Exécution de la requête avec des paramètres liés
+	$add_result = $sth->execute([
+		':e_id' => $i,
+		':e_frequence' => $e_frequence,
+		':e_lastdate' => date("Y-m-d"),
+		':e_designation' => $e_designation,
+		':e_detail' => $e_detail
+	]);     
         
         $error_emptyinput="";
-        $message.= ($add_result!=1) ? $message_success_add : $message_error_add;
+        $message.= ($add_result) ? $message_success_add : $message_error_add;
     }
 }
 
@@ -55,7 +68,19 @@ if ($modif_entretien!="") {
         $plus_intervant_nom=mb_strtoupper($plus_intervant_nom);
         $plus_intervant_phone=phone_display("$plus_intervant_phone","");
 
-        $modif_result = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_intervant_nom."', '".$plus_intervant_prenom."','".$plus_intervant_mail."','".$plus_intervant_phone."') ;"));
+		// Préparation de la requête d'insertion
+		$sth = $dbh->prepare("
+			INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone)
+			VALUES (:utilisateur_nom, :utilisateur_prenom, :utilisateur_mail, :utilisateur_phone)
+		");
+
+		// Exécution de la requête avec des paramètres liés
+		$modif_result = $sth->execute([
+			':utilisateur_nom' => $plus_intervant_nom,
+			':utilisateur_prenom' => $plus_intervant_prenom,
+			':utilisateur_mail' => $plus_intervant_mail,
+			':utilisateur_phone' => $plus_intervant_phone
+		]);
         /* TODO : prévoir le cas où la personne existe déjà */
 
         if (!isset($modif_result)) $message.=$message_error_add;
@@ -75,8 +100,20 @@ if ($modif_entretien!="") {
 
         $e_effectuele=($e_effectuele==NULL) ? "0000-00-00" : $e_effectuele;
         
-	$modif_result = $dbh->query(str_replace("\"\"", "NULL","UPDATE entretien SET e_lastdate = '".$e_effectuele."' $effectuepar_sql WHERE $alle ;"));
-	$message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
+		// Préparation de la requête de mise à jour
+		$sth = $dbh->prepare("
+			UPDATE entretien
+			SET e_lastdate = :e_lastdate
+			WHERE $alle
+		");
+
+		// Exécution de la requête avec des paramètres liés
+		$modif_result = $sth->execute([
+			':e_lastdate' => $e_effectuele
+		]);
+
+		// Construction du message
+		$message .= ($modif_result) ? $message_success_modif : $message_error_modif;
     }
     else $error_noebox="Vous devez cocher au moins une case d’entretien";
 
@@ -105,9 +142,22 @@ if ($del_e_confirm=="Confirmer la suppression") {
 ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
 */
 // entretiens
-$sth = $dbh->query("SELECT e_index, e_frequence, e_lastdate, e_designation, e_detail, e_effectuerpar FROM entretien WHERE e_id=$i ORDER BY e_designation ASC ;");
-$entretiens = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-if ($sth) $sth->closeCursor();
+// Préparation de la requête de sélection
+$sth = $dbh->prepare("
+    SELECT e_index, e_frequence, e_lastdate, e_designation, e_detail, e_effectuerpar
+    FROM entretien
+    WHERE e_id = :e_id
+    ORDER BY e_designation ASC
+");
+
+// Exécution de la requête avec des paramètres liés
+$sth->execute([':e_id' => $i]);
+
+// Récupération des résultats
+$entretiens = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+// Fermeture du curseur
+$sth->closeCursor();
 
 
 /*
@@ -158,8 +208,8 @@ echo "<div id=\"bloc\" style=\"background:#f998a9; vertical-align:top;\">";
         echo "<label for=\"e_detail\" style=\"vertical-align: top;\"> Détails :</label>\n";
         echo "<textarea name=\"e_detail\" rows=\"4\" cols=\"33\"></textarea><br/>";
 
-	$error_emptyinput= (!isset($error_emptyinput)) ? "" : $error_emptyinput ;
-        if ($error_emptyinput!="") echo "<p class=\"error_message\">$error_emptyinput</p>";
+		$error_emptyinput= (!isset($error_emptyinput)) ? "" : $error_emptyinput ;
+        if ($error_emptyinput!="") echo "<p class=\"error_message\">$error_emptyinput : </p>";
 
         /* ########### submit ########### */
         echo "<label for=\"add_entretien\" > &nbsp;</label>\n";
