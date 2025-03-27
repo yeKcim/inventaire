@@ -7,7 +7,7 @@
 ╚█████╔╝╚██████╔╝╚██████╔╝██║  ██║██║ ╚████║██║  ██║███████╗
  ╚════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝
 */
-
+$message="";
 
 /* ########### POST ########### */
 $arr = array("add_historique","del_h_confirm","h","hide_auto");
@@ -25,20 +25,55 @@ foreach ($arr as &$value) {
 ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝╚═╝      ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
 // ajout d’une entrée dans l’historique
-if ($add_historique=="Ajouter") {
+if ($add_historique == "Ajouter") {
     $arr = array("date_info", "histo");
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
+        $$value = isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "";
     }
-    $sth = $dbh->query("SELECT historique_index FROM historique WHERE historique_date=\"".$date_info."\" AND historique_texte=\"".$histo."\" AND historique_id=\"".$i."\";");
-    $query_do_i_insert_histo = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-    if ($sth) $sth->closeCursor();
 
-    if (!isset($query_do_i_insert_histo[0]) ) {
-        $historique_date=($historique_date==NULL) ? "0000-00-00" : $historique_date;
-	    $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".$date_info."\", \"".$histo."\", \"".$i."\");"));
+    // Préparation de la requête de sélection
+    $sth = $dbh->prepare("
+        SELECT historique_index
+        FROM historique
+        WHERE historique_date = :historique_date
+        AND historique_texte = :historique_texte
+        AND historique_id = :historique_id
+    ");
+
+    // Exécution de la requête avec des paramètres liés
+    $sth->execute([
+        ':historique_date' => $date_info,
+        ':historique_texte' => $histo,
+        ':historique_id' => $i
+    ]);
+
+    // Récupération des résultats
+    $do_i_insert_histo = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+    // Fermeture du curseur
+    $sth->closeCursor();
+
+    if (!isset($do_i_insert_histo[0])) {
+        $historique_date = ($historique_date == NULL) ? "0000-00-00" : $historique_date;
+
+        // Préparation de la requête d'insertion
+        $sth = $dbh->prepare("
+            INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id)
+            VALUES (NULL, :historique_date, :historique_texte, :historique_id)
+        ");
+
+        // Exécution de la requête avec des paramètres liés
+        $sth->execute([
+            ':historique_date' => $date_info,
+            ':historique_texte' => $histo,
+            ':historique_id' => $i
+        ]);
+        
+        $message.= $message_success_add;
+    } else {
+        // TODO: écrire un message comme quoi l’entrée était déjà dans la base donc n’a pas été ajoutée
+        $message.="<p class=\"error_message\" id=\"disappear_delay\">Une entrée exactement identique existait déjà. L’entrée n’a pas été ajoutée.</p>";
     }
-    else {/* TODO: écrire un message comme quoi l’entrée était déjà dans la base donc n’a pas été ajoutée*/}
 }
 
 // Suppression d’une entrée dans l’historique
@@ -58,9 +93,23 @@ if ($del_h_confirm=="Confirmer la suppression") {
 // historique
 $hide_auto_cmd = ($hide_auto=="1") ? "AND `historique_texte` NOT LIKE '%<!--auto-->%'" : "" ;
 
-$sth = $dbh->query("SELECT * FROM historique WHERE historique_id=$i $hide_auto_cmd ORDER BY historique_date DESC, historique_index DESC ;");
-$historique = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-if ($sth) $sth->closeCursor();
+// Préparation de la requête de sélection
+$sth = $dbh->prepare("
+    SELECT *
+    FROM historique
+    WHERE historique_id = :historique_id
+    $hide_auto_cmd
+    ORDER BY historique_date DESC, historique_index DESC
+");
+
+// Exécution de la requête avec des paramètres liés
+$sth->execute([':historique_id' => $i]);
+
+// Récupération des résultats
+$historique = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+// Fermeture du curseur
+$sth->closeCursor();
 
 
 
@@ -74,7 +123,10 @@ if ($sth) $sth->closeCursor();
 */
 echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
 
+
     echo "<h1>Journal</h1>";
+    
+    echo $message;
 
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
     if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=".$i."".$quick."\">";
