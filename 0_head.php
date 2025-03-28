@@ -67,7 +67,7 @@
     ═╩╝╩╚═╝╩ ╩╩  ╩  ╚═╝╩ ╩╩╚═  ═╩╝╚═╝╩═╝╩ ╩ ╩   -->
     <script type="text/javascript">
       $j(document).ready( function() {
-        $j('#disappear_delay').delay(2000).fadeOut();
+        $j('#disappear_delay').delay(5000).fadeOut();
       });
     </script>
 
