@@ -9,7 +9,7 @@
    ╚═╝   ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝ ╚══▀▀═╝  ╚═════╝ ╚══════╝
 */
 
-$message="";
+$message = "";
 
 /*
  █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
@@ -19,25 +19,11 @@ $message="";
 ██║  ██║██║  ██║██║  ██║██║  ██║   ██║
 ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
 */
-// tags
-$sth = $dbh->query("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
-$tags = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-
-if (!isset($fieldset_tags)) {
-	// tags_i les tags de $i
-	$sth = $dbh->query("SELECT tags_index FROM tags WHERE tags_id=$i ;");
-	$tags = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-}
-
-if (!isset($fieldset_compatibilite)) {
-	// compatibilité de $i
-	$sth = $dbh->query("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
-	$compatibilite = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-}
-
-// tous les lab_id classé par catégorie
-$sth = $dbh->query("SELECT base_index, lab_id, categorie, categorie_lettres, categorie_nom FROM base, categorie WHERE categorie=categorie_index ORDER BY categorie_nom ASC ;");
-$labids_cat = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+// Tous les lab_id classés par catégorie
+$sth = $dbh->prepare("SELECT base_index, lab_id, categorie, categorie_lettres, categorie_nom FROM base, categorie WHERE categorie = categorie_index ORDER BY categorie_nom ASC;");
+$sth->execute();
+$labids_cat = $sth->fetchAll(PDO::FETCH_ASSOC);
+$sth->closeCursor();
 
 
 /*
@@ -48,143 +34,77 @@ $labids_cat = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
 ██║ ╚═╝ ██║╚██████╔╝██████╔╝██║██║██╗      ███████║╚██████╔╝███████╗
 ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝╚═╝      ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
-if ( isset($_POST["technique_valid"]) ) {
+if (isset($_POST["technique_valid"])) {
 
-    $arr = array("categorie", "plus_categorie_nom", "plus_categorie_abbr", "lab_id", "id_man", "marque", "plus_marque", "plus_marque_nom", "reference", "serial_number", "plus_tags");
+    $arr = ["categorie", "plus_categorie_nom", "plus_categorie_abbr", "lab_id", "id_man", "marque", "plus_marque", "plus_marque_nom", "reference", "serial_number", "plus_tags"];
     foreach ($arr as &$value) {
-        $$value= isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "" ;
+        $$value = isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "";
     }
 
+	/*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔╦╗╔═╗╦═╗╔═╗ ╦ ╦╔═╗
+		║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣
+		╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩ ╩╩ ╩╩╚═╚═╝╚╚═╝╚═╝  */
+    if ($marque == "plus_marque") {
+        if (!empty($plus_marque_nom)) {
+            $sth = $dbh->prepare("INSERT INTO marque (marque_nom) VALUES (:nom)");
+            $sth->execute([':nom' => $plus_marque_nom]);
+            $marque = return_last_id("marque_index", "marque");
 
-/*  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔╦╗╦╔╗ ╦  ╦╔╦╗╔═╗╔═╗
-    ║  ║ ║║║║╠═╝╠═╣ ║ ║╠╩╗║  ║ ║ ║╣ ╚═╗
-    ╚═╝╚═╝╩ ╩╩  ╩ ╩ ╩ ╩╚═╝╩═╝╩ ╩ ╚═╝╚═╝ */
-    // Supprimer tous les compatibilités de cette entrée pour réinitialiser
-    $delcount = $dbh->exec("DELETE FROM compatibilite WHERE compatib_id1=$i OR compatib_id2=$i ;");
-
-    // Ajout des compatibilités
-    if (isset($_POST["compatibilite"])) {
-        $allc="";
-        foreach ($_POST["compatibilite"] as $c) $allc.= "(".$c[0].",$i),";
-        $allc=substr($allc, 0, -1); // suppression du dernier caractère
-	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO compatibilite (compatib_id1, compatib_id2) VALUES $allc ; "));
-    }
-    // refaire compatibilité de $i
-    $sth = $dbh->query("SELECT * FROM compatibilite WHERE compatib_id1=\"$i\" OR compatib_id2=\"$i\" ;");
-    $compatibilite_query = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-    $compatibilite = array();
-    foreach ($compatibilite_query as $c) {
-    	$compatibilite[]= ($l["compatib_id1"]==$i) ? $l["compatib_id2"] : $l["compatib_id1"] ;
-    }
-
-/*  ╔╦╗╔═╗╔═╗╔═╗
-     ║ ╠═╣║ ╦╚═╗
-     ╩ ╩ ╩╚═╝╚═╝    */
-    // Supprimer tous les tags de cette entrée pour réinitialiser
-    $delcount = $dbh->exec("DELETE FROM tags WHERE tags_id=$i;");
-
-    // Nouveaux tags
-    if ($plus_tags!="") {
-        // TODO : une page administration permettant de supprimer des tags ou d’en fusionner,…
-        // Nouveaux tags dans tags_list
-        $new_tag = explode(',',$plus_tags);
-        $allnewtags=""; $allnewtagscomma="";
-
-        foreach ($new_tag as &$nt) {
-            $nt= ($nt[0]!=" ") ? $nt : substr($nt,1) ; // supp premier caractère si c’est un espace
-            if ( in_array_r($nt,$tags) ) $allnewtagscomma.= "'$nt',"; // Recherche si le tag est déjà dans $tags
-            else { // si le tag n’existe pas déjà, on l’ajoute dans la liste des tags à créer
-                $allnewtags.= "(NULL,'$nt'),";
-                $allnewtagscomma.= "'$nt',";
-            }
-        }
-        $allnewtags=substr($allnewtags, 0, -1); // suppression du dernier caractère
-        $allnewtagscomma=substr($allnewtagscomma, 0, -1); // suppression du dernier caractère
-        if ($allnewtagscomma!="") {
-		$sth = $dbh->query("INSERT INTO tags_list (tags_list_index, tags_list_nom) VALUES $allnewtags ;");
-	        // Nouveaux tags dans tags de $i
-	        $allnewtags_index="";
-        	// tagnew_i les tags de $i
-		$sth = $dbh->query("SELECT tags_list_index FROM tags_list WHERE tags_list_nom IN ($allnewtagscomma) ;");
-		$table_tagnew_i = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-		foreach ($table_tagnew_i as $nt) $allnewtags_index.= "('".$nt["tags_list_index"]."','$i')," ;
-	        $allnewtags_index=substr($allnewtags_index, 0, -1); // suppression du dernier caractère
-		$sth = $dbh->query("INSERT INTO tags (tags_index, tags_id) VALUES $allnewtags_index ;");
+            array_push($marques, ["marque_index" => $marque, "marque_nom" => $plus_marque_nom]);
+        } else {
+        	$message.="<p class=\"error_message\" id=\"disappear_delay\">Le nom de la nouvelle marque ne peut être vide, marque indéfinie.</p>";
+        	$error=1;
+        	$marque=0;
         }
     }
+    
+	/*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔═╗╦═╗╦╔═╗
+		║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣
+		╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝    */
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	/*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
+		║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
+		╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
+	if (!$error) {
+		// Préparation de la requête de mise à jour
+		$sth = $dbh->prepare("
+		    UPDATE base
+		    SET marque = :marque,
+		        reference = :reference,
+		        serial_number = :serial_number
+		    WHERE base_index = :base_index
+		");
 
+		// Exécution de la requête avec des paramètres liés
+		$modif_result = $sth->execute([
+		    ':marque' => $marque,
+		    ':reference' => $reference,
+		    ':serial_number' => $serial_number,
+		    ':base_index' => $i
+		]);
 
-    // Ajout des tags
-    if (isset($_POST["tags"])) {
-        $allt="";
-        foreach ($_POST["tags"] as $ta) $allt.= "(".$ta.",$i),";
-        $allt=substr($allt, 0, -1); // suppression du dernier caractère
-	$sth = $dbh->query("INSERT INTO tags (tags_index, tags_id) VALUES $allt ;");
+		$message .= $message_success_modif;
 
-    }
-
-    // refaire tags et tags de $i avant affichage
-    // $tags_list
-    $sth = $dbh->query("SELECT * FROM tags_list WHERE tags_list_index!=0 ORDER BY tags_list_nom ASC ;");
-    $tags = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-
-    // tags_i les tags de $i
-    $sth = $dbh->query("SELECT tags_index FROM tags WHERE tags_id=$i ;");
-    $tags_i = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-
-
-/*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔╦╗╔═╗╦═╗╔═╗ ╦ ╦╔═╗
-    ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣
-    ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩ ╩╩ ╩╩╚═╚═╝╚╚═╝╚═╝  */
-    if ($marque=="plus_marque") {
-	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO marque (marque_nom) VALUES ('".$plus_marque_nom."') ;"));
-        /* TODO : prévoir le cas où la marque existe déjà */
-	$marque=return_last_id("marque_index","marque");
-
-        // on ajoute cette entrée dans le tableau des marques (utilisé pour le select)
-	array_push($marques, array("marque_index" => $marque, "marque_nom" => $plus_marque_nom ) );
-    }
-
-
-/*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔═╗╦═╗╦╔═╗
-    ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣
-    ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝    */
-    if ($categorie=="plus_categorie") {
-	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$plus_categorie_abbr."\",\"".$plus_categorie_nom."\") ;"));
-        /* TODO : prévoir le cas où la catégorie existe déjà */
-	$categorie=return_last_id("categorie_index","categorie");
-
-        // on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
-	array_push($categories, array("categorie_index" => $categorie, "categorie_lettres" => $plus_categorie_nom, "categorie_nom" => $plus_categorie_abbr ) );
-        // TODO Attention l’abréviation ne doit contenir que des lettres !
-    }
-
-
-
-/*  ╦  ╔═╗╔╗  ╦╔╦╗
-    ║  ╠═╣╠╩╗ ║ ║║
-    ╩═╝╩ ╩╚═╝┘╩═╩╝  */
-    // Si on change la catégorie, il est nécessaire de changer également le lab_id !
-    if ($data[0]["categorie"]!=$categorie) $data[0]["lab_id"]=new_lab_id($categorie);
-
-    if ($lab_id=="manual_id") {
-        if ($id_man!="") $lab_id=$id_man;
-        else {/* si manuel mais vide → auto */}
-    }
-
-
-/*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
-    ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
-    ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-    $modif_result = $dbh->query(str_replace("\"\"", "NULL","UPDATE base SET marque='".$marque."', reference='".$reference."', serial_number='".$serial_number."', categorie='".$categorie."', lab_id='".$lab_id."' WHERE base.base_index = $i;"));
-    $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
-
-    // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
-    $data[0]["marque"]=$marque;
-    $data[0]["serial_number"]=$serial_number;
-    $data[0]["reference"]=$reference;
-    $data[0]["categorie"]=$categorie;
-
+	}
+	// Avant d’afficher, on doit ajouter les nouvelles infos dans les arrays concernés
+	$data[0]["marque"] = $marque;
+	$data[0]["serial_number"] = $serial_number;
+	$data[0]["reference"] = $reference;
 }
 
 
@@ -197,49 +117,74 @@ if ( isset($_POST["technique_valid"]) ) {
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝
 */
 echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
+echo "<h1>Technique</h1>";
 
-    echo "<h1>Technique</h1>";
+echo $message;
 
-    echo $message;
-
-    $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
-    if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=".$i."".$quick."\">";
+$quick = (isset($_GET["quick_page"])) ? "&quick_page=" . $_GET["quick_page"] . "&quick_name=" . $_GET["quick_name"] : "";
+if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=" . $i . $quick . "\">";
 
 /*  ╦═╗╔═╗╔═╗╔═╗╦═╗╔═╗╔╗╔╔═╗╔═╗  ╦╔╗╔╦╗╔═╗╦═╗╔╗╔╔═╗
     ╠╦╝║╣ ╠╣ ║╣ ╠╦╝║╣ ║║║║  ║╣   ║║║║║ ║╣ ╠╦╝║║║║╣
     ╩╚═╚═╝╚  ╚═╝╩╚═╚═╝╝╚╝╚═╝╚═╝  ╩╝╚╝╩ ╚═╝╩╚═╝╚╝╚═╝    */
-    echo "<fieldset><legend>Référence interne</legend>";
+    
+echo "<fieldset><legend>Référence interne</legend>";
 
-        /* ########### categorie ########### */
-        echo "<label for=\"categorie\">Catégorie* : </label>\n";
-        echo "<select name=\"categorie\" onchange=\"display(this,'plus_categorie','plus_categorie');\" id=\"categorie\">";
-        echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["categorie"]=="0") echo "selected";} echo ">— Aucune catégorie spécifiée —</option>";
-        echo "<option value=\"plus_categorie\" "; if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "selected";} echo ">— Nouvelle catégorie : —</option>";
-        option_selecteur(  (isset($data[0])) ? $data[0]["categorie"] : ""  , $categories, "categorie_index", "categorie_nom", "categorie_lettres", "display()");
-        echo "</select><br/>";
-		/*select2 pour recherche */
-		echo "<script>
-			\$j(document).ready(function() {
-				\$j('#categorie').select2({width: '270px'});
-			});
-		</script>";
-        
+/* ########### categorie ########### */
+echo "<label for=\"categorie\">Catégorie* : </label>\n";
+echo "<select name=\"categorie\" onchange=\"display(this,'plus_categorie','plus_categorie');\" id=\"categorie\" required>";
+echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["categorie"]=="0") echo "selected";} echo ">— Aucune catégorie spécifiée —</option>";
 
-            /* ########### + categorie ########### */
-            echo "\n\n\n";
-            echo "<fieldset id=\"plus_categorie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Catégorie</legend>";
-                echo "<label for=\"plus_categorie_nom\">Nom* :</label>\n";
-                $deja_catnom=dejadanslabase("SELECT DISTINCT `categorie_nom` FROM `categorie` ");
-                echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\" pattern=\"^(?!(".$deja_catnom.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /><br/>\n";
+echo "<option value=\"plus_categorie\" "; if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "selected";} echo ">— Nouvelle catégorie : —</option>";
+option_selecteur(  (isset($data[0])) ? $data[0]["categorie"] : ""  , $categories, "categorie_index", "categorie_nom", "categorie_lettres", "display()");
+echo "</select><br/>\n\n";
 
-                echo "<label for=\"plus_categorie_abbr\">Abbréviation* <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
-                $deja_abrev=dejadanslabase("SELECT DISTINCT `categorie_lettres` FROM `categorie` ;");
-				echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($deja_abrev))([A-Za-z]{1,4})$\" ";
-					if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "required ";}
-				echo "oninvalid=\"setCustomValidity('Abbréviation (1 à 4 caractères) déjà utilisée ?')\"  oninput=\"setCustomValidity('')\" >\n";
+echo "<script>\n
+	\$j(document).ready(function() {
+		// Initialisation de Select2
+		\$j('#categorie').select2({
+		    width: '270px'
+		});
 
-            echo "</fieldset>";
-            echo "\n\n\n";
+		// Validation personnalisée
+		\$j('#categorie').on('change', function() {
+		    if ($(this).val() === \"0\") {
+		        $(this)[0].setCustomValidity('Champ obligatoire');
+		    } else {
+		        $(this)[0].setCustomValidity('');
+		    }
+		});
+
+		// Vérification avant la soumission du formulaire
+		$('form').on('submit', function(event) {
+		    if ($('#categorie').val() === \"0\") {
+		        event.preventDefault(); // Empêche la soumission
+		        $('#categorie')[0].setCustomValidity('Champ obligatoire');
+		        $('#categorie')[0].reportValidity(); // Affiche le message d'erreur
+		    }
+		});
+	});
+</script>";
+
+
+/* ########### + categorie ########### */
+echo "\n\n\n";
+echo "<fieldset id=\"plus_categorie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Catégorie</legend>";
+    echo "<label for=\"plus_categorie_nom\">Nom* :</label>\n";
+    $deja_catnom=dejadanslabase("SELECT DISTINCT `categorie_nom` FROM `categorie` ");
+    echo "<input value=\"\" name=\"plus_categorie_nom\" type=\"text\" pattern=\"^(?!(".$deja_catnom.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /><br/>\n";
+
+    echo "<label for=\"plus_categorie_abbr\">Abbréviation* <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
+    $deja_abrev=dejadanslabase("SELECT DISTINCT `categorie_lettres` FROM `categorie` ;");
+	echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($deja_abrev))([A-Za-z]{1,4})$\" ";
+		if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "required ";}
+	echo "oninvalid=\"setCustomValidity('Abbréviation (1 à 4 caractères) déjà utilisée ?')\"  oninput=\"setCustomValidity('')\" >\n";
+
+echo "</fieldset>";
+echo "\n\n\n";
+
+    
+
 
         /* ########### lab_id ########### */
         echo "<label for=\"lab_id\">";
@@ -286,59 +231,64 @@ echo "<div id=\"bloc\" style=\"background:#b4e287; vertical-align:top;\">";
 
     echo "</fieldset>";
     
-echo "</fieldset>";
-
-
+echo "</fieldset>";    
+    
+    
+    
+    
+    
+    
+    
+    
 /*  ╦═╗╔═╗╔═╗╔═╗╦═╗╔═╗╔╗╔╔═╗╔═╗  ╔═╗╔═╗╔╗╔╔═╗╔╦╗╦═╗╦ ╦╔═╗╔╦╗╔═╗╦ ╦╦═╗
     ╠╦╝║╣ ╠╣ ║╣ ╠╦╝║╣ ║║║║  ║╣   ║  ║ ║║║║╚═╗ ║ ╠╦╝║ ║║   ║ ║╣ ║ ║╠╦╝
     ╩╚═╚═╝╚  ╚═╝╩╚═╚═╝╝╚╝╚═╝╚═╝  ╚═╝╚═╝╝╚╝╚═╝ ╩ ╩╚═╚═╝╚═╝ ╩ ╚═╝╚═╝╩╚═   */
-    echo "<fieldset><legend>Référence constructeur</legend>";
+echo "<fieldset><legend>Référence constructeur</legend>";
 
-        /* ########### marque ########### */
-        echo "<label for=\"marque\">marque : </label>\n";
-        echo "<select name=\"marque\" onchange=\"display(this,'plus_marque','plus_marque');\" id=\"marque\">";
-		echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["marque"]=="0") echo "selected";} echo ">— aucune marque spécifiée —</option>";
-        echo "<option value=\"plus_marque\" "; if (isset($data[0]["marque"])) { if ($data[0]["marque"]=="plus_marque") echo "selected";} echo ">− nouvelle marque : −</option>";
-        option_selecteur(  (isset($data[0])) ? $data[0]["marque"] : ""  , $marques, "marque_index", "marque_nom");
-        echo "</select><br/>";
-		/*select2 pour recherche */
-		echo "<script>
-			\$j(document).ready(function() {
-				\$j('#marque').select2({width: '270px'});
-			});
-		</script>";        
+/* ########### marque ########### */
+echo "<label for=\"marque\">Marque : </label>\n";
+echo "<select name=\"marque\" onchange=\"display(this,'plus_marque','plus_marque');\" id=\"marque\">";
+echo "<option value=\"0\" "; if (isset($data[0])) { if ($data[0]["marque"] == "0") echo "selected"; } echo ">— Aucune marque spécifiée —</option>";
+echo "<option value=\"plus_marque\" "; if (isset($data[0]["marque"])) { if ($data[0]["marque"] == "plus_marque") echo "selected"; } echo ">− Nouvelle marque : −</option>";
+option_selecteur((isset($data[0])) ? $data[0]["marque"] : "", $marques, "marque_index", "marque_nom");
+echo "</select><br/>";
+echo "<script>
+    \$j(document).ready(function() {
+        // Initialisation de Select2
+        \$j('#marque').select2({
+            width: '270px'
+        });
+    });
+</script>";
 
-            /* ########### + marque ########### */
-            echo "\n\n\n";
-            echo "<fieldset id=\"plus_marque\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Marque</legend>";
-                echo "<label for=\"plus_marque_nom\">Nom* :</label>\n";
+/* ########### + marque ########### */
+echo "\n\n\n";
+echo "<fieldset id=\"plus_marque\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvelle Marque</legend>";
+echo "<label for=\"plus_marque_nom\">Nom* :</label>\n";
+$deja_marque = dejadanslabase("SELECT DISTINCT `marque_nom` FROM `marque` ");
+echo "<input value=\"\" name=\"plus_marque_nom\" type=\"text\"  pattern=\"^(?!(" . $deja_marque . ")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" / >\n";
+echo "</fieldset>";
+echo "\n\n\n";
 
-                $deja_marque=dejadanslabase("SELECT DISTINCT `marque_nom` FROM `marque` ");
-                echo "<input value=\"\" name=\"plus_marque_nom\" type=\"text\"  pattern=\"^(?!(".$deja_marque.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" / >\n";
-            echo "</fieldset>";
-            echo "\n\n\n";
+/* ########### reference ########### */
+echo "<label for=\"reference\">Référence : </label>\n";
+echo "<input value=\""; if (isset($data[0])) echo $data[0]["reference"]; echo "\" name=\"reference\" type=\"text\" id=\"reference\">";
+echo "<br/>";
 
-        /* ########### reference ########### */
-        echo "<label for=\"reference\">Référence : </label>\n";			echo "<input value=\""; if (isset($data[0])) echo $data[0]["reference"]; echo "\" name=\"reference\" type=\"text\" id=\"reference\">";
-        echo "<br/>";
+/* ########### serial_number ########### */
+echo "<label for=\"serial_number\">Numéro de série : </label>\n";
+echo "<input value=\""; if (isset($data[0])) echo $data[0]["serial_number"]; echo "\" name=\"serial_number\" type=\"text\" id=\"serial_number\"><br/>";
 
-        /* ########### serial_number ########### */
-        echo "<label for=\"serial_number\">Numéro de série : </label>\n";	echo "<input value=\""; if (isset($data[0])) echo $data[0]["serial_number"]; echo "\" name=\"serial_number\" type=\"text\" id=\"serial_number\"><br/>";
-
-    echo "</fieldset>";
-
+echo "</fieldset>";
 
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
-    if ($write) echo "<p style=\"text-align:center;\"><input name=\"technique_valid\" value=\"Enregistrer\" type=\"submit\" class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser
+if ($write) echo "<p style=\"text-align:center;\"><input name=\"technique_valid\" value=\"Enregistrer\" type=\"submit\" class=\"little_button\" /></p>";
+if ($write) echo "</form>";
 
-    if ($write) echo "</form>";
-
-echo "<p style=\"text-align:right;\"><small>* champ obligatoire</small></p>"; 
+echo "<p style=\"text-align:right;\"><small>* champ obligatoire</small></p>";
 
 echo "</div>";
-
-
-
 ?>
+
