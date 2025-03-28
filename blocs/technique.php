@@ -78,41 +78,21 @@ if (isset($_POST["technique_valid"])) {
 			$categorie=return_last_id("categorie_index","categorie");
 			// on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
 			
-			
-			
-			//array_push($categories, array("categorie_lettres" => $plus_categorie_nom, "categorie_nom" => $plus_categorie_abbr ) );
-			
 			array_push($categories, array(
 				"categorie_index"   => $categorie,       // L'ID retourné
 				"categorie_nom"     => $plus_categorie_nom,  // Le nom complet
 				"categorie_lettres" => $plus_categorie_abbr  // L'abréviation
 			));
-			
-			
-			
-			
-			// TODO Attention l’abréviation ne doit contenir que des lettres !
 		}
-    }		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+    }
+    
+    if ( ($lab_id=="manual_id") && ( empty($id_man) ) ) {
+		$message.= "<p class=\"error_message\" id=\"disappear_delay\">Si vous sélectionnez Id manuel, renseignez l’identifiant !</p>";
+		$error=1;
+		$lab_id="";
+    }
 
-		
-		
-		
-		
-		
-		
-		
+
 	/*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
 		║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
 		╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
@@ -281,7 +261,7 @@ echo "<fieldset><legend>Référence interne</legend>";
 
 
             $deja_idman=dejadanslabase("SELECT DISTINCT `lab_id` FROM `base` ;");
-			echo "<input value=\"\" name=\"id_man\" type=\"text\" pattern=\"^(?!(".$deja_idman.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /} \n";
+			echo "<input value=\"\" name=\"id_man\" type=\"text\" pattern=\"^(?!(".$deja_idman.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" / > \n";
 
         echo "</fieldset>";
         echo "\n\n\n";
