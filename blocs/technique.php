@@ -54,14 +54,46 @@ if (isset($_POST["technique_valid"])) {
         } else {
         	$message.="<p class=\"error_message\" id=\"disappear_delay\">Le nom de la nouvelle marque ne peut être vide, marque indéfinie.</p>";
         	$error=1;
-        	$marque=0;
+        	$marque="0";
         }
     }
     
 	/*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔═╗╦═╗╦╔═╗
 		║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣
 		╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝    */
-		
+    if ($categorie=="plus_categorie") {
+
+		if ( (empty($plus_categorie_abbr)) || (empty($plus_categorie_nom) ) ) {
+			$message.= "<p class=\"error_message\" id=\"disappear_delay\">Pour créer une nouvelle catégorie, remplir les champs obligatoires</p>";
+			$error=1;
+			$categorie="";
+		}
+		else {
+			$sth = $dbh->prepare("INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (:lettres, :nom)");
+			$sth->execute([
+				':lettres' => !empty($plus_categorie_abbr) ? $plus_categorie_abbr : null,
+				':nom' => !empty($plus_categorie_nom) ? $plus_categorie_nom : null
+			]);
+			/* TODO : prévoir le cas où la catégorie existe déjà */
+			$categorie=return_last_id("categorie_index","categorie");
+			// on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
+			
+			
+			
+			//array_push($categories, array("categorie_lettres" => $plus_categorie_nom, "categorie_nom" => $plus_categorie_abbr ) );
+			
+			array_push($categories, array(
+				"categorie_index"   => $categorie,       // L'ID retourné
+				"categorie_nom"     => $plus_categorie_nom,  // Le nom complet
+				"categorie_lettres" => $plus_categorie_abbr  // L'abréviation
+			));
+			
+			
+			
+			
+			// TODO Attention l’abréviation ne doit contenir que des lettres !
+		}
+    }		
 		
 		
 		
@@ -86,7 +118,8 @@ if (isset($_POST["technique_valid"])) {
 		    UPDATE base
 		    SET marque = :marque,
 		        reference = :reference,
-		        serial_number = :serial_number
+		        serial_number = :serial_number,
+		        categorie = :categorie
 		    WHERE base_index = :base_index
 		");
 
@@ -95,6 +128,7 @@ if (isset($_POST["technique_valid"])) {
 		    ':marque' => $marque,
 		    ':reference' => $reference,
 		    ':serial_number' => $serial_number,
+		    ':categorie' => $categorie,
 		    ':base_index' => $i
 		]);
 
@@ -105,6 +139,7 @@ if (isset($_POST["technique_valid"])) {
 	$data[0]["marque"] = $marque;
 	$data[0]["serial_number"] = $serial_number;
 	$data[0]["reference"] = $reference;
+	$data[0]["categorie"] = $categorie;
 }
 
 
@@ -134,36 +169,35 @@ echo "<fieldset><legend>Référence interne</legend>";
 echo "<label for=\"categorie\">Catégorie* : </label>\n";
 echo "<select name=\"categorie\" onchange=\"display(this,'plus_categorie','plus_categorie');\" id=\"categorie\" required>";
 echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["categorie"]=="0") echo "selected";} echo ">— Aucune catégorie spécifiée —</option>";
-
 echo "<option value=\"plus_categorie\" "; if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "selected";} echo ">— Nouvelle catégorie : —</option>";
 option_selecteur(  (isset($data[0])) ? $data[0]["categorie"] : ""  , $categories, "categorie_index", "categorie_nom", "categorie_lettres", "display()");
 echo "</select><br/>\n\n";
 
 echo "<script>\n
-	\$j(document).ready(function() {
-		// Initialisation de Select2
-		\$j('#categorie').select2({
-		    width: '270px'
-		});
+    \$j(document).ready(function() {
+        // Initialisation de Select2
+        \$j('#categorie').select2({
+            width: '270px'
+        });
 
-		// Validation personnalisée
-		\$j('#categorie').on('change', function() {
-		    if ($(this).val() === \"0\") {
-		        $(this)[0].setCustomValidity('Champ obligatoire');
-		    } else {
-		        $(this)[0].setCustomValidity('');
-		    }
-		});
+        // Validation personnalisée
+        $('#categorie').on('change', function() {
+            if ($(this).val() === \"0\") {
+                $(this)[0].setCustomValidity('Champ obligatoire');
+            } else {
+                $(this)[0].setCustomValidity('');
+            }
+        });
 
-		// Vérification avant la soumission du formulaire
-		$('form').on('submit', function(event) {
-		    if ($('#categorie').val() === \"0\") {
-		        event.preventDefault(); // Empêche la soumission
-		        $('#categorie')[0].setCustomValidity('Champ obligatoire');
-		        $('#categorie')[0].reportValidity(); // Affiche le message d'erreur
-		    }
-		});
-	});
+        // Vérification avant la soumission du formulaire
+        $('form').on('submit', function(event) {
+            if ($('#categorie').val() === \"0\") {
+                event.preventDefault(); // Empêche la soumission
+                $('#categorie')[0].setCustomValidity('Champ obligatoire');
+                $('#categorie')[0].reportValidity(); // Affiche le message d'erreur
+            }
+        });
+    });
 </script>";
 
 
@@ -176,9 +210,14 @@ echo "<fieldset id=\"plus_categorie\" class=\"subfield\" style=\"display: none;\
 
     echo "<label for=\"plus_categorie_abbr\">Abbréviation* <abbr title=\"4 caractères max, pas de chiffres\"><strong>ⓘ</strong></abbr> :</label>\n";
     $deja_abrev=dejadanslabase("SELECT DISTINCT `categorie_lettres` FROM `categorie` ;");
-	echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($deja_abrev))([A-Za-z]{1,4})$\" ";
-		if (isset($data[0])) {if ($data[0]["categorie"]=="plus_categorie") echo "required ";}
-	echo "oninvalid=\"setCustomValidity('Abbréviation (1 à 4 caractères) déjà utilisée ?')\"  oninput=\"setCustomValidity('')\" >\n";
+	echo "<input value=\"\" name=\"plus_categorie_abbr\" type=\"text\" maxlength=\"4\" minlength=\"1\" pattern=\"^(?!($deja_abrev))([A-Za-z]{1,4})$\" id=\"plus_categorie_abbr\" oninvalid=\"setCustomValidity('Abbréviation (1 à 4 caractères) déjà utilisée ?')\" oninput=\"setCustomValidity('')\" >\n";
+	
+	echo"<script>
+	  document.getElementById('plus_categorie_abbr').addEventListener('input', function(e) {
+		// Remplacer tout caractère qui n'est pas une lettre A-Z ou a-z par rien
+		this.value = this.value.replace(/[^A-Za-z]/g, '');
+	  });
+	</script>";
 
 echo "</fieldset>";
 echo "\n\n\n";
