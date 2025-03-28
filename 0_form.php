@@ -45,7 +45,7 @@ $IOT_CMD= ($IOT!="") ? "AND sortie IN ($IOT)" : "AND sortie IN (0,2)" ;
 // $categories in tables_sql_commun.php
 selecteur_selectwo("CAT", $categories, "Toutes catégories", "categorie_index", "categorie_nom", "categorie_lettres", "display()");
 $CAT_CMD= ($CAT!="") ? "AND categorie_index IN ($CAT)" : "" ;
-
+echo "<br/>Note&nbsp;: si une catégorie est sélectionnée, les caractéristiques s’affichent en colonnes indépendantes triables/filtrables";
 
 /*#########################################################################
 #                           SEA : Recherche                             #
