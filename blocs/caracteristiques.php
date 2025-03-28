@@ -155,8 +155,8 @@ echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
         if ($c["unite_carac"]=="bool") {
             echo "\n\t<select name='carac[".$c["carac"]."]' id='carac_".$c["carac"]."_'>";
             echo "\n\t\t<option value=''>Non renseigné</option>";
-            echo "\n\t\t<option value='1' "; if ($caracs_i[$keys[0]]["carac_valeur"]=="1") echo 'selected'; echo ">Oui</option>";
-            echo "\n\t\t<option value='0' "; if ($caracs_i[$keys[0]]["carac_valeur"]=="0") echo 'selected'; echo ">Non</option>";
+            echo "\n\t\t<option value='1' "; if (array_key_exists("0",$keys)) { if ($caracs_i[$keys[0]]["carac_valeur"]=="1") echo 'selected';} echo ">Oui</option>";
+            echo "\n\t\t<option value='0' "; if (array_key_exists("0",$keys)) { if ($caracs_i[$keys[0]]["carac_valeur"]=="0") echo 'selected';} echo ">Non</option>";
             echo "\n\t</select>\n";
             /*select2 pour recherche */
 			echo "<script>
