@@ -207,7 +207,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 
         /* ########### designation ########### */
         echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation* :</label>\n";
-        echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"31px\"";
+        echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"31px\" required ";
         echo "value=\""; if (isset($data[0])) { echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";} echo "\" ><br/>\n";
 
         /* ########### vendeur ########### */
