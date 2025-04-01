@@ -128,8 +128,13 @@ foreach ($arr as &$value) {
 }
 
 if ($del_e_confirm=="Confirmer la suppression") {
-    $delresult = $dbh->exec("DELETE FROM entretien WHERE e_index=$e_del AND e_id=$i;");
-    $message.=($delresult!="") ? $message_success_del : $message_error_del;
+	$sth = $dbh->prepare("DELETE FROM entretien WHERE e_index = :e_index AND e_id = :e_id");
+	$sth->execute([
+		':e_index' => $e_del,
+		':e_id'    => $i
+	]);
+	$delresult = $sth->rowCount();
+	$message .= ($delresult > 0) ? $message_success_del : $message_error_del;
 }
 
 
