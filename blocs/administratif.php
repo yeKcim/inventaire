@@ -71,22 +71,33 @@ if ( isset($_POST["administratif_valid"]) ) {
 			    "vendeur_remarques" => $plus_vendeur_remarque
 			];
 		} else {
-			   		echo "<p class='error_message'>Erreur : Le nom du nouveau vendeur est vide, l’entrée a été définie comme non spécifiée.</p>";
+			   		$message.= "<p class=\"error_message\" id=\"disappear_delay\">Erreur : Le nom du nouveau vendeur est vide, l’entrée a été définie comme non spécifiée.</p>";
 			   		$vendeur="0";
+			   		$error=1;
 		}
 	}
 
-	if ($contrat_type == "plus_contrat_type") {
-
-		$sth = $dbh->prepare("INSERT INTO contrat_type (contrat_type_cat) VALUES (:plus_contrat_type_nom)");				// Prépare la requête avec un paramètre lié
-		$sth->execute([':plus_contrat_type_nom' => !empty($plus_contrat_type_nom) ? $plus_contrat_type_nom : null]);		// Exécute avec une valeur NULL si la variable est vide
-		$contrat_type = return_last_id("contrat_type_index", "contrat_type");												// Récupère l'ID du dernier enregistrement
-		array_push($types_contrats, ["contrat_type_index" => $contrat_type,"contrat_type_cat" => $plus_contrat_type_nom]);	// Ajoute l'entrée dans le tableau
-		$sth->closeCursor();																								// Ferme le curseur
+	/* ########### Ajout d’un nouveau type de contrat ########### */
+	if (  ($contrat_type == "plus_contrat_type") && (!$error)  ) {
+	
+		if (!empty($plus_contrat_type_nom)) {
+			$sth = $dbh->prepare("INSERT INTO contrat_type (contrat_type_cat) VALUES (:plus_contrat_type_nom)");				// Prépare la requête avec un paramètre lié
+			$sth->execute([':plus_contrat_type_nom' => !empty($plus_contrat_type_nom) ? $plus_contrat_type_nom : null]);		// Exécute avec une valeur NULL si la variable est vide
+			$contrat_type = return_last_id("contrat_type_index", "contrat_type");												// Récupère l'ID du dernier enregistrement
+			array_push($types_contrats, ["contrat_type_index" => $contrat_type,"contrat_type_cat" => $plus_contrat_type_nom]);	// Ajoute l'entrée dans le tableau
+			$sth->closeCursor();																								// Ferme le curseur
+		}
+		else {
+			$contrat_type_index=0;
+			$contrat=0;
+		    $message.= "<p class=\"error_message\" id=\"disappear_delay\">Erreur : Le nouveau type de contrat est vide, l’entrée a été définie comme non spécifiée.</p>";
+		    $error=1;
+		}
 	}
-    
+
+
 /* ########### Ajout d’un nouveau contrat ########### */
-	if ($contrat == "plus_contrat") {
+	if ( ($contrat == "plus_contrat") && (!$error)  ) {
 		if (!empty($plus_contrat_nom)) { // Vérifier que le nom n’est pas vide
 		    $sth = $dbh->prepare("INSERT INTO contrat (contrat_nom, contrat_type) VALUES (?, ?)");
 		    $sth->execute([$plus_contrat_nom, $contrat_type]);
@@ -100,9 +111,12 @@ if ( isset($_POST["administratif_valid"]) ) {
 		        "contrat_type" => $contrat_type
 		    ];
 		} else {
-		    echo "<p class='error_message'>Erreur : Le nom du contrat est vide.</p>";
+			$contrat=0;
+		    $message.= "<p class=\"error_message\" id=\"disappear_delay\">Erreur : Le nom du contrat est vide, l’entrée a été définie comme non spécifiée.</p>";
+		    $error=1;
 		}
 	}
+
 
 	if ($tutelle == "plus_tutelle") {
 		if (!empty($plus_tutelle)) { // Vérifier que le nom n’est pas vide
@@ -112,60 +126,91 @@ if ( isset($_POST["administratif_valid"]) ) {
 			array_push($tutelles, ["tutelle_index" => $tutelle, "tutelle_nom" => $plus_tutelle]); 	// Ajoute l'entrée dans le tableau
 			$sth->closeCursor(); 																	// Ferme le curseur
 		} else {
-		   	echo "<p class='error_message'>Erreur : Le nom de la nouvelle tutelle est vide.</p>";
+		   	$message.= "<p class=\"error_message\" id=\"disappear_delay\">Erreur : Le nom de la nouvelle tutelle est vide, l’entrée a été définie comme non spécifiée.</p>";
+		   	$error=1;
+		   	$tutelle =0;
 		}															
 	}
 
     if ($responsable_achat=="plus_responsable_achat") {
         $plus_responsable_achat_nom=mb_strtoupper($plus_responsable_achat_nom);
         $plus_responsable_achat_phone=phone_display("$plus_responsable_achat_phone","");
-        $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES ('".$plus_responsable_achat_nom."', '".$plus_responsable_achat_prenom."','".$plus_responsable_achat_mail."','".$plus_responsable_achat_phone."') ; "));
-        /* TODO : prévoir le cas où le contrat existe déjà */
-	$responsable_achat=return_last_id("utilisateur_index","utilisateur");
-        // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-        array_push($utilisateurs, array("utilisateur_index" => $responsable_achat, "utilisateur_nom" => $plus_responsable_achat_nom, "utilisateur_prenom" => $plus_responsable_achat_prenom, "utilisateur_mail" => $plus_responsable_achat_mail, "utilisateur_phone" => $plus_responsable_achat_phone) );
-        if ($sth) $sth->closeCursor();
+        
+        
+        if (!empty($plus_responsable_achat_nom)) {
+        
+			$sql = "INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) 
+					VALUES (:nom, :prenom, :mail, :phone)";
+
+			$sth = $dbh->prepare($sql);
+			$sth->execute([
+				':nom'    => $plus_responsable_achat_nom,
+				':prenom' => $plus_responsable_achat_prenom,
+				':mail'   => $plus_responsable_achat_mail,
+				':phone'  => $plus_responsable_achat_phone
+			]);
+		    /* TODO : prévoir le cas où le responsable existe déjà */
+		$responsable_achat=return_last_id("utilisateur_index","utilisateur");
+		    // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
+		    array_push($utilisateurs, array("utilisateur_index" => $responsable_achat, "utilisateur_nom" => $plus_responsable_achat_nom, "utilisateur_prenom" => $plus_responsable_achat_prenom, "utilisateur_mail" => $plus_responsable_achat_mail, "utilisateur_phone" => $plus_responsable_achat_phone) );
+		    if ($sth) $sth->closeCursor();
+    	}
+    	else
+    	{
+			$error=1;
+			$responsable_achat=0;
+			$message.= "<p class=\"error_message\" id=\"disappear_delay\">Si vous sélectionnez « Nouveau responsable d’achat », renseignez au moins le nom ! L’entrée a été définie comme non spécifiée.</p>";
+    	}
+    
+
     }
 
-// TODO : prix avec une virgule ou un point ?
 
-/*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦  
-    ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║  
-    ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝     */
-    $date_achat=($date_achat==NULL) ? "0000-00-00" : $date_achat;
-    $garantie=($garantie==NULL) ? "0000-00-00" : $garantie;
 
-	$sql = "UPDATE base 
-		    SET designation        = :designation,
-		        vendeur            = :vendeur,
-		        prix               = :prix,
-		        contrat            = :contrat,
-		        date_achat         = :date_achat,
-		        garantie           = :garantie,
-		        bon_commande       = :bon_commande,
-		        num_inventaire     = :num_inventaire,
-		        tutelle            = :tutelle,
-		        responsable_achat  = :responsable_achat
-		    WHERE base_index = :i";
 
-	$sth = $dbh->prepare($sql);
-	$sth->execute([
-		':designation'       => ($designation       === "" ? null : $designation),
-		':vendeur'           => ($vendeur           === "" ? "0" : $vendeur),
-		':prix'              => ($prix              === "" ? "0" : $prix),
-		':contrat'           => ($contrat           === "" ? "0" : $contrat),
-		':date_achat'        => ($date_achat        === "" ? null : $date_achat),
-		':garantie'          => ($garantie          === "" ? null : $garantie),
-		':bon_commande'      => ($bon_commande      === "" ? null : $bon_commande),
-		':num_inventaire'    => ($num_inventaire    === "" ? null : $num_inventaire),
-		':tutelle'           => ($tutelle           === "" ? "0" : $tutelle),
-		':responsable_achat' => ($responsable_achat === "" ? "0" : $responsable_achat),
-		':i'                 => $i
-	]);
-	
-	
 
-    $message.= (!isset($modif_result)) ? $message_success_modif : $message_error_modif;
+
+
+if (!$error) {
+
+	// TODO : prix avec une virgule ou un point ?
+
+	/*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦  
+		║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║  
+		╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝     */
+		$date_achat=($date_achat==NULL) ? "0000-00-00" : $date_achat;
+		$garantie=($garantie==NULL) ? "0000-00-00" : $garantie;
+
+		$sql = "UPDATE base 
+				SET designation        = :designation,
+				    vendeur            = :vendeur,
+				    prix               = :prix,
+				    contrat            = :contrat,
+				    date_achat         = :date_achat,
+				    garantie           = :garantie,
+				    bon_commande       = :bon_commande,
+				    num_inventaire     = :num_inventaire,
+				    tutelle            = :tutelle,
+				    responsable_achat  = :responsable_achat
+				WHERE base_index = :i";
+
+		$sth = $dbh->prepare($sql);
+		$sth->execute([
+			':designation'       => ($designation       === "" ? null : $designation),
+			':vendeur'           => ($vendeur           === "" ? "0" : $vendeur),
+			':prix'              => ($prix              === "" ? "0" : $prix),
+			':contrat'           => ($contrat           === "" ? "0" : $contrat),
+			':date_achat'        => ($date_achat        === "" ? null : $date_achat),
+			':garantie'          => ($garantie          === "" ? null : $garantie),
+			':bon_commande'      => ($bon_commande      === "" ? null : $bon_commande),
+			':num_inventaire'    => ($num_inventaire    === "" ? null : $num_inventaire),
+			':tutelle'           => ($tutelle           === "" ? "0" : $tutelle),
+			':responsable_achat' => ($responsable_achat === "" ? "0" : $responsable_achat),
+			':i'                 => $i
+		]);
+
+		$message.= $message_success_modif;
+	}
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data[0]["designation"]=$designation;
@@ -297,7 +342,9 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
                /*select2 pour recherche */
 				echo "<script>
 					\$j(document).ready(function() {
-						\$j('#contrat_type').select2();
+						\$j('#contrat_type').select2({
+							width: '250px'
+						});
 					});
 				</script>";
                echo "<br/>";
