@@ -112,8 +112,12 @@ if ($modif_entretien!="") {
 			':e_lastdate' => $e_effectuele
 		]);
 
-		// Construction du message
-		$message .= ($modif_result) ? $message_success_modif : $message_error_modif;
+		if ($modif_result && $sth->rowCount() > 0) {
+			$message .= $message_success_modif;
+		} else {
+			$message .= $message_error_modif;
+		}
+		
     }
     else $error_noebox="Vous devez cocher au moins une case d’entretien";
 
