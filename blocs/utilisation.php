@@ -40,7 +40,6 @@ $sth->execute();
 $localisations = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
-
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗
 ████╗ ████║██╔═══██╗██╔══██╗██║██╔════╝    ██╔════╝██╔═══██╗██║
@@ -159,28 +158,57 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 
     // Si l’integration change, ajout d’une entrée autotomatiquement dans le journal
     if ($data[0]["integration"]!=$integration) {
-        $add_journal= "INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id) VALUES (NULL, \"".date("y.m.d")."\", \"<!--auto-->" ;
 
-	$add_journal.= ($integration=="0") ? "Fin de l’intégration à :<br/> → " : "Intégration à :<br/> → " ;
 
-        $keys = ($integration=="0") ? array_keys(array_column($lab_ids, 'base_index'), $data[0]["integration"]) : array_keys(array_column($lab_ids, 'base_index'), $integration) ;
-        if (isset($keys[0])) $txt_in=quickdisplayincarac_b($lab_ids[$keys[0]]);
-	else $txt_in = ($integration=="0") ? "<a href='info.php?BASE=".$database."&i=".$data[0]["integration"]."' target='_blank'>#".$data[0]["integration"]."</a>" : "<a href='info.php?BASE=".$database."&i=".$integration."' target='_blank'>#".$integration."</a>";
 
-	$add_journal.=$txt_in."\", \"".$i."\");" ;
-	// Exemple de requête préparée pour insérer dans la table 'journal'
-	$sql = "INSERT INTO journal (colonne1, colonne2) VALUES (:valeur1, :valeur2);";
+
+
+
+
+
+
+
+
+
+	$date = date("y.m.d");
+
+	$prefix = ($integration == "0")
+		? "Fin de l’intégration à :<br/> → "
+		: "Intégration à :<br/> → ";
+
+	// Détermination de la valeur de $txt_in selon $integration et $lab_ids
+	$keys = ($integration == "0")
+		? array_keys(array_column($lab_ids, 'base_index'), $data[0]["integration"])
+		: array_keys(array_column($lab_ids, 'base_index'), $integration);
+
+	if (isset($keys[0])) {
+		$txt_in = quickdisplayincarac_b($lab_ids[$keys[0]]);
+	} else {
+		$txt_in = ($integration == "0")
+		    ? "<a href='info.php?BASE=".$database."&i=".$data[0]["integration"]."' target='_blank'>#".$data[0]["integration"]."</a>"
+		    : "<a href='info.php?BASE=".$database."&i=".$integration."' target='_blank'>#".$integration."</a>";
+	}
+
+	// Construction du texte à insérer
+	$historique_texte = "<!--auto-->" . $prefix . $txt_in;
+	$historique_id    = $i;
+
+	// Préparation et exécution de la requête
+	$sql = "INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id)
+		    VALUES (NULL, :date, :texte, :id)";
 	$sth = $dbh->prepare($sql);
-
-	// Exécution de la requête avec les paramètres
 	$sth->execute([
-		':valeur1' => $valeur1,
-		':valeur2' => $valeur2
+		':date'  => $date,
+		':texte' => $historique_texte,
+		':id'    => $historique_id
 	]);
 
-	// Fermeture du curseur
-	$sth->closeCursor();
-        //$message. = (!isset($sth))? "<p class=\"error_message\" id=\"disappear_delay\">Une erreur inconnue est survenue. La modification n’a pas été ajoutée automatiquement au journal.</p>" : "<p class=\"success_message\" id=\"disappear_delay\">La modification a été auto$
+
+
+
+
+
+
 
 
     }
@@ -374,7 +402,6 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo "<option value=\"0\" "; if ($data[0]["integration"]=="0") echo "selected"; echo ">— Aucune intégration spécifiée —</option>";
         option_selecteur($data[0]["integration"], $lab_ids, "base_index", "lab_id");
         echo "</select>";
-        /*select2 pour recherche */
 		echo "<script>
 			\$j(document).ready(function() {
 				\$j('#integration').select2({width: '210px'});
@@ -388,15 +415,10 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         }
 
 
-
-
 		echo "<br/>&nbsp;<br/>";
+						
 		
-		
-		
-		
-		
-		
+		// Intégre
 		echo "<label for=\"parentde[]\">Intègre : </label>\n";
 
 		echo "<select class=\"select2\" multiple=\"multiple\" tabindex=\"6\" name=\"parentde[]\" id=\"multiple\">";
@@ -418,8 +440,6 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 					});
 				});
 			  </script>";
-
-
 
     echo "</fieldset>";
 
