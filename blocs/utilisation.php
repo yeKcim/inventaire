@@ -19,25 +19,27 @@ $message="";
 ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
 */
 
-// tous les lab_id (utilisé uniquement pour intégration, TODO à supprimer)
-$sth = $dbh->query("SELECT base_index, lab_id, categorie, reference, designation, sortie FROM base WHERE base_index!=\"$i\" ORDER BY lab_id ASC ;");
-$lab_ids = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-if ($sth) $sth->closeCursor();
+// Requête pour la table 'base'
+$sql = "SELECT base_index, lab_id, categorie, reference, designation, sortie, integration FROM base WHERE base_index != :base_index ORDER BY lab_id ASC;";
+$sth = $dbh->prepare($sql);
+$sth->execute([':base_index' => $i]);
+$lab_ids = $sth->fetchAll(PDO::FETCH_ASSOC);
+$sth->closeCursor();
 
-// raison_sortie
-$sth = $dbh->query("SELECT * FROM raison_sortie WHERE raison_sortie_index!=0 ORDER BY raison_sortie_nom ASC ;");
-$raison_sorties = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-if ($sth) $sth->closeCursor();
+// Requête pour la table 'raison_sortie'
+$sql = "SELECT * FROM raison_sortie WHERE raison_sortie_index != 0 ORDER BY raison_sortie_nom ASC;";
+$sth = $dbh->prepare($sql);
+$sth->execute();
+$raison_sorties = $sth->fetchAll(PDO::FETCH_ASSOC);
+$sth->closeCursor();
 
-// localisation
-$sth = $dbh->query("SELECT * FROM localisation WHERE localisation_index!=0 ORDER BY localisation_batiment ASC, localisation_piece ASC ;");
-$localisations = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-if ($sth) $sth->closeCursor();
+// Requête pour la table 'localisation'
+$sql = "SELECT * FROM localisation WHERE localisation_index != 0 ORDER BY localisation_batiment ASC, localisation_piece ASC;";
+$sth = $dbh->prepare($sql);
+$sth->execute();
+$localisations = $sth->fetchAll(PDO::FETCH_ASSOC);
+$sth->closeCursor();
 
-// tous les enfants
-$sth = $dbh->query("SELECT base_index, lab_id, designation FROM base WHERE integration=\"$i\" ORDER BY lab_id ASC ;");
-$kids = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-if ($sth) $sth->closeCursor();
 
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗
@@ -57,7 +59,20 @@ if ( isset($_POST["utilisation_valid"]) ) {
     if ($utilisateur=="plus_utilisateur") {
         $plus_utilisateur_nom=mb_strtoupper($plus_utilisateur_nom);
         $plus_utilisateur_phone=phone_display("$plus_utilisateur_phone","");
-	$sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$plus_utilisateur_nom."\", \"".$plus_utilisateur_prenom."\",\"".$plus_utilisateur_mail."\",\"".$plus_utilisateur_phone."\") ;"));
+		// Requête préparée pour insérer un nouvel utilisateur
+		$sql = "INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (:nom, :prenom, :mail, :phone);";
+		$sth = $dbh->prepare($sql);
+
+		// Exécution de la requête avec les paramètres
+		$sth->execute([
+			':nom' => $plus_utilisateur_nom,
+			':prenom' => $plus_utilisateur_prenom,
+			':mail' => $plus_utilisateur_mail,
+			':phone' => $plus_utilisateur_phone
+		]);
+
+		// Fermeture du curseur
+		$sth->closeCursor();
         /* TODO : prévoir le cas où le contrat existe déjà */
 	$utilisateur=return_last_id("utilisateur_index","utilisateur");
 
@@ -66,7 +81,18 @@ if ( isset($_POST["utilisation_valid"]) ) {
     }
 
     if ($localisation=="plus_localisation") {
-        $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES (\"".$plus_localisation_bat."\", \"".$plus_localisation_piece."\" );"));
+		// Requête préparée pour insérer une nouvelle localisation
+		$sql = "INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES (:batiment, :piece);";
+		$sth = $dbh->prepare($sql);
+
+		// Exécution de la requête avec les paramètres
+		$sth->execute([
+			':batiment' => $plus_localisation_bat,
+			':piece' => $plus_localisation_piece
+		]);
+
+		// Fermeture du curseur
+		$sth->closeCursor();
         
         /* TODO : prévoir le cas où la nouvelle localisation existe déjà */
 	$localisation=return_last_id("localisation_index","localisation");
@@ -77,7 +103,17 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
 
     if ($raison_sortie=="plus_raison_sortie") {
-        $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO raison_sortie (raison_sortie_nom) VALUES (\"".$plus_raison_sortie_nom."\");"));
+		// Requête préparée pour insérer une nouvelle raison de sortie
+		$sql = "INSERT INTO raison_sortie (raison_sortie_nom) VALUES (:raison_sortie_nom);";
+		$sth = $dbh->prepare($sql);
+
+		// Exécution de la requête avec les paramètres
+		$sth->execute([
+			':raison_sortie_nom' => $plus_raison_sortie_nom
+		]);
+
+		// Fermeture du curseur
+		$sth->closeCursor();
         /* TODO : prévoir le cas où le contrat existe déjà */
 	$raison_sortie=return_last_id("raison_sortie_index","raison_sortie");
         // on ajoute cette entrée dans le tableau des raisons de sortie (utilisé pour le select)
@@ -93,7 +129,31 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
     // Si la localisation change, on modifie la date de localisation pour mettre aujourd’hui
     $change_date_localisation= ($data[0]["localisation"]==$localisation) ? "" : ", date_localisation=\"".date("y.m.d")."\"";
 
-    $modif_result = $dbh->query(str_replace("\"\"", "NULL","UPDATE base SET utilisateur=\"".$utilisateur."\", localisation=\"".$localisation."\", sortie=\"".$sortie."\", integration=\"".$integration."\", raison_sortie=\"".$raison_sortie."\" $change_date_localisation WHERE base.base_index = $i;"));
+	// Requête préparée pour mettre à jour la table 'base'
+	$sql = "UPDATE base
+			SET utilisateur = :utilisateur,
+			    localisation = :localisation,
+			    sortie = :sortie,
+			    integration = :integration,
+			    raison_sortie = :raison_sortie
+			    $change_date_localisation
+			WHERE base_index = :base_index;";
+
+	$sth = $dbh->prepare($sql);
+
+	// Exécution de la requête avec les paramètres
+	$sth->execute([
+		':utilisateur' => $utilisateur,
+		':localisation' => $localisation,
+		':sortie' => $sortie,
+		':integration' => $integration,
+		':raison_sortie' => $raison_sortie,
+		':base_index' => $i
+	]);
+
+	// Fermeture du curseur
+	$sth->closeCursor();
+
     $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
 
 
@@ -108,7 +168,18 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 	else $txt_in = ($integration=="0") ? "<a href='info.php?BASE=".$database."&i=".$data[0]["integration"]."' target='_blank'>#".$data[0]["integration"]."</a>" : "<a href='info.php?BASE=".$database."&i=".$integration."' target='_blank'>#".$integration."</a>";
 
 	$add_journal.=$txt_in."\", \"".$i."\");" ;
-        $sth = $dbh->query(str_replace("\"\"", "NULL","$add_journal"));
+	// Exemple de requête préparée pour insérer dans la table 'journal'
+	$sql = "INSERT INTO journal (colonne1, colonne2) VALUES (:valeur1, :valeur2);";
+	$sth = $dbh->prepare($sql);
+
+	// Exécution de la requête avec les paramètres
+	$sth->execute([
+		':valeur1' => $valeur1,
+		':valeur2' => $valeur2
+	]);
+
+	// Fermeture du curseur
+	$sth->closeCursor();
         //$message. = (!isset($sth))? "<p class=\"error_message\" id=\"disappear_delay\">Une erreur inconnue est survenue. La modification n’a pas été ajoutée automatiquement au journal.</p>" : "<p class=\"success_message\" id=\"disappear_delay\">La modification a été auto$
 
 
@@ -294,9 +365,12 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
     ╩╝╚╝╩ ╚═╝╚═╝╩╚═╩ ╩ ╩ ╩╚═╝╝╚╝  */
     echo "<fieldset><legend>Intégration (composant intégré à un autre ou faisant parti d’un lot)</legend>";
 
-        echo "<label for=\"integration\">Intégré dans :</label>\n";
+
+		// Intégré dans
+        echo "<label for=\"integration\">est intégré dans :</label>\n";
 
         echo "<select name=\"integration\" id=\"integration\" >";
+       
         echo "<option value=\"0\" "; if ($data[0]["integration"]=="0") echo "selected"; echo ">— Aucune intégration spécifiée —</option>";
         option_selecteur($data[0]["integration"], $lab_ids, "base_index", "lab_id");
         echo "</select>";
@@ -306,17 +380,46 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 				\$j('#integration').select2({width: '210px'});
 			});
 		</script>";
-
+		
+		// Lien vers parent
         if (isset($data[0]["integration"])) { if ( ($data[0]["integration"]!="0") && ($data[0]["integration"]!="") )
-            echo " <a href=\"info.php?BASE=".$database."&i=".$data[0]["integration"]."\" target=\"_blank\"><strong>↗</strong></a>";
+            echo " <a href=\"info.php?BASE=".$database."&i=".$data[0]["integration"]."\" target=\"_blank\">";
+            echo "<strong>↗</strong></a>";
         }
 
-        if (!empty($kids) ) {
-            echo "<br/>Parent de :\n";
-            echo "<ul>";
-                foreach ($kids as $k) echo "<li><a href=\"?i=".$k["base_index"]."&BASE=".$database."\" target=\"_blank\">".$k["lab_id"]." (#".$k["base_index"].")</a>&nbsp;: ".$k["designation"]."</li>";
-            echo "</ul>";
-        }
+
+
+
+		echo "<br/>&nbsp;<br/>";
+		
+		
+		
+		
+		
+		
+		echo "<label for=\"parentde[]\">Intègre : </label>\n";
+
+		echo "<select class=\"select2\" multiple=\"multiple\" tabindex=\"6\" name=\"parentde[]\" id=\"multiple\">";
+		foreach ($lab_ids as $all_ids) {
+			echo "<option value=\"".$all_ids["base_index"]."\" ";
+			echo ($all_ids["integration"]==$i) ? " selected " : "";
+			echo ">[".$all_ids["lab_id"]."] ";
+			echo mb_substr($all_ids["designation"], 0, 35);
+			echo (mb_strlen($all_ids["designation"]) > 35) ? " …" : "";
+			echo "</option><br/>";
+		}
+		echo "</select>";
+		echo "<script>
+				\$j(document).ready(function() {
+					\$j('#multiple').select2({
+						placeholder: \"Sélectionnez les éléments intégrés\",
+						allowClear: true,
+						width:\"270px\"
+					});
+				});
+			  </script>";
+
+
 
     echo "</fieldset>";
 
