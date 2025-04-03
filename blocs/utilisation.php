@@ -101,30 +101,61 @@ if ( isset($_POST["utilisation_valid"]) ) {
         $$value= isset($_POST[$value]) ? trim($_POST[$value]) : "" ;
     }
     
+/*	╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦    ╦ ╦╔╦╗╦╦  ╦╔═╗╔═╗╔╦╗╔═╗╦ ╦╦═╗
+	║║║║ ║║ ║╚╗╔╝║╣ ║    ║ ║ ║ ║║  ║╚═╗╠═╣ ║ ║╣ ║ ║╠╦╝
+	╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝  ╚═╝ ╩ ╩╩═╝╩╚═╝╩ ╩ ╩ ╚═╝╚═╝╩╚═	*/
 
     if ($utilisateur=="plus_utilisateur") {
         $plus_utilisateur_nom=mb_strtoupper($plus_utilisateur_nom);
         $plus_utilisateur_phone=phone_display("$plus_utilisateur_phone","");
-		// Requête préparée pour insérer un nouvel utilisateur
-		$sql = "INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (:nom, :prenom, :mail, :phone);";
-		$sth = $dbh->prepare($sql);
+        
+        
+        if (!empty($plus_utilisateur_nom)) {
+        
+			$sql = "INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) 
+					VALUES (:nom, :prenom, :mail, :phone)";
 
-		// Exécution de la requête avec les paramètres
-		$sth->execute([
-			':nom' => $plus_utilisateur_nom,
-			':prenom' => $plus_utilisateur_prenom,
-			':mail' => $plus_utilisateur_mail,
-			':phone' => $plus_utilisateur_phone
-		]);
+			$sth = $dbh->prepare($sql);
+			$sth->execute([
+				':nom'    => $plus_utilisateur_nom,
+				':prenom' => $plus_utilisateur_prenom,
+				':mail'   => $plus_utilisateur_mail,
+				':phone'  => $plus_utilisateur_phone
+			]);
+		    /* TODO : prévoir le cas où le responsable existe déjà */
+		$utilisateur=return_last_id("utilisateur_index","utilisateur");
+		    // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
+		    array_push($utilisateurs, array("utilisateur_index" => $utilisateur, "utilisateur_nom" => $plus_utilisateur_nom, "utilisateur_prenom" => $plus_utilisateur_prenom, "utilisateur_mail" => $plus_utilisateur_mail, "utilisateur_phone" => $plus_utilisateur_phone) );
+		    if ($sth) $sth->closeCursor();
+    	}
+    	else
+    	{
+			$error=1;
+			$utilisateur=0;
+			$message.= "<p class=\"error_message\" id=\"disappear_delay\">Si vous sélectionnez « Nouvel utilisateur », renseignez au moins le nom ! L’entrée a été définie comme non spécifiée.</p>";
+    	}
+    
 
-		// Fermeture du curseur
-		$sth->closeCursor();
-        /* TODO : prévoir le cas où le contrat existe déjà */
-	$utilisateur=return_last_id("utilisateur_index","utilisateur");
-
-        // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
-	array_push($utilisateurs, array("utilisateur_index" => $utilisateur, "utilisateur_nom" => $plus_utilisateur_nom, "utilisateur_prenom" => $plus_utilisateur_prenom, "utilisateur_mail" => $plus_utilisateur_mail, "utilisateur_phone" => phone_display("$plus_utilisateur_phone",".") ) );
     }
+    
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     if ($localisation=="plus_localisation") {
 		// Requête préparée pour insérer une nouvelle localisation
@@ -168,6 +199,8 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
 $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 
+
+if (!$error) {
 /*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
     ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
     ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
@@ -200,65 +233,51 @@ $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
 	// Fermeture du curseur
 	$sth->closeCursor();
 
-    $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
+    // $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
 
 
     // Si l’integration change, ajout d’une entrée autotomatiquement dans le journal
     if ($data[0]["integration"]!=$integration) {
 
+		$date = date("y.m.d");
 
+		$prefix = ($integration == "0")
+			? "Fin de l’intégration à :<br/> → "
+			: "Intégration à :<br/> → ";
 
+		// Détermination de la valeur de $txt_in selon $integration et $lab_ids
+		$keys = ($integration == "0")
+			? array_keys(array_column($lab_ids, 'base_index'), $data[0]["integration"])
+			: array_keys(array_column($lab_ids, 'base_index'), $integration);
 
+		if (isset($keys[0])) {
+			$txt_in = quickdisplayincarac_b($lab_ids[$keys[0]]);
+		} else {
+			$txt_in = ($integration == "0")
+				? "<a href='info.php?BASE=".$database."&i=".$data[0]["integration"]."' target='_blank'>#".$data[0]["integration"]."</a>"
+				: "<a href='info.php?BASE=".$database."&i=".$integration."' target='_blank'>#".$integration."</a>";
+		}
 
+		// Construction du texte à insérer
+		$historique_texte = "<!--auto-->" . $prefix . $txt_in;
+		$historique_id    = $i;
 
+		// Préparation et exécution de la requête
+		$sql = "INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id)
+				VALUES (NULL, :date, :texte, :id)";
+		$sth = $dbh->prepare($sql);
+		$sth->execute([
+			':date'  => $date,
+			':texte' => $historique_texte,
+			':id'    => $historique_id
+		]);
 
-
-
-
-
-
-	$date = date("y.m.d");
-
-	$prefix = ($integration == "0")
-		? "Fin de l’intégration à :<br/> → "
-		: "Intégration à :<br/> → ";
-
-	// Détermination de la valeur de $txt_in selon $integration et $lab_ids
-	$keys = ($integration == "0")
-		? array_keys(array_column($lab_ids, 'base_index'), $data[0]["integration"])
-		: array_keys(array_column($lab_ids, 'base_index'), $integration);
-
-	if (isset($keys[0])) {
-		$txt_in = quickdisplayincarac_b($lab_ids[$keys[0]]);
-	} else {
-		$txt_in = ($integration == "0")
-		    ? "<a href='info.php?BASE=".$database."&i=".$data[0]["integration"]."' target='_blank'>#".$data[0]["integration"]."</a>"
-		    : "<a href='info.php?BASE=".$database."&i=".$integration."' target='_blank'>#".$integration."</a>";
 	}
 
-	// Construction du texte à insérer
-	$historique_texte = "<!--auto-->" . $prefix . $txt_in;
-	$historique_id    = $i;
-
-	// Préparation et exécution de la requête
-	$sql = "INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id)
-		    VALUES (NULL, :date, :texte, :id)";
-	$sth = $dbh->prepare($sql);
-	$sth->execute([
-		':date'  => $date,
-		':texte' => $historique_texte,
-		':id'    => $historique_id
-	]);
 
 
 
-
-
-
-
-
-
-    }
+}
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data[0]["utilisateur"]=$utilisateur;
