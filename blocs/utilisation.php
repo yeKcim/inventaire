@@ -40,6 +40,7 @@ $sth->execute();
 $localisations = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
+
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗
 ████╗ ████║██╔═══██╗██╔══██╗██║██╔════╝    ██╔════╝██╔═══██╗██║
@@ -50,10 +51,56 @@ $sth->closeCursor();
 */
 if ( isset($_POST["utilisation_valid"]) ) {
 
+/*	╦╔╗╔╔╦╗╔═╗╔═╗╦═╗╔═╗
+	║║║║ ║ ║╣ ║ ╦╠╦╝║╣ 
+	╩╝╚╝ ╩ ╚═╝╚═╝╩╚═╚═╝ */
+	if (isset($_POST["parentde"])) $parentde_int = array_map('intval', $_POST["parentde"]);
+	else $parentde_int = array();
+
+    // Supposons que $lab_ids contient déjà le tableau décodé (par exemple via json_decode)
+	$filtered = array_filter($lab_ids, function($entry) { return $entry['integration'] == 5;});
+	// Extrait uniquement les base_index
+	$base_indexes = array_column($filtered, 'base_index');
+	$integre_avant = array_map('intval', $base_indexes); // $base_indexes est issu de ton filtrage initial
+	$integre_apres = array_map('intval', $parentde_int); // Conversion en entiers
+	$to_set_0 = array_values(array_diff($integre_avant, $integre_apres));
+    
+	// 1. Mise à jour des entrées qui ne sont plus dans "après" (integration = 0)
+	if (!empty($to_set_0)) {
+		$placeholders_to_zero = implode(',', array_fill(0, count($to_set_0), '?'));
+		$sql = "UPDATE base SET integration = 0 WHERE base_index IN ($placeholders_to_zero)";
+		$sth = $dbh->prepare($sql);
+		$sth->execute($to_set_0);
+	}
+
+	// 2. Mise à jour des entrées de "après" (integration = 5)
+	if (!empty($integre_apres)) {
+		// Création des placeholders (?,?,?,...)
+		$placeholders_to_i = implode(',', array_fill(0, count($integre_apres), '?'));
+		$sql = "UPDATE base SET integration = $i WHERE base_index IN ($placeholders_to_i)";
+		$sth = $dbh->prepare($sql);
+		$sth->execute($integre_apres);
+	}
+
+	// 3. S’il y a eu un changement dans "integre" on refait $lab_ids
+	if ((!empty($integre_apres)) || (!empty($to_set_0))) {
+		// Requête pour la table 'base'
+		$sql = "SELECT base_index, lab_id, categorie, reference, designation, sortie, integration FROM base WHERE base_index != :base_index ORDER BY lab_id ASC;";
+		$sth = $dbh->prepare($sql);
+		$sth->execute([':base_index' => $i]);
+		$lab_ids = $sth->fetchAll(PDO::FETCH_ASSOC);
+		$sth->closeCursor();
+	}	
+
+
+/*	╔═╗╦ ╦╔╦╗╦═╗╔═╗╔═╗  ╔═╗╔╗╔╔╦╗╦═╗╔═╗╔═╗╔═╗  ╔╦╗╦ ╦  ╔═╗╔═╗╦═╗╔╦╗╦ ╦╦  ╔═╗╦╦═╗╔═╗
+	╠═╣║ ║ ║ ╠╦╝║╣ ╚═╗  ║╣ ║║║ ║ ╠╦╝║╣ ║╣ ╚═╗   ║║║ ║  ╠╣ ║ ║╠╦╝║║║║ ║║  ╠═╣║╠╦╝║╣ 
+	╩ ╩╚═╝ ╩ ╩╚═╚═╝╚═╝  ╚═╝╝╚╝ ╩ ╩╚═╚═╝╚═╝╚═╝  ═╩╝╚═╝  ╚  ╚═╝╩╚═╩ ╩╚═╝╩═╝╩ ╩╩╩╚═╚═╝	*/
     $arr = array("utilisateur", "plus_utilisateur_prenom", "plus_utilisateur_nom", "plus_utilisateur_mail", "plus_utilisateur_phone", "localisation", "plus_localisation_bat", "plus_localisation_piece", "sortie", "raison_sortie", "plus_raison_sortie_nom", "integration");
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? trim($_POST[$value]) : "" ;
     }
+    
 
     if ($utilisateur=="plus_utilisateur") {
         $plus_utilisateur_nom=mb_strtoupper($plus_utilisateur_nom);
@@ -442,6 +489,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 			  </script>";
 
     echo "</fieldset>";
+    
 
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║
