@@ -137,7 +137,7 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
         echo "<input value=\"".date("Y-m-d")."\" name=\"date_info\" type=\"date\" id=\"date_info\"/><br/>";
 
         echo "<label for=\"histo\" style=\"vertical-align: top;\"> Information :</label>\n";
-        echo "<textarea name=\"histo\" rows=\"4\" cols=\"31\"></textarea><br/>";
+        echo "<textarea name=\"histo\" rows=\"4\" cols=\"25\" required></textarea><br/>";
         if ($write) {
             echo "<label for=\"add_historique\" > &nbsp;</label>\n";
             echo "<input name=\"add_historique\" value=\"Ajouter\" type=\"submit\" class=\"little_button\" />";
