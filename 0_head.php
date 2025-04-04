@@ -65,11 +65,11 @@
 <!--╔╦╗╦╔═╗╔═╗╔═╗╔═╗╔═╗╔═╗╦═╗  ╔╦╗╔═╗╦  ╔═╗╦ ╦
      ║║║╚═╗╠═╣╠═╝╠═╝║╣ ╠═╣╠╦╝   ║║║╣ ║  ╠═╣╚╦╝
     ═╩╝╩╚═╝╩ ╩╩  ╩  ╚═╝╩ ╩╩╚═  ═╩╝╚═╝╩═╝╩ ╩ ╩   -->
-    <script type="text/javascript">
-      $j(document).ready( function() {
-        $j('#disappear_delay').delay(5000).fadeOut();
-      });
-    </script>
+	<script type="text/javascript">
+	  $j(document).ready(function() {
+		$j('#disappear_delay, .disappear_delay').delay(5000).fadeOut();
+	  });
+	</script>
 
 <!--╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗ ╦  ╔═╗╔═╗
      ║║╠═╣ ║ ╠═╣ ║ ╠═╣╠╩╗║  ║╣ ╚═╗

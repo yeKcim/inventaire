@@ -108,7 +108,7 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
         echo "<br/>";
         echo "Taille maximum : ".formatBytes($max_size)."o.<br/>";
 
-        echo "<input type=\"file\" name=\"fichier\" style=\"border:0px solid #cc0000;\"/><br/>";
+        echo "<input type=\"file\" name=\"fichier[]\" multiple style=\"border:0px solid #cc0000;\"/><br/>";
 
         if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
             echo "<br/><input type=\"checkbox\" name=\"filetoref\" value=\"1\"> Fichier global lié à la référence fabricant.<br/>";
@@ -120,44 +120,60 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
         }
         echo "</p>";
 
-        /* ########### Ajout d’un fichier ########### */
-        if(isset($_FILES['fichier'])){
-            $errors= array();
-            $file_name = $_FILES['fichier']['name'];
-            $file_size =$_FILES['fichier']['size'];
-            $file_tmp =$_FILES['fichier']['tmp_name'];
-            $file_type=$_FILES['fichier']['type'];
-            
-            $parts = explode('.', $_FILES['fichier']['name']);
-            $file_ext = mb_strtolower(end($parts));
-
-            if(in_array($file_ext,$extensions)== false) $errors[]="Extension non permise.";
-            if ( ($file_size > $max_size)||($file_size == 0) ) $errors[]="La taille du fichier doit être au maximum de ".formatBytes($max_size)."o.";
-
-            if(empty($errors)==true) {
-
-                if ($filetoref!="" ) {
-					$keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
-					$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
-		            $r=str_replace('/', "_", $data[0]["reference"]);
-					$dossier=$dossierdesfichiers.$database."/".$m."-".$r;
+	/* ########### Ajout de fichiers ########### */
+	if(isset($_FILES['fichier'])){
+		$errors = array();
+		// Vérifie que le répertoire de destination est défini (selon ton code existant)
+		if ($filetoref != "") {
+		    $keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
+		    $m = str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
+		    $r = str_replace('/', "_", $data[0]["reference"]);
+		    $dossier = $dossierdesfichiers . $database . "/" . $m . "-" . $r;
+		} else {
+		    $dossier = $dossierdesfichiers . $database . "/" . $i;
 		}
-                else $dossier=$dossierdesfichiers.$database."/".$i;
+		
+		// Traitement de chaque fichier
+		foreach($_FILES['fichier']['name'] as $key => $file_name){
+		    // Récupération des infos de chaque fichier
+		    $file_size = $_FILES['fichier']['size'][$key];
+		    $file_tmp  = $_FILES['fichier']['tmp_name'][$key];
+		    $file_type = $_FILES['fichier']['type'][$key];
+		    
+		    $parts = explode('.', $file_name);
+		    $file_ext = mb_strtolower(end($parts));
+		    
+		    // Vérification des extensions et taille
+		    if(in_array($file_ext, $extensions) == false){
+		        $errors[] = "Extension non permise pour le fichier $file_name.";
+		        continue; // Passe au fichier suivant
+		    }
+		    if(($file_size > $max_size) || ($file_size == 0)){
+		        $errors[] = "La taille du fichier $file_name doit être au maximum de " . formatBytes($max_size) . "o et non vide";
+		        continue; // Passe au fichier suivant
+		    }
+		    
+		    // Préparation du dossier (éventuellement remplacement de certains caractères)
+		    $dossier_modifie = str_replace("&", "amp", $dossier);
+		    $dossier_modifie = str_replace(";", "semicolon", $dossier_modifie);
+		    
+		    // Déplacer le fichier
+		    if(move_uploaded_file($file_tmp, "$dossier_modifie/" . $file_name)){
+		        echo "<p class=\"success_message disappear_delay\" id=\"disappear_delay_".$file_name."\">Fichier $file_name envoyé avec succès.</p>";
+		    } else {
+		        $errors[] = "Erreur lors de l'envoi du fichier $file_name.";
+		    }
+		}
+		
+		// Affichage des erreurs s'il y en a
+		if(!empty($errors)){
+		    foreach ($errors as $e) {
+		        echo "<p class=\"error_message disappear_delay\" id=\"disappear_delay_".$e."\"><strong>$e</strong></p>";
+		    }
+		}
+}
+/* ########### END Ajout de fichiers ########### */
 
-                
-                
-                    //$dossier=str_replace("&", "&amp;", $dossier);
-                    $dossier=str_replace("&", "amp", $dossier);
-                    $dossier=str_replace(";", "semicolon", $dossier);
-                
-                
-                move_uploaded_file($file_tmp,"$dossier/".$file_name);
-                //echo "Fichier envoyé avec succès.<br/>";
-                echo "<p class=\"success_message\" id=\"disappear_delay\">Fichier envoyé avec succès.</p>";
-            }
-            else foreach ($errors as $e) echo "<p class=\"error_message\" id=\"disappear_delay\"><strong>$e</strong></p>";
-        }
-        /* ########### END Ajout d’un fichier ########### */
 
         if ($write) echo "<p style=\"text-align:center;\"><input name=\"Valider\" value=\"Envoyer\" type=\"submit\" class=\"little_button\" /></p>";
         if ($write) echo "</form>";
