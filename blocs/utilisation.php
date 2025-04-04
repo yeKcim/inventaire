@@ -138,46 +138,37 @@ if ( isset($_POST["utilisation_valid"]) ) {
 
     }
     
-    
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*	╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╦  ╔═╗╔═╗╔═╗╦  ╦╔═╗╔═╗╔╦╗╦╔═╗╔╗╔
+	║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ║ ║║  ╠═╣║  ║╚═╗╠═╣ ║ ║║ ║║║║
+	╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩═╝╚═╝╚═╝╩ ╩╩═╝╩╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝	*/
     if ($localisation=="plus_localisation") {
-		// Requête préparée pour insérer une nouvelle localisation
-		$sql = "INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES (:batiment, :piece);";
-		$sth = $dbh->prepare($sql);
-
-		// Exécution de la requête avec les paramètres
-		$sth->execute([
-			':batiment' => $plus_localisation_bat,
-			':piece' => $plus_localisation_piece
-		]);
-
-		// Fermeture du curseur
-		$sth->closeCursor();
-        
-        /* TODO : prévoir le cas où la nouvelle localisation existe déjà */
-	$localisation=return_last_id("localisation_index","localisation");
-	
-        // on ajoute cette entrée dans le tableau des localisations (utilisé pour le select)
-	array_push($localisations, array("localisation_index" => $localisation, "localisation_batiment" => $plus_localisation_bat, "localisation_piece" => $plus_localisation_piece ) );
+    
+        if ((empty($plus_localisation_bat))||(empty($plus_localisation_bat))) {
+			$error=1;
+			$localisation=0;
+			$message.= "<p class=\"error_message\" id=\"disappear_delay\">Si vous sélectionnez « Nouvelle localisation », renseignez les champs obligatoires ! L’entrée n’a pas été modifiée.</p>";
+    	}
+    	else {
+    		// Requête préparée pour insérer une nouvelle localisation
+			$sql = "INSERT INTO localisation (localisation_batiment, localisation_piece) VALUES (:batiment, :piece);";
+			$sth = $dbh->prepare($sql);
+			// Exécution de la requête avec les paramètres
+			$sth->execute([
+				':batiment' => $plus_localisation_bat,
+				':piece' => $plus_localisation_piece
+			]);
+			$sth->closeCursor();		// Fermeture du curseur
+		    
+		    /* TODO : prévoir le cas où la nouvelle localisation existe déjà */
+			$localisation=return_last_id("localisation_index","localisation");
+		
+		    // on ajoute cette entrée dans le tableau des localisations (utilisé pour le select)
+			array_push($localisations, array("localisation_index" => $localisation, "localisation_batiment" => $plus_localisation_bat, "localisation_piece" => $plus_localisation_piece ) );
+		}
     }
-
+    
+    
+    
 
     if ($raison_sortie=="plus_raison_sortie") {
 		// Requête préparée pour insérer une nouvelle raison de sortie
@@ -275,9 +266,8 @@ if (!$error) {
 	}
 
 
-
-
 }
+
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
     $data[0]["utilisateur"]=$utilisateur;
@@ -437,6 +427,12 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo "<option value=\"plus_raison_sortie\" "; if ($data[0]["raison_sortie"]=="plus_raison_sortie") echo "selected"; echo ">−Nouvelle raison : −</option>";
         option_selecteur($data[0]["raison_sortie"], $raison_sorties, "raison_sortie_index", "raison_sortie_nom");
         echo "</select>";
+        /*select2 pour recherche */
+		echo "<script>
+			\$j(document).ready(function() {
+				\$j('#raison_sortie').select2({width: '270px'});
+			});
+		</script>";
         echo "</span>";
 
 
@@ -444,7 +440,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
                     /* ########### + raison_sortie ########### */
                     echo "\n\n\n";
                     echo "<fieldset id=\"plus_raison_sortie\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Nouvellle raison de sortie</legend>";
-                        echo "<label for=\"plus_raison_sortie_nom\">Raison :</label>\n";
+                        echo "<label for=\"plus_raison_sortie_nom\">Raison* :</label>\n";
 
                         $deja_raison=dejadanslabase("SELECT DISTINCT `raison_sortie_nom` FROM `raison_sortie`");
                         echo "<input value=\"\" name=\"plus_raison_sortie_nom\" type=\"text\"  pattern=\"^(?!(".$deja_raison.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" />\n";
