@@ -148,7 +148,7 @@ function displayDir($database, $i, $dir, $del=FALSE, $allowmv=FALSE) {
     else {
         $files = scandir("$dir");
         if ($files != FALSE) {
-        $tableid=str_replace('/', "", $dir);
+        $tableid = preg_replace('/[^a-zA-Z0-9_]/', '', $dir);
         echo "\n\n<table id=\"".$tableid."\">";
         echo "<thead><tr>";
         echo "<th width=\"5%\"><span title=\"Type\">.*</span></th>";
