@@ -149,10 +149,17 @@ echo "<div id=\"bloc\" style=\"background:#ad7fa8; vertical-align:top;\">";
 
     // bouton cacher/afficer les logs auto
     echo "<p style=\"text-align:center\">";
-    echo "<select name=\"hide_auto\" onchange=\"submit();\" style=\"text-align:center;\">";
+    echo "<select name=\"hide_auto\" id=\"hide_auto\" onchange=\"submit();\" style=\"text-align:center;\">";
     echo "<option value=\"1\"" ; if ($hide_auto=="1") echo "selected"; echo ">Cacher les entrées auto</option>";
-    echo "<option value=\"0\"" ; if ($hide_auto!="1") echo "selected"; echo ">Toutes les entrées :</option>";
+    echo "<option value=\"0\"" ; if ($hide_auto!="1") echo "selected"; echo ">Toutes les entrées</option>";
     echo "</select> ";
+    
+	echo "<script>
+		\$j(document).ready(function() {
+			\$j('#hide_auto').select2({minimumResultsForSearch: Infinity,});
+		});
+	  </script>";
+	  
     echo "</p>";
 
 
