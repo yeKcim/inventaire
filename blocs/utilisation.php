@@ -271,7 +271,25 @@ if (!$error) {
 		]);
 	}
 	// TODO : Je devrais aussi faire ces journaux lorsque je fais une intégration depuis le formulaire Intègre
+	/*
+	// Les IDs pour lesquels tu souhaites insérer une entrée
+	$ids = [5, 6, 35];
 
+	// Construction de la sous-requête en UNION ALL
+	// On crée un ensemble de lignes avec une colonne "id"
+	$subQuery = "SELECT " . implode(" AS id UNION ALL SELECT ", $ids) . " AS id";
+
+	// Construction de la requête complète
+	$sql = "INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id)
+			SELECT NULL, :date, :texte, id
+			FROM ($subQuery) AS t";
+	// Préparation et exécution de la requête
+	$sth = $dbh->prepare($sql);
+	$sth->execute([
+		':date'  => $date,
+		':texte' => $historique_texte
+	]);
+	*/
 
 
 
@@ -499,7 +517,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 		// Intégre
 		echo "<label for=\"parentde[]\">Intègre : </label>\n";
 
-		echo "<select class=\"select2\" multiple=\"multiple\" tabindex=\"6\" name=\"parentde[]\" id=\"multiple\">";
+		echo "<select class=\"select2\" multiple=\"multiple\" tabindex=\"6\" name=\"parentde[]\" id=\"multiple_int\">";
 		foreach ($lab_ids as $all_ids) {
 			echo "<option value=\"".$all_ids["base_index"]."\" ";
 			echo ($all_ids["integration"]==$i) ? " selected " : "";
@@ -511,7 +529,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 		echo "</select>";
 		echo "<script>
 				\$j(document).ready(function() {
-					\$j('#multiple').select2({
+					\$j('#multiple_int').select2({
 						placeholder: \"Sélectionnez les éléments intégrés\",
 						allowClear: true,
 						width:\"270px\"
