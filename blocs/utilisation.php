@@ -270,7 +270,7 @@ if (!$error) {
 			':id'    => $historique_id
 		]);
 	}
-
+	// TODO : Je devrais aussi faire ces journaux lorsque je fais une intégration depuis le formulaire Intègre
 
 
 
@@ -399,7 +399,9 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo " <a href=\"".$utilisation_localisation_help."\" target=\"_blank\" title=\"Plan\">plan</a>";
         //echo " <span id=\"linkbox\" onclick=\"TINY.box.show({image:'".$utilisation_localisation_help."',width:$width,height:$height})\" title=\"Plan\">plan</span>";
     }
-    else { echo " <span title=\"fonctionnalité à venir\">&nbsp;</span>"; }
+    else { //echo " <span title=\"fonctionnalité à venir\">&nbsp;</span>";
+    	echo " &nbsp; <abbr title=\"si un fichier ".$utilisation_localisation_help." est ajouté sur le serveur, un lien vers un plan sera affiché ici\"><strong>?</strong></abbr>";
+     }
 
 
     echo "</fieldset>";
