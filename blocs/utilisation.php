@@ -166,29 +166,34 @@ if ( isset($_POST["utilisation_valid"]) ) {
 			array_push($localisations, array("localisation_index" => $localisation, "localisation_batiment" => $plus_localisation_bat, "localisation_piece" => $plus_localisation_piece ) );
 		}
     }
-    
-    
-    
 
+/*	╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗╦═╗╔═╗╦╔═╗╔═╗╔╗╔  ╔═╗╔═╗╦═╗╔╦╗╦╔═╗
+	║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣ ╠╦╝╠═╣║╚═╗║ ║║║║  ╚═╗║ ║╠╦╝ ║ ║║╣ 
+	╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝╩╚═╩ ╩╩╚═╝╚═╝╝╚╝  ╚═╝╚═╝╩╚═ ╩ ╩╚═╝	*/
     if ($raison_sortie=="plus_raison_sortie") {
-		// Requête préparée pour insérer une nouvelle raison de sortie
-		$sql = "INSERT INTO raison_sortie (raison_sortie_nom) VALUES (:raison_sortie_nom);";
-		$sth = $dbh->prepare($sql);
-
-		// Exécution de la requête avec les paramètres
-		$sth->execute([
-			':raison_sortie_nom' => $plus_raison_sortie_nom
-		]);
-
-		// Fermeture du curseur
-		$sth->closeCursor();
-        /* TODO : prévoir le cas où le contrat existe déjà */
-	$raison_sortie=return_last_id("raison_sortie_index","raison_sortie");
-        // on ajoute cette entrée dans le tableau des raisons de sortie (utilisé pour le select)
-	array_push($vendeurs, array("raison_sortie_index" => $raison_sortie, "raison_sortie_nom" => $plus_raison_sortie_nom ) );
+        if (!empty($plus_raison_sortie_nom)) {
+			// Requête préparée pour insérer une nouvelle raison de sortie
+			$sql = "INSERT INTO raison_sortie (raison_sortie_nom) VALUES (:raison_sortie_nom);";
+			$sth = $dbh->prepare($sql);
+			// Exécution de la requête avec les paramètres
+			$sth->execute([
+				':raison_sortie_nom' => $plus_raison_sortie_nom
+			]);
+			// Fermeture du curseur
+			$sth->closeCursor();
+			$raison_sortie=return_last_id("raison_sortie_index","raison_sortie");
+		    // on ajoute cette entrée dans le tableau des raisons de sortie (utilisé pour le select)
+			array_push($raison_sorties, array("raison_sortie_index" => $raison_sortie, "raison_sortie_nom" => $plus_raison_sortie_nom ) );
+		}
+		else {
+			$error=1;
+			$raison_sortie=0;
+			$message.= "<p class=\"error_message\" id=\"disappear_delay\">Si vous sélectionnez « Nouvelle raison », renseignez le champ obligatoire ! L’entrée n’a pas été modifiée.</p>";
+		}	
     }
-
 $raison_sortie = ($sortie==0) ? "0" : $raison_sortie ;
+
+
 
 
 if (!$error) {
@@ -227,15 +232,19 @@ if (!$error) {
     // $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
 
 
+
+
+
+
+
+
+
     // Si l’integration change, ajout d’une entrée autotomatiquement dans le journal
     if ($data[0]["integration"]!=$integration) {
-
 		$date = date("y.m.d");
-
 		$prefix = ($integration == "0")
 			? "Fin de l’intégration à :<br/> → "
 			: "Intégration à :<br/> → ";
-
 		// Détermination de la valeur de $txt_in selon $integration et $lab_ids
 		$keys = ($integration == "0")
 			? array_keys(array_column($lab_ids, 'base_index'), $data[0]["integration"])
@@ -248,11 +257,9 @@ if (!$error) {
 				? "<a href='info.php?BASE=".$database."&i=".$data[0]["integration"]."' target='_blank'>#".$data[0]["integration"]."</a>"
 				: "<a href='info.php?BASE=".$database."&i=".$integration."' target='_blank'>#".$integration."</a>";
 		}
-
 		// Construction du texte à insérer
 		$historique_texte = "<!--auto-->" . $prefix . $txt_in;
 		$historique_id    = $i;
-
 		// Préparation et exécution de la requête
 		$sql = "INSERT INTO historique (historique_index, historique_date, historique_texte, historique_id)
 				VALUES (NULL, :date, :texte, :id)";
@@ -262,8 +269,15 @@ if (!$error) {
 			':texte' => $historique_texte,
 			':id'    => $historique_id
 		]);
-
 	}
+
+
+
+
+
+
+
+
 
 
 }
