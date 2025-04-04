@@ -476,7 +476,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo "<select name=\"integration\" id=\"integration\" >";
        
         echo "<option value=\"0\" "; if ($data[0]["integration"]=="0") echo "selected"; echo ">— Aucune intégration spécifiée —</option>";
-        option_selecteur($data[0]["integration"], $lab_ids, "base_index", "lab_id");
+        option_selecteur($data[0]["integration"], $lab_ids, "base_index", "lab_id", "designation");
         echo "</select>";
 		echo "<script>
 			\$j(document).ready(function() {
