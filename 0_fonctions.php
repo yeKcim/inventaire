@@ -48,43 +48,60 @@ function phone_display($n, $display) {
 ╚══════╝╚══════╝╚══════╝╚══════╝ ╚═════╝   ╚═╝
 */
 
-function selecteur_selectwo($nom, $table, $intitule, $A="0", $B="1", $complement="0",$complement_display="") {
+function selecteur_selectwo($nom, $table, $intitule, $A="0", $B="1", $complement="0", $complement_display="") {
     global $$nom;
-    echo "<select name=\"$nom\" onchange=\"submit();\" class=\"select2\" tabindex=\"0\" id=\"$nom\" >";
-    echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>";
-    foreach ($table as &$l){
-        $selected= ($$nom==$l[$A]) ? "selected > $nom =" : " > " ;
-        $complement_info= ( ($complement!=0)||(array_key_exists($complement, $l)) ) ? "$l[$complement]" : "";
-        $c= ($complement_display!="") ? "($complement_info)" : "$complement_info";
-        echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
+
+    // Vérifier que $table est un tableau ou un objet avant de faire le foreach
+    if (is_array($table) || is_object($table)) {
+        echo "<select name=\"$nom\" onchange=\"submit();\" class=\"select2\" tabindex=\"0\" id=\"$nom\" >";
+        echo "<option value=\"\" "; if ($$nom=="") echo "selected"; echo ">— $intitule —</option>";
+        foreach ($table as &$l) {
+            $selected = ($$nom == $l[$A]) ? "selected > $nom =" : " > ";
+            $complement_info = (($complement != 0) || (array_key_exists($complement, $l))) ? "$l[$complement]" : "";
+            $c = ($complement_display != "") ? "($complement_info)" : "$complement_info";
+            echo "<option value=\"$l[$A]\" $selected $l[$B] $c</option>";
+        }
+        echo "</select> ";
+        // Script pour select2
+        echo "<script>
+            \$j(document).ready(function() {
+                \$j('#".$nom."').select2({
+                    placeholder: \"".$intitule."\",
+                    allowClear: true
+                });
+            });
+        </script>";
+    } else {
+        // Si $table n'est pas un tableau ou un objet, afficher un message d'erreur
+        echo "<p>Error: The data for the select menu is invalid.</p>";
     }
-    echo "</select> ";
-	/*select2 pour recherche */
-		echo "<script>
-			\$j(document).ready(function() {
-				\$j('#".$nom."').select2({
-					placeholder: \"".$intitule."\",
-					allowClear: true
-				});
-			});
-		</script>";
 }
 
 
 
-function option_selecteur($select, $table, $A="0", $B="1", $complement="0",$complement_display="") {
-	# Chaque entrée du tableau fourni est affiché sous forme d’option pour un sélecteur avec un selected sur une entrée spécifique
+
+function option_selecteur($select, $table, $A="0", $B="1", $complement="0", $complement_display="") {
+    # Chaque entrée du tableau fourni est affiché sous forme d’option pour un sélecteur avec un selected sur une entrée spécifique
     ## select             : entrée à selectionner
-    ## table              : tabeau avec toutes les entrées à proposer
-    ## A                  : ?
-    ## B                  : ?
-    ## complement         : ?
-    ## complement_display : ?
-	foreach ($table as &$l){
-		$complement_info= ( ($complement!=0)||(array_key_exists($complement, $l)) ) ? "$l[$complement]" : "" ;
-		$c= ($complement_display!="") ? "($complement_info)" : "$complement_info";
-		echo "<option value=\"$l[$A]\" "; echo ($select==$l[$A]) ? "selected >" : " >"; echo "$l[$B] $c</option>";
-	}
+    ## table              : tableau avec toutes les entrées à proposer
+    ## A                  : index du tableau pour l'option
+    ## B                  : index du tableau pour le texte de l'option
+    ## complement         : index du tableau pour des informations complémentaires
+    ## complement_display : texte à afficher pour l'information complémentaire
+
+    // Vérifie si $table est un tableau valide avant de passer à foreach
+    if (is_array($table) && !empty($table)) {
+        foreach ($table as &$l) {
+            $complement_info = ( ($complement != 0) || (array_key_exists($complement, $l)) ) ? $l[$complement] : "";
+            $c = ($complement_display != "") ? "($complement_info)" : "$complement_info";
+            echo "<option value=\"$l[$A]\" "; 
+            echo ($select == $l[$A]) ? "selected >" : " >"; 
+            echo "$l[$B] $c</option>";
+        }
+    } else {
+        // Si $table n'est pas un tableau valide, on affiche un message d'erreur ou on gère autrement
+        echo "";
+    }
 }
 
 

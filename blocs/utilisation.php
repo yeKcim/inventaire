@@ -123,7 +123,8 @@ if ( isset($_POST["utilisation_valid"]) ) {
 				':phone'  => $plus_utilisateur_phone
 			]);
 		    /* TODO : prévoir le cas où le responsable existe déjà */
-		$utilisateur=return_last_id("utilisateur_index","utilisateur");
+			$utilisateur=return_last_id("utilisateur_index","utilisateur");
+			$utilisateurs = is_array($utilisateurs) ? $utilisateurs : [];
 		    // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
 		    array_push($utilisateurs, array("utilisateur_index" => $utilisateur, "utilisateur_nom" => $plus_utilisateur_nom, "utilisateur_prenom" => $plus_utilisateur_prenom, "utilisateur_mail" => $plus_utilisateur_mail, "utilisateur_phone" => $plus_utilisateur_phone) );
 		    if ($sth) $sth->closeCursor();
@@ -161,7 +162,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
 		    
 		    /* TODO : prévoir le cas où la nouvelle localisation existe déjà */
 			$localisation=return_last_id("localisation_index","localisation");
-		
+			$localisation = is_array($localisation) ? $localisation : [];
 		    // on ajoute cette entrée dans le tableau des localisations (utilisé pour le select)
 			array_push($localisations, array("localisation_index" => $localisation, "localisation_batiment" => $plus_localisation_bat, "localisation_piece" => $plus_localisation_piece ) );
 		}
@@ -182,6 +183,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
 			// Fermeture du curseur
 			$sth->closeCursor();
 			$raison_sortie=return_last_id("raison_sortie_index","raison_sortie");
+			$raison_sortie = is_array($raison_sortie) ? $raison_sortie : [];
 		    // on ajoute cette entrée dans le tableau des raisons de sortie (utilisé pour le select)
 			array_push($raison_sorties, array("raison_sortie_index" => $raison_sortie, "raison_sortie_nom" => $plus_raison_sortie_nom ) );
 		}

@@ -58,7 +58,30 @@ if ($del_f_confirm=="Confirmer la suppression") {
 if ($move!="") {
     $movefrom=str_replace("$dossierdesfichiers$database/", "", $move);
     if ($movefrom=="$i/") {
-        $keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
+    
+    
+    
+		// Vérifie si $marques est bien un tableau et qu'il n'est pas vide
+		if (is_array($marques) && !empty($marques)) {
+			// Cherche l'index dans la colonne 'marque_index'
+			$keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
+			
+			// Si l'index est trouvé, récupère la première clé
+			if (isset($keys[0])) {
+				$key = $keys[0];
+			} else {
+				// Si l'index n'est pas trouvé
+				$key = null;
+			}
+		} else {
+			// Gère le cas où $marques est false ou un tableau vide
+			echo "Aucune marque trouvée.";
+			$key = null; // Ou une valeur par défaut
+		}
+
+        
+        
+        
         if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
 
             $m=$marques[$keys[0]]["marque_nom"];
@@ -187,7 +210,32 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
         displayDir($database, $i, "$dossierdesfichiers$database/$i/", $del=$write, $allowmv=$mv);
     echo "</fieldset>";
 
-    $keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
+
+
+
+	// Vérifie que $marques est un tableau valide et non vide
+	if (is_array($marques) && !empty($marques)) {
+		// Utilisation de array_column() pour récupérer les clés des 'marque_index'
+		$keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
+		
+		// Si une clé est trouvée, assigne la première clé à $key
+		if (isset($keys[0])) {
+			$key = $keys[0];
+		} else {
+			// Si aucune clé n'est trouvée, définir $key à null ou autre valeur par défaut
+			$key = null;
+		}
+	} else {
+		// Si $marques n'est pas un tableau valide ou est vide
+		echo "Erreur : Aucune marque trouvée ou problème avec les données.";
+		$key = null; // Ou autre valeur par défaut
+	}
+
+    
+    
+    
+    
+    
     echo "<fieldset><legend>Fichiers globaux liés à la référence constructeur</legend>";
     if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
        	$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);

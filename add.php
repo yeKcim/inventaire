@@ -67,7 +67,7 @@ if ( isset($_POST["add_valid"]) ) {
 		        // TODO : prévoir le cas où existe déjà
 			$data["vendeur"]=return_last_id("vendeur_index","vendeur");
 		        // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
-			$vendeurs = $vendeurs ?? [];
+			$vendeurs = isset($vendeurs) && is_array($vendeurs) ? $vendeurs : [];
 			$plus_vendeur_nom = $plus_vendeur_nom ?? '';
 			$plus_vendeur_web = $plus_vendeur_web ?? '';
 			$plus_vendeur_remarque = $plus_vendeur_remarque ?? '';
@@ -92,8 +92,9 @@ if ( isset($_POST["add_valid"]) ) {
 			$data["contrat_type"] = return_last_id("contrat_type_index", "contrat_type");
 
             // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-		    $types_contrats = $types_contrats ?? [];
-			array_push($types_contrats, array("contrat_type_index" => $data["contrat_type"], "contrat_type_cat" => $data["plus_contrat_type_nom"] ) );
+			$types_contrats = is_array($types_contrats) ? $types_contrats : [];
+			array_push($types_contrats, array("contrat_type_index" => $data["contrat_type"], "contrat_type_cat" => $data["plus_contrat_type_nom"]));
+
         }
     }
 
@@ -114,7 +115,7 @@ if ( isset($_POST["add_valid"]) ) {
 			]);
 			$data["contrat"] = return_last_id("contrat_index", "contrat");
 
-			$contrats = $contrats ?? [];
+			$contrats = isset($contrats) && is_array($contrats) ? $contrats : [];
             // on ajoute cette entrée dans le tableau des contrats (utilisé pour le select)
 	    	array_push($contrats, array("contrat_index" => $data["contrat"], "contrat_nom" => $data["plus_contrat_nom"], "contrat_type" => $data["contrat_type"] ) );
 
@@ -137,7 +138,7 @@ if ( isset($_POST["add_valid"]) ) {
 			]);
 			$data["tutelle"] = return_last_id("tutelle_index", "tutelle");
 
-	    	$tutelles = $tutelles ?? [];
+			$tutelles = isset($tutelles) && is_array($tutelles) ? $tutelles : [];  	
             // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
 	    	array_push($tutelles, array("tutelle_index" => $data["tutelle"], "tutelle_nom" => $data["plus_tutelle"] ) );
         }
@@ -166,7 +167,7 @@ if ( isset($_POST["add_valid"]) ) {
 			]);
 			$data["responsable_achat"] = return_last_id("utilisateur_index", "utilisateur");
 
-			$utilisateurs = $utilisateurs ?? [];
+			$utilisateurs = is_array($utilisateurs) ? $utilisateurs : [];
 		    // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
 			array_push($utilisateurs, array("utilisateur_index" => $data["responsable_achat"], "utilisateur_nom" => $data["plus_responsable_achat_nom"], "utilisateur_prenom" => $data["plus_responsable_achat_prenom"], "utilisateur_mail" => $data["plus_responsable_achat_mail"], "utilisateur_phone" => phone_display("".$data["plus_responsable_achat_phone"]."",".") ) );
         }
@@ -188,7 +189,7 @@ if ( isset($_POST["add_valid"]) ) {
 			]);
 			$data["marque"] = return_last_id("marque_index", "marque");
 
-		    $marques = $marques ?? [];
+		    $marques = is_array($marques) ? $marques : [];
 			// on ajoute cette entrée dans le tableau des marques (utilisé pour le select)
 			array_push($marques, array("marque_index" => $data["marque"], "marque_nom" => $data["plus_marque_nom"] ) );
         }
@@ -216,7 +217,7 @@ if ( isset($_POST["add_valid"]) ) {
 			$data["categorie"] = return_last_id("categorie_index", "categorie");
 
             // on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
-		    $categories = $categories ?? [];
+		    $categories = is_array($categories) ? $categories : [];
 			array_push($categories, array("categorie_index" => $data["categorie"], "categorie_nom" => $data["plus_categorie_nom"], "categorie_lettres" => $data["plus_categorie_abbr"] ) );
             // TODO Attention l’abréviation ne doit contenir que des lettres !
         }

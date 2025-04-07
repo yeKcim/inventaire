@@ -404,7 +404,23 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<label for=\"responsable_achat\">Acheteur ";
 
 		$d= (isset($data[0])) ? $data[0]["responsable_achat"] : "";
-		$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $d); if (isset($keys[0])) {$key=$keys[0];}
+
+	// Vérifie que $utilisateurs est bien un tableau et qu'il n'est pas vide
+	if (is_array($utilisateurs) && !empty($utilisateurs)) {
+		// Cherche l'index dans la colonne 'utilisateur_index'
+		$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $d);
+		
+		if (isset($keys[0])) {
+		    $key = $keys[0];
+		} else {
+		    // Si l'index n'est pas trouvé
+		    $key = null;
+		}
+	} else {
+		// Gérer le cas où $utilisateurs n'est pas un tableau ou est vide
+		echo "Aucun utilisateur trouvé.";
+		$key = null;  // Ou une valeur par défaut
+	}
 
 		if (isset($data[0]))
 		{ if ( ($data[0]["responsable_achat"]!="0")&&(($data[0]["responsable_achat"]!="")) ) {
