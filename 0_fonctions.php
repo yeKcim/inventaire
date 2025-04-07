@@ -261,17 +261,33 @@ function parse_size($size) {
 function new_lab_id($categorie) {
     global $dbh;
     // quelle est l’abbréviation de la catégorie ?
-    $sth = $dbh->query("SELECT categorie_lettres FROM categorie WHERE categorie_index='".$categorie."' ;");
-    $tabbr = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-    $abbr=$tabbr[0]["categorie_lettres"];
-    if ($sth) $sth->closeCursor();
-    // recherche du labid max
-    $sth = $dbh->query("SELECT lab_id FROM base WHERE categorie='".$categorie."' ORDER BY lab_id ASC ;");
-    $allid = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-    if ($sth) $sth->closeCursor();
+	// Recherche du nom de la catégorie à partir de son index
+	$sth = $dbh->prepare("SELECT categorie_lettres FROM categorie WHERE categorie_index = :categorie;");
+	$sth->bindParam(':categorie', $categorie, PDO::PARAM_INT);  // Lier la variable avec le paramètre de la requête
+	$sth->execute();
+	$tabbr = ($sth->rowCount() > 0) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
+	$abbr = $tabbr[0]["categorie_lettres"] ?? '';  // Utilisation de l'opérateur de fusion null pour éviter une erreur si la clé n'existe pas
+	$sth->closeCursor();
+
+	// Recherche du lab_id max pour la catégorie donnée
+	$sth = $dbh->prepare("SELECT lab_id FROM base WHERE categorie = :categorie ORDER BY lab_id ASC;");
+	$sth->bindParam(':categorie', $categorie, PDO::PARAM_INT);  // Lier à nouveau la variable catégorie
+	$sth->execute();
+	$allid = ($sth->rowCount() > 0) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
+	$sth->closeCursor();
+
     // on supprime les lettres des lab_id, on met les chiffres dans un tableau
-    $allidnum=array();
-    foreach ($allid as $a) array_push ( $allidnum, preg_replace('`[^0-9]`', '', $a["lab_id"]) );
+    $allidnum = array();
+	// Vérifier que $allid est un tableau avant de faire le foreach
+	if (is_array($allid)) {
+		foreach ($allid as $a) {
+		    // Utilisation de preg_replace pour ne garder que les chiffres dans lab_id
+		    array_push($allidnum, preg_replace('`[^0-9]`', '', $a["lab_id"]));
+		}
+	} else {
+		// Si $allid est FALSE, tu peux gérer ce cas, par exemple en laissant $allidnum vide
+		$allidnum = array();  // Ou effectuer une autre action selon le besoin
+	}
     $newid= ($allid) ? max($allidnum)+1 : 1 ;
     $new_lab_id="".$abbr."".$newid."";
     // TODO : Vérifier avant qu’aucune autre entrée ainsi nommée n’existe ! dans le cas d’un nommage manuel
@@ -279,14 +295,23 @@ function new_lab_id($categorie) {
     return $new_lab_id;
 }
 
-function return_last_id($col,$table) {
+function return_last_id($col, $table) {
     global $dbh;
-    $sth = $dbh->query("SELECT $col FROM $table ORDER BY $col DESC LIMIT 1 ;");
-    $t = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-    $r = ($t) ? $t[0][$col] : 0 ;
-    if ($sth) $sth->closeCursor();
+    // Préparation de la requête SQL
+    $sql = "SELECT $col FROM $table ORDER BY $col DESC LIMIT 1";
+    // Préparer la requête
+    $sth = $dbh->prepare($sql);
+    // Exécuter la requête
+    $sth->execute();
+    // Récupérer le résultat
+    $t = $sth->fetchAll(PDO::FETCH_ASSOC);
+    // Vérifier si un résultat existe, sinon retourner 0
+    $r = ($t) ? $t[0][$col] : 0;
+    // Fermer le curseur
+    $sth->closeCursor();
     return $r;
 }
+
 
 function quickdisplayincarac ($t) {
     global $categories; global $database;
@@ -379,24 +404,27 @@ function vnum($s) {
 
 
 function dejadanslabase($select) {
-    // $s="$sSELECT DISTINCT `categorie_lettres` FROM `categorie` ;"
-    // Ne pas oublier les ` car ils servent à récupérer une info !
     global $dbh;
-    $abr = $dbh->query("$select");
-    $abrev = ($abr) ? $abr->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-    if ($abr) $abr->closeCursor();
-    $listab="";
+    // Préparation de la requête
+    $sth = $dbh->prepare($select);
+    // Exécution de la requête
+    $sth->execute();
+    // Récupérer les résultats
+    $abrev = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
+    // Fermer le curseur
+    $sth->closeCursor();
+    // Préparer la liste des valeurs distinctes
+    $listab = "";
     $distinct = explode("`", $select);
-    $d=$distinct[1];
+    $d = $distinct[1];
+    // Concatenation des valeurs
     foreach ($abrev as $a) {
-        $listab.="".$a["$d"]."";
-            $listab.="|";
+        $listab .= $a["$d"] . "|";
     }
-    $listab=substr("$listab", 0, -1);
+    // Retirer le dernier séparateur "|"
+    $listab = rtrim($listab, '|');
     return $listab;
 }
-
-
 
 
 

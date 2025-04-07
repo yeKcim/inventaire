@@ -19,25 +19,36 @@ $today=date("Y-m-d");
 ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
 */
 
+// Construire la requête SQL avec les clauses dynamiques
 $table = "
 SELECT base_index, lab_id, categorie, categorie_nom, categorie_lettres, reference, designation, marque, marque_nom, vendeur, vendeur_nom,
-	vendeur_web, vendeur_remarques, serial_number, localisation, localisation_batiment, localisation_piece, date_localisation,
-	vendeur_nom, marque_nom, raison_sortie, raison_sortie_nom, utilisateur, responsable_achat,
-	utilisateur_nom as `responsable_nom`, utilisateur_prenom as `responsable_prenom`, utilisateur_mail as `responsable_mail`,
-	utilisateur_phone as `responsable_phone`,
-	date_achat, prix, contrat, contrat_nom,
-	num_inventaire, integration
+       vendeur_web, vendeur_remarques, serial_number, localisation, localisation_batiment, localisation_piece, date_localisation,
+       vendeur_nom, marque_nom, raison_sortie, raison_sortie_nom, utilisateur, responsable_achat,
+       utilisateur_nom as `responsable_nom`, utilisateur_prenom as `responsable_prenom`, utilisateur_mail as `responsable_mail`,
+       utilisateur_phone as `responsable_phone`,
+       date_achat, prix, contrat, contrat_nom,
+       num_inventaire, integration
 FROM base, categorie, marque, vendeur, localisation, contrat, contrat_type, utilisateur, raison_sortie
-WHERE categorie=categorie_index AND marque=marque_index AND vendeur=vendeur_index AND
-	localisation=localisation_index AND contrat=contrat_index AND raison_sortie=raison_sortie_index
-AND contrat_index=contrat AND contrat_type=contrat_type_index AND responsable_achat=utilisateur_index
-$IOT_CMD $CAT_CMD $TYC_CMD $CON_CMD $SEA_CMD $RES_CMD $UTL_CMD
-$ORDER ;
+WHERE categorie = categorie_index
+  AND marque = marque_index
+  AND vendeur = vendeur_index
+  AND localisation = localisation_index
+  AND contrat = contrat_index
+  AND raison_sortie = raison_sortie_index
+  AND contrat_index = contrat
+  AND contrat_type = contrat_type_index
+  AND responsable_achat = utilisateur_index
+  $IOT_CMD $CAT_CMD $TYC_CMD $CON_CMD $SEA_CMD $RES_CMD $UTL_CMD
+  $ORDER;
 ";
-
-$sth = $dbh->query($table);
-$tableau = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
-if ($sth) $sth->closeCursor();
+// Préparer la requête
+$sth = $dbh->prepare($table);
+// Exécuter la requête
+$sth->execute();
+// Récupérer les résultats
+$tableau = $sth->fetchAll(PDO::FETCH_ASSOC);
+// Fermer le curseur
+$sth->closeCursor();
 
 //liste des base_index affichés
 $b_i="";
@@ -109,9 +120,20 @@ if (!empty($b_i)) {
 	}
 	
 	//liste des entretiens correspondants
-	$sth = $dbh->query("SELECT e_id, e_index, e_frequence, e_lastdate, e_designation FROM entretien WHERE e_id IN ($b_i) ORDER BY e_index ASC ;");
-	$tableau_entretien = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array() ;
+	$tableau_entretien = array();
+	// Assurer que $b_i est bien un tableau
+	$b_i_array = is_array($b_i) ? $b_i : explode(',', $b_i);
+	$placeholders = implode(',', array_fill(0, count($b_i_array), '?'));
+	$sql = "SELECT e_id, e_index, e_frequence, e_lastdate, e_designation
+		    FROM entretien
+		    WHERE e_id IN ($placeholders)
+		    ORDER BY e_index ASC";
+	$sth = $dbh->prepare($sql);
+	$sth->execute($b_i_array);
+	$tableau_entretien = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array();
+
 	if ($sth) $sth->closeCursor();
+
 	$te=array();
 	foreach ($tableau_entretien as $l) {
 	    $f=$l["e_frequence"];
@@ -146,9 +168,22 @@ if (!empty($b_i)) {
 $b_e="";
 foreach ($tableau as &$t) { $b_e.=($t["integration"]!="0") ? $t["integration"]."," : ""; }
 if ($b_e!="") {
-	$b_e=substr($b_e, 0, -1); // suppression du dernier caractère
-	$sth = $dbh->query("SELECT base_index, lab_id, categorie, reference, designation, sortie FROM base WHERE base_index IN ($b_e) ORDER BY base_index ASC ; ");
-	$tableau_enfants = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+	$b_e_array = is_array($b_e) ? $b_e : explode(',', $b_e);
+	$b_e = implode(',', $b_e_array);
+
+	// Assurer que $b_e est bien une chaîne valide de valeurs pour IN
+	$placeholders = implode(',', array_fill(0, count($b_e_array), '?'));
+
+	$sql = "SELECT base_index, lab_id, categorie, reference, designation, sortie
+		    FROM base
+		    WHERE base_index IN ($placeholders)
+		    ORDER BY base_index ASC";
+
+	$sth = $dbh->prepare($sql);
+	$sth->execute($b_e_array);
+
+	$tableau_enfants = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
+
 	if ($sth) $sth->closeCursor();
 } else {
 	    $tableau_enfants = [];
