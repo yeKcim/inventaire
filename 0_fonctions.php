@@ -302,7 +302,6 @@ function new_lab_id($categorie) {
 		    array_push($allidnum, preg_replace('`[^0-9]`', '', $a["lab_id"]));
 		}
 	} else {
-		// Si $allid est FALSE, tu peux gérer ce cas, par exemple en laissant $allidnum vide
 		$allidnum = array();  // Ou effectuer une autre action selon le besoin
 	}
     $newid= ($allid) ? max($allidnum)+1 : 1 ;

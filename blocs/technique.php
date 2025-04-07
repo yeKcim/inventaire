@@ -50,6 +50,7 @@ if (isset($_POST["technique_valid"])) {
             $sth->execute([':nom' => $plus_marque_nom]);
             $marque = return_last_id("marque_index", "marque");
 
+        	$marques = is_array($marques) ? $marques : [];
             array_push($marques, ["marque_index" => $marque, "marque_nom" => $plus_marque_nom]);
         } else {
         	$message.="<p class=\"error_message\" id=\"disappear_delay\">Le nom de la nouvelle marque ne peut être vide, marque indéfinie.</p>";
@@ -78,6 +79,7 @@ if (isset($_POST["technique_valid"])) {
 			$categorie=return_last_id("categorie_index","categorie");
 			// on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
 			
+			$categories = is_array($categories) ? $categories : [];
 			array_push($categories, array(
 				"categorie_index"   => $categorie,       // L'ID retourné
 				"categorie_nom"     => $plus_categorie_nom,  // Le nom complet

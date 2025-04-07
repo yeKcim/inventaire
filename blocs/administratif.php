@@ -83,7 +83,8 @@ if ( isset($_POST["administratif_valid"]) ) {
 		if (!empty($plus_contrat_type_nom)) {
 			$sth = $dbh->prepare("INSERT INTO contrat_type (contrat_type_cat) VALUES (:plus_contrat_type_nom)");				// Prépare la requête avec un paramètre lié
 			$sth->execute([':plus_contrat_type_nom' => !empty($plus_contrat_type_nom) ? $plus_contrat_type_nom : null]);		// Exécute avec une valeur NULL si la variable est vide
-			$contrat_type = return_last_id("contrat_type_index", "contrat_type");												// Récupère l'ID du dernier enregistrement
+			$contrat_type = return_last_id("contrat_type_index", "contrat_type"); // Récupère l'ID du dernier enregistrement
+			$types_contrats = is_array($types_contrats) ? $types_contrats : [];
 			array_push($types_contrats, ["contrat_type_index" => $contrat_type,"contrat_type_cat" => $plus_contrat_type_nom]);	// Ajoute l'entrée dans le tableau
 			$sth->closeCursor();																								// Ferme le curseur
 		}
@@ -122,7 +123,8 @@ if ( isset($_POST["administratif_valid"]) ) {
 		if (!empty($plus_tutelle)) { // Vérifier que le nom n’est pas vide
 			$sth = $dbh->prepare("INSERT INTO tutelle (tutelle_nom) VALUES (:plus_tutelle)"); 		// Prépare la requête avec un paramètre lié
 			$sth->execute([':plus_tutelle' => !empty($plus_tutelle) ? $plus_tutelle : null]); 		// Exécute avec une valeur NULL si la variable est vide
-			$tutelle = return_last_id("tutelle_index", "tutelle"); 									// Récupère l'ID du dernier enregistrement
+			$tutelle = return_last_id("tutelle_index", "tutelle"); 
+			$tutelles = is_array($tutelles) ? $tutelles : [];									// Récupère l'ID du dernier enregistrement
 			array_push($tutelles, ["tutelle_index" => $tutelle, "tutelle_nom" => $plus_tutelle]); 	// Ajoute l'entrée dans le tableau
 			$sth->closeCursor(); 																	// Ferme le curseur
 		} else {
@@ -152,6 +154,7 @@ if ( isset($_POST["administratif_valid"]) ) {
 		    /* TODO : prévoir le cas où le responsable existe déjà */
 		$responsable_achat=return_last_id("utilisateur_index","utilisateur");
 		    // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
+		    $utilisateurs = is_array($utilisateurs) ? $utilisateurs : [];
 		    array_push($utilisateurs, array("utilisateur_index" => $responsable_achat, "utilisateur_nom" => $plus_responsable_achat_nom, "utilisateur_prenom" => $plus_responsable_achat_prenom, "utilisateur_mail" => $plus_responsable_achat_mail, "utilisateur_phone" => $plus_responsable_achat_phone) );
 		    if ($sth) $sth->closeCursor();
     	}
