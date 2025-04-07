@@ -88,6 +88,8 @@ if ($modif_entretien!="") {
             $message.=$message_success_add;
 	    $e_effectuerpar=return_last_id("utilisateur_index","utilisateur");
             // on ajoute cette entrée dans le tableau des utilisateurs
+            
+        $utilisateurs = is_array($utilisateurs) ? $utilisateurs : [];
 	    array_push($utilisateurs, array("utilisateur_index" => $e_effectuerpar, "utilisateur_nom"  => $plus_intervant_nom, "utilisateur_prenom" => $plus_intervant_prenom, "utilisateur_mail" => $plus_intervant_mail, "utilisateur_phone" =>phone_display("$plus_intervant_phone",".") ) );
         }
     }
@@ -284,8 +286,13 @@ else {
                 else echo "<span style=\"color:#3a4a46;\">";
             }
 
-	    $keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $e["e_effectuerpar"]);
-	    
+	    if (is_array($utilisateurs)) {
+			$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $e["e_effectuerpar"]);
+		} else {
+			// Si $utilisateurs n'est pas un tableau, tu peux définir un tableau vide ou gérer l'erreur
+			$keys = [];
+		}
+
 	    if ( array_key_exists(0,$keys) ) $key=$keys[0];;
 	    
             echo "<abbr title=\"dernier entretien effectué ";
