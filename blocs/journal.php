@@ -54,7 +54,7 @@ if ($add_historique == "Ajouter") {
     $sth->closeCursor();
 
     if (!isset($do_i_insert_histo[0])) {
-        $historique_date = ($historique_date == NULL) ? "0000-00-00" : $historique_date;
+        $historique_date = $historique_date ?? "0000-00-00";
 
         // Préparation de la requête d'insertion
         $sth = $dbh->prepare("
