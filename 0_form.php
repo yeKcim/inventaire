@@ -69,9 +69,27 @@ $TYC_CMD= ($TYC!="") ? "AND contrat_type_index=$TYC" : "" ;
 #########################################################################
 #                            CON : contrat                              #
 #########################################################################
-$LIM_CON= ($TYC!="") ? "AND contrat_type=\"$TYC\" " : "" ; // si type de contrat sélectionné, formulaire contrats se limite
-$sth = $dbh->query("SELECT contrat_index, contrat_nom, contrat_type FROM contrat, contrat_type WHERE contrat_index!=0 AND contrat_type_index!=0 AND contrat_type=contrat_type.contrat_type_index $LIM_CON ORDER BY contrat_nom ASC ;");
-$contrats = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+// Déterminer la clause de filtrage en fonction de $TYC
+$LIM_CON = ($TYC != "") ? "AND contrat_type = :tyc " : "";
+
+// Requête SQL avec un marqueur de paramètre pour $TYC
+$sql = "SELECT contrat_index, contrat_nom, contrat_type
+        FROM contrat, contrat_type
+        WHERE contrat_index != 0
+        AND contrat_type_index != 0
+        AND contrat_type = contrat_type.contrat_type_index
+        $LIM_CON
+        ORDER BY contrat_nom ASC;";
+
+$sth = $dbh->prepare($sql);
+
+// Lier le paramètre si $TYC n'est pas vide
+if ($TYC != "") {
+    $sth->bindParam(':tyc', $TYC, PDO::PARAM_STR);
+}
+
+$sth->execute();
+$contrats = $sth->fetchAll(PDO::FETCH_ASSOC);
 selecteur_selectwo("CON", $contrats, "Tous contrats", "contrat_index", "contrat_nom");
 $CON_CMD= ($CON!="") ? "AND contrat_index=$CON" : "" ;
 if ($sth) $sth->closeCursor();
@@ -79,8 +97,16 @@ if ($sth) $sth->closeCursor();
 #########################################################################
 #                      RES : Responsable achat                          #
 #########################################################################
-$sth = $dbh->query("SELECT DISTINCT (utilisateur_index) responsable_achat, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur, base WHERE responsable_achat=utilisateur_index AND utilisateur_index!=0 ORDER BY utilisateur_nom, utilisateur_prenom ASC ;");
-$responsables = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+// Requête SQL pour récupérer les responsables d'achat
+$sql = "SELECT DISTINCT utilisateur_index AS responsable_achat, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone
+        FROM utilisateur, base
+        WHERE responsable_achat = utilisateur_index
+        AND utilisateur_index != 0
+        ORDER BY utilisateur_nom, utilisateur_prenom ASC;";
+
+$sth = $dbh->prepare($sql);
+$sth->execute();
+$responsables = $sth->fetchAll(PDO::FETCH_ASSOC);
 selecteur_selectwo("RES", $responsables, "Tous responsables achat", "responsable_achat", "utilisateur_nom", "utilisateur_prenom");
 $RES_CMD= ($RES!="") ? "AND responsable_achat=$RES" : "" ;
 if ($sth) $sth->closeCursor();
@@ -88,8 +114,17 @@ if ($sth) $sth->closeCursor();
 #########################################################################
 #                         UTL : Utilisateur                             #
 #########################################################################
-$sth = $dbh->query("SELECT DISTINCT(utilisateur_index) utilisateur_index, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone FROM utilisateur, base WHERE utilisateur=utilisateur_index AND utilisateur_index!=0 ORDER BY utilisateur_nom ASC ;");
-$utilisateurs = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
+// Requête SQL pour récupérer les utilisateurs
+$sql = "SELECT DISTINCT utilisateur_index, utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone
+        FROM utilisateur, base
+        WHERE utilisateur = utilisateur_index
+        AND utilisateur_index != 0
+        ORDER BY utilisateur_nom ASC;";
+
+$sth = $dbh->prepare($sql);
+$sth->execute();
+$utilisateurs = $sth->fetchAll(PDO::FETCH_ASSOC);
+
 selecteur_selectwo("UTL", $utilisateurs, "Tous les utilisateurs", "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
 $UTL_CMD= ($UTL!="") ? "AND utilisateur=$UTL" : "" ;
 if ($sth) $sth->closeCursor();

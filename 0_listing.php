@@ -45,20 +45,54 @@ foreach ($tableau as &$t) { $b_i.="".$t["base_index"].","; }
 $b_i= ($b_i=="") ? "" : substr($b_i, 0, -1); // suppression du dernier caractère
 
 if (!empty($b_i)) {
+	$tableau_journaux = array();
+	// Supposons que $b_i est un tableau d'IDs
+	$b_i_array = is_array($b_i) ? $b_i : explode(',', $b_i); // au cas où ce soit une chaîne
+	$placeholders = implode(',', array_fill(0, count($b_i_array), '?'));
 	//liste des journaux correspondants
-	$sth = $dbh->query("SELECT historique_id, COUNT(*) as nb_entree FROM historique, base WHERE historique_id=base_index AND base_index IN ($b_i) GROUP BY historique_id ORDER BY historique_id ASC;");
-	$tableau_journaux = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
+	$sql = "SELECT historique_id, COUNT(*) as nb_entree 
+		    FROM historique, base 
+		    WHERE historique_id = base_index 
+		      AND base_index IN ($placeholders) 
+		    GROUP BY historique_id 
+		    ORDER BY historique_id ASC";
+	$sth = $dbh->prepare($sql);
+	$sth->execute($b_i_array);
+	$tableau_journaux = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : false;
 	if ($sth) $sth->closeCursor();
 	
 	//liste des ensembles parmi les éléments affichés
-$sth = $dbh->query("SELECT base_index, integration, lab_id, categorie, reference, designation, sortie FROM base WHERE integration IN ($b_i) ORDER BY base_index ASC ; ");
-$tableau_parents = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-if ($sth) $sth->closeCursor();
+	$tableau_parents = array();
+	// S'assurer que $b_i est un tableau (ex: [1,2,3])
+	$b_i_array = is_array($b_i) ? $b_i : explode(',', $b_i);
+	$placeholders = implode(',', array_fill(0, count($b_i_array), '?'));
+	$sql = "SELECT base_index, integration, lab_id, categorie, reference, designation, sortie
+		    FROM base
+		    WHERE integration IN ($placeholders)
+		    ORDER BY base_index ASC";
+	$sth = $dbh->prepare($sql);
+	$sth->execute($b_i_array);
+	$tableau_parents = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : false;
+	if ($sth) $sth->closeCursor();
 
 	//liste des caracs correspondantes
-	$sth = $dbh->query("SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND base_index IN ($b_i) AND carac!=0 ORDER BY base.base_index ASC, carac ASC;");
-	$table_carac = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array() ;
+	$table_carac = array();
+	// Assurer que $b_i est bien un tableau
+	$b_i_array = is_array($b_i) ? $b_i : explode(',', $b_i);
+	$placeholders = implode(',', array_fill(0, count($b_i_array), '?'));
+	$sql = "SELECT base_index, categorie, carac_valeur, carac, nom_carac, unite_carac, symbole_carac
+		    FROM caracteristiques
+		    JOIN carac ON carac_caracteristique_id = carac
+		    JOIN base ON carac_id = base_index
+		    WHERE base_index IN ($placeholders) AND carac != 0
+		    ORDER BY base.base_index ASC, carac ASC";
+	$sth = $dbh->prepare($sql);
+	$sth->execute($b_i_array);
+
+	$table_carac = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : array();
+
 	if ($sth) $sth->closeCursor();
+
 	$tc=array(); $td_c=array(); $th_c="";
 	$val=array();
 	foreach ($table_carac as $l) {
@@ -123,37 +157,47 @@ if ($b_e!="") {
 $th_c="";
 
 if ($CAT!="") {
-  // Si une seule catégorie est affichée on met les caractéristiques pertinentes dans un tableau
-  $sth = $dbh->query("SELECT DISTINCT carac, nom_carac, unite_carac, symbole_carac FROM caracteristiques, carac, base WHERE carac_id=base_index AND carac_caracteristique_id=carac AND categorie=".$CAT." AND carac!=0 ORDER BY carac ASC ;");
-  $carac_categorie = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-  if ($sth) $sth->closeCursor();
+	// Si une seule catégorie est affichée on met les caractéristiques pertinentes dans un tableau
+	$sth = $dbh->prepare("SELECT DISTINCT carac, nom_carac, unite_carac, symbole_carac 
+		                  FROM caracteristiques, carac, base 
+		                  WHERE carac_id = base_index 
+		                    AND carac_caracteristique_id = carac 
+		                    AND categorie = :cat 
+		                    AND carac != 0 
+		                  ORDER BY carac ASC");
 
-  $style="background-color:rgba(212, 224, 200, 0.45);";
+	$sth->execute([':cat' => $CAT]);
 
-  foreach ($carac_categorie as $cc) {
-    //on ajoute une case dans th
-    $th_c.="<th style=\"background:#a4b395;vertical-align:top;\">";
-    $th_c.="<span title=\"".$cc["nom_carac"]."\"><span style=\"color:#2e3436;\">".$cc["symbole_carac"]."</span>";
-    if ($cc["unite_carac"]!="") $th_c.="<br/>(".$cc["unite_carac"].")";
-    $th_c.="</th>";
-    //on ajoute une case dans tr
-    if (is_array($val)) {
-			foreach ($val as $k => $v) {
-			if (!isset($val[$k]["echo"])) $val[$k]["echo"]="";
-			$val[$k]["echo"].="<td style=\"".$style."\">".spanquick("caracteristiques",$k);
-			if (isset($v[$cc["carac"]])) {
-																		
-				//todo:on ajoute la valeur numérique en commentaire ou cachée
-				//$val[$k]["echo"].="<strike>".vnum($v[$cc["carac"]])."</strike> ";
-				$val[$k]["echo"].="<span style=\"display:none;\">".vnum($v[$cc["carac"]])."</span> ";
-				$val[$k]["echo"].=$v[$cc["carac"]];
-																		
-			}
-			else $val[$k]["echo"].="-";
-			$val[$k]["echo"].="</span></td>";
-			}
-	}
-  }
+	$carac_categorie = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : false;
+
+	if ($sth) $sth->closeCursor();
+
+  	$style="background-color:rgba(212, 224, 200, 0.45);";
+
+  	foreach ($carac_categorie as $cc) {
+		//on ajoute une case dans th
+		$th_c.="<th style=\"background:#a4b395;vertical-align:top;\">";
+		$th_c.="<span title=\"".$cc["nom_carac"]."\"><span style=\"color:#2e3436;\">".$cc["symbole_carac"]."</span>";
+		if ($cc["unite_carac"]!="") $th_c.="<br/>(".$cc["unite_carac"].")";
+		$th_c.="</th>";
+		//on ajoute une case dans tr
+		if (is_array($val)) {
+				foreach ($val as $k => $v) {
+				if (!isset($val[$k]["echo"])) $val[$k]["echo"]="";
+				$val[$k]["echo"].="<td style=\"".$style."\">".spanquick("caracteristiques",$k);
+				if (isset($v[$cc["carac"]])) {
+																			
+					//todo:on ajoute la valeur numérique en commentaire ou cachée
+					//$val[$k]["echo"].="<strike>".vnum($v[$cc["carac"]])."</strike> ";
+					$val[$k]["echo"].="<span style=\"display:none;\">".vnum($v[$cc["carac"]])."</span> ";
+					$val[$k]["echo"].=$v[$cc["carac"]];
+																			
+				}
+				else $val[$k]["echo"].="-";
+				$val[$k]["echo"].="</span></td>";
+				}
+		}
+  	}
 }
 
 /*#######################################################################
@@ -161,9 +205,10 @@ if ($CAT!="") {
 #######################################################################*/
 if ($IOT!="0") {
     $raison_sortie=array();
-    $sth = $dbh->query("SELECT * FROM raison_sortie WHERE raison_sortie_index!=0");
-    $raison_sortie = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE ;
-    if ($sth) $sth->closeCursor();
+	$sth = $dbh->prepare("SELECT * FROM raison_sortie WHERE raison_sortie_index != 0");
+	$sth->execute();
+	$raison_sortie = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : false;
+	if ($sth) $sth->closeCursor();
     $display_raison_sortie=1;
 }
 else $display_raison_sortie=0;
@@ -315,7 +360,7 @@ echo "</td>";
             if ($ddir) echo $ddir; else $nofiles=true;
         }
         else $nofiles=true;
-        if ($nofiles) echo spanquick("documents",$t["base_index"])."-</span>";
+        if (isset($nofiles)) echo spanquick("documents",$t["base_index"])."-</span>";
         else echo spanquick("documents",$t["base_index"])."+</span>";
 
         echo "</td>";
