@@ -54,11 +54,24 @@ if ( isset($_POST["add_valid"]) ) {
             $data["vendeur"]="0";
         }
         else {
-	    $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques) VALUES (\"".$data["plus_vendeur_nom"]."\",\"".$data["plus_vendeur_web"]."\",\"".$data["plus_vendeur_remarque"]."\") ;"));
-            // TODO : prévoir le cas où existe déjà
-	    $data["vendeur"]=return_last_id("vendeur_index","vendeur");
-            // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
-	    array_push($vendeurs, array("vendeur_index" => $data["vendeur"], "vendeur_nom" => $plus_vendeur_nom, "vendeur_web" => $plus_vendeur_web, "vendeur_remarques" => $plus_vendeur_remarque ) );
+			$sql = "INSERT INTO vendeur (vendeur_nom, vendeur_web, vendeur_remarques)
+		    VALUES (:vendeur_nom, :vendeur_web, :vendeur_remarques)";
+			$sth = $dbh->prepare($sql);
+			$sth->execute([
+				':vendeur_nom'      => ($data["plus_vendeur_nom"]      === "" ? null : $data["plus_vendeur_nom"]),
+				':vendeur_web'      => ($data["plus_vendeur_web"]      === "" ? null : $data["plus_vendeur_web"]),
+				':vendeur_remarques'=> ($data["plus_vendeur_remarque"] === "" ? null : $data["plus_vendeur_remarque"])
+			]);
+
+			$data["vendeur"] = return_last_id("vendeur_index", "vendeur");
+		        // TODO : prévoir le cas où existe déjà
+			$data["vendeur"]=return_last_id("vendeur_index","vendeur");
+		        // on ajoute cette entrée dans le tableau des vendeurs (utilisé pour le select)
+			$vendeurs = $vendeurs ?? [];
+			$plus_vendeur_nom = $plus_vendeur_nom ?? '';
+			$plus_vendeur_web = $plus_vendeur_web ?? '';
+			$plus_vendeur_remarque = $plus_vendeur_remarque ?? '';
+			array_push($vendeurs, array("vendeur_index" => $data["vendeur"], "vendeur_nom" => $plus_vendeur_nom, "vendeur_web" => $plus_vendeur_web, "vendeur_remarques" => $plus_vendeur_remarque ) );
         }
     }
 
@@ -71,11 +84,16 @@ if ( isset($_POST["add_valid"]) ) {
             $data["contrat_type"]="0";
         }
         else {
-            $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO contrat_type (contrat_type_cat) VALUES (\"".$data["plus_contrat_type_nom"]."\") ;"));
-            /* TODO : prévoir le cas où existe déjà */
-	    $data["contrat_type"]=return_last_id("contrat_type_index","contrat_type");
+            $sql = "INSERT INTO contrat_type (contrat_type_cat) VALUES (:contrat_type_cat)";
+			$sth = $dbh->prepare($sql);
+			$sth->execute([
+				':contrat_type_cat' => ($data["plus_contrat_type_nom"] === "" ? null : $data["plus_contrat_type_nom"])
+			]);
+			$data["contrat_type"] = return_last_id("contrat_type_index", "contrat_type");
+
             // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-	    array_push($types_contrats, array("contrat_type_index" => $data["contrat_type"], "contrat_type_cat" => $data["plus_contrat_type_nom"] ) );
+		    $types_contrats = $types_contrats ?? [];
+			array_push($types_contrats, array("contrat_type_index" => $data["contrat_type"], "contrat_type_cat" => $data["plus_contrat_type_nom"] ) );
         }
     }
 
@@ -83,16 +101,22 @@ if ( isset($_POST["add_valid"]) ) {
     // ╠═╣ ║║ ║║ ║ ║   ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ║  ║ ║║║║║ ╠╦╝╠═╣ ║
     // ╩ ╩╚╝╚═╝╚═╝ ╩   ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╚═╝╚═╝╝╚╝╩ ╩╚═╩ ╩ ╩
     if ($data["contrat"]=="plus_contrat") {
-        if ($data["plus_contrat_nom"]=NULL) {
+        if ($data["plus_contrat_nom"]==NULL) {
             $error.="<p class=\"error_message\">Merci de spécifier le nom du nouveau contrat</p>";
             $data["contrat"]="0";
         }
         else {
-            $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO contrat (contrat_nom, contrat_type) VALUES (\"".$data["plus_contrat_nom"]."\",\"".$data["contrat_type"]."\") ;"));
-            /* TODO : prévoir le cas où existe déjà */
-	    $data["contrat"]=return_last_id("contrat_index","contrat");
+            $sql = "INSERT INTO contrat (contrat_nom, contrat_type) VALUES (:contrat_nom, :contrat_type)";
+			$sth = $dbh->prepare($sql);
+			$sth->execute([
+				':contrat_nom' => ($data["plus_contrat_nom"] === "" ? null : $data["plus_contrat_nom"]),
+				':contrat_type' => ($data["contrat_type"] === "" ? null : $data["contrat_type"])
+			]);
+			$data["contrat"] = return_last_id("contrat_index", "contrat");
+
+			$contrats = $contrats ?? [];
             // on ajoute cette entrée dans le tableau des contrats (utilisé pour le select)
-	    array_push($contrats, array("contrat_index" => $data["contrat"], "contrat_nom" => $data["plus_contrat_nom"], "contrat_type" => $data["contrat_type"] ) );
+	    	array_push($contrats, array("contrat_index" => $data["contrat"], "contrat_nom" => $data["plus_contrat_nom"], "contrat_type" => $data["contrat_type"] ) );
 
         }
     }
@@ -106,11 +130,16 @@ if ( isset($_POST["add_valid"]) ) {
             $data["tutelle"]="0";
         }
         else {
-            $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO tutelle (tutelle_nom) VALUES (\"".$data["plus_tutelle"]."\") ;"));
-            /* TODO : prévoir le cas où existe déjà */
-	    $data["tutelle"]=return_last_id("tutelle_index","tutelle");
+            $sql = "INSERT INTO tutelle (tutelle_nom) VALUES (:tutelle_nom)";
+			$sth = $dbh->prepare($sql);
+			$sth->execute([
+				':tutelle_nom' => ($data["plus_tutelle"] === "" ? null : $data["plus_tutelle"])
+			]);
+			$data["tutelle"] = return_last_id("tutelle_index", "tutelle");
+
+	    	$tutelles = $tutelles ?? [];
             // on ajoute cette entrée dans le tableau des types de contrats (utilisé pour le select)
-	    array_push($tutelles, array("tutelle_index" => $data["tutelle"], "tutelle_nom" => $data["plus_tutelle"] ) );
+	    	array_push($tutelles, array("tutelle_index" => $data["tutelle"], "tutelle_nom" => $data["plus_tutelle"] ) );
         }
     }
 
@@ -126,11 +155,20 @@ if ( isset($_POST["add_valid"]) ) {
             $data["plus_responsable_achat_nom"]=mb_strtoupper($data["plus_responsable_achat_nom"]);
             $data["plus_responsable_achat_phone"]=phone_display("".$data["plus_responsable_achat_phone"]."","");
 
-	    $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone) VALUES (\"".$data["plus_responsable_achat_nom"]."\", \"".$data["plus_responsable_achat_prenom"]."\",\"".$data["plus_responsable_achat_mail"]."\",\"".$data["plus_responsable_achat_phone"]."\") ; "));
-            /* TODO : prévoir le cas où existe déjà */
-	    $data["responsable_achat"]=return_last_id("utilisateur_index","utilisateur");
-            // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
-	    array_push($utilisateurs, array("utilisateur_index" => $data["responsable_achat"], "utilisateur_nom" => $data["plus_responsable_achat_nom"], "utilisateur_prenom" => $data["plus_responsable_achat_prenom"], "utilisateur_mail" => $data["plus_responsable_achat_mail"], "utilisateur_phone" => phone_display("".$data["plus_responsable_achat_phone"]."",".") ) );
+			$sql = "INSERT INTO utilisateur (utilisateur_nom, utilisateur_prenom, utilisateur_mail, utilisateur_phone)
+		    VALUES (:nom, :prenom, :mail, :phone)";
+			$sth = $dbh->prepare($sql);
+			$sth->execute([
+				':nom'    => ($data["plus_responsable_achat_nom"]  === "" ? null : $data["plus_responsable_achat_nom"]),
+				':prenom' => ($data["plus_responsable_achat_prenom"] === "" ? null : $data["plus_responsable_achat_prenom"]),
+				':mail'   => ($data["plus_responsable_achat_mail"]   === "" ? null : $data["plus_responsable_achat_mail"]),
+				':phone'  => ($data["plus_responsable_achat_phone"]  === "" ? null : $data["plus_responsable_achat_phone"])
+			]);
+			$data["responsable_achat"] = return_last_id("utilisateur_index", "utilisateur");
+
+			$utilisateurs = $utilisateurs ?? [];
+		    // on ajoute cette entrée dans le tableau des utilisateurs (utilisé pour le select)
+			array_push($utilisateurs, array("utilisateur_index" => $data["responsable_achat"], "utilisateur_nom" => $data["plus_responsable_achat_nom"], "utilisateur_prenom" => $data["plus_responsable_achat_prenom"], "utilisateur_mail" => $data["plus_responsable_achat_mail"], "utilisateur_phone" => phone_display("".$data["plus_responsable_achat_phone"]."",".") ) );
         }
     }
 
@@ -143,11 +181,16 @@ if ( isset($_POST["add_valid"]) ) {
             $data["marque"]="0";
         }
         else {
-	    $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO marque (marque_nom) VALUES (\"".$data["plus_marque_nom"]."\") ;"));
-            /* TODO : prévoir le cas où existe déjà */
-            $data["marque"]=return_last_id("marque_index","marque");
-	    // on ajoute cette entrée dans le tableau des marques (utilisé pour le select)
-	    array_push($marques, array("marque_index" => $data["marque"], "marque_nom" => $data["plus_marque_nom"] ) );
+			$sql = "INSERT INTO marque (marque_nom) VALUES (:marque_nom)";
+			$sth = $dbh->prepare($sql);
+			$sth->execute([
+				':marque_nom' => ($data["plus_marque_nom"] === "" ? null : $data["plus_marque_nom"])
+			]);
+			$data["marque"] = return_last_id("marque_index", "marque");
+
+		    $marques = $marques ?? [];
+			// on ajoute cette entrée dans le tableau des marques (utilisé pour le select)
+			array_push($marques, array("marque_index" => $data["marque"], "marque_nom" => $data["plus_marque_nom"] ) );
         }
     }
 
@@ -164,11 +207,17 @@ if ( isset($_POST["add_valid"]) ) {
         //    $data["categorie"]="0";
         //} Cette fonction pose problème pour les caractères spéciaux, TODO trouver une méthode pour interdire les chiffres…
         else {
-            $sth = $dbh->query(str_replace("\"\"", "NULL","INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (\"".$data["plus_categorie_abbr"]."\",\"".$data["plus_categorie_nom"]."\") ;")) ;
-            /* TODO : prévoir le cas où existe déjà */
-	    $data["categorie"]=return_last_id("categorie_index", "categorie");
+            $sql = "INSERT INTO categorie (categorie_lettres, categorie_nom) VALUES (:lettres, :nom)";
+			$sth = $dbh->prepare($sql);
+			$sth->execute([
+				':lettres' => ($data["plus_categorie_abbr"] === "" ? null : $data["plus_categorie_abbr"]),
+				':nom'     => ($data["plus_categorie_nom"] === "" ? null : $data["plus_categorie_nom"])
+			]);
+			$data["categorie"] = return_last_id("categorie_index", "categorie");
+
             // on ajoute cette entrée dans le tableau des catégories (utilisé pour le select)
-	    array_push($categories, array("categorie_index" => $data["categorie"], "categorie_nom" => $data["plus_categorie_nom"], "categorie_lettres" => $data["plus_categorie_abbr"] ) );
+		    $categories = $categories ?? [];
+			array_push($categories, array("categorie_index" => $data["categorie"], "categorie_nom" => $data["plus_categorie_nom"], "categorie_lettres" => $data["plus_categorie_abbr"] ) );
             // TODO Attention l’abréviation ne doit contenir que des lettres !
         }
     }
@@ -186,31 +235,87 @@ if ( isset($_POST["add_valid"]) ) {
         // ╔═╗╔═╗╦  ╔═╗╦ ╦╦    ╔╦╗╦ ╦  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╔═╗╦ ╦  ╦
         // ║  ╠═╣║  ║  ║ ║║     ║║║ ║  ║║║║ ║║ ║╚╗╔╝║╣ ╠═╣║ ║  ║
         // ╚═╝╩ ╩╩═╝╚═╝╚═╝╩═╝  ═╩╝╚═╝  ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩ ╩╚═╝  ╩
-	$i=return_last_id("base_index", "base") + 1;
+		$i = return_last_id("base_index", "base") + 1;
 
-	$insert="USE ".$dbname."; INSERT INTO base (base_index, lab_id, categorie, serial_number, reference, designation, utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, date_sortie, sortie, raison_sortie, integration) VALUES (\"".$i."\", \"".$data["lab_id"]."\", \"".$data["categorie"]."\", \"".$data["serial_number"]."\", \"".$data["reference"]."\", \"".$data["designation"]."\", \"0\", \"0\", \"0000-00-00\", \"".$data["tutelle"]."\", \"".$data["contrat"]."\", \"".$data["bon_commande"]."\", \"".$data["num_inventaire"]."\", \"".$data["vendeur"]."\", \"".$data["marque"]."\", \"".$data["date_achat"]."\", \"".$data["responsable_achat"]."\", \"".$data["garantie"]."\", \"".$data["prix"]."\", \"0000-00-00\",  \"0\", \"0\", \"0\") ;";
+		$sql = "INSERT INTO base (
+			base_index, lab_id, categorie, serial_number, reference, designation, 
+			utilisateur, localisation, date_localisation, tutelle, contrat, bon_commande, 
+			num_inventaire, vendeur, marque, date_achat, responsable_achat, garantie, prix, 
+			date_sortie, sortie, raison_sortie, integration
+		) VALUES (
+			:base_index, :lab_id, :categorie, :serial_number, :reference, :designation,
+			:utilisateur, :localisation, :date_localisation, :tutelle, :contrat, :bon_commande,
+			:num_inventaire, :vendeur, :marque, :date_achat, :responsable_achat, :garantie, :prix,
+			:date_sortie, :sortie, :raison_sortie, :integration
+		)";
 
-	$add_result = $dbh->query($insert);
-        if (!isset($add_result)) $error.=$message_error_add;
-        else {
-            $success.="<p class=\"success_message\">";
-            $success.="L’entrée a été ajoutée à la base de donnée.<br/>";
-            $success.="Vous pouvez directement ajouter une nouvelle entrée<br/>";
-            $success.="ou <a href=\"info.php?BASE=$database&i=$i\" target=\"_blank\"><strong>→ Compléter les informations de ".$data["lab_id"]." #$i</strong></a>";
-            $success.="</p>";
+		$sth = $dbh->prepare($sql);
 
-            $data=array(
-                "base_index"=>$i,              "lab_id"=>"",                "categorie"=>"0",
-                "serial_number"=>"",           "reference"=>"",             "designation"=>"",
-                "utilisateur"=>"0",            "localisation"=>"",          "date_localisation"=>"",
-                "tutelle"=>"0",                "contrat"=>"0",              "bon_commande"=>"",
-                "num_inventaire"=>"",
-                "vendeur"=>"0",                "marque"=>"0",               "date_achat"=>"",
-                "responsable_achat"=>"0",      "garantie"=>"",              "prix"=>"0",
-                "date_sortie"=>"",             "sortie"=>"",                "raison_sortie"=>"",
-                "integration"=>""   );
-        }
-    }
+		$params = [
+			':base_index'         => $i,
+			':lab_id'             => $data["lab_id"],
+			':categorie'          => $data["categorie"],
+			':serial_number'      => $data["serial_number"],
+			':reference'          => $data["reference"],
+			':designation'        => $data["designation"],
+			':utilisateur'        => "0",
+			':localisation'       => "0",
+			':date_localisation'  => "0000-00-00",
+			':tutelle'            => $data["tutelle"],
+			':contrat'            => $data["contrat"],
+			':bon_commande'       => $data["bon_commande"],
+			':num_inventaire'     => $data["num_inventaire"],
+			':vendeur'            => $data["vendeur"],
+			':marque'             => $data["marque"],
+			':date_achat'         => $data["date_achat"],
+			':responsable_achat'  => $data["responsable_achat"],
+			':garantie'           => $data["garantie"],
+			':prix'               => $data["prix"],
+			':date_sortie'        => "0000-00-00",
+			':sortie'             => "0",
+			':raison_sortie'      => "0",
+			':integration'        => "0"
+		];
+
+		$add_result = $sth->execute($params);
+
+		if (!$add_result) {
+			$error .= $message_error_add;
+		} else {
+			$success .= "<p class=\"success_message\">";
+			$success .= "L’entrée a été ajoutée à la base de donnée.<br/>";
+			$success .= "Vous pouvez directement ajouter une nouvelle entrée<br/>";
+			$success .= "ou <a href=\"info.php?BASE=$database&i=$i\" target=\"_blank\"><strong>→ Compléter les informations de " . $data["lab_id"] . " #$i</strong></a>";
+			$success .= "</p>";
+
+			// Réinitialisation des valeurs pour un nouveau formulaire
+			$data = array(
+				"base_index"         => $i,
+				"lab_id"             => "",
+				"categorie"          => "0",
+				"serial_number"      => "",
+				"reference"          => "",
+				"designation"        => "",
+				"utilisateur"        => "0",
+				"localisation"       => "",
+				"date_localisation"  => "",
+				"tutelle"            => "0",
+				"contrat"            => "0",
+				"bon_commande"       => "",
+				"num_inventaire"     => "",
+				"vendeur"            => "0",
+				"marque"             => "0",
+				"date_achat"         => "",
+				"responsable_achat"  => "0",
+				"garantie"           => "",
+				"prix"               => "0",
+				"date_sortie"        => "",
+				"sortie"             => "",
+				"raison_sortie"      => "",
+				"integration"        => ""
+			);
+		}
+	}
 }
 /*
 ███████╗██╗███╗   ██╗ ██████╗ ███╗   ██╗    ██╗███╗   ██╗██╗████████╗    ██╗   ██╗ █████╗ ██████╗ ██╗ █████╗ ██████╗ ██╗     ███████╗███████╗
