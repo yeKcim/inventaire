@@ -162,7 +162,7 @@ if ( isset($_POST["utilisation_valid"]) ) {
 		    
 		    /* TODO : prévoir le cas où la nouvelle localisation existe déjà */
 			$localisation=return_last_id("localisation_index","localisation");
-			$localisation = is_array($localisation) ? $localisation : [];
+			$localisations = is_array($localisations) ? $localisations : [];
 		    // on ajoute cette entrée dans le tableau des localisations (utilisé pour le select)
 			array_push($localisations, array("localisation_index" => $localisation, "localisation_batiment" => $plus_localisation_bat, "localisation_piece" => $plus_localisation_piece ) );
 		}
