@@ -361,6 +361,7 @@ function quickdisplaymini ($t) {
 
 function quickdisplayincarac_b ($t) {
     global $categories;
+    global $database;
 	$txt="";
         if ($t["sortie"]=="1") $txt.="<strike>";
         $txt.="<a href='info.php?BASE=$database&i=".$t["base_index"]."' title='#".$t["base_index"]."' target='_blank'>";
