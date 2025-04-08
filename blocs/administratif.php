@@ -32,9 +32,9 @@ $sth->execute();
 $vendeurs = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 // Récupération des contrats
-$sth = $dbh->prepare("SELECT DISTINCT contrat_index, contrat_nom, contrat_type 
-                      FROM contrat 
-                      WHERE contrat_index!=0 
+$sth = $dbh->prepare("SELECT DISTINCT contrat_index, contrat_nom, contrat_type, contrat_type_cat 
+                      FROM contrat, contrat_type
+                      WHERE contrat_index!=0 AND contrat_type_index=contrat_type
                       ORDER BY contrat_nom ASC;");
 $sth->execute();
 $contrats = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -312,7 +312,7 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
         echo "<select name=\"contrat\" onchange=\"display(this,'plus_contrat','plus_contrat');\" id=\"contrat\">";
         echo "<option value=\"0\" "; if (isset($data[0])) {if ($data[0]["contrat"]=="0") echo "selected";} echo ">— Aucun contrat spécifié —</option>";
         echo "<option value=\"plus_contrat\" "; if (isset($data[0])) {if ($data[0]["contrat"]=="plus_contrat") echo "selected";} echo ">− Nouveau contrat : −</option>";
-        option_selecteur( (isset($data[0])) ? $data[0]["contrat"] : "", $contrats, "contrat_index", "contrat_nom");
+        option_selecteur( (isset($data[0])) ? $data[0]["contrat"] : "", $contrats, "contrat_index", "contrat_nom", "contrat_type_cat", true );
         echo "</select>";
         /*select2 pour recherche */
         echo "<script>

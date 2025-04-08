@@ -71,10 +71,7 @@ function selecteur_selectwo($nom, $table, $intitule, $A="0", $B="1", $complement
                 });
             });
         </script>";
-    } else {
-        // Si $table n'est pas un tableau ou un objet, afficher un message d'erreur
-        echo "<p>Error: The data for the select menu is invalid.</p>";
-    }
+    } else {}
 }
 
 
