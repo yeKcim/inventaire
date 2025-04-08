@@ -227,7 +227,6 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 		}
 	} else {
 		// Si $marques n'est pas un tableau valide ou est vide
-		echo "Erreur : Aucune marque trouvée ou problème avec les données.";
 		$key = null; // Ou autre valeur par défaut
 	}
 
