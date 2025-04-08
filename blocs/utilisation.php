@@ -233,14 +233,6 @@ if (!$error) {
 
     // $message.= (!isset($modif_result)) ? $message_error_modif : $message_success_modif;
 
-
-
-
-
-
-
-
-
     // Si l’integration change, ajout d’une entrée autotomatiquement dans le journal
     if ($data[0]["integration"]!=$integration) {
 		$date = date("y.m.d");
@@ -461,7 +453,8 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         echo "<select name=\"raison_sortie\" onchange=\"display(this,'plus_raison_sortie','plus_raison_sortie');\" id=\"raison_sortie\">";
         echo "<option value=\"0\" "; if ($data[0]["raison_sortie"]=="0") echo "selected"; echo ">— Aucune raison spécifiée —</option>";
         echo "<option value=\"plus_raison_sortie\" "; if ($data[0]["raison_sortie"]=="plus_raison_sortie") echo "selected"; echo ">−Nouvelle raison : −</option>";
-        option_selecteur($data[0]["raison_sortie"], $raison_sorties, "raison_sortie_index", "raison_sortie_nom");
+        
+        if (!empty($data) && isset($data[0])) option_selecteur($data[0]["raison_sortie"], $raison_sorties, "raison_sortie_index", "raison_sortie_nom");
         echo "</select>";
         /*select2 pour recherche */
 		echo "<script>
@@ -530,12 +523,16 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 
 		echo "<select class=\"select2\" multiple=\"multiple\" tabindex=\"6\" name=\"parentde[]\" id=\"multiple_int\">";
 		foreach ($lab_ids as $all_ids) {
-			echo "<option value=\"".$all_ids["base_index"]."\" ";
-			echo ($all_ids["integration"]==$i) ? " selected " : "";
-			echo ">[".$all_ids["lab_id"]."] ";
-			echo mb_substr($all_ids["designation"], 0, 35);
-			echo (mb_strlen($all_ids["designation"]) > 35) ? " …" : "";
-			echo "</option><br/>";
+		
+			if ($all_ids["base_index"]!=$data[0]["integration"]) {
+				echo "<option value=\"".$all_ids["base_index"]."\" ";
+				echo ($all_ids["integration"]==$i) ? " selected " : "";
+				echo ">[".$all_ids["lab_id"]."] ";
+				echo mb_substr($all_ids["designation"], 0, 35);
+				echo (mb_strlen($all_ids["designation"]) > 35) ? " …" : "";
+				echo "</option><br/>";
+			}	
+			
 		}
 		echo "</select>";
 		echo "<script>
