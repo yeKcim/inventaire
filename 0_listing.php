@@ -460,7 +460,7 @@ echo "</td>";
             if ($ddir) echo $ddir; else $nofiles=true;
         }
         else $nofiles=true;
-        if ($nofiles) echo spanquick("documents",$t["base_index"])."-</span>";
+        if (isset($nofiles)) echo spanquick("documents",$t["base_index"])."-</span>";
         else echo spanquick("documents",$t["base_index"])."+</span>";
 
         echo "</td>";
