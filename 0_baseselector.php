@@ -86,12 +86,30 @@ try {
     echo "<select name=\"BASE\" onchange=\"submit();\" class=\"select2\" tabindex=\"0\" id=\"selectbase\">";
     echo "<option value=\"\">− Sélectionnez une base −</option>";
 
+	$border_color = null;
     // Pour l'affichage dans le select, on génère les <option> à partir de $list_bases
     foreach ($list_bases as $base) {
-        $selected = ($base['short_name'] == $BASE) ? " selected" : "";
+
+        if ($base['short_name'] == $BASE) {
+       		$selected = " selected";
+       		$border_color = htmlspecialchars($base['color']);
+        } else {
+        	$selected = "";
+        	
+        }
+     
         echo "<option value=\"" . $base['short_name'] . "\"" . $selected . ">" . $base['display'] . "</option>";
     }
     echo "</select> ";
+    
+    echo "</select> ";
+    echo "<script>
+    \$j(document).ready(function() {
+        \$j('#selectbase').select2();
+    });
+    </script>";
+    
+    
     // Optionnel : champ caché pour 'i'
     if (isset($i) && $i != "") {
         echo "<input id=\"i\" name=\"i\" type=\"hidden\" value=\"$i\">";
@@ -100,6 +118,14 @@ try {
     echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',width:400,height:400,closejs:function(){location.reload()}})\" title=\"Ajouter une nouvelle base d’inventaire\">+</span>";
     echo "</p>";
     echo "</form>";
+    
+
+	// ajout d’une ligne de la couleur de la base
+        echo (isset($border_color)) ? "<hr style=\"color:{$border_color}; border-style: solid; margin-top:-0.5em; border-width:1px;\" />" : "" ;
+    
+    
+    
+    
 
     // Si aucune base n'est sélectionnée, afficher toutes les bases sous forme de <li> avec background color
     if (($database == "") && ($nb_base >= 2)) {
