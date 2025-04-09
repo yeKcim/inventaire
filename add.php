@@ -365,8 +365,8 @@ echo $success;
 echo "<form method=\"post\" action=\"\">";
 
 echo "<div id=\"container\">";
-    require_once("./blocs/administratif.php");
-    require_once("./blocs/technique.php");
+    require_once("./modules/administratif/bloc.php");
+    require_once("./modules/technique/bloc.php");
 
 
     /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗

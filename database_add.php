@@ -118,14 +118,18 @@ else {
 	// MODULES ACTIVÉS
 	echo "<label for=\"modules[]\"><abbr title=\"À terme, il sera possible d’activer/désactiver certains modules\">Modules</abbr>&nbsp;: </label>\n";
 	echo "<select class=\"select2\" multiple=\"multiple\" tabindex=\"6\" name=\"modules[]\" id=\"modules\">";
-	$dir = "./blocs/";
-	$fichiers = scandir($dir);
-	foreach ($fichiers as $fichier) {
-		if ($fichier !== '.' && $fichier !== '..') {
-			$f=pathinfo($fichier, PATHINFO_FILENAME);
-		    echo "<option value=\"".$f."\"  selected >".$f."</option>";
-		}
-	}
+	$dir = "./modules/";
+	foreach (scandir($dir) as $item) {
+    if ($item === '.' || $item === '..') continue;
+    if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
+        echo "<option value=\"".$item."\"  selected >".$item."</option>";
+    }
+}
+	
+	
+	
+	
+	
 	echo "</select>";
 	echo "<script>
 			\$j(document).ready(function() {

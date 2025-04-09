@@ -29,7 +29,7 @@ echo "<div id=\"container\">";
     echo " #".$i." ";
     if (array_key_exists("designation", $data)) echo $data["designation"];
     echo "<br/>";
-    require_once("./blocs/$quick_page.php");
+    require_once("./modules/$quick_page/bloc.php");
 echo "</div>";
 
 ?>
