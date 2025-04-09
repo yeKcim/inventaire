@@ -497,8 +497,11 @@ echo "</td>";
         echo "<td>";
         echo spanquick("utilisation",$t["base_index"]);
 
-	if (array_key_exists("utilisateur", $t)) { $keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]); if (array_key_exists("0",$keys)) $key=$keys[0]; } else $key=null;
-        if ($t["utilisateur"]!=0) echo "<span title=\"Utilisé par ".$utilisateurs[$key]["utilisateur_prenom"]." ".$utilisateurs[$key]["utilisateur_nom"]." ";
+	if (array_key_exists("utilisateur", $t)) {
+			$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]);
+			 if (array_key_exists("0",$keys)) $key=$keys[0]; else $key=null;
+		}
+        if ($t["utilisateur"] != 0 && $key != null) { echo "<span title=\"Utilisé par ".$utilisateurs[$key]["utilisateur_prenom"]." ".$utilisateurs[$key]["utilisateur_nom"]." ";}
         else echo "<span title=\"";
         if ($t["localisation"]!=0) echo "le ".dateformat($t["date_localisation"],"fr")."";
         echo "\">";
