@@ -23,6 +23,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `SETTINGS`
+--
+
+CREATE TABLE `SETTINGS` (
+  `i` int(11) NOT NULL AUTO_INCREMENT,
+  `color` tinytext NOT NULL DEFAULT '#000000',
+  `blocs` text NOT NULL DEFAULT 'administratif,caracteristiques,documents,entretien,journal,technique,utilisation',
+  PRIMARY KEY (`i`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+INSERT INTO `SETTINGS` (`i`, `color`, `blocs`) VALUES (NULL, '#000000', 'administratif,caracteristiques,documents,entretien,journal,technique,utilisation'); 
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `base`
 --
 

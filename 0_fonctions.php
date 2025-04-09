@@ -454,4 +454,7 @@ $message_success_modif="<p class=\"success_message\" id=\"disappear_delay\">L’
 $message_error_del="<p class=\"error_message\" id=\"disappear_delay\">Une erreur inconnue est survenue. L’entrée n’a pas été supprimée.</p>";
 $message_success_del="<p class=\"success_message\" id=\"disappear_delay\">L’entrée a été supprimée de la base de donnée.</p>";
 
+
+
+
 ?>

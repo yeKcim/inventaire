@@ -1,5 +1,36 @@
 <?php
-$BASE = isset($_GET["BASE"]) ? htmlentities($_GET["BASE"]) : "" ;
+
+
+/**
+ * Détermine la couleur du texte en fonction de la couleur de fond.
+ * Si le fond est sombre, retourne blanc (#FFFFFF), sinon noir (#000000).
+ *
+ * @param string $bgHex La couleur de fond au format hexadécimal (#RRGGBB ou #RGB).
+ * @return string Couleur du texte (#FFFFFF ou #000000).
+ */
+function getTextColorForBackground($bgHex) {
+    // Suppression du caractère #
+    $hex = ltrim($bgHex, '#');
+    // Si en format court (#RGB), convertir en #RRGGBB
+    if (strlen($hex) == 3) {
+        $hex = $hex[0] . $hex[0]
+             . $hex[1] . $hex[1]
+             . $hex[2] . $hex[2];
+    }
+    // Extraction des composantes RGB
+    $r = hexdec(substr($hex, 0, 2));
+    $g = hexdec(substr($hex, 2, 2));
+    $b = hexdec(substr($hex, 4, 2));
+    // Calcul de la luminosité en utilisant la formule de luminance relative
+    // brightness = (R*299 + G*587 + B*114) / 1000
+    $brightness = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+    // Si la luminosité est faible (< 128), on choisit le blanc, sinon le noir.
+    return ($brightness < 128) ? "#FFFFFF" : "#000000";
+}
+
+
+
+$BASE = isset($_GET["BASE"]) ? htmlentities($_GET["BASE"]) : "";
 
 echo "<form method=\"get\" action=\"?\">";
 
@@ -10,15 +41,38 @@ try {
     // Exécution de la requête pour récupérer les bases de données
     $dbs = $dblist->query('SHOW DATABASES');
 
-    // Vérification si la requête a retourné des bases
+    // Vérifier si la requête a retourné des bases
     while ($db = $dbs->fetchColumn(0)) {
         if (strpos($db, $prefix) !== false) {
-            $list_bases[] = "<option value=\"" . str_replace($prefix, "", $db) . "\">" . strtoupper(str_replace($prefix, "", $db)) . "</option>";
-            $first_base = ($nb_base == 0) ? str_replace($prefix, "", $db) : $first_base;
+            // Récupération du nom abrégé de la base
+            $shortName = str_replace($prefix, "", $db);
+
+            // Connexion temporaire à la base pour récupérer la couleur dans SETTINGS
+            try {
+                $dbh_temp = new PDO("mysql:host=$connecthost;dbname=$db", $connectlogin, $connectpasse);
+                $dbh_temp->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $stmt = $dbh_temp->query("SELECT color FROM SETTINGS WHERE i = 1");
+                $color = $stmt->fetchColumn();
+                if (!$color) {
+                    $color = "#ffffff"; // Couleur par défaut si non trouvée
+                }
+            } catch (PDOException $e) {
+                $color = "#ffffff"; // Valeur par défaut en cas d'erreur
+            }
+
+            // Stocker les informations dans un tableau associatif
+            $list_bases[] = array(
+                'short_name' => $shortName,
+                'display' => strtoupper($shortName),
+                'color' => $color
+            );
+            if ($nb_base == 0) {
+                $first_base = $shortName;
+            }
             $nb_base++;
         }
     }
-
+    
     // Gestion des erreurs si aucune base n'a été trouvée
     if ($nb_base == 0) {
         echo "<p style=\"text-align:center;\">Aucun inventaire détecté !</p>";
@@ -32,33 +86,38 @@ try {
     echo "<select name=\"BASE\" onchange=\"submit();\" class=\"select2\" tabindex=\"0\" id=\"selectbase\">";
     echo "<option value=\"\">− Sélectionnez une base −</option>";
 
-    // Affichage des options de bases de données
-    foreach ($list_bases as $d) {
-        echo str_replace("value=\"" . str_replace($prefix, "", $database) . "\">", "value=\"" . str_replace($prefix, "", $database) . "\" selected>", $d);
+    // Pour l'affichage dans le select, on génère les <option> à partir de $list_bases
+    foreach ($list_bases as $base) {
+        $selected = ($base['short_name'] == $BASE) ? " selected" : "";
+        echo "<option value=\"" . $base['short_name'] . "\"" . $selected . ">" . $base['display'] . "</option>";
     }
-
     echo "</select> ";
-    echo "<script>
-    \$j(document).ready(function() {
-        \$j('#selectbase').select2({
-            placeholder: \"Sélectionnez une base\"
-        });
-    });
-    </script>";
-
-    // Si un paramètre 'i' existe, l'ajouter en tant que champ caché
-    if (isset($i)) {
-        if ($i != "") echo "<input id=\"i\" name=\"i\" type=\"hidden\" value=\"$i\">";
+    // Optionnel : champ caché pour 'i'
+    if (isset($i) && $i != "") {
+        echo "<input id=\"i\" name=\"i\" type=\"hidden\" value=\"$i\">";
     }
-
     // Bouton pour ajouter une nouvelle base d'inventaire
-    echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',width:200,height:200,closejs:function(){location.reload()}})\" title=\"Ajouter une nouvelle base d’inventaire\">+</span>";
-
+    echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',width:400,height:400,closejs:function(){location.reload()}})\" title=\"Ajouter une nouvelle base d’inventaire\">+</span>";
     echo "</p>";
     echo "</form>";
 
-    // Si aucune base n'est sélectionnée, quitter le script
-    if ($database == "") exit();
+    // Si aucune base n'est sélectionnée, afficher toutes les bases sous forme de <li> avec background color
+    if (($database == "") && ($nb_base >= 2)) {
+
+        echo "<ul style=\"text-align:center; list-style:none;\">";
+        foreach ($list_bases as $base) {
+        	// Récupération de la couleur de fond et calcul de la couleur du texte
+        	$bgColor = htmlspecialchars($base['color']);
+			$textColor = getTextColorForBackground($bgColor);
+			// Définition du background via inline style avec la couleur récupérée
+            echo "<li style=\"border:solid 1px #aaaaaa; width:30%; margin-left: 1em; margin-bottom: 1em; margin-right: auto; float:left; background-color:{$bgColor}; font-size:1.2em;\">";
+            echo "<a style=\"display: block; padding:2em; color:{$textColor}; text-decoration:none;\" href=\"?BASE=" . $base['short_name'] . "\">" . $base['display'] . "</a>";
+            echo "</li>";
+        }
+        echo "</ul>";
+        
+        exit();
+    }
 
 } catch (Exception $e) {
     echo 'Erreur : ' . $e->getMessage();
