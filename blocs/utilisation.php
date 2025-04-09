@@ -40,6 +40,10 @@ $sth->execute();
 $localisations = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
+ // tous les enfants⏎
+$sth = $dbh->prepare("SELECT base_index, lab_id, designation FROM base WHERE integration = :integration ORDER BY lab_id ASC;");
+$sth->execute([':integration' => $i]);
+$kids = $sth->fetchAll(PDO::FETCH_ASSOC);
 
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗
@@ -509,9 +513,11 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 		</script>";
 		
 		// Lien vers parent
-        if (isset($data[0]["integration"])) { if ( ($data[0]["integration"]!="0") && ($data[0]["integration"]!="") )
-            echo " <a href=\"info.php?BASE=".$database."&i=".$data[0]["integration"]."\" target=\"_blank\">";
-            echo "<strong>↗</strong></a>";
+        if (isset($data[0]["integration"])) {
+        	if ( ($data[0]["integration"]!="0") && ($data[0]["integration"]!="") ) {
+	            echo " <a href=\"info.php?BASE=".$database."&i=".$data[0]["integration"]."\" target=\"_blank\">";
+   		        echo "<strong>↗</strong></a>";
+   		    }
         }
 
 
@@ -544,6 +550,22 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 					});
 				});
 			  </script>";
+			  
+			  
+
+			
+			
+			  
+		if (!empty($kids) ) {                                                                                                                           
+			echo "<p>Liens vers les composants intégrés : </p>\n";
+			echo "<ul>";
+			foreach ($kids as $k) echo "<li><a href=\"?i={$k["base_index"]}&BASE={$database}\" target=\"_blank\"><strong>{$k["lab_id"]}</strong>&nbsp;: {$k["designation"]}</a></li>";
+			echo "</ul>";
+		}
+			  
+			  
+			  
+			  
 
     echo "</fieldset>";
     
