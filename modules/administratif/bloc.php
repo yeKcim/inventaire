@@ -420,8 +420,6 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
 		    $key = null;
 		}
 	} else {
-		// Gérer le cas où $utilisateurs n'est pas un tableau ou est vide
-		echo "Aucun utilisateur trouvé.";
 		$key = null;  // Ou une valeur par défaut
 	}
 
