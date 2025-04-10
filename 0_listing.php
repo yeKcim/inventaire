@@ -211,7 +211,7 @@ if ($CAT!="") {
 
 	foreach ($carac_categorie as $cc) {
 		//on ajoute une case dans th
-		$th_c.="<th style=\"background:#a4b395;vertical-align:top;\">";
+		$th_c.="<th style=\"background:#8faaa4;vertical-align:top;\">";
 		$th_c.="<span title=\"".$cc["nom_carac"]."\"><span style=\"color:#2e3436;\">".$cc["symbole_carac"]."</span>";
 		if ($cc["unite_carac"]!="") $th_c.="<br/>(".$cc["unite_carac"].")";
 		$th_c.="</th>";
@@ -277,16 +277,15 @@ echo "<thead>";
 echo "<tr>";
      echo "<th>							Id Labo";                   	echo "</th>";
      echo "<th>							Catégorie";                 	echo "</th>";
-     echo "<th style=\"background:#bab987;\">			Désignation";               	echo "</th>";
+     echo "<th>							Désignation";               	echo "</th>";
 
      if ($th_c!="") echo $th_c;
-     else echo "<th style=\"background:#a4b395;\">		Caractéristiques";          	echo "</th>";
-     if ($CAT!="") echo "<th style=\"background:rgb(150, 165, 188);\">Intègre</th>";
-
+     else echo "<th style=\"background:#8faaa4;\">		Caractéristiques";          	echo "</th>";
+     echo "<th style=\"background:#96a5bc;\">			Intègre"; 						echo "</th>";
      echo "<th style=\"background:#8AAA6D;\">			Marque";                    	echo "</th>";
      echo "<th style=\"background:#8AAA6D;\">			Référence fabricant";       	echo "</th>";
-     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>référence";    	echo "</th>";
      echo "<th style=\"background:#8AAA6D;\">			Numéro de série";           	echo "</th>";
+     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>référence";    	echo "</th>";
      echo "<th style=\"background:#bab987;\">			n° d’inventaire";           	echo "</th>";
      echo "<th style=\"background:#bab987;\">			Achat";                     	echo "</th>";
      echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</th>";
@@ -349,21 +348,17 @@ foreach ($tableau as &$t) {
     }
 
 
-    if ($CAT!="") echo "<td>";
+    echo "<td>";
 
         $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
         // Intégration parent de
         if (array_key_exists("0", $keys)) {
             if (array_key_exists($keys[0], $tableau_parents)) {
-               if ($CAT!="") { foreach ($keys as $k) {echo "⬉&nbsp;"; quickdisplaymini($tableau_parents[$k]); echo "<br/>";}  }
-               else {
-                 echo "<ul>";
-                 foreach ($keys as $k) { echo "<li style=\"list-style-type: '⬉';\">&nbsp;"; quickdisplayincarac($tableau_parents[$k]); echo "</li>";}
-                 echo "</ul>";
-               }
+               { foreach ($keys as $k) {echo "⬉&nbsp;"; quickdisplaymini($tableau_parents[$k]); echo "<br/>";}  }
+
             }
         }
-        else { if ($CAT!="") echo "<a href=\"\" title=\"todo\">-</a>";}
+        else { echo "<a href=\"\" title=\"todo\">-</a>";}
 
 echo "</td>";
 
@@ -387,7 +382,14 @@ echo "</td>";
         echo "</span>";
         echo "</td>";
 
-        // ********** Fichiers globaux **********
+        // ********** Serial number **********
+        echo "<td>";
+        echo spanquick("technique",$t["base_index"]);
+        if ($t["serial_number"]!="") echo $t["serial_number"]; else echo "-";
+        echo "</span>";
+        echo "</td>";
+
+		// ********** Fichiers globaux **********
         echo "<td>";
 
         $m=str_replace('/', "_", $t["marque_nom"]);
@@ -411,12 +413,6 @@ echo "</td>";
 
         echo "</td>";
 
-        // ********** Serial number **********
-        echo "<td>";
-        echo spanquick("technique",$t["base_index"]);
-        if ($t["serial_number"]!="") echo $t["serial_number"]; else echo "-";
-        echo "</span>";
-        echo "</td>";
 
         // ********** N° d’inventaire **********
         echo "<td>";
@@ -549,16 +545,15 @@ echo "</td>";
 echo "<tr>";
      echo "<th>							Id Labo";                   	echo "</th>";
      echo "<th>							Catégorie";                 	echo "</th>";
-     echo "<th style=\"background:#bab987;\">			Désignation";               	echo "</th>";
+     echo "<th>							Désignation";               	echo "</th>";
 
      if ($th_c!="") echo $th_c;
-     else echo "<th style=\"background:#a4b395;\">		Caractéristiques";          	echo "</th>";
-     if ($CAT!="") echo "<th style=\"background:rgb(150, 165, 188);\">Intègre</th>";
-
+     else echo "<th style=\"background:#8faaa4;\">		Caractéristiques";          	echo "</th>";
+     echo "<th style=\"background:#96a5bc;\">			Intègre";						echo "</th>";
      echo "<th style=\"background:#8AAA6D;\">			Marque";                    	echo "</th>";
      echo "<th style=\"background:#8AAA6D;\">			Référence fabricant";       	echo "</th>";
-     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>référence";    	echo "</th>";
      echo "<th style=\"background:#8AAA6D;\">			Numéro de série";           	echo "</th>";
+     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>référence";    	echo "</th>";
      echo "<th style=\"background:#bab987;\">			n° d’inventaire";           	echo "</th>";
      echo "<th style=\"background:#bab987;\">			Achat";                     	echo "</th>";
      echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</th>";
