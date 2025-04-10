@@ -21,7 +21,7 @@ $message = "";
 */
 if (isset($_POST["technique_valid"])) {
 
-    $arr = ["marque", "plus_marque", "plus_marque_nom", "reference", "serial_number"];
+    $arr = ["marque", "plus_marque", "plus_marque_nom", "reference", "serial_number", "base_index"];
     foreach ($arr as &$value) {
         $$value = isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "";
     }
@@ -54,7 +54,7 @@ if (isset($_POST["technique_valid"])) {
 		    UPDATE base
 		    SET marque = :marque,
 		        reference = :reference,
-		        serial_number = :serial_number,
+		        serial_number = :serial_number
 		    WHERE base_index = :base_index
 		");
 
@@ -63,6 +63,7 @@ if (isset($_POST["technique_valid"])) {
 		    ':marque' => $marque,
 		    ':reference' => $reference,
 		    ':serial_number' => $serial_number,
+		    ':base_index'     => $i
 		]);
 
 		$message .= $message_success_modif;
