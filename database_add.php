@@ -28,7 +28,6 @@ if ($postData!=null) {
 	foreach ($postData["modules"] as &$bloc) $blocs.=$bloc.",";
 	$blocs=substr($blocs, 0, -1);
 
-
 	// Création de la base
 	$newdb = $prefix . $name_db;
 	try {
@@ -56,8 +55,9 @@ if ($postData!=null) {
 
 	// Mise à jour de SETTINGS
 	$updateSettings = "UPDATE `SETTINGS` 
-		               SET `color` = '{$color}', `blocs` = 'administratif,caracteristiques,journal,technique,utilisation' 
+		               SET `color` = '{$color}', `blocs` = '{$blocs}' 
 		               WHERE `i` = 1;";
+		               
 	$result = $dbh->exec($updateSettings);
 	if ($result === false) {
 		$errorInfo = $dbh->errorInfo();
@@ -108,46 +108,36 @@ else {
 
 	// COULEUR
 	$random_color = sprintf('#%06X', mt_rand(0, 0xFFFFFF));
-
-	echo "<label for=\"color\" style=\"vertical-align: top;\"><abbr title=\"Pour différencier visuellement la base parmi d’autres. Comme nous mettons des étiquettes, nous choisissons la couleur de l’étiquette correspondante\">Couleur</abbr>&nbsp;:</label>";
+	echo "<label for=\"color\" style=\"vertical-align: top;\">
+		<abbr title=\"Pour différencier visuellement la base parmi d’autres. Comme nous mettons des étiquettes, nous choisissons la couleur de l’étiquette correspondante\">
+		Couleur</abbr>&nbsp;:</label>";
 	echo "<input type=\"color\" id=\"color\" name=\"color\" value=\"".$random_color."\" /><br/><br/>";
 
 
 
 
-	// MODULES ACTIVÉS
-	echo "<label for=\"modules[]\"><abbr title=\"À terme, il sera possible d’activer/désactiver certains modules\">Modules</abbr>&nbsp;: </label>\n";
-	echo "<select class=\"select2\" multiple=\"multiple\" tabindex=\"6\" name=\"modules[]\" id=\"modules\">";
+	// MODULES
+	echo "<label for=\"modules\" style=\"vertical-align: top;\">
+		<abbr title=\"Vous pouvez activer/désactiver certaines fonction et glisser/déposer pour modifier l’ordre\">
+		Modules</abbr>&nbsp;:</label>";
 	$dir = "./modules/";
-	foreach (scandir($dir) as $item) {
-    if ($item === '.' || $item === '..') continue;
-    if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
-        echo "<option value=\"".$item."\"  selected >".$item."</option>";
-    }
-}
-	
-	
-	
-	
-	
-	echo "</select>";
-	echo "<script>
-			\$j(document).ready(function() {
-				\$j('#modules').select2({
-					placeholder: \"Sélectionnez les éléments intégrés\",
-					allowClear: true,
-					width:\"270px\"
-				});
-			});
-		  </script>";
+	echo "\n<fieldset style=\"margin-left:120px; width:200px;\">\n\n";
+	echo "<ol id=\"modules\">";
+	  foreach (scandir($dir) as $item) {
+		if ($item === '.' || $item === '..') continue;
+		if (is_dir($dir . DIRECTORY_SEPARATOR . $item)) {
+		    echo "<li>⇅<input type=\"checkbox\" name=\"modules[]\" value=\"{$item}\" checked> {$item}</li>";
+		}
+	  }
+	echo "</ol>";
+	echo "<script src=\"sortable/Sortable.min.js\"></script>
+		<script>
+		  Sortable.create(document.getElementById('modules'), {
+			animation: 150
+		  });
+		</script>";
 
-
-
-
-
-
-
-//	echo "\n</fieldset>\n\n";
+echo "\n</fieldset>\n\n";
 	 
 	echo "<p><input name=\"add_db\" value=\"Créer\" type=\"submit\" class=\"little_button\" /></p>";
 	echo "</form>";

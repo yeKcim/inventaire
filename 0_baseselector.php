@@ -1,32 +1,7 @@
 <?php
 
 
-/**
- * Détermine la couleur du texte en fonction de la couleur de fond.
- * Si le fond est sombre, retourne blanc (#FFFFFF), sinon noir (#000000).
- *
- * @param string $bgHex La couleur de fond au format hexadécimal (#RRGGBB ou #RGB).
- * @return string Couleur du texte (#FFFFFF ou #000000).
- */
-function getTextColorForBackground($bgHex) {
-    // Suppression du caractère #
-    $hex = ltrim($bgHex, '#');
-    // Si en format court (#RGB), convertir en #RRGGBB
-    if (strlen($hex) == 3) {
-        $hex = $hex[0] . $hex[0]
-             . $hex[1] . $hex[1]
-             . $hex[2] . $hex[2];
-    }
-    // Extraction des composantes RGB
-    $r = hexdec(substr($hex, 0, 2));
-    $g = hexdec(substr($hex, 2, 2));
-    $b = hexdec(substr($hex, 4, 2));
-    // Calcul de la luminosité en utilisant la formule de luminance relative
-    // brightness = (R*299 + G*587 + B*114) / 1000
-    $brightness = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
-    // Si la luminosité est faible (< 128), on choisit le blanc, sinon le noir.
-    return ($brightness < 128) ? "#FFFFFF" : "#000000";
-}
+
 
 
 
@@ -101,7 +76,7 @@ try {
         echo "<option value=\"" . $base['short_name'] . "\"" . $selected . ">" . $base['display'] . "</option>";
     }
     echo "</select> ";
-    
+   
     echo "</select> ";
     echo "<script>
     \$j(document).ready(function() {
@@ -118,13 +93,6 @@ try {
     echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',width:400,height:400,closejs:function(){location.reload()}})\" title=\"Ajouter une nouvelle base d’inventaire\">+</span>";
     echo "</p>";
     echo "</form>";
-    
-
-	// ajout d’une ligne de la couleur de la base
-        echo (isset($border_color)) ? "<hr style=\"color:{$border_color}; border-style: solid; margin-top:-0.5em; border-width:1px;\" />" : "" ;
-    
-    
-    
     
 
     // Si aucune base n'est sélectionnée, afficher toutes les bases sous forme de <li> avec background color

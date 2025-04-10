@@ -442,9 +442,6 @@ function dejadanslabase($select) {
 
 
 
-
-
-
 $message_error_add="<p class=\"error_message\" id=\"disappear_delay\">Une erreur inconnue est survenue. L’entrée n’a pas été ajoutée.</p>";
 $message_success_add="<p class=\"success_message\" id=\"disappear_delay\">L’entrée a été ajoutée à la base de donnée.</p>";
 
@@ -456,5 +453,31 @@ $message_success_del="<p class=\"success_message\" id=\"disappear_delay\">L’en
 
 
 
+/**
+ * Détermine la couleur du texte en fonction de la couleur de fond.
+ * Si le fond est sombre, retourne blanc (#FFFFFF), sinon noir (#000000).
+ *
+ * @param string $bgHex La couleur de fond au format hexadécimal (#RRGGBB ou #RGB).
+ * @return string Couleur du texte (#FFFFFF ou #000000).
+ */
+function getTextColorForBackground($bgHex) {
+    // Suppression du caractère #
+    $hex = ltrim($bgHex, '#');
+    // Si en format court (#RGB), convertir en #RRGGBB
+    if (strlen($hex) == 3) {
+        $hex = $hex[0] . $hex[0]
+             . $hex[1] . $hex[1]
+             . $hex[2] . $hex[2];
+    }
+    // Extraction des composantes RGB
+    $r = hexdec(substr($hex, 0, 2));
+    $g = hexdec(substr($hex, 2, 2));
+    $b = hexdec(substr($hex, 4, 2));
+    // Calcul de la luminosité en utilisant la formule de luminance relative
+    // brightness = (R*299 + G*587 + B*114) / 1000
+    $brightness = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+    // Si la luminosité est faible (< 128), on choisit le blanc, sinon le noir.
+    return ($brightness < 128) ? "#FFFFFF" : "#000000";
+}
 
 ?>

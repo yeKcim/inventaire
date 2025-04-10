@@ -1,18 +1,12 @@
 <?php
 $titre="Inventaire";
+require_once("./0_fonctions.php");
 require_once("./0_head.php");
-?>
-
-<!-- ########### BODY ########### -->
-<body>
-
-<?php
-
+echo "<!-- ########### BODY ########### --><body>";
 require_once("./0_connect.php");
 require_once("./0_baseselector.php");
 require_once("./0_connect_db.php");
-
-require_once("./0_fonctions.php");
+require_once("./0_settings.php");
 
 /* ########### GET ########### */
 $arr = array("CAT","TYC","CON","SEA","RES","UTL","IOT","ORDER");
@@ -41,17 +35,15 @@ echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'add.php?BASE=$databa
 require_once("./0_form.php");
 require_once("./0_listing.php");
 
-?>
-
-<script type="text/javascript">
+echo "
+<script type=\"text/javascript\">
     function openJS(){alert('loaded')}
     function closeJS(){alert('closed')}
 </script>
 
 </body>
 
-</html>
+</html>";
 
-<?php
 $dbh = null;
-?>
+

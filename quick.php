@@ -4,18 +4,14 @@ $arr = array("i", "quick_page", "quick_name");
 foreach ($arr as &$value) {
     $$value= isset($_GET[$value]) ? $_GET[$value] : "" ;
 }
-
 $titre="$quick_name #$i";
+require_once("./0_fonctions.php");
 require_once("./0_connect.php");
 if ($database=="") require_once("./0_baseselector.php");
 require_once("./0_connect_db.php");
 require_once("./0_tables_sql_commun.php");
 require_once("./0_head.php");
-?>
-
-<body>
-<?php
-require_once("./0_fonctions.php");
+echo "<!-- ########### BODY ########### --><body>";
 $error="";
 $success="";
 
@@ -32,11 +28,7 @@ echo "<div id=\"container\">";
     require_once("./modules/$quick_page/bloc.php");
 echo "</div>";
 
-?>
+echo "</body></html>";
 
-</body>
-</html>
-
-<?php
 $dbh = null;
-?>
+
