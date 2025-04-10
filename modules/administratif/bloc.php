@@ -49,7 +49,7 @@ $contrats = $sth->fetchAll(PDO::FETCH_ASSOC);
 */
 if ( isset($_POST["administratif_valid"]) ) {
 
-    $arr = array("designation","vendeur","plus_vendeur_nom","plus_vendeur_web","plus_vendeur_remarque","prix","contrat","plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "bon_commande", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie");
+    $arr = array("vendeur","plus_vendeur_nom","plus_vendeur_web","plus_vendeur_remarque","prix","contrat","plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "bon_commande", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie");
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? trim($_POST[$value]) : "" ;
     }
@@ -185,8 +185,7 @@ if (!$error) {
 		$garantie=($garantie==NULL) ? "0000-00-00" : $garantie;
 
 		$sql = "UPDATE base 
-				SET designation        = :designation,
-				    vendeur            = :vendeur,
+				SET vendeur            = :vendeur,
 				    prix               = :prix,
 				    contrat            = :contrat,
 				    date_achat         = :date_achat,
@@ -199,7 +198,6 @@ if (!$error) {
 
 		$sth = $dbh->prepare($sql);
 		$sth->execute([
-			':designation'       => ($designation       === "" ? null : $designation),
 			':vendeur'           => ($vendeur           === "" ? "0" : $vendeur),
 			':prix'              => ($prix              === "" ? "0" : $prix),
 			':contrat'           => ($contrat           === "" ? "0" : $contrat),
@@ -216,7 +214,6 @@ if (!$error) {
 	}
 
     // Avant d’afficher on doit ajouter les nouvelles infos dans les array concernés…
-    $data[0]["designation"]=$designation;
     $data[0]["vendeur"]=$vendeur;
     $data[0]["prix"]=$prix;
     $data[0]["contrat"]=$contrat;
@@ -252,11 +249,6 @@ echo "<div id=\"bloc\" style=\"background:#fcf3a3; vertical-align:top;\">";
     ╠═╝╠╦╝║ ║ ║║║ ║║ ║
     ╩  ╩╚═╚═╝═╩╝╚═╝╩ ╩  */
     echo "<fieldset><legend>Produit</legend>";
-
-        /* ########### designation ########### */
-        echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation* :</label>\n";
-        echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"31px\" required ";
-        echo "value=\""; if (isset($data[0])) { echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";} echo "\" ><br/>\n";
 
         /* ########### vendeur ########### */
         echo "<label for=\"vendeur\">Vendeur ";

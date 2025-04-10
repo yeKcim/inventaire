@@ -135,7 +135,7 @@ foreach ($arr as $value) { $$value= isset($$value) ? "".$$value."" : "" ; }
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝
 */
 
-echo "<div id=\"bloc\" style=\"background:#daefc5; vertical-align:top;\">";
+echo "<div id=\"bloc\" style=\"background:#c6ece3; vertical-align:top;\">";
 
     echo "<h1>Caractéristiques</h1>";
 

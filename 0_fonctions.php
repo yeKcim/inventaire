@@ -274,39 +274,39 @@ function parse_size($size) {
 
 function new_lab_id($categorie) {
     global $dbh;
-    // quelle est l’abbréviation de la catégorie ?
-	// Recherche du nom de la catégorie à partir de son index
-	$sth = $dbh->prepare("SELECT categorie_lettres FROM categorie WHERE categorie_index = :categorie;");
-	$sth->bindParam(':categorie', $categorie, PDO::PARAM_INT);  // Lier la variable avec le paramètre de la requête
-	$sth->execute();
-	$tabbr = ($sth->rowCount() > 0) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
-	$abbr = $tabbr[0]["categorie_lettres"] ?? '';  // Utilisation de l'opérateur de fusion null pour éviter une erreur si la clé n'existe pas
-	$sth->closeCursor();
+    // Recherche de l'abbréviation de la catégorie
+    $sth = $dbh->prepare("SELECT categorie_lettres FROM categorie WHERE categorie_index = :categorie;");
+    $sth->bindParam(':categorie', $categorie, PDO::PARAM_INT);
+    $sth->execute();
+    $tabbr = ($sth->rowCount() > 0) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
+    $abbr = $tabbr[0]["categorie_lettres"] ?? '';
+    $sth->closeCursor();
 
-	// Recherche du lab_id max pour la catégorie donnée
-	$sth = $dbh->prepare("SELECT lab_id FROM base WHERE categorie = :categorie ORDER BY lab_id ASC;");
-	$sth->bindParam(':categorie', $categorie, PDO::PARAM_INT);  // Lier à nouveau la variable catégorie
-	$sth->execute();
-	$allid = ($sth->rowCount() > 0) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
-	$sth->closeCursor();
+    // Recherche du lab_id max pour la catégorie donnée
+    $sth = $dbh->prepare("SELECT lab_id FROM base WHERE categorie = :categorie ORDER BY lab_id ASC;");
+    $sth->bindParam(':categorie', $categorie, PDO::PARAM_INT);
+    $sth->execute();
+    $allid = ($sth->rowCount() > 0) ? $sth->fetchAll(PDO::FETCH_ASSOC) : FALSE;
+    $sth->closeCursor();
 
-    // on supprime les lettres des lab_id, on met les chiffres dans un tableau
+    // On supprime les lettres des lab_id pour obtenir les parties numériques
     $allidnum = array();
-	// Vérifier que $allid est un tableau avant de faire le foreach
-	if (is_array($allid)) {
-		foreach ($allid as $a) {
-		    // Utilisation de preg_replace pour ne garder que les chiffres dans lab_id
-		    array_push($allidnum, preg_replace('`[^0-9]`', '', $a["lab_id"]));
-		}
-	} else {
-		$allidnum = array();  // Ou effectuer une autre action selon le besoin
-	}
-    $newid= ($allid) ? max($allidnum)+1 : 1 ;
-    $new_lab_id="".$abbr."".$newid."";
-    // TODO : Vérifier avant qu’aucune autre entrée ainsi nommée n’existe ! dans le cas d’un nommage manuel
-    $new_lab_id = ($categorie==0) ? "" : $new_lab_id;
+    if (is_array($allid)) {
+        foreach ($allid as $a) {
+            // Utilisation de preg_replace avec des délimiteurs et conversion en entier
+            array_push($allidnum, (int) preg_replace('/[^0-9]/', '', $a["lab_id"]));
+        }
+    } else {
+        $allidnum = array();
+    }
+    
+    // Calcul du nouvel id numérique
+    $newid = ($allid) ? max($allidnum) + 1 : 1;
+    $new_lab_id = $abbr . $newid;
+    $new_lab_id = ($categorie == 0) ? "" : $new_lab_id;
     return $new_lab_id;
 }
+
 
 function return_last_id($col, $table) {
     global $dbh;
