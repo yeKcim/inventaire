@@ -76,7 +76,7 @@ try {
     // Gestion des erreurs si aucune base n'a été trouvée
     if ($nb_base == 0) {
         echo "<p style=\"text-align:center;\">Aucun inventaire détecté !</p>";
-        echo "<p style=\"text-align:center;\"><span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',width:200,height:200,closejs:function(){location.reload()}})\" title=\"Ajouter une nouvelle base d’inventaire\">Créer la première base</span></p>";
+        echo "<p style=\"text-align:center;\"><span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'database_add.php',width:400,height:400,closejs:function(){location.reload()}})\" title=\"Ajouter une nouvelle base d’inventaire\">Créer la première base</span></p>";
         exit();
     } elseif ($nb_base == 1) {
         $database = ($BASE == "") ? $first_base : $BASE;

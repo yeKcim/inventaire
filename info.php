@@ -30,7 +30,30 @@ $write=true;
 
 echo "<p>Informations #$i :</p>";
 
+
+// Connexion temporaire à la base pour récupérer la couleur dans SETTINGS
+try {
+    $dblist->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $stmt = $dblist->query("SELECT blocs FROM SETTINGS WHERE i = 1");
+    $modules = $stmt->fetchColumn();
+    if (!$modules) {
+        $modules = "administratif,technique,caracteristiques,entretien,utilisation,journal"; // Couleur par défaut si non trouvée
+    }
+} catch (PDOException $e) {
+    $modules = "administratif,technique,caracteristiques,entretien,utilisation,journal"; // Valeur par défaut en cas d'erreur
+}
+$mod_array = explode(',', $modules);
+
 echo "<div id=\"container\">";
+foreach ($mod_array as $m) {
+	require_once("./modules/{$m}/bloc.php");
+}
+
+echo "</div>";
+
+
+
+/*
     require_once("./modules/administratif/bloc.php");
     require_once("./modules/technique/bloc.php");
     require_once("./modules/caracteristiques/bloc.php");
@@ -39,7 +62,7 @@ echo "<div id=\"container\">";
     require_once("./modules/utilisation/bloc.php");
     require_once("./modules/journal/bloc.php");
 
-echo "</div>";
+*/
 
 ?>
 
