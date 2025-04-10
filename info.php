@@ -32,28 +32,9 @@ echo "<div id=\"container\">";
 foreach ($SETTINGS_modules as $m) {
 	require_once("./modules/{$m}/bloc.php");
 }
-
 echo "</div>";
 
+echo "</body></html>";
 
-
-/*
-    require_once("./modules/administratif/bloc.php");
-    require_once("./modules/technique/bloc.php");
-    require_once("./modules/caracteristiques/bloc.php");
-    require_once("./modules/documents/bloc.php");
-    require_once("./modules/entretien/bloc.php");
-    require_once("./modules/utilisation/bloc.php");
-    require_once("./modules/journal/bloc.php");
-
-*/
-
-?>
-
-
-</body>
-</html>
-
-<?php
 $dbh = null;
-?>
+
