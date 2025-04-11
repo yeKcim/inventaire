@@ -86,6 +86,7 @@ if (!empty($b_i)) {
 	$tableau_parents = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : false;
 	if ($sth) $sth->closeCursor();
 
+
 	//liste des caracs correspondantes
 	$table_carac = array();
 	// Assurer que $b_i est bien un tableau
@@ -104,7 +105,7 @@ if (!empty($b_i)) {
 
 	if ($sth) $sth->closeCursor();
 
-	$tc=array(); $td_c=array(); $th_c="";
+	$tc=array(); $td_c=array();
 	$val=array();
 	foreach ($table_carac as $l) {
 		$li=$l["base_index"]; $lc=$l["carac"];
@@ -118,6 +119,7 @@ if (!empty($b_i)) {
 		$tc[$l["base_index"]].="<span style=\"color:#75507b;\">".$value."".$unit."</span></span> ; ";
 		$val[$li][$lc]=$value;
 	}
+	
 	
 	//liste des entretiens correspondants
 	$tableau_entretien = array();
@@ -189,62 +191,6 @@ if ($b_e!="") {
 	    $tableau_enfants = [];
 }
 
-$th_c="";
-
-if ($CAT!="") {
-	// Si une seule catégorie est affichée on met les caractéristiques pertinentes dans un tableau
-	$sth = $dbh->prepare("SELECT DISTINCT carac, nom_carac, unite_carac, symbole_carac 
-		                  FROM caracteristiques, carac, base 
-		                  WHERE carac_id = base_index 
-		                    AND carac_caracteristique_id = carac 
-		                    AND categorie = :cat 
-		                    AND carac != 0 
-		                  ORDER BY carac ASC");
-
-	$sth->execute([':cat' => $CAT]);
-
-	$carac_categorie = ($sth) ? $sth->fetchAll(PDO::FETCH_ASSOC) : false;
-
-	if ($sth) $sth->closeCursor();
-
-  	$style="background-color:rgba(212, 224, 200, 0.45);";
-
-	foreach ($carac_categorie as $cc) {
-		//on ajoute une case dans th
-		$th_c.="<th style=\"background:#8faaa4;vertical-align:top;\">";
-		$th_c.="<span title=\"".$cc["nom_carac"]."\"><span style=\"color:#2e3436;\">".$cc["symbole_carac"]."</span>";
-		if ($cc["unite_carac"]!="") $th_c.="<br/>(".$cc["unite_carac"].")";
-		$th_c.="</th>";
-
-		// Initialisation de la variable $val si elle n'est pas définie
-		if (!isset($val)) {
-		    $val = [];
-		}
-
-		//on ajoute une case dans tr
-		if (is_array($val)) {
-		    foreach ($val as $k => $v) {
-		        if (!isset($val[$k]["echo"])) {
-		            $val[$k]["echo"] = "";
-		        }
-		        $val[$k]["echo"] .= "<td style=\"".$style."\">".spanquick("caracteristiques", $k);
-		        
-		        if (isset($v[$cc["carac"]])) {
-		            //todo:on ajoute la valeur numérique en commentaire ou cachée
-		            //$val[$k]["echo"] .= "<strike>".vnum($v[$cc["carac"]])."</strike> ";
-		            $val[$k]["echo"] .= "<span style=\"display:none;\">".vnum($v[$cc["carac"]])."</span> ";
-		            $val[$k]["echo"] .= $v[$cc["carac"]];
-		        } else {
-		            $val[$k]["echo"] .= "-";
-		        }
-		        
-		        $val[$k]["echo"] .= "</span></td>";
-		    }
-		}
-	}
-
-}
-
 /*#######################################################################
 #          Si du matériel sorti est affiché, afficher état              #
 #######################################################################*/
@@ -258,186 +204,86 @@ if ($IOT!="0") {
 }
 else $display_raison_sortie=0;
 
-/*
-████████╗ █████╗ ██████╗ ██╗     ███████╗ █████╗ ██╗   ██╗
-╚══██╔══╝██╔══██╗██╔══██╗██║     ██╔════╝██╔══██╗██║   ██║
-   ██║   ███████║██████╔╝██║     █████╗  ███████║██║   ██║
-   ██║   ██╔══██║██╔══██╗██║     ██╔══╝  ██╔══██║██║   ██║
-   ██║   ██║  ██║██████╔╝███████╗███████╗██║  ██║╚██████╔╝
-   ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝
-*/
+
+
+
+
+// ███╗   ███╗ ██████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗
+// ████╗ ████║██╔═══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝
+// ██╔████╔██║██║   ██║██║  ██║██║   ██║██║     █████╗  ███████╗
+// ██║╚██╔╝██║██║   ██║██║  ██║██║   ██║██║     ██╔══╝  ╚════██║
+// ██║ ╚═╝ ██║╚██████╔╝██████╔╝╚██████╔╝███████╗███████╗███████║
+// ╚═╝     ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝╚══════╝
+$modules = [
+    include "/home/carre/git-bin/inventaire/modules/- infos minimales -/colonnes.php",
+    include "/home/carre/git-bin/inventaire/modules/caracteristiques/colonnes.php",
+    include "/home/carre/git-bin/inventaire/modules/technique/colonnes.php",
+    include "/home/carre/git-bin/inventaire/modules/documents/colonnes.php",
+    include "/home/carre/git-bin/inventaire/modules/administratif/colonnes.php",
+];
+
+
+
+// ████████╗ █████╗ ██████╗ ██╗     ███████╗ █████╗ ██╗   ██╗
+// ╚══██╔══╝██╔══██╗██╔══██╗██║     ██╔════╝██╔══██╗██║   ██║
+//    ██║   ███████║██████╔╝██║     █████╗  ███████║██║   ██║
+//    ██║   ██╔══██║██╔══██╗██║     ██╔══╝  ██╔══██║██║   ██║
+//    ██║   ██║  ██║██████╔╝███████╗███████╗██║  ██║╚██████╔╝
+//    ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝
+
+
 
 
 echo "<table id=\"listing\">";
 
-/*  ╔═╗╔╗╔╦╗╔═╗╔╦╗╔═╗  ╔╦╗╔═╗╔╗ ╦  ╔═╗╔═╗╦ ╦
-    ║╣ ║║║║ ║╣  ║ ║╣    ║ ╠═╣╠╩╗║  ║╣ ╠═╣║ ║
-    ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝    */
+// ╔═╗╔╗╔╦╗╔═╗╔╦╗╔═╗  ╔╦╗╔═╗╔╗ ╦  ╔═╗╔═╗╦ ╦
+// ║╣ ║║║║ ║╣  ║ ║╣    ║ ╠═╣╠╩╗║  ║╣ ╠═╣║ ║
+// ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝
 echo "<thead>";
 echo "<tr>";
-     echo "<th>							Id Labo";                   	echo "</th>";
-     echo "<th>							Catégorie";                 	echo "</th>";
-     echo "<th>							Désignation";               	echo "</th>";
 
-     if ($th_c!="") echo $th_c;
-     else echo "<th style=\"background:#8faaa4;\">		Caractéristiques";          	echo "</th>";
-     echo "<th style=\"background:#96a5bc;\">			Intègre"; 						echo "</th>";
-     echo "<th style=\"background:#8AAA6D;\">			Marque";                    	echo "</th>";
-     echo "<th style=\"background:#8AAA6D;\">			Référence fabricant";       	echo "</th>";
-     echo "<th style=\"background:#8AAA6D;\">			Numéro de série";           	echo "</th>";
-     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>référence";    	echo "</th>";
-     echo "<th style=\"background:#bab987;\">			n° d’inventaire";           	echo "</th>";
-     echo "<th style=\"background:#bab987;\">			Achat";                     	echo "</th>";
+	foreach ($modules as $module) {
+		echo $module['thead'];
+	}
+	
      echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</th>";
-     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>entrée";       	echo "</th>";
      echo "<th style=\"background:#a786a2;\">			Journal";                   	echo "</th>";
      echo "<th style=\"background:#96a5bc;\">           Intégré à";                     echo "</th>";
+     echo "<th style=\"background:#96a5bc;\">			Intègre"; 						echo "</th>";
      echo "<th style=\"background:#96a5bc;\">			Localisation";              	echo "</th>";
     if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">	État";       			echo "</th>";
      echo "<th>                                         &nbsp;";                        echo "</th>";
 echo "</tr>";
 echo "</thead>";
 
-/*  ╦  ╦╔═╗╔╗╔╔═╗╔═╗  ╔╦╗╔═╗  ╦═╗╔═╗╔═╗╦ ╦╦ ╔╦╗╔═╗╔╦╗╔═╗
-    ║  ║║ ╦║║║║╣ ╚═╗   ║║║╣   ╠╦╝║╣ ╚═╗║ ║║  ║ ╠═╣ ║ ╚═╗
-    ╩═╝╩╚═╝╝╚╝╚═╝╚═╝  ═╩╝╚═╝  ╩╚═╚═╝╚═╝╚═╝╩═╝╩ ╩ ╩ ╩ ╚═╝    */
+
+// ╦  ╦╔═╗╔╗╔╔═╗╔═╗  ╔╦╗╔═╗  ╦═╗╔═╗╔═╗╦ ╦╦ ╔╦╗╔═╗╔╦╗╔═╗
+// ║  ║║ ╦║║║║╣ ╚═╗   ║║║╣   ╠╦╝║╣ ╚═╗║ ║║  ║ ╠═╣ ║ ╚═╗
+// ╩═╝╩╚═╝╝╚╝╚═╝╚═╝  ═╩╝╚═╝  ╩╚═╚═╝╚═╝╚═╝╩═╝╩ ╩ ╩ ╩ ╚═╝
 foreach ($tableau as &$t) {
     echo "<tr>";
 
-        // ********** Id Labo **********
-        echo "<td><a href=\"info.php?BASE=$database&i=".$t["base_index"]."\" title=\"#".$t["base_index"]."\" target=\"_blank\">";
-        echo "<strong>";
-        if ($t["lab_id"]=="") echo "#".$t["base_index"]."";
-        else {
-            echo "<span style=\"display:none;\">".preg_replace("/[^a-zA-Z]+/", "", $t["lab_id"])."-".sprintf( "%06d", preg_replace("/[^0-9]+/", "", $t["lab_id"]) )."</span> ";
-            echo $t["lab_id"];
-        }
-        echo "</strong>";
-        echo "</a></td>";
+	$data = include "/home/carre/git-bin/inventaire/modules/- infos minimales -/colonnes.php";
+	echo $data['tbody'];
 
-        // ********** Catégorie **********
-        echo "<td>";
-	if ($CAT=="") echo "<a href=\"?BASE=$database&CAT=".$t["categorie"]."\" style=\"color:#000;\" title=\"Afficher les entrées de la catégorie [".$t["categorie_lettres"]."]\">";
-	echo $t["categorie_nom"];
-	if ($CAT=="") echo "</a>";
-	echo "</td>";
+	$data = include "/home/carre/git-bin/inventaire/modules/caracteristiques/colonnes.php";
+	echo $data['tbody'];
+	/* // problème avec caractéristiques lors de l’utilisation de :
+ 	foreach ($modules as $module) {
+		echo $module['tbody'];
+	}   */  
 
-        // ********** Désignation **********
-        echo "<td>";
-        echo spanquick("administratif",$t["base_index"]);
-        if ($t["designation"]!="") echo $t["designation"];
-        else echo "-";
-        echo "</span>";
-        echo "</td>";
+	$data = include "/home/carre/git-bin/inventaire/modules/technique/colonnes.php";
+	echo $data['tbody'];
 
-        // ********** Caractéristiques **********
-    if ($CAT=="") {
-        echo "<td>";
+	$data = include "/home/carre/git-bin/inventaire/modules/documents/colonnes.php";
+	echo $data['tbody'];
 
-	    echo spanquick("caracteristiques",$t["base_index"]);
-
-	    if (array_key_exists($t["base_index"], $tc)) echo substr($tc[$t["base_index"]], 0, -2);
-        else echo "-";
-
-        echo "</span>";
-    }
-    elseif ($th_c=="") echo "<td style=\"".$style."\">".spanquick("caracteristiques",$t["base_index"])."-</span></td>";
-    else {
-	if (isset($val[$t["base_index"]]["echo"])) echo $val[$t["base_index"]]["echo"];
-	else foreach ($carac_categorie as $c) echo "<td style=\"".$style."\">".spanquick("caracteristiques",$t["base_index"])."-</span></td>";
-    }
+	$data = include "/home/carre/git-bin/inventaire/modules/administratif/colonnes.php";
+	echo $data['tbody'];
 
 
-    echo "<td>";
 
-        $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
-        // Intégration parent de
-        if (array_key_exists("0", $keys)) {
-            if (array_key_exists($keys[0], $tableau_parents)) {
-               { foreach ($keys as $k) {echo "⬉&nbsp;"; quickdisplaymini($tableau_parents[$k]); echo "<br/>";}  }
-
-            }
-        }
-        else { echo "<a href=\"\" title=\"todo\">-</a>";}
-
-echo "</td>";
-
-
-        // ********** Marque  **********
-        echo "<td>";
-
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=$database&i=".$t["base_index"]."&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"";
-        if ($t["vendeur"]!="-") echo "vendu par ".$t["vendeur_nom"]."";
-        echo "\">";
-	if ($t["marque"]!="") echo $t["marque_nom"]; else echo "-";
-
-	echo "</span>";
-        echo "</td>";
-
-        // ********** Référence **********
-        echo "<td>";
-        echo spanquick("technique",$t["base_index"]);
-        if ($t["reference"]!="") echo $t["reference"];
-        else echo "-";
-        echo "</span>";
-        echo "</td>";
-
-        // ********** Serial number **********
-        echo "<td>";
-        echo spanquick("technique",$t["base_index"]);
-        if ($t["serial_number"]!="") echo $t["serial_number"]; else echo "-";
-        echo "</span>";
-        echo "</td>";
-
-		// ********** Fichiers globaux **********
-        echo "<td>";
-
-        $m=str_replace('/', "_", $t["marque_nom"]);
-        $r=str_replace('/', "_", $t["reference"]);
-        $dir="files/$database/".$m."-".$r;
-
-        
-            //$dir=str_replace("&", "&amp;", $dir);
-            $dir=str_replace("&", "amp", $dir);
-            $dir=str_replace(";", "semicolon", $dir);
-        
-
-
-        if (file_exists("$racine$dir")) {
-            $ddir=display_dir_compact("$racine$dir");
-            if ($ddir) echo $ddir; else $nofiles=true;
-        }
-        else $nofiles=true;
-        if (isset($nofiles)) echo spanquick("documents",$t["base_index"])."-</span>";
-        else echo spanquick("documents",$t["base_index"])."+</span>";
-
-        echo "</td>";
-
-
-        // ********** N° d’inventaire **********
-        echo "<td>";
-        echo spanquick("administratif",$t["base_index"]);
-        if ($t["num_inventaire"]!="") echo $t["num_inventaire"]; else echo "-";
-        echo "</span>";
-        echo "</td>";
-
-        // ********** Achat **********
-        echo "<td>";
-
-        echo spanquick("administratif",$t["base_index"]);
-
-        echo "<span title=\"";
-        if ($t["responsable_achat"]!="0") echo "Par ".$t["responsable_prenom"]." ".$t["responsable_nom"]." ";
-        if ($t["date_achat"]!="0000-00-00") echo "le ".dateformat($t["date_achat"],"fr")."";
-        echo "\">";
-        if ($t["prix"]!="0") { echo "".$t["prix"]."€"; /*stat*/$prix_total=$prix_total+$t["prix"];/*endstat*/}
-        if ($t["contrat"]!="0")echo " sur ".$t["contrat_nom"]."";
-        if ( ($t["prix"]=="0") && ($t["contrat"]=="0") ) echo "-";
-        echo "</span>";
-
-        echo "</span>";
-
-        echo "</td>";
 
         // ********** Entretiens **********
         echo "<td>";
@@ -445,20 +291,6 @@ echo "</td>";
         echo spanquick("entretien",$t["base_index"]);
 	if (array_key_exists($t["base_index"], $te)) echo $te[$t["base_index"]]; else echo "-";
         echo "</span>";
-
-        echo "</td>";
-
-        // ********** Fichiers **********
-        echo "<td>";
-
-        $dir="files/$database/".$t["base_index"]."";
-        if (file_exists("$racine$dir")) {
-            $ddir=display_dir_compact("$racine$dir");
-            if ($ddir) echo $ddir; else $nofiles=true;
-        }
-        else $nofiles=true;
-        if (isset($nofiles)) echo spanquick("documents",$t["base_index"])."-</span>";
-        else echo spanquick("documents",$t["base_index"])."+</span>";
 
         echo "</td>";
 
@@ -486,9 +318,26 @@ echo "</td>";
                 $keys = array_keys(array_column($tableau_enfants, 'base_index'), $t["integration"]);
                 if (isset($keys[0])) quickdisplaymini($tableau_enfants[$keys[0]]);
         }
-	else echo spanquick("utilisation",$t["base_index"])."-</span>";
+		else echo spanquick("utilisation",$t["base_index"])."-</span>";
+		
         echo "</td>";
 
+
+        // ********** Intègre **********
+    echo "<td>";
+
+        $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
+        // Intégration parent de
+        if (array_key_exists("0", $keys)) {
+            if (array_key_exists($keys[0], $tableau_parents)) {
+               { foreach ($keys as $k) {echo "⬉&nbsp;"; quickdisplaymini($tableau_parents[$k]); echo "<br/>";}  }
+
+            }
+        }
+        else { echo "<a href=\"\" title=\"todo\">-</a>";}
+
+	echo "</td>";
+	
 
         // ********** Localisation **********
         echo "<td>";
@@ -526,40 +375,27 @@ echo "</td>";
         echo "✚";
         echo "</span>";
         echo "</td>";
-                                
-
 
 
 
     echo "</tr>";
-    
-
-    
 
 }
 
-
-
-
+// ╔═╗╦╔═╗╔╦╗  ╔╦╗╔═╗  ╔═╗╔═╗╔═╗╔═╗
+// ╠═╝║║╣  ║║   ║║║╣   ╠═╝╠═╣║ ╦║╣ 
+// ╩  ╩╚═╝═╩╝  ═╩╝╚═╝  ╩  ╩ ╩╚═╝╚═╝
     echo "<tfoot>";
 echo "<tr>";
-     echo "<th>							Id Labo";                   	echo "</th>";
-     echo "<th>							Catégorie";                 	echo "</th>";
-     echo "<th>							Désignation";               	echo "</th>";
+	
+	foreach ($modules as $module) {
+		echo $module['tfoot'];
+	}
 
-     if ($th_c!="") echo $th_c;
-     else echo "<th style=\"background:#8faaa4;\">		Caractéristiques";          	echo "</th>";
-     echo "<th style=\"background:#96a5bc;\">			Intègre";						echo "</th>";
-     echo "<th style=\"background:#8AAA6D;\">			Marque";                    	echo "</th>";
-     echo "<th style=\"background:#8AAA6D;\">			Référence fabricant";       	echo "</th>";
-     echo "<th style=\"background:#8AAA6D;\">			Numéro de série";           	echo "</th>";
-     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>référence";    	echo "</th>";
-     echo "<th style=\"background:#bab987;\">			n° d’inventaire";           	echo "</th>";
-     echo "<th style=\"background:#bab987;\">			Achat";                     	echo "</th>";
      echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</th>";
-     echo "<th style=\"background:#BA944D;\">			Fichiers<br/>entrée";       	echo "</th>";
      echo "<th style=\"background:#a786a2;\">			Journal";                   	echo "</th>";
      echo "<th style=\"background:#96a5bc;\">           Intégré à";                     echo "</th>";
+     echo "<th style=\"background:#96a5bc;\">			Intègre";						echo "</th>";
      echo "<th style=\"background:#96a5bc;\">			Localisation";              	echo "</th>";
     if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">	État";       			echo "</th>";
      echo "<th>                                         &nbsp;";                        echo "</th>";
@@ -587,5 +423,6 @@ echo "<li>Entretiens : ";
 echo "</li>";
 echo "</ul>";
 /*endstat*/
+
 
 ?>
