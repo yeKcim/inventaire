@@ -1,5 +1,5 @@
 <?php
-
+if (!isset($t) || !is_array($t)) return ['thead' => '', 'tbody' => '', 'tfoot' => ''];
 
 
 if (!isset($th_c)) {
@@ -78,7 +78,7 @@ if ($CAT=="") {
     $td.="<td>";
     $td.=spanquick("caracteristiques",$t["base_index"]);
 
-    if (array_key_exists($t["base_index"], $tc)) $td.=substr($tc[$t["base_index"]], 0, -2);
+    if (is_array($tc) && array_key_exists($t["base_index"], $tc)) $td.=substr($tc[$t["base_index"]], 0, -2);
     else $td.="-";
 
     $td.="</span>";

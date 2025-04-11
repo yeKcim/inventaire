@@ -1,5 +1,10 @@
 <?php
 
+function include_module($module_path, $t = null) {
+	if (!isset($t) || !is_array($t)) return ['thead' => '', 'tbody' => '', 'tfoot' => ''];
+	return include $module_path;
+}
+
 /*stat*/
 $prix_total=0;
 $entretiens_late=0;
@@ -206,22 +211,16 @@ else $display_raison_sortie=0;
 
 
 
-
-
 // ███╗   ███╗ ██████╗ ██████╗ ██╗   ██╗██╗     ███████╗███████╗
 // ████╗ ████║██╔═══██╗██╔══██╗██║   ██║██║     ██╔════╝██╔════╝
 // ██╔████╔██║██║   ██║██║  ██║██║   ██║██║     █████╗  ███████╗
 // ██║╚██╔╝██║██║   ██║██║  ██║██║   ██║██║     ██╔══╝  ╚════██║
 // ██║ ╚═╝ ██║╚██████╔╝██████╔╝╚██████╔╝███████╗███████╗███████║
 // ╚═╝     ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚══════╝╚══════╝╚══════╝
-$modules = [
-    include "/home/carre/git-bin/inventaire/modules/- infos minimales -/colonnes.php",
-    include "/home/carre/git-bin/inventaire/modules/caracteristiques/colonnes.php",
-    include "/home/carre/git-bin/inventaire/modules/technique/colonnes.php",
-    include "/home/carre/git-bin/inventaire/modules/documents/colonnes.php",
-    include "/home/carre/git-bin/inventaire/modules/administratif/colonnes.php",
-];
-
+$modules = [];
+foreach ($SETTINGS_modules as $m) {
+    $modules[] = include_module("./modules/{$m}/colonnes.php", $t ?? null);
+}
 
 
 // ████████╗ █████╗ ██████╗ ██╗     ███████╗ █████╗ ██╗   ██╗
@@ -232,8 +231,6 @@ $modules = [
 //    ╚═╝   ╚═╝  ╚═╝╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝ ╚═════╝
 
 
-
-
 echo "<table id=\"listing\">";
 
 // ╔═╗╔╗╔╦╗╔═╗╔╦╗╔═╗  ╔╦╗╔═╗╔╗ ╦  ╔═╗╔═╗╦ ╦
@@ -241,18 +238,10 @@ echo "<table id=\"listing\">";
 // ╚═╝╝╚╝╩ ╚═╝ ╩ ╚═╝   ╩ ╩ ╩╚═╝╩═╝╚═╝╩ ╩╚═╝
 echo "<thead>";
 echo "<tr>";
-
 	foreach ($modules as $module) {
 		echo $module['thead'];
 	}
-	
-     echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</th>";
-     echo "<th style=\"background:#a786a2;\">			Journal";                   	echo "</th>";
-     echo "<th style=\"background:#96a5bc;\">           Intégré à";                     echo "</th>";
-     echo "<th style=\"background:#96a5bc;\">			Intègre"; 						echo "</th>";
-     echo "<th style=\"background:#96a5bc;\">			Localisation";              	echo "</th>";
-    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">	État";       			echo "</th>";
-     echo "<th>                                         &nbsp;";                        echo "</th>";
+	echo "<th>&nbsp;</th>";
 echo "</tr>";
 echo "</thead>";
 
@@ -262,121 +251,18 @@ echo "</thead>";
 // ╩═╝╩╚═╝╝╚╝╚═╝╚═╝  ═╩╝╚═╝  ╩╚═╚═╝╚═╝╚═╝╩═╝╩ ╩ ╩ ╩ ╚═╝
 foreach ($tableau as &$t) {
     echo "<tr>";
-
-	$data = include "/home/carre/git-bin/inventaire/modules/- infos minimales -/colonnes.php";
-	echo $data['tbody'];
-
-	$data = include "/home/carre/git-bin/inventaire/modules/caracteristiques/colonnes.php";
-	echo $data['tbody'];
-	/* // problème avec caractéristiques lors de l’utilisation de :
- 	foreach ($modules as $module) {
-		echo $module['tbody'];
-	}   */  
-
-	$data = include "/home/carre/git-bin/inventaire/modules/technique/colonnes.php";
-	echo $data['tbody'];
-
-	$data = include "/home/carre/git-bin/inventaire/modules/documents/colonnes.php";
-	echo $data['tbody'];
-
-	$data = include "/home/carre/git-bin/inventaire/modules/administratif/colonnes.php";
-	echo $data['tbody'];
-
-
-
-
-        // ********** Entretiens **********
-        echo "<td>";
-
-        echo spanquick("entretien",$t["base_index"]);
-	if (array_key_exists($t["base_index"], $te)) echo $te[$t["base_index"]]; else echo "-";
-        echo "</span>";
-
-        echo "</td>";
-
-        // ********** Journal **********
-        echo "<td>";
-
-        echo spanquick("journal",$t["base_index"]);
-
-	if (array_key_exists("base_index", $t)) {
-		$keys = array_keys(array_column($tableau_journaux, 'historique_id'), $t["base_index"]);
-		if (array_key_exists("0",$keys)) echo "<sup>".$tableau_journaux[$keys[0]]["nb_entree"]."</sup> <img src=\"mime-icons/txt.png\" />" ;
-		else echo "-" ;
+	foreach ($SETTINGS_modules as $m) {
+		$data = include "./modules/{$m}/colonnes.php";
+		echo $data['tbody'];
 	}
-	else echo "-" ;
-
-        echo "</span>";
-
-        echo "</td>";
-
-        // ********** Intégré à **********
-        echo "<td>";
-        $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
-        if ($t["integration"]!="0") {
-		echo spanquick("utilisation",$t["base_index"])."➡</span>&nbsp;";
-                $keys = array_keys(array_column($tableau_enfants, 'base_index'), $t["integration"]);
-                if (isset($keys[0])) quickdisplaymini($tableau_enfants[$keys[0]]);
-        }
-		else echo spanquick("utilisation",$t["base_index"])."-</span>";
-		
-        echo "</td>";
-
-
-        // ********** Intègre **********
+                             
+    // ********** Outils **********
     echo "<td>";
-
-        $keys = array_keys(array_column($tableau_parents, 'integration'), $t["base_index"]);
-        // Intégration parent de
-        if (array_key_exists("0", $keys)) {
-            if (array_key_exists($keys[0], $tableau_parents)) {
-               { foreach ($keys as $k) {echo "⬉&nbsp;"; quickdisplaymini($tableau_parents[$k]); echo "<br/>";}  }
-
-            }
-        }
-        else { echo "<a href=\"\" title=\"todo\">-</a>";}
-
-	echo "</td>";
-	
-
-        // ********** Localisation **********
-        echo "<td>";
-        echo spanquick("utilisation",$t["base_index"]);
-
-	if (array_key_exists("utilisateur", $t)) {
-			$keys = array_keys(array_column($utilisateurs, 'utilisateur_index'), $t["utilisateur"]);
-			 if (array_key_exists("0",$keys)) $key=$keys[0]; else $key=null;
-		}
-        if ($t["utilisateur"] != 0 && $key != null) { echo "<span title=\"Utilisé par ".$utilisateurs[$key]["utilisateur_prenom"]." ".$utilisateurs[$key]["utilisateur_nom"]." ";}
-        else echo "<span title=\"";
-        if ($t["localisation"]!=0) echo "le ".dateformat($t["date_localisation"],"fr")."";
-        echo "\">";
-
-        echo "".$t["localisation_batiment"]." ".$t["localisation_piece"]."";
-
-        echo "</span>";
-        echo "</span>";
-        echo "</td>";
-
-        // ********** État **********
-        if ($IOT!="0") {
-            echo "<td>";
-            echo spanquick("utilisation",$t["base_index"]);
-	        echo $t["raison_sortie_nom"];
-            echo "</span>";
-            echo "</td>";
-        }
-
-
-                                
-        // ********** Outils **********
-        echo "<td>";
-        echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'duplicate.php?BASE=$database&i=".$t["base_index"]."',width:440,height:750,closejs:function(){location.reload()}})\" title=\"Dupliquer cette entrée\">";
-        echo "✚";
-        echo "</span>";
-        echo "</td>";
-
-
+    echo "<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'duplicate.php?BASE={$database}&i={$t["base_index"]}',
+    		width:440,height:750,closejs:function(){location.reload()}})\" title=\"Dupliquer cette entrée\">";
+    echo "✚";
+    echo "</span>";
+    echo "</td>";
 
     echo "</tr>";
 
@@ -385,26 +271,16 @@ foreach ($tableau as &$t) {
 // ╔═╗╦╔═╗╔╦╗  ╔╦╗╔═╗  ╔═╗╔═╗╔═╗╔═╗
 // ╠═╝║║╣  ║║   ║║║╣   ╠═╝╠═╣║ ╦║╣ 
 // ╩  ╩╚═╝═╩╝  ═╩╝╚═╝  ╩  ╩ ╩╚═╝╚═╝
-    echo "<tfoot>";
+echo "<tfoot>";
 echo "<tr>";
-	
 	foreach ($modules as $module) {
 		echo $module['tfoot'];
 	}
-
-     echo "<th style=\"background:#c19aaa;\">			Entretiens";                	echo "</th>";
-     echo "<th style=\"background:#a786a2;\">			Journal";                   	echo "</th>";
-     echo "<th style=\"background:#96a5bc;\">           Intégré à";                     echo "</th>";
-     echo "<th style=\"background:#96a5bc;\">			Intègre";						echo "</th>";
-     echo "<th style=\"background:#96a5bc;\">			Localisation";              	echo "</th>";
-    if ($IOT!="0")  echo "<th style=\"background:#96a5bc;\">	État";       			echo "</th>";
-     echo "<th>                                         &nbsp;";                        echo "</th>";
+    echo "<th>&nbsp;</th>";
 echo "</tr>";
 echo "</tfoot>";
 
 echo "</table>";
-
-
 
 
 

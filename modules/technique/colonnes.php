@@ -1,5 +1,5 @@
 <?php
-
+if (!isset($t) || !is_array($t)) return ['thead' => '', 'tbody' => '', 'tfoot' => ''];
 
 // ╔═╗╔╗╔╔╦╗╔═╗╔╦╗╔═╗
 // ║╣ ║║║ ║ ║╣  ║ ║╣ 
