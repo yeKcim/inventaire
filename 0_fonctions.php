@@ -85,21 +85,19 @@ function option_selecteur($select, $table, $A="0", $B="1", $complement="0", $com
     ## B                  : index du tableau pour le texte de l'option
     ## complement         : index du tableau pour des informations complémentaires
     ## complement_display : texte à afficher pour l'information complémentaire
-
-    // Vérifie si $table est un tableau valide avant de passer à foreach
     if (is_array($table) && !empty($table)) {
         foreach ($table as &$l) {
-            $complement_info = ( ($complement != 0) || (array_key_exists($complement, $l)) ) ? $l[$complement] : "";
+            $complement_info = ($complement !== "0" && array_key_exists($complement, $l)) ? $l[$complement] : "";
             $c = ($complement_display != "") ? "($complement_info)" : "$complement_info";
             echo "<option value=\"$l[$A]\" "; 
             echo ($select == $l[$A]) ? "selected >" : " >"; 
             echo "$l[$B] $c</option>";
         }
     } else {
-        // Si $table n'est pas un tableau valide, on affiche un message d'erreur ou on gère autrement
         echo "";
     }
 }
+
 
 
 function echodatatables($tableid,$iDisplayLength="10") {
