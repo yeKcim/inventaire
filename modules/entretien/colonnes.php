@@ -17,7 +17,7 @@ $td="";
 $td.="<td>";
 	$td.=spanquick("entretien",$t["base_index"]);
 	
-	if (is_array($te) && array_key_exists($t["base_index"], $te)) {
+	if (  isset($te) && is_array($te) && array_key_exists($t["base_index"], $te)  ) {
 		$td.=$te[$t["base_index"]];
 	} else $td.="-";
 

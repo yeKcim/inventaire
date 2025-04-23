@@ -17,7 +17,9 @@ $th="\n\n
 // ╚═╝╚═╝╩═╝╚═╝╝╚╝╝╚╝╚═╝╚═╝
 $td="";
 // ********** Id Labo **********
-$td.="\n\n<td><a href=\"info.php?BASE={$database}&i={$t["base_index"]}\" title=\"#{$t["base_index"]}\" target=\"_blank\">";
+$td.="\n\n<td><a href=\"info.php?BASE=";
+$td.= isset($database) ? $database : "";
+$td.="&i={$t["base_index"]}\" title=\"#{$t["base_index"]}\" target=\"_blank\">";
 $td.="<strong>";
 if ($t["lab_id"]=="") $td.="#{$t["base_index"]}";
 else {
@@ -33,9 +35,15 @@ $td.="</a></td>";
 
 // ********** Catégorie **********
 $td.="<td>";
-if ($CAT=="") $td.="<a href=\"?BASE=$database&CAT={$t["categorie"]}\" style=\"color:#000;\" title=\"Afficher les entrées de la catégorie [{$t["categorie_lettres"]}]\">";
+if (isset($CAT)) {
+	if ($CAT=="") {
+		$td.="<a href=\"?BASE=";
+		$td.= isset($database) ? $database : "";
+		$td.="&CAT={$t["categorie"]}\" style=\"color:#000;\" title=\"Afficher les entrées de la catégorie [{$t["categorie_lettres"]}]\">";
+	}
+}
 $td.=$t["categorie_nom"];
-if ($CAT=="") $td.="</a>";
+if (isset($CAT)) { $td.= ($CAT=="") ? "</a>" : ""; }
 $td.="</td>";
 
 // ********** Désignation **********

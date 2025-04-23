@@ -17,7 +17,9 @@ $td="";
 
 // ********** Marque  **********
 $td.="<td>";
-	$td.="<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE={$database}&i={$t["base_index"]}&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"";
+	$td.="<span id=\"linkbox\" onclick=\"TINY.box.show({iframe:'quick.php?BASE=";
+	$td.= isset ($database) ? $database : "";
+	$td.="&i={$t["base_index"]}&quick_page=technique&quick_name=Technique',width:440,height:750,closejs:function(){location.reload()}})\" title=\"";
 	if ($t["vendeur"]!="-") $td.="vendu par {$t["vendeur_nom"]}";
 	$td.="\">";
 	if ($t["marque"]!="") $td.= $t["marque_nom"]; else $td.="-";

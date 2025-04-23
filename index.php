@@ -9,10 +9,9 @@ require_once("./0_connect_db.php");
 require_once("./0_settings.php");
 
 /* ########### GET ########### */
-$arr = array("CAT","TYC","CON","SEA","RES","UTL","IOT","ORDER");
-// récupération
-foreach ($arr as &$value) {
-    $$value= isset($_GET[$value]) ? htmlentities($_GET[$value]) : "" ;
+$keys = ["CAT", "TYC", "CON", "SEA", "RES", "UTL", "IOT", "ORDER"];
+foreach ($keys as $key) {
+    $$key = htmlentities($_GET[$key] ?? '');
 }
 
 // adaptation pour sea

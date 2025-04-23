@@ -18,13 +18,15 @@ $td="";
         $td.="<td>";
 		    $m=str_replace('/', "_", $t["marque_nom"]);
 		    $r=str_replace('/', "_", $t["reference"]);
-		    $dir="files/$database/".$m."-".$r;
+		    $dir= (isset ($database)) ? "files/{$database}/{$m}-{$r}" : "";
 		        //$dir=str_replace("&", "&amp;", $dir);
 		        $dir=str_replace("&", "amp", $dir);
 		        $dir=str_replace(";", "semicolon", $dir);
-		    if (file_exists("$racine$dir")) {
-		        $ddir=display_dir_compact("$racine$dir");
-		        if ($ddir) $td.=$ddir; else $nofiles=true;
+		    if (isset ($racine)) { 
+		    	if (file_exists("$racine$dir")) {
+				    $ddir=display_dir_compact("$racine$dir");
+				    if ($ddir) $td.=$ddir; else $nofiles=true;
+				}
 		    }
 		    else $nofiles=true;
 		    $td.=spanquick("documents",$t["base_index"]);
@@ -35,11 +37,13 @@ $td="";
 
         // ********** Fichiers entrée **********
         $td.="<td>";
-		    $dir="files/$database/".$t["base_index"]."";
-		    if (file_exists("$racine$dir")) {
-		        $ddir=display_dir_compact("$racine$dir");
-		        if ($ddir) $td.=$ddir; else $nofiles=true;
-		    }
+		    $dir= (isset ($database)) ?  "files/$database/{$t["base_index"]}" : "";
+		    if (isset ($racine)) {
+				if (file_exists("$racine$dir")) {
+				    $ddir=display_dir_compact("$racine$dir");
+				    if ($ddir) $td.=$ddir; else $nofiles=true;
+				}
+			}
 		    else $nofiles=true;
 		    $td.=spanquick("documents",$t["base_index"]);
 		    if (isset($nofiles)) $td.="-</span>";

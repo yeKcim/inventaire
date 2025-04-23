@@ -1,6 +1,7 @@
 <?php
 if (!isset($t) || !is_array($t)) return ['thead' => '', 'tbody' => '', 'tfoot' => ''];
 
+global $IOT;
 
 // ╔═╗╔╗╔╔╦╗╔═╗╔╦╗╔═╗
 // ║╣ ║║║ ║ ║╣  ║ ║╣ 
@@ -8,7 +9,8 @@ if (!isset($t) || !is_array($t)) return ['thead' => '', 'tbody' => '', 'tfoot' =
 $th="<th style=\"background:#96a5bc;\">Intégré à</th>
 	 <th style=\"background:#96a5bc;\">Intègre</th>
 	 <th style=\"background:#96a5bc;\">Localisation</th>";
-if ($IOT!="0")  $th.="<th style=\"background:#96a5bc;\">État</th>";
+
+if ($IOT!="0") { $th.="<th style=\"background:#96a5bc;\">État</th>"; }
 
 
 // ╔═╗╔═╗╦  ╔═╗╔╗╔╔╗╔╔═╗╔═╗
@@ -90,8 +92,6 @@ if ($IOT!="0") {
     $td.="</span>";
     $td.="</td>";
 }
-
-
 
 // ╦═╗╔═╗╔╦╗╦ ╦╦═╗╔╗╔
 // ╠╦╝║╣  ║ ║ ║╠╦╝║║║
