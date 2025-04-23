@@ -31,7 +31,7 @@ $td="";
 		    else $nofiles=true;
 		    $td.=spanquick("documents",$t["base_index"]);
 		    if (isset($nofiles)) $td.="-</span>";
-		    else $td.="+</span>";
+		    else $td.="-</span>";
         $td.="</td>";
       
 
@@ -47,7 +47,7 @@ $td="";
 		    else $nofiles=true;
 		    $td.=spanquick("documents",$t["base_index"]);
 		    if (isset($nofiles)) $td.="-</span>";
-		    else $td.="+</span>";
+		    else $td.="-</span>";
         $td.="</td>";
         
         
