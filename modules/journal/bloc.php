@@ -25,7 +25,7 @@ foreach ($arr as &$value) {
 ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝╚═╝      ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
 // ajout d’une entrée dans l’historique
-if ($add_historique == "Ajouter") {
+if ( ($add_historique == "Ajouter") || (isset($data["add_valid"])) ) {
     $arr = array("date_info", "histo");
     foreach ($arr as &$value) {
         $$value = isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "";

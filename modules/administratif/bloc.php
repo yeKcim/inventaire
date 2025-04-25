@@ -47,7 +47,7 @@ $contrats = $sth->fetchAll(PDO::FETCH_ASSOC);
 ██║ ╚═╝ ██║╚██████╔╝██████╔╝██║██║██╗      ███████║╚██████╔╝███████╗
 ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝╚═╝      ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
-if ( isset($_POST["administratif_valid"]) ) {
+if ( (isset($_POST["administratif_valid"]))  || (isset($data["add_valid"])) ) {
 
     $arr = array("vendeur","plus_vendeur_nom","plus_vendeur_web","plus_vendeur_remarque","prix","contrat","plus_contrat_nom", "contrat_type", "plus_contrat_type_nom", "tutelle", "plus_tutelle", "bon_commande", "num_inventaire", "responsable_achat", "plus_responsable_achat_prenom", "plus_responsable_achat_nom", "plus_responsable_achat_mail", "plus_responsable_achat_phone", "date_achat", "garantie");
     foreach ($arr as &$value) {

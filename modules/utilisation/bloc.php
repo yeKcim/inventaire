@@ -53,7 +53,7 @@ $kids = $sth->fetchAll(PDO::FETCH_ASSOC);
 ██║ ╚═╝ ██║╚██████╔╝██████╔╝██║██║██╗      ███████║╚██████╔╝███████╗
 ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝╚═╝      ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
-if ( isset($_POST["utilisation_valid"]) ) {
+if ( ( isset($_POST["utilisation_valid"]) ) || (isset($data["add_valid"])) ) {
 
 /*	╦╔╗╔╔╦╗╔═╗╔═╗╦═╗╔═╗
 	║║║║ ║ ║╣ ║ ╦╠╦╝║╣ 

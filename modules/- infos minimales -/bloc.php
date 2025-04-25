@@ -35,7 +35,7 @@ $sth->closeCursor();
 ██║ ╚═╝ ██║╚██████╔╝██████╔╝██║██║██╗      ███████║╚██████╔╝███████╗
 ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝╚═╝      ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
-if (isset($_POST["minimum_valid"])) {
+if ( (isset($_POST["minimum_valid"])) || (isset($data["add_valid"])) ) {
 
     $arr = ["categorie", "plus_categorie_nom", "plus_categorie_abbr", "lab_id", "id_man", "designation"];
     foreach ($arr as &$value) {

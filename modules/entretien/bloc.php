@@ -22,7 +22,7 @@ $message="";
 /*  ╔═╗ ╦╔═╗╦ ╦╔╦╗  ╔═╗╔╗╔╦╗╦═╗╔═╗╔╦╗╦╔═╗╔╗╔
     ╠═╣ ║║ ║║ ║ ║   ║╣ ║║║║ ╠╦╝║╣  ║ ║║╣ ║║║
     ╩ ╩╚╝╚═╝╚═╝ ╩   ╚═╝╝╚╝╩ ╩╚═╚═╝ ╩ ╩╚═╝╝╚╝    */
-if ( isset($_POST["add_entretien"]) ) {
+if ( ( isset($_POST["add_entretien"]) )  || (isset($data["add_valid"])) ) {
     $arr = array("e_frequence", "e_frequence_multipli", "e_designation", "e_detail");
     foreach ($arr as &$value) {
         $$value= isset($_POST[$value]) ? trim($_POST[$value]) : "" ;

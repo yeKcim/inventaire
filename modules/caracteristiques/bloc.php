@@ -21,7 +21,7 @@ $message="";
 /*  ╔═╗╔═╗╦═╗╔═╗╔═╗
     ║  ╠═╣╠╦╝╠═╣║
     ╚═╝╩ ╩╩╚═╩ ╩╚═╝ */
-if (isset($_POST["carac_valid"])) {
+if ( (isset($_POST["carac_valid"])) || (isset($data["add_valid"])) ) {
     $sql = "DELETE FROM carac WHERE carac_id = ?;";
     $sth = $dbh->prepare($sql);
     $delcount = $sth->execute([$i]);
@@ -57,7 +57,7 @@ if (isset($_POST["carac_valid"])) {
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗
     ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣╠╦╝╠═╣║
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩╩╚═╩ ╩╚═╝  */
-if (isset($_POST["new_carac_valid"])) {
+if ( (isset($_POST["new_carac_valid"])) || (isset($data["add_valid"])) ) {
     $arr = ["nom_carac", "unite_carac", "symbole_carac"];
     foreach ($arr as &$value) {
         $$value = isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "";
