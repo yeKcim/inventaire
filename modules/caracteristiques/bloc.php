@@ -117,10 +117,9 @@ $caracs_i = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
 // Caractéristiques de la catégorie
-$sql = "SELECT DISTINCT carac_caracteristique_id FROM carac, caracteristiques, base WHERE carac_id = base_index AND carac_caracteristique_id = carac";
-$sql.= (basename($_SERVER['PHP_SELF'])!="add.php") ? " AND categorie = ? ;" : " ;";
+$sql = "SELECT DISTINCT carac_caracteristique_id FROM carac, caracteristiques, base WHERE carac_id = base_index AND carac_caracteristique_id = carac AND categorie = ?;";
 $sth = $dbh->prepare($sql);
-if (basename($_SERVER['PHP_SELF'])!="add.php") $sth->execute([$data[0]["categorie"]]); else $sth->execute();
+$sth->execute([$data[0]["categorie"]]);
 $car_of_cat = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
