@@ -20,7 +20,7 @@ $data = array_map(fn($v) => htmlentities($v), $_POST);
 if ( isset($data["add_valid"]) ) {
 
 	// Ajout d’une entrée minimale qui sera ensuite modifiée par les blocs
-	$count = $dbh->exec("INSERT INTO base (categorie) VALUES (0)");
+	$added = $dbh->exec("INSERT INTO base (categorie) VALUES (0)");
 	$i = $dbh->lastInsertId();
 	
 	if (isset($i)) {
@@ -29,16 +29,10 @@ if ( isset($data["add_valid"]) ) {
 		$message .= "Vous pouvez directement ajouter une nouvelle entrée<br/>";
 		$message .= "ou <a href=\"info.php?BASE=$database&i=$i\" target=\"_blank\"><strong>→ Compléter les informations de " . $data["lab_id"] . " #$i</strong></a>";
 		$message .= "</p>";
-		
-		// Réinitialisation des valeurs pour un nouveau formulaire
-		$data = array();		
-		
 	} else {
 		$error .= $message_error_add;
 	}
-	
 }
-
 
 // ██████╗ ██╗███████╗██████╗ ██╗      █████╗ ██╗   ██╗    ██████╗ ██╗      ██████╗  ██████╗███████╗
 // ██╔══██╗██║██╔════╝██╔══██╗██║     ██╔══██╗╚██╗ ██╔╝    ██╔══██╗██║     ██╔═══██╗██╔════╝██╔════╝
@@ -46,7 +40,6 @@ if ( isset($data["add_valid"]) ) {
 // ██║  ██║██║╚════██║██╔═══╝ ██║     ██╔══██║  ╚██╔╝      ██╔══██╗██║     ██║   ██║██║     ╚════██║
 // ██████╔╝██║███████║██║     ███████╗██║  ██║   ██║       ██████╔╝███████╗╚██████╔╝╚██████╗███████║
 // ╚═════╝ ╚═╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝       ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝╚══════╝
-
 
 $write=false;
 $fieldset_tags="Cette fonctionnalité n’est activée qu’une fois l’entrée enregistrée dans la base.";
@@ -60,12 +53,14 @@ echo "<form method=\"post\" action=\"\">";
 
 echo "<div id=\"container\">";
 
-
-for ($i = 0; $i < 3 && $i < count($SETTINGS_modules); $i++) {
-    require_once("./modules/{$SETTINGS_modules[$i]}/bloc.php");
-}
-
-
+	$indexmax=3;
+	for ($index = 0; $index < $indexmax && $index < count($SETTINGS_modules); $index++) {
+		if ( ($SETTINGS_modules[$index] == "journal") ||
+			 ($SETTINGS_modules[$index] == "caracteristiques") ||
+			 ($SETTINGS_modules[$index] == "entretien")||
+			 ($SETTINGS_modules[$index] == "documents") ) $indexmax++;
+		else require_once("./modules/{$SETTINGS_modules[$index]}/bloc.php");
+	}
 
     // ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     // ╚═╗║ ║╠╩╗║║║║ ║
@@ -83,9 +78,6 @@ for ($i = 0; $i < 3 && $i < count($SETTINGS_modules); $i++) {
 echo "</div>";
 
 echo "</form>";
-
-global $SETTINGS_modules;
-print_r($SETTINGS_modules);
 
 echo "</body></html>";
 $dbh = null;

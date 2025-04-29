@@ -227,6 +227,19 @@ if (!$error) {
 
 }
 
+// Réinitialisation des valeurs pour un nouveau formulaire
+if (isset($added)) {
+    $data[0]["vendeur"]=$vendeur;
+    $data[0]["prix"]=$prix;
+    $data[0]["contrat"]=$contrat;
+    $data[0]["date_achat"]=$date_achat;
+    $data[0]["garantie"]=$garantie;
+    $data[0]["bon_commande"]=$bon_commande;
+    $data[0]["num_inventaire"]=$num_inventaire;
+    $data[0]["tutelle"]=$tutelle;
+    $data[0]["plus_tutelle"]=$plus_tutelle;
+    $data[0]["responsable_achat"]=$responsable_achat;
+}
 
 /*
 ███████╗ ██████╗ ██████╗ ███╗   ███╗██╗   ██╗██╗      █████╗ ██╗██████╗ ███████╗

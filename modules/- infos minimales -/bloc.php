@@ -9,7 +9,6 @@
 ╚═╝╚═╝  ╚═══╝╚═╝      ╚═════╝ ╚══════╝    ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
                                        
 */
-
 $message = "";
 
 /*
@@ -26,7 +25,6 @@ $sth->execute();
 $labids_cat = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
-
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗
 ████╗ ████║██╔═══██╗██╔══██╗██║██╔════╝    ██╔════╝██╔═══██╗██║
@@ -35,6 +33,7 @@ $sth->closeCursor();
 ██║ ╚═╝ ██║╚██████╔╝██████╔╝██║██║██╗      ███████║╚██████╔╝███████╗
 ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝╚═╝      ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
+
 if ( (isset($_POST["minimum_valid"])) || (isset($data["add_valid"])) ) {
 
     $arr = ["categorie", "plus_categorie_nom", "plus_categorie_abbr", "lab_id", "id_man", "designation"];
@@ -123,6 +122,11 @@ if ( (isset($_POST["minimum_valid"])) || (isset($data["add_valid"])) ) {
 	$data[0]["categorie"] = $categorie;
 }
 
+// Réinitialisation des valeurs pour un nouveau formulaire
+if (isset($added)) {
+	$data[0]["designation"] = $designation;
+	$data[0]["categorie"] = $categorie;
+}
 
 /*
 ███████╗ ██████╗ ██████╗ ███╗   ███╗██╗   ██╗██╗      █████╗ ██╗██████╗ ███████╗

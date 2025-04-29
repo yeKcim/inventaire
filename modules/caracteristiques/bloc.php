@@ -126,6 +126,16 @@ $sth->closeCursor();
 $arr = array("nom_carac", "unite_carac", "symbole_carac");
 foreach ($arr as $value) { $$value= isset($$value) ? "".$$value."" : "" ; }
 
+// Réinitialisation des valeurs pour un nouveau formulaire
+//?????????????????
+//?????????????????
+//?????????????????
+//?????????????????
+//?????????????????
+//?????????????????
+//?????????????????
+//?????????????????
+
 /*
 ███████╗ ██████╗ ██████╗ ███╗   ███╗██╗   ██╗██╗      █████╗ ██╗██████╗ ███████╗
 ██╔════╝██╔═══██╗██╔══██╗████╗ ████║██║   ██║██║     ██╔══██╗██║██╔══██╗██╔════╝
@@ -241,24 +251,28 @@ echo "</fieldset>";
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩╩╚═╩ ╩╚═╝  */
     echo "<fieldset><legend>Nouvelle caractéristique</legend>";
 
-    // TODO des catégories de caractéristiques ?
-    echo "Si la caractéristique n’est pas présente dans la liste ci-dessus…<br/>";
+	if (basename($_SERVER['PHP_SELF'])=="add.php") {
+		echo "«&nbsp;Nouvelle caractéristique&nbsp;» non disponible dans la page d’ajout";
+	}
+	else {
+		// TODO des catégories de caractéristiques ?
+		echo "Si la caractéristique n’est pas présente dans la liste ci-dessus…<br/>";
 
-    echo "<label for=\"nom_carac\">Nom* :</label>\n";
-    $deja_nomcarac=dejadanslabase("SELECT DISTINCT `nom_carac` FROM `caracteristiques`");
-    echo "<input value=\"$nom_carac\" name=\"nom_carac\" type=\"text\" required pattern=\"^(?!(".$deja_nomcarac.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /><br/>\n";
+		echo "<label for=\"nom_carac\">Nom* :</label>\n";
+		$deja_nomcarac=dejadanslabase("SELECT DISTINCT `nom_carac` FROM `caracteristiques`");
+		echo "<input value=\"$nom_carac\" name=\"nom_carac\" type=\"text\" required pattern=\"^(?!(".$deja_nomcarac.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /><br/>\n";
 
-    echo "<label for=\"unite_carac\">";
-    echo "<abbr title=\"µm, %,… si oui/non, entrez « bool »\">Unité</abbr>";
-    echo " :</label>\n";
-    echo "<input value=\"$unite_carac\" name=\"unite_carac\" type=\"text\" /><br/>\n";
+		echo "<label for=\"unite_carac\">";
+		echo "<abbr title=\"µm, %,… si oui/non, entrez « bool »\">Unité</abbr>";
+		echo " :</label>\n";
+		echo "<input value=\"$unite_carac\" name=\"unite_carac\" type=\"text\" /><br/>\n";
 
-    echo "<label for=\"symbole_carac\">";
-    echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle* </abbr>";
-    echo ":</label>\n";
-    $deja_symbole=dejadanslabase("SELECT DISTINCT `symbole_carac` FROM `caracteristiques`");
-    echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\" required pattern=\"^(?!(".$deja_symbole.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /><br/>\n";
-
+		echo "<label for=\"symbole_carac\">";
+		echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle* </abbr>";
+		echo ":</label>\n";
+		$deja_symbole=dejadanslabase("SELECT DISTINCT `symbole_carac` FROM `caracteristiques`");
+		echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\" required pattern=\"^(?!(".$deja_symbole.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /><br/>\n";
+	}
 
     /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
         ╚═╗║ ║╠╩╗║║║║ ║

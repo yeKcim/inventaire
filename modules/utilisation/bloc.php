@@ -289,13 +289,6 @@ if (!$error) {
 	]);
 	*/
 
-
-
-
-
-
-
-
 }
 
 
@@ -308,6 +301,14 @@ if (!$error) {
 
 }
 
+// Réinitialisation des valeurs pour un nouveau formulaire
+if (isset($added)) {
+    $data[0]["utilisateur"]=$utilisateur;
+    $data[0]["localisation"]=$localisation;
+    $data[0]["sortie"]=$sortie;
+    $data[0]["raison_sortie"] = $raison_sortie ;
+    $data[0]["integration"]=$integration;
+}
 
 /*
 ███████╗ ██████╗ ██████╗ ███╗   ███╗██╗   ██╗██╗      █████╗ ██╗██████╗ ███████╗

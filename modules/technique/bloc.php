@@ -21,8 +21,8 @@ if ( (isset($_POST["technique_valid"])) || (isset($data["add_valid"])) ) {
     $arr = ["marque", "plus_marque", "plus_marque_nom", "reference", "serial_number", "base_index"];
     foreach ($arr as &$value) {
         $$value = isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "";
-    }
-
+    }	
+ 
 	//  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔╦╗╔═╗╦═╗╔═╗ ╦ ╦╔═╗
 	//	║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║║║╠═╣╠╦╝║═╬╗║ ║║╣
 	//	╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╩ ╩╩ ╩╩╚═╚═╝╚╚═╝╚═╝
@@ -73,6 +73,12 @@ if ( (isset($_POST["technique_valid"])) || (isset($data["add_valid"])) ) {
 
 }
 
+// Réinitialisation des valeurs pour un nouveau formulaire
+if (isset($added)) {
+	$data[0]["marque"] = $marque;
+	$data[0]["serial_number"] = $serial_number;
+	$data[0]["reference"] = $reference;
+}
 
 // ███████╗ ██████╗ ██████╗ ███╗   ███╗██╗   ██╗██╗      █████╗ ██╗██████╗ ███████╗
 // ██╔════╝██╔═══██╗██╔══██╗████╗ ████║██║   ██║██║     ██╔══██╗██║██╔══██╗██╔════╝
