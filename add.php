@@ -15,7 +15,21 @@ $error="";
 
 $message= "";
 
-$data = array_map(fn($v) => htmlentities($v), $_POST);
+
+
+$filters = [];
+foreach ($_POST as $key => $value) {
+    // on indique qu’on veut FILTER_SANITIZE_SPECIAL_CHARS (semblable à htmlentities)
+    // et on autorise les tableaux
+    $filters[$key] = [
+        'filter'  => FILTER_SANITIZE_SPECIAL_CHARS,
+        'flags'   => FILTER_REQUIRE_ARRAY | FILTER_FORCE_ARRAY,
+    ];
+}
+// récupère $_POST filtré, même pour les inputs multiples
+$data = filter_input_array(INPUT_POST, $filters);
+
+
 
 if ( isset($data["add_valid"]) ) {
 
@@ -55,10 +69,11 @@ echo "<div id=\"container\">";
 
 	$indexmax=3;
 	for ($index = 0; $index < $indexmax && $index < count($SETTINGS_modules); $index++) {
-		if ( ($SETTINGS_modules[$index] == "journal") ||
-			 ($SETTINGS_modules[$index] == "caracteristiques") ||
-			 ($SETTINGS_modules[$index] == "entretien")||
-			 ($SETTINGS_modules[$index] == "documents") ) $indexmax++;
+		if ( ($SETTINGS_modules[$index] == "journal")
+			 // ||($SETTINGS_modules[$index] == "caracteristiques")
+			 || ($SETTINGS_modules[$index] == "entretien")
+			 || ($SETTINGS_modules[$index] == "documents")
+		) $indexmax++;
 		else require_once("./modules/{$SETTINGS_modules[$index]}/bloc.php");
 	}
 

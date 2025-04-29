@@ -43,10 +43,6 @@ if ($mv_f_confirm=="Renommer") {
     
 }
 
-
-
-
-
 /* ########### Suppression d’un fichier ########### */
 if ($del_f_confirm=="Confirmer la suppression") {
     // Si le dossier trash n’existe pas, on le crée
@@ -58,14 +54,10 @@ if ($del_f_confirm=="Confirmer la suppression") {
 if ($move!="") {
     $movefrom=str_replace("$dossierdesfichiers$database/", "", $move);
     if ($movefrom=="$i/") {
-    
-    
-    
 		// Vérifie si $marques est bien un tableau et qu'il n'est pas vide
 		if (is_array($marques) && !empty($marques)) {
 			// Cherche l'index dans la colonne 'marque_index'
 			$keys = array_keys(array_column($marques, 'marque_index'), $data[0]["marque"]);
-			
 			// Si l'index est trouvé, récupère la première clé
 			if (isset($keys[0])) {
 				$key = $keys[0];
@@ -80,17 +72,12 @@ if ($move!="") {
 		}
 
         
-        
-        
         if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
-
             $m=$marques[$keys[0]]["marque_nom"];
             $r=$data[0]["reference"];
-
             $m=str_replace('/', "_", $m);
             $m=str_replace("&", "amp", $m);
             $m=str_replace(";", "semicolon", $m);
-
             $r=str_replace('/', "_", $r);
             $r=str_replace("&", "amp", $r);
             $r=str_replace(";", "semicolon", $r);
@@ -206,10 +193,12 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 /*  ╔═╗╦╔═╗╦ ╦╦╔═╗╦═╗╔═╗
     ╠╣ ║║  ╠═╣║║╣ ╠╦╝╚═╗
     ╚  ╩╚═╝╩ ╩╩╚═╝╩╚═╚═╝  */
-    echo "<fieldset><legend>Fichiers de cette entrée</legend>";
-        displayDir($database, $i, "$dossierdesfichiers$database/$i/", $del=$write, $allowmv=$mv);
-    echo "</fieldset>";
-
+    
+    if (basename($_SERVER['PHP_SELF'])!="add.php") {
+		echo "<fieldset><legend>Fichiers de cette entrée</legend>";
+		    displayDir($database, $i, "$dossierdesfichiers$database/$i/", $del=$write, $allowmv=$mv);
+		echo "</fieldset>";
+	}
 
 
 
@@ -232,62 +221,61 @@ echo "<div id=\"bloc\" style=\"background:rgb(245, 214, 197); vertical-align:top
 
     
     
-    
-    
-    
+    if (basename($_SERVER['PHP_SELF'])!="add.php") {
     echo "<fieldset><legend>Fichiers globaux liés à la référence constructeur</legend>";
-    if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
-       	$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
-	    $r=str_replace('/', "_", $data[0]["reference"]);
-        displayDir($database, $i, "".$dossierdesfichiers."".$database."/".$m."-".$r."/", $del=$write, $allowmv=$mv);
-    }
-    else echo "Vous devez renseigner « Marque » et « Référence fabriquant » pour activer cette fonction.";
-    echo "</fieldset>";
-
+		if ( ($data[0]["reference"]!="")&&($data[0]["marque"]!="0") ) {
+		   	$m=str_replace('/', "_", $marques[$keys[0]]["marque_nom"]);
+			$r=str_replace('/', "_", $data[0]["reference"]);
+		    displayDir($database, $i, "".$dossierdesfichiers."".$database."/".$m."-".$r."/", $del=$write, $allowmv=$mv);
+		}
+		else echo "Vous devez renseigner « Marque » et « Référence fabriquant » pour activer cette fonction.";
+		echo "</fieldset>";
+	}
 
 /*  ╦═╗╔═╗╔═╗╔═╗╦═╗╔═╗╔╗╔╔═╗╔═╗╔═╗  ╔═╗╦╔╦╗╦ ╦  ╔═╗╦╦═╗╔═╗╔═╗
     ╠╦╝║╣ ╠╣ ║╣ ╠╦╝║╣ ║║║║  ║╣ ╚═╗  ╚═╗║║║║║ ║  ╠═╣║╠╦╝║╣ ╚═╗
     ╩╚═╚═╝╚  ╚═╝╩╚═╚═╝╝╚╝╚═╝╚═╝╚═╝  ╚═╝╩╩ ╩╩ ╩═╝╩ ╩╩╩╚═╚═╝╚═╝ */
-    echo "<fieldset><legend>Fichiers de référence similaire</legend>";
+    if (basename($_SERVER['PHP_SELF'])!="add.php") {
+		echo "<fieldset><legend>Fichiers de référence similaire</legend>";
 
-    // Array references_similaires
-	$sql = "SELECT base_index, lab_id 
-		    FROM base 
-		    WHERE reference = :reference 
-		      AND marque = :marque 
-		      AND categorie = :categorie 
-		      AND base_index != :i 
-		    ORDER BY base_index ASC";
-	$sth = $dbh->prepare($sql);
-	$sth->execute([
-		':reference' => $data[0]["reference"],
-		':marque'    => $data[0]["marque"],
-		':categorie' => $data[0]["categorie"],
-		':i'         => $i
-	]);
-	$references_similaires = $sth->fetchAll(PDO::FETCH_ASSOC);
-	$sth->closeCursor();
+		// Array references_similaires
+		$sql = "SELECT base_index, lab_id 
+				FROM base 
+				WHERE reference = :reference 
+				  AND marque = :marque 
+				  AND categorie = :categorie 
+				  AND base_index != :i 
+				ORDER BY base_index ASC";
+		$sth = $dbh->prepare($sql);
+		$sth->execute([
+			':reference' => $data[0]["reference"],
+			':marque'    => $data[0]["marque"],
+			':categorie' => $data[0]["categorie"],
+			':i'         => $i
+		]);
+		$references_similaires = $sth->fetchAll(PDO::FETCH_ASSOC);
+		$sth->closeCursor();
 
-	if (!$references_similaires || $data[0]["reference"] == "" || $data[0]["marque"] == "0" || $data[0]["categorie"] == "0") {
-		echo "Aucune référence correspondante trouvée";
+		if (!$references_similaires || $data[0]["reference"] == "" || $data[0]["marque"] == "0" || $data[0]["categorie"] == "0") {
+			echo "Aucune référence correspondante trouvée";
+		}
+		else {
+		    echo "<table id=\"simreffiles\">";
+		    echo "<thead><tr><th style=\"text-align:left\">Ref</th><th style=\"text-align:left\">Fichiers</th></tr></thead>";
+		    foreach ($references_similaires as $rs) {
+		        echo "<tr>";
+		        echo "<td width=\"20%\"><a href=\"info.php?i=".$rs["base_index"]."\" target=\"_blank\">";
+		        if ($rs["lab_id"]=="") echo "#".$rs["base_index"].""; else echo "<span title=\"#".$rs["base_index"]."\">".$rs["lab_id"]."</span>";
+		        echo "</a></td><td>";
+		        $ddir=display_dir_compact("$dossierdesfichiers$database/".$rs["base_index"]."/");
+		        if ($ddir) echo display_dir_compact("$dossierdesfichiers$database/".$rs["base_index"]."/"); else echo "Aucun fichier";
+		        echo "</td></tr>";
+		    }
+		    echo "</table>";
+		    echodatatables("simreffiles","5");
+		}
+		echo "</fieldset>";
 	}
-    else {
-        echo "<table id=\"simreffiles\">";
-        echo "<thead><tr><th style=\"text-align:left\">Ref</th><th style=\"text-align:left\">Fichiers</th></tr></thead>";
-        foreach ($references_similaires as $rs) {
-            echo "<tr>";
-            echo "<td width=\"20%\"><a href=\"info.php?i=".$rs["base_index"]."\" target=\"_blank\">";
-            if ($rs["lab_id"]=="") echo "#".$rs["base_index"].""; else echo "<span title=\"#".$rs["base_index"]."\">".$rs["lab_id"]."</span>";
-            echo "</a></td><td>";
-            $ddir=display_dir_compact("$dossierdesfichiers$database/".$rs["base_index"]."/");
-            if ($ddir) echo display_dir_compact("$dossierdesfichiers$database/".$rs["base_index"]."/"); else echo "Aucun fichier";
-            echo "</td></tr>";
-        }
-        echo "</table>";
-        echodatatables("simreffiles","5");
-    }
-    echo "</fieldset>";
-
 echo "</div>";
 
 ?>

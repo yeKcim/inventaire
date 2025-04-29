@@ -124,8 +124,8 @@ if ( (isset($_POST["minimum_valid"])) || (isset($data["add_valid"])) ) {
 
 // Réinitialisation des valeurs pour un nouveau formulaire
 if (isset($added)) {
-	$data[0]["designation"] = $designation;
-	$data[0]["categorie"] = $categorie;
+	$data[0]["designation"] = "";
+	$data[0]["categorie"] = "";
 }
 
 /*

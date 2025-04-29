@@ -10,6 +10,8 @@
 
 $message="";
 
+
+
 /*
  █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
 ██╔══██╗██╔══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
@@ -20,9 +22,10 @@ $message="";
 */
 
 // Requête pour la table 'base'
+$I= (basename($_SERVER['PHP_SELF'])=="add.php") ? "0" : $i;
 $sql = "SELECT base_index, lab_id, categorie, reference, designation, sortie, integration FROM base WHERE base_index != :base_index ORDER BY lab_id ASC;";
 $sth = $dbh->prepare($sql);
-$sth->execute([':base_index' => $i]);
+$sth->execute([':base_index' => $I]);
 $lab_ids = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
@@ -41,9 +44,12 @@ $localisations = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
  // tous les enfants⏎
-$sth = $dbh->prepare("SELECT base_index, lab_id, designation FROM base WHERE integration = :integration ORDER BY lab_id ASC;");
-$sth->execute([':integration' => $i]);
-$kids = $sth->fetchAll(PDO::FETCH_ASSOC);
+if (basename($_SERVER['PHP_SELF'])!="add.php") {
+	$sth = $dbh->prepare("SELECT base_index, lab_id, designation FROM base WHERE integration = :integration ORDER BY lab_id ASC;");
+	$sth->execute([':integration' => $i]);
+	$kids = $sth->fetchAll(PDO::FETCH_ASSOC);
+}
+else $kids = NULL;
 
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗
@@ -54,6 +60,7 @@ $kids = $sth->fetchAll(PDO::FETCH_ASSOC);
 ╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝╚═╝      ╚══════╝ ╚══▀▀═╝ ╚══════╝
 */
 if ( ( isset($_POST["utilisation_valid"]) ) || (isset($data["add_valid"])) ) {
+
 
 /*	╦╔╗╔╔╦╗╔═╗╔═╗╦═╗╔═╗
 	║║║║ ║ ║╣ ║ ╦╠╦╝║╣ 
@@ -209,6 +216,7 @@ if (!$error) {
 
     // Si la localisation change, on modifie la date de localisation pour mettre aujourd’hui
     $change_date_localisation= ($data[0]["localisation"]==$localisation) ? "" : ", date_localisation=\"".date("y.m.d")."\"";
+	$integration=($integration==NULL) ? "0" : $integration;
 
 	// Requête préparée pour mettre à jour la table 'base'
 	$sql = "UPDATE base
@@ -303,11 +311,11 @@ if (!$error) {
 
 // Réinitialisation des valeurs pour un nouveau formulaire
 if (isset($added)) {
-    $data[0]["utilisateur"]=$utilisateur;
-    $data[0]["localisation"]=$localisation;
-    $data[0]["sortie"]=$sortie;
-    $data[0]["raison_sortie"] = $raison_sortie ;
-    $data[0]["integration"]=$integration;
+    $data[0]["utilisateur"]="";
+    $data[0]["localisation"]="";
+    $data[0]["sortie"]="";
+    $data[0]["raison_sortie"] = "" ;
+    $data[0]["integration"]="";
 }
 
 /*
@@ -335,9 +343,11 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         /* ########### utilisateur ########### */
         echo "<label for=\"utilisateur\">Utilisateur : </label>\n";
         echo "<select name=\"utilisateur\" onchange=\"display(this,'plus_utilisateur','plus_utilisateur');\" id=\"utilisateur\">";
-        echo "<option value=\"0\" "; if ($data[0]["utilisateur"]=="0") echo "selected"; echo ">— Aucun utilisateur spécifié —</option>";
-        echo "<option value=\"plus_utilisateur\" "; if ($data[0]["utilisateur"]=="plus_utilisateur") echo "selected"; echo ">− Nouvel utilisateur : −</option>";
-    	option_selecteur($data[0]["utilisateur"], $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
+        echo "<option value=\"0\" "; if ( isset($data[0]["utilisateur"]) && ($data[0]["utilisateur"]=="0") ) echo "selected"; echo ">— Aucun utilisateur spécifié —</option>";
+        echo "<option value=\"plus_utilisateur\" "; if ( isset($data[0]["utilisateur"]) && ($data[0]["utilisateur"]=="plus_utilisateur") ) echo "selected"; echo ">− Nouvel utilisateur : −</option>";
+
+		$selection_utilisateurs= (isset($data[0]["utilisateur"])) ? $data[0]["utilisateur"] : "";
+    	option_selecteur($selection_utilisateurs, $utilisateurs, "utilisateur_index", "utilisateur_nom", "utilisateur_prenom");
         echo "</select><br />\n";
 		/*select2 pour recherche */
 		echo "<script>
@@ -380,10 +390,11 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         /* ########### localisation ########### */
         echo "<label for=\"localisation\">Localisation : </label>\n";
         echo "<select name=\"localisation\" onchange=\"display(this,'plus_localisation','plus_localisation');\" id=\"localisation\" >";
-        echo "<option value=\"0\" "; if ($data[0]["localisation"]=="0") echo "selected"; echo ">— Aucune localisation spécifiée —</option>";
-        echo "<option value=\"plus_localisation\" "; if ($data[0]["localisation"]=="plus_localisation") echo "selected"; echo ">− Nouvelle localisation : −</option>";
+        echo "<option value=\"0\" "; if ( isset($data[0]["localisation"]) && ($data[0]["localisation"]=="0") ) echo "selected"; echo ">— Aucune localisation spécifiée —</option>";
+        echo "<option value=\"plus_localisation\" "; if ( isset($data[0]["localisation"]) && ($data[0]["localisation"]=="plus_localisation") ) echo "selected"; echo ">− Nouvelle localisation : −</option>";
 
-        option_selecteur($data[0]["localisation"], $localisations, "localisation_index", "localisation_batiment", "localisation_piece");
+		$selection_localisation= (isset($data[0]["localisation"])) ? $data[0]["localisation"] : "";
+        option_selecteur($selection_localisation, $localisations, "localisation_index", "localisation_batiment", "localisation_piece");
         echo "</select>";
 		/*select2 pour recherche */
 		echo "<script>
@@ -393,7 +404,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 		</script>";		
 		
 
-        if ( ($data[0]["date_localisation"]!="") && ($data[0]["date_localisation"]!="0000-00-00") )
+        if ( isset($data[0]["date_localisation"]) && ( ($data[0]["date_localisation"]!="") && ($data[0]["date_localisation"]!="0000-00-00") ) )
             echo " <abbr title=\"le ".dateformat($data[0]["date_localisation"],"fr")."\"><strong>ⓘ</strong></abbr>";
 
 
@@ -431,9 +442,9 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
         /* ########### sortie ########### */
         echo "<label for=\"sortie\">État : </label>\n";
         echo "<select name=\"sortie\" id=\"etat\" onchange=\"hide(this,'0','0');\">";
-            echo "<option value=\"0\" "; if ($data[0]["sortie"]=="") echo "selected"; echo ">Inventorié</option>";
-            echo "<option value=\"1\" "; if ($data[0]["sortie"]=="1") echo "selected"; echo ">Sortie définitive d’inventaire</option>";
-            echo "<option value=\"2\" "; if ($data[0]["sortie"]=="2") echo "selected"; echo ">Sortie temporaire d’inventaire</option>";
+            echo "<option value=\"0\" "; if ( isset($data[0]["sortie"]) && ($data[0]["sortie"]=="") ) echo "selected"; echo ">Inventorié</option>";
+            echo "<option value=\"1\" "; if ( isset($data[0]["sortie"]) && ($data[0]["sortie"]=="1") ) echo "selected"; echo ">Sortie définitive d’inventaire</option>";
+            echo "<option value=\"2\" "; if ( isset($data[0]["sortie"]) && ($data[0]["sortie"]=="2") ) echo "selected"; echo ">Sortie temporaire d’inventaire</option>";
         echo "</select>";
         /*select2 pour recherche */
 		echo "<script>
@@ -445,19 +456,20 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 			});
 		</script>";
 		
-        if ( ($data[0]["sortie"]!="0") && ($data[0]["date_sortie"]!="") && ($data[0]["date_sortie"]!="0000-00-00") )
+        if ( ( isset($data[0]["sortie"]) && ($data[0]["sortie"]!="0") ) 
+        	&& ( isset($data[0]["date_sortie"]) && ($data[0]["date_sortie"]!="") && ($data[0]["date_sortie"]!="0000-00-00") ) )
         echo " <abbr title=\"le ".dateformat($data[0]["date_sortie"],"fr")."\"><strong>ⓘ</strong></abbr>"; /* seulement si sortie… !!! */
 
 
         /* ########### raison_sortie ########### */
 
-        $disp= ($data[0]["sortie"]=="0") ? "none" : "block";
+        $disp= ( isset($data[0]["sortie"]) && ($data[0]["sortie"]=="0") ) ? "none" : "block";
 
         echo "<span id=\"0\" style=\"display:$disp;\">";
         echo "<label for=\"raison_sortie\">Raison de sortie : </label>\n"; /* seulement si sortie… !!! */
         echo "<select name=\"raison_sortie\" onchange=\"display(this,'plus_raison_sortie','plus_raison_sortie');\" id=\"raison_sortie\">";
-        echo "<option value=\"0\" "; if ($data[0]["raison_sortie"]=="0") echo "selected"; echo ">— Aucune raison spécifiée —</option>";
-        echo "<option value=\"plus_raison_sortie\" "; if ($data[0]["raison_sortie"]=="plus_raison_sortie") echo "selected"; echo ">−Nouvelle raison : −</option>";
+        echo "<option value=\"0\" "; if ( isset($data[0]["raison_sortie"]) && ($data[0]["raison_sortie"]=="0") ) echo "selected"; echo ">— Aucune raison spécifiée —</option>";
+        echo "<option value=\"plus_raison_sortie\" "; if ( isset($data[0]["raison_sortie"]) && ($data[0]["raison_sortie"]=="plus_raison_sortie") ) echo "selected"; echo ">−Nouvelle raison : −</option>";
         
         if (!empty($data) && isset($data[0])) option_selecteur($data[0]["raison_sortie"], $raison_sorties, "raison_sortie_index", "raison_sortie_nom");
         echo "</select>";
@@ -489,6 +501,7 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
     ╩╝╚╝╩ ╚═╝╚═╝╩╚═╩ ╩ ╩ ╩╚═╝╝╚╝  */
     echo "<fieldset><legend>Intégration (composant intégré à un autre ou faisant parti d’un lot)</legend>";
 
+	if (basename($_SERVER['PHP_SELF'])!="add.php") {
 
 		// Intégré dans
         echo "<label for=\"integration\">est intégré dans :</label>\n";
@@ -528,34 +541,30 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 		// Intégre
 		echo "<label for=\"parentde[]\">Intègre : </label>\n";
 
-		echo "<select class=\"select2\" multiple=\"multiple\" tabindex=\"6\" name=\"parentde[]\" id=\"multiple_int\">";
-		foreach ($lab_ids as $all_ids) {
-		
-			if ($all_ids["base_index"]!=$data[0]["integration"]) {
-				echo "<option value=\"".$all_ids["base_index"]."\" ";
-				echo ($all_ids["integration"]==$i) ? " selected " : "";
-				echo ">[".$all_ids["lab_id"]."] ";
-				echo mb_substr($all_ids["designation"], 0, 35);
-				echo (mb_strlen($all_ids["designation"]) > 35) ? " …" : "";
-				echo "</option><br/>";
-			}	
+			echo "<select class=\"select2\" multiple=\"multiple\" tabindex=\"6\" name=\"parentde[]\" id=\"multiple_int\">";
+			foreach ($lab_ids as $all_ids) {
 			
-		}
-		echo "</select>";
-		echo "<script>
-				\$j(document).ready(function() {
-					\$j('#multiple_int').select2({
-						placeholder: \"Sélectionnez les éléments intégrés\",
-						allowClear: true,
-						width:\"270px\"
+				if ($all_ids["base_index"]!=$data[0]["integration"]) {
+					echo "<option value=\"".$all_ids["base_index"]."\" ";
+					echo ($all_ids["integration"]==$i) ? " selected " : "";
+					echo ">[".$all_ids["lab_id"]."] ";
+					echo mb_substr($all_ids["designation"], 0, 35);
+					echo (mb_strlen($all_ids["designation"]) > 35) ? " …" : "";
+					echo "</option><br/>";
+				}	
+				
+			}
+			echo "</select>";
+			echo "<script>
+					\$j(document).ready(function() {
+						\$j('#multiple_int').select2({
+							placeholder: \"Sélectionnez les éléments intégrés\",
+							allowClear: true,
+							width:\"270px\"
+						});
 					});
-				});
-			  </script>";
-			  
-			  
-
-			
-			
+				  </script>";
+	
 			  
 		if (!empty($kids) ) {                                                                                                                           
 			echo "<p>Liens vers les composants intégrés : </p>\n";
@@ -564,13 +573,13 @@ echo "<div id=\"bloc\" style=\"background:#c3d1e1; vertical-align:top;\">";
 			echo "</ul>";
 		}
 			  
-			  
-			  
-			  
-
+	
+		} else {
+			echo "intégration non gérée dans la page ajout";
+		}   
     echo "</fieldset>";
     
-
+    
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║
     ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */

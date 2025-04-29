@@ -108,17 +108,19 @@ $sth->execute();
 $allcaracs = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
+$I= (basename($_SERVER['PHP_SELF'])=="add.php") ? "0" : $i;
 // Caractéristiques de l'élément 'i'
 $sql = "SELECT carac, carac_valeur FROM caracteristiques, carac, base WHERE carac_id = base_index AND carac_caracteristique_id = carac AND base_index = ? AND carac != 0 ORDER BY base.base_index ASC, carac ASC;";
 $sth = $dbh->prepare($sql);
-$sth->execute([$i]);
+$sth->execute([$I]);
 $caracs_i = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
 // Caractéristiques de la catégorie
-$sql = "SELECT DISTINCT carac_caracteristique_id FROM carac, caracteristiques, base WHERE carac_id = base_index AND carac_caracteristique_id = carac AND categorie = ?;";
+$sql = "SELECT DISTINCT carac_caracteristique_id FROM carac, caracteristiques, base WHERE carac_id = base_index AND carac_caracteristique_id = carac";
+$sql.= (basename($_SERVER['PHP_SELF'])!="add.php") ? " AND categorie = ? ;" : " ;";
 $sth = $dbh->prepare($sql);
-$sth->execute([$data[0]["categorie"]]);
+if (basename($_SERVER['PHP_SELF'])!="add.php") $sth->execute([$data[0]["categorie"]]); else $sth->execute();
 $car_of_cat = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
