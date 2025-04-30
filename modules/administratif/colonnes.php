@@ -1,6 +1,6 @@
 <?php
 if (!isset($t) || !is_array($t)) return ['thead' => '', 'tbody' => '', 'tfoot' => ''];
-
+$prix_total=(isset($prix_total))?$prix_total:0;
 
 // ╔═╗╔╗╔╔╦╗╔═╗╔╦╗╔═╗
 // ║╣ ║║║ ║ ║╣  ║ ║╣ 

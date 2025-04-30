@@ -117,11 +117,16 @@ $caracs_i = $sth->fetchAll(PDO::FETCH_ASSOC);
 $sth->closeCursor();
 
 // Caractéristiques de la catégorie
-$sql = "SELECT DISTINCT carac_caracteristique_id FROM carac, caracteristiques, base WHERE carac_id = base_index AND carac_caracteristique_id = carac AND categorie = ?;";
-$sth = $dbh->prepare($sql);
-$sth->execute([$data[0]["categorie"]]);
-$car_of_cat = $sth->fetchAll(PDO::FETCH_ASSOC);
-$sth->closeCursor();
+if (isset($data[0], $data[0]['categorie'])) {
+	$sql = "SELECT DISTINCT carac_caracteristique_id FROM carac, caracteristiques, base WHERE carac_id = base_index AND carac_caracteristique_id = carac AND categorie = ?;";
+	$sth = $dbh->prepare($sql);
+	$sth->execute([$data[0]["categorie"]]);
+	$car_of_cat = $sth->fetchAll(PDO::FETCH_ASSOC);
+	$sth->closeCursor();
+} else {
+    // $data[0]['categorie'] absent
+    $car_of_cat = [];
+}
 
 // Cas de création d’une nouvelle caracteristique, pour garder les champs remplis en cas d’erreur
 $arr = array("nom_carac", "unite_carac", "symbole_carac");

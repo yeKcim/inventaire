@@ -87,7 +87,7 @@ if ( (isset($_POST["minimum_valid"])) || (isset($data["add_valid"])) ) {
 		║  ╠═╣╠╩╗ ║ ║║
 		╩═╝╩ ╩╚═╝┘╩═╩╝  */
 		// Si on change la catégorie, il est nécessaire de changer également le lab_id !
-		if ($data[0]["categorie"]!=$categorie) {
+		if (isset($data[0]["categorie"]) && ($data[0]["categorie"]!=$categorie)) {
 			$data[0]["lab_id"]=new_lab_id($categorie);
 			$lab_id=$data[0]["lab_id"];
 		}
@@ -213,12 +213,12 @@ if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=" . $i . $qui
         echo "Identifiant labo* :</label>\n";
 
 	echo "<select name=\"lab_id\" onchange=\"display(this,'manual_id','manual_id');\" id=\"lab_id\">";
-		 echo "<option value=\""; if (isset($data[0])) echo $data[0]["lab_id"]; echo"\" ";
+		 echo "<option value=\""; if (isset($data[0],$data[0]["lab_id"])) echo $data[0]["lab_id"]; echo"\" ";
 
-			$lab_id = (!isset($lab_id)) ? "" : $lab_id;
-			$id_man = (!isset($id_man)) ? "" : $id_man;
+			$lab_id = (isset($lab_id)) ? $lab_id : "" ;
+			$id_man = (isset($id_man)) ? $id_man : "" ;
 
-			if (isset($data[0])) {if ($lab_id==$data[0]["lab_id"]) echo "selected";}	echo ">";
+			if (isset($data[0],$data[0]["lab_id"])) {if ($lab_id==$data[0]["lab_id"]) echo "selected";}	echo ">";
 			if (isset($fieldset_tags)) echo "Auto";
 			else {
 			    if ($id_man=="") echo $data[0]["lab_id"];
