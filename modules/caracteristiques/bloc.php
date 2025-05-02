@@ -134,13 +134,7 @@ foreach ($arr as $value) { $$value= isset($$value) ? "".$$value."" : "" ; }
 
 // Réinitialisation des valeurs pour un nouveau formulaire
 //?????????????????
-//?????????????????
-//?????????????????
-//?????????????????
-//?????????????????
-//?????????????????
-//?????????????????
-//?????????????????
+
 
 /*
 ███████╗ ██████╗ ██████╗ ███╗   ███╗██╗   ██╗██╗      █████╗ ██╗██████╗ ███████╗
@@ -159,7 +153,7 @@ echo "<div id=\"bloc\" style=\"background:#c6ece3; vertical-align:top;\">";
 
     $quick= ( isset($_GET["quick_page"]) ) ? "&quick_page=".$_GET["quick_page"]."&quick_name=".$_GET["quick_name"]."" : "";
 
-    if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=".$i."".$quick."\">";
+    if ($write) echo "<form method=\"post\" action=\"?BASE={$database}&i={$i}{$quick}\">";
 
 /*  ╔═╗╔═╗╦═╗╔═╗╔═╗╔╦╗╔═╗╦═╗╦╔═╗╔╦╗╦╔═╗ ╦ ╦╔═╗╔═╗
     ║  ╠═╣╠╦╝╠═╣║   ║ ║╣ ╠╦╝║╚═╗ ║ ║║═╬╗║ ║║╣ ╚═╗
@@ -250,42 +244,65 @@ echo "</fieldset>";
 
 
 
-    if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=".$i."".$quick."\">";
+    if ($write) echo "</form><form method=\"post\" id=\"add_cat\" action=\"?BASE=$database&i=".$i."".$quick."\">";
+
+	if (basename($_SERVER['PHP_SELF'])=="add.php") {echo "</form><form id=\"add_cat\" method=\"post\" action=\"\">";}
 
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗
     ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣╠╦╝╠═╣║
     ╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩╩╚═╩ ╩╚═╝  */
     echo "<fieldset><legend>Nouvelle caractéristique</legend>";
 
-	if (basename($_SERVER['PHP_SELF'])=="add.php") {
-		echo "«&nbsp;Nouvelle caractéristique&nbsp;» non disponible dans la page d’ajout";
+
+	// TODO des catégories de caractéristiques ?
+	echo "Si la caractéristique n’est pas présente dans la liste ci-dessus…<br/>";
+
+	echo "<label for=\"nom_carac\">Nom* :</label>\n";
+	$deja_nomcarac=dejadanslabase("SELECT DISTINCT `nom_carac` FROM `caracteristiques`");
+	echo "<input value=\"$nom_carac\" name=\"nom_carac\" type=\"text\" required pattern=\"^(?!(".$deja_nomcarac.")$).*$\" oninvalid=\"
+	if (this.validity.valueMissing) {
+	  this.setCustomValidity('Ce champ est obligatoire');
 	}
-	else {
-		// TODO des catégories de caractéristiques ?
-		echo "Si la caractéristique n’est pas présente dans la liste ci-dessus…<br/>";
-
-		echo "<label for=\"nom_carac\">Nom* :</label>\n";
-		$deja_nomcarac=dejadanslabase("SELECT DISTINCT `nom_carac` FROM `caracteristiques`");
-		echo "<input value=\"$nom_carac\" name=\"nom_carac\" type=\"text\" required pattern=\"^(?!(".$deja_nomcarac.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /><br/>\n";
-
-		echo "<label for=\"unite_carac\">";
-		echo "<abbr title=\"µm, %,… si oui/non, entrez « bool »\">Unité</abbr>";
-		echo " :</label>\n";
-		echo "<input value=\"$unite_carac\" name=\"unite_carac\" type=\"text\" /><br/>\n";
-
-		echo "<label for=\"symbole_carac\">";
-		echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle* </abbr>";
-		echo ":</label>\n";
-		$deja_symbole=dejadanslabase("SELECT DISTINCT `symbole_carac` FROM `caracteristiques`");
-		echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\" required pattern=\"^(?!(".$deja_symbole.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" /><br/>\n";
+	else if (this.validity.patternMismatch) {
+	  this.setCustomValidity('Déjà dans la base');
 	}
+  	\"";
+  	echo "\" oninput=\"setCustomValidity('')\" /><br/>\n";
+  	
+	echo "<label for=\"unite_carac\">";
+	echo "<abbr title=\"µm, %,… si oui/non, entrez « bool »\">Unité</abbr>";
+	echo " :</label>\n";
+	echo "<input value=\"$unite_carac\" name=\"unite_carac\" type=\"text\" /><br/>\n";
+
+	echo "<label for=\"symbole_carac\">";
+	echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle* </abbr>";
+	echo ":</label>\n";
+	$deja_symbole=dejadanslabase("SELECT DISTINCT `symbole_carac` FROM `caracteristiques`");
+	echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\" required pattern=\"^(?!(".$deja_symbole.")$).*$\" oninvalid=\"
+	if (this.validity.valueMissing) {
+	  this.setCustomValidity('Ce champ est obligatoire');
+	}
+	else if (this.validity.patternMismatch) {
+	  this.setCustomValidity('Déjà dans la base');
+	}
+  	\"";
+  	echo "\" oninput=\"setCustomValidity('')\" /><br/>\n";
+	
 
     /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
         ╚═╗║ ║╠╩╗║║║║ ║
         ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
-    if ($write) echo "<p style=\"text-align:center;\"><input name=\"new_carac_valid\" value=\"Ajouter\" type=\"submit\"  class=\"little_button\" /></p>"; // TODO Ajouter un bouton réinitialiser ?
+    if ($write) {
+    	echo "<p style=\"text-align:center;\"><input name=\"new_carac_valid\" value=\"Ajouter\" type=\"submit\"  class=\"little_button\" form=\"add_cat\" formnovalidate /></p>"; // TODO Ajouter un bouton réinitialiser ?
+    	echo "</form><form method=\"post\" id=\"main_form\" action=\"?BASE={$database}&i={$i}{$quick}\">";
+    }
 
-    if ($write) echo "</form>";
+
+    if (basename($_SERVER['PHP_SELF'])=="add.php") {
+        echo "<p style=\"text-align:center;\"><input name=\"new_carac_valid\" value=\"Ajouter\" type=\"submit\"  class=\"little_button\" form=\"add_cat\" formnovalidate /></p>"; // TODO Ajouter un bouton réinitialiser ?
+    	echo "</form><form method=\"post\" id=\"main_form\" action=\"\">";
+    }
+    
     
         echo "<p style=\"text-align:right;\"><small>* champ obligatoire</small></p>"; 
 

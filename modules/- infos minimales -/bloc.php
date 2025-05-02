@@ -10,6 +10,7 @@
                                        
 */
 $message = "";
+$error_conditions=NULL;
 
 /*
  █████╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
@@ -41,6 +42,7 @@ if ( (isset($_POST["minimum_valid"])) || (isset($data["add_valid"])) ) {
         $$value = isset($_POST[$value]) ? htmlentities(trim($_POST[$value])) : "";
     }
     
+    
 	/*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╔╦╗╔═╗╔═╗╔═╗╦═╗╦╔═╗
 		║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣ ║ ║╣ ║ ╦║ ║╠╦╝║║╣
 		╝╚╝╚═╝╚═╝ ╚╝ ╚═╝╩═╝╩═╝╚═╝  ╚═╝╩ ╩ ╩ ╚═╝╚═╝╚═╝╩╚═╩╚═╝    */
@@ -48,7 +50,7 @@ if ( (isset($_POST["minimum_valid"])) || (isset($data["add_valid"])) ) {
 
 		if ( (empty($plus_categorie_abbr)) || (empty($plus_categorie_nom) ) ) {
 			$message.= "<p class=\"error_message\" id=\"disappear_delay\">Pour créer une nouvelle catégorie, remplir les champs obligatoires</p>";
-			$error=1;
+			$error_conditions=1;
 			$categorie="";
 		}
 		else {
@@ -72,15 +74,26 @@ if ( (isset($_POST["minimum_valid"])) || (isset($data["add_valid"])) ) {
     
     if ( ($lab_id=="manual_id") && ( empty($id_man) ) ) {
 		$message.= "<p class=\"error_message\" id=\"disappear_delay\">Si vous sélectionnez Id manuel, renseignez l’identifiant !</p>";
-		$error=1;
+		$error_conditions=1;
 		$lab_id="";
     }
+    
+  
 
+    if ($categorie=="0")  {
+		$message.= "<p class=\"error_message\" id=\"disappear_delay\">Catégorie est un champ obligatoire</p>";
+		$error_conditions=1;
+		
+		$data[0]["lab_id"]=$lab_id;
+		$data[0]["designation"] = $designation;
+		$data[0]["categorie"] = $categorie;
+    }
+    
 
 	/*  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔═╗ ╦    ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
 		║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗║═╬╗║    ║═╬╗║ ║║╣ ╠╦╝╚╦╝
 		╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╚╩═╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩     */
-	if (!$error) {
+	if (!$error_conditions) {
 	
 	
 	/*  ╦  ╔═╗╔╗  ╦╔╦╗
@@ -96,7 +109,11 @@ if ( (isset($_POST["minimum_valid"])) || (isset($data["add_valid"])) ) {
 		    if ($id_man!="") $lab_id=$id_man;
 		    else {/* si manuel mais vide → auto */}
 		}
-	
+		elseif ($lab_id=="") {
+			$data[0]["lab_id"]=new_lab_id($categorie);
+			$lab_id=$data[0]["lab_id"];
+		} 
+			
 		// Préparation de la requête de mise à jour
 		$sth = $dbh->prepare("
 		    UPDATE base
@@ -163,8 +180,10 @@ if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=" . $i . $qui
 		    // Initialisation de Select2
 		    \$j('#categorie').select2({
 		        width: '270px'
-		    });
+		    });";
 
+			if (basename($_SERVER['PHP_SELF'])!="add.php")
+			echo "
 		    // Validation personnalisée
 		    $('#categorie').on('change', function() {
 		        if ($(this).val() === \"0\") {
@@ -182,7 +201,9 @@ if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=" . $i . $qui
 		            $('#categorie')[0].reportValidity(); // Affiche le message d'erreur
 		        }
 		    });
-		});
+		    ";
+		    
+		echo "});
 	</script>";
 
 
@@ -219,7 +240,7 @@ if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=" . $i . $qui
 			$id_man = (isset($id_man)) ? $id_man : "" ;
 
 			if (isset($data[0],$data[0]["lab_id"])) {if ($lab_id==$data[0]["lab_id"]) echo "selected";}	echo ">";
-			if (isset($fieldset_tags)) echo "Auto";
+			if (basename($_SERVER['PHP_SELF'])=="add.php") echo "Auto";
 			else {
 			    if ($id_man=="") echo $data[0]["lab_id"];
 			    else echo "$id_man";
@@ -228,7 +249,7 @@ if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=" . $i . $qui
 		echo "<option value=\"manual_id\" ";
 		echo ">Manuel</option>";
         echo "</select><br/>";
-        /*select2 pour recherche */
+        /*select2 */
 		echo "<script>
 			\$j(document).ready(function() {
 				\$j('#lab_id').select2({
@@ -242,7 +263,6 @@ if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=" . $i . $qui
         echo "<fieldset id=\"manual_id\" class=\"subfield\" style=\"display: none;\"><legend class=\"subfield\">Id Manuel</legend>";
             echo "<label for=\"id_man\">Id* :</label>\n";
 
-
             $deja_idman=dejadanslabase("SELECT DISTINCT `lab_id` FROM `base` ;");
 			echo "<input value=\"\" name=\"id_man\" type=\"text\" pattern=\"^(?!(".$deja_idman.")$).*$\" oninvalid=\"setCustomValidity('Déjà dans la base')\" oninput=\"setCustomValidity('')\" / > \n";
 
@@ -252,17 +272,10 @@ if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=" . $i . $qui
 
     echo "</fieldset>";
     
-//echo "</fieldset>";    
-    
-
-//echo "<fieldset><legend>Description</legend>";
-
         /* ########### designation ########### */
         echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation* :</label>\n";
         echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"31px\" required ";
         echo "value=\""; if (isset($data[0])) { echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";} echo "\" ><br/>\n";
-
-//echo "</fieldset>";
 
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║
