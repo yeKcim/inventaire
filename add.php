@@ -7,18 +7,32 @@ require_once("./0_tables_sql_commun.php");
 require_once("./0_head.php");
 echo "<body>";
 
-
 require_once("./0_fonctions.php");
 require_once("./0_settings.php");
 $error="";
 
-
 $message= "";
 
-$data = array_map(fn($v) => htmlentities($v), $_POST);
+// ██████╗  ██████╗ ███████╗████████╗
+// ██╔══██╗██╔═══██╗██╔════╝╚══██╔══╝
+// ██████╔╝██║   ██║███████╗   ██║   
+// ██╔═══╝ ██║   ██║╚════██║   ██║   
+// ██║     ╚██████╔╝███████║   ██║   
+// ╚═╝      ╚═════╝ ╚══════╝   ╚═╝   
+function sanitize_input($input) {
+    if (is_array($input)) { return array_map('sanitize_input', $input); }
+    return htmlentities($input, ENT_QUOTES, 'UTF-8');
+}
+$data = sanitize_input($_POST);
     
+    
+// ██╗███╗   ██╗███████╗███████╗██████╗ ████████╗    ███╗   ███╗██╗███╗   ██╗██╗
+// ██║████╗  ██║██╔════╝██╔════╝██╔══██╗╚══██╔══╝    ████╗ ████║██║████╗  ██║██║
+// ██║██╔██╗ ██║███████╗█████╗  ██████╔╝   ██║       ██╔████╔██║██║██╔██╗ ██║██║
+// ██║██║╚██╗██║╚════██║██╔══╝  ██╔══██╗   ██║       ██║╚██╔╝██║██║██║╚██╗██║██║
+// ██║██║ ╚████║███████║███████╗██║  ██║   ██║       ██║ ╚═╝ ██║██║██║ ╚████║██║
+// ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝  ╚═╝   ╚═╝       ╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝
 if ( isset($data["add_valid"]) ) {
-
     // Ajout d’une entrée minimale qui sera ensuite modifiée par les blocs
 	$added = $dbh->exec("INSERT INTO base (categorie) VALUES (0)");
 	$i = $dbh->lastInsertId();
@@ -44,11 +58,8 @@ if ( isset($data["add_valid"]) ) {
 $write=false;
 
 echo "<p>Ajouter une entrée :</p>";
-
 echo $message;
-
 echo "<form method=\"post\" action=\"\"id=\"main_form\" >";
-
 echo "<div id=\"container\">";
 
 	$indexmax=3;
@@ -59,7 +70,6 @@ echo "<div id=\"container\">";
 		) $indexmax++;
 		else require_once("./modules/{$SETTINGS_modules[$index]}/bloc.php");
 	}
-
     // ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     // ╚═╗║ ║╠╩╗║║║║ ║
     // ╚═╝╚═╝╚═╝╩ ╩╩ ╩ 
@@ -70,12 +80,8 @@ echo "<div id=\"container\">";
     echo "</p>"; // TODO Ajouter un bouton réinitialiser
 
     echo $error;
-
     echo "</div>";
-
 echo "</div>";
-
 echo "</form>";
-
 echo "</body></html>";
 $dbh = null;
