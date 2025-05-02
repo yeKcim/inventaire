@@ -109,7 +109,8 @@ if ( (isset($_POST["minimum_valid"])) || (isset($data["add_valid"])) ) {
 		    if ($id_man!="") $lab_id=$id_man;
 		    else {/* si manuel mais vide → auto */}
 		}
-		elseif ($lab_id=="") {
+
+		if ($lab_id=="") {
 			$data[0]["lab_id"]=new_lab_id($categorie);
 			$lab_id=$data[0]["lab_id"];
 		} 
@@ -167,6 +168,11 @@ if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=" . $i . $qui
     
 //echo "<fieldset><legend>Référence interne</legend>";
 
+   /* ########### designation ########### */
+    echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation* :</label>\n";
+    echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"31px\" required ";
+    echo "value=\""; if (isset($data[0])) { echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";} echo "\" ><br/>\n";
+        
 	/* ########### categorie ########### */
 	echo "<label for=\"categorie\">Catégorie* : </label>\n";
 	echo "<select name=\"categorie\" onchange=\"display(this,'plus_categorie','plus_categorie');\" id=\"categorie\" required>";
@@ -271,11 +277,7 @@ if ($write) echo "<form method=\"post\" action=\"?BASE=$database&i=" . $i . $qui
         echo "<br/>";
 
     echo "</fieldset>";
-    
-        /* ########### designation ########### */
-        echo "<label for=\"designation\" style=\"vertical-align: top;\">Désignation* :</label>\n";
-        echo "<input name=\"designation\" type=\"text\" id=\"designation\" size=\"31px\" required ";
-        echo "value=\""; if (isset($data[0])) { echo ($data[0]["designation"]!="") ? $data[0]["designation"] : "";} echo "\" ><br/>\n";
+   
 
 /*  ╔═╗╦ ╦╔╗ ╔╦╗╦╔╦╗
     ╚═╗║ ║╠╩╗║║║║ ║

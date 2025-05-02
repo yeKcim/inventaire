@@ -74,6 +74,7 @@ label {
     width: 100px;
     text-align: right;
     margin-right: 5px;
+    line-height: 2.4em;
 }
 
 form, input {
