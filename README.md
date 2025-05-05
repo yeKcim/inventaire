@@ -23,9 +23,6 @@ Si l’on affiche qu’une seule catégorie, les caractéristiques se séparent 
 ![Preview cat](./README_screenshot_catform.png)
 ![Preview cat](./README_screenshot_cat.png)
 
-L’ajout d’un inventaire se fait en toute simplicité :
-![Preview addinv](./README_screenshot_addinv.png)
-
 
 ## Installation
 
@@ -34,6 +31,7 @@ L’ajout d’un inventaire se fait en toute simplicité :
 * MySQL (testé avec mariadb 11.7.2)
 
 Sous debian, par exemple, j’ai lancé `sudo apt install mariadb-server apache2 php{,-mysql,-php-gettext} phpmyadmin`
+
 
 ### Installation
 * Remplir 0_config.php selon vos paramètres
@@ -55,16 +53,16 @@ post_max_size = 10M
 
 - [x] **Identifiant labo** : Possibilité de choisir l’identifiant manuellement.
 - [x] **Plusieurs inventaires**
-- [ ] **Datatables** : En français
+- [x] **Datatables** : En français
 - [ ] Édition multiple
-- [ ] **Caractéristiques** : Si affichage d’une catégorie unique, les caractéristiques sont affichées séparément sous forme de colonne triables par datatables
-- [ ] **Simplification de saisie** : duplication de fiches, ajouter une commande
-- [ ] **Intégration** : Si intégré, afficher un lien dans listing vers le conteneur. Mais également gérer les lots. Il peut arriver qu’un lot de filtre soit acheté et que l’un d’eux soit intégré dans un montage…
+- [x] **Caractéristiques** : Si affichage d’une catégorie unique, les caractéristiques sont affichées séparément sous forme de colonne triables par datatables
+- [x] **Simplification de saisie** : duplication de fiches
+- [x] **Intégration** : Si intégré, afficher un lien dans listing vers le conteneur. Mais également gérer les lots. Il peut arriver qu’un lot de filtre soit acheté et que l’un d’eux soit intégré dans un montage…
 - [ ] **Rangement** : Ajouter une case pour indiquer où ranger le matériel quand non utilisé.
 - [ ] **Documents** : Supporter le glisser/déposer, supporter l’envoi de fichier depuis une adresse
 - [ ] **Type de contrat** : Afficher le type de contrat dans l’intitulé des contrats pour un meilleur affichage = « sur Chaire Julien » plutôt que « sur Julien »
 - [ ] **Droits** : Ajouter un gestionnaire des droits, qu’un stagiaire ne puisse pas éditer les informations par exemple. Pour plus de simplicité, peut-être juste cacher les boutons de validation…
-- [ ] **Vous avez un message** : Toutes les modifications de la base doivent être suivies d’un message temporaire.
+- [x] **Vous avez un message** : Toutes les modifications de la base doivent être suivies d’un message temporaire.
 - [x] **Statistiques** : Ajouter des statistiques sur les éléments affichés (nombre d’entrées, prix, camemberts des responsables d’achat, des contrats,…
 - [ ] **Page d’administration** : Vider le dossier trash, gestion de backup, édition de tags ou d’utilisateurs, suppression de catégorie vide…
 - [ ] **Division cellulaire** : Que faire si l’on casse un élément et qu’il devient 2 ou 3 (cas déjà arrivé pour un milieu actif…).
