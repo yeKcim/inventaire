@@ -31,7 +31,7 @@ $td .= "<td>";
 		$td .= "➡</span>&nbsp;";
 		if (isset($tableau_enfants) && is_array($tableau_enfants)) {
 		    $keys = array_keys(array_column($tableau_enfants, 'base_index'), $t["integration"]);
-		   if (isset($keys[0])) quickdisplaymini($tableau_enfants[$keys[0]]);
+		    if (isset($keys[0])) $td.=quickdisplaymini($tableau_enfants[$keys[0]]);
 		}
 	} else {
 		$td .= spanquick("utilisation", $t["base_index"]);
