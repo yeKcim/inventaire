@@ -109,6 +109,7 @@
 	<script>
 	  $j(document).ready(function () {
 		new DataTable('#listing', {
+		  pageLength: 50,
 		  initComplete: function () {
 		    this.api()
 		      .columns()
