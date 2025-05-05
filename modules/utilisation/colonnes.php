@@ -18,14 +18,6 @@ if ($IOT!="0") { $th.="<th style=\"background:#96a5bc;\">État</th>"; }
 // ╚═╝╚═╝╩═╝╚═╝╝╚╝╝╚╝╚═╝╚═╝
 
 
-
-
-
-
-
-
-
-
 $td="";
 // ********** Intégré à **********
 $td .= "<td>";
@@ -36,11 +28,11 @@ $td .= "<td>";
 	}
 	if ($t["integration"] != "0") {
 		$td .= spanquick("utilisation", $t["base_index"]);
-		$td .= "➡</span>&nbsp;";/*
+		$td .= "➡</span>&nbsp;";
 		if (isset($tableau_enfants) && is_array($tableau_enfants)) {
 		    $keys = array_keys(array_column($tableau_enfants, 'base_index'), $t["integration"]);
-		    if (isset($keys[0])) quickdisplaymini($tableau_enfants[$keys[0]]);
-		}*/
+		   if (isset($keys[0])) quickdisplaymini($tableau_enfants[$keys[0]]);
+		}
 	} else {
 		$td .= spanquick("utilisation", $t["base_index"]);
 		$td .= "-</span>";
@@ -55,26 +47,17 @@ $td.="<td>";
 		$keys = [];
 	}
 	// Intégration parent de
-	if (array_key_exists("0", $keys)) {
-		if (array_key_exists($keys[0], $tableau_parents)) {/*
-		   {	foreach ($keys as $k) {
+		if (array_key_exists("0", $keys)) {
+			if (array_key_exists($keys[0], $tableau_parents)) {
+				foreach ($keys as $k) {
 		   			$td.="⬉&nbsp;";
 		   			$td.=quickdisplaymini($tableau_parents[$k]);
 		   			$td.="<br/>";
-		   		}
-		   }*/
+			   	}
+			}
 		}
-	}
 	else { $td.="<a href=\"\" title=\"todo\">-</a>";}
 $td.="</td>";
-
-
-
-
-
-
-
-
 
 
 

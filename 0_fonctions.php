@@ -347,14 +347,16 @@ function quickdisplayincarac ($t) {
 function quickdisplaymini ($t) {
         global $categories;
         global $database;
-        if ($t["sortie"]=="1") echo "<strike>";
-        echo "<a href=\"info.php?BASE=$database&i=".$t["base_index"]."\" title=\"#".$t["base_index"]."";
-        if (isset($t["designation"])) echo " ".$t["designation"]." ";
-        if (isset($t["reference"])) echo "{".$t["reference"]."} ";
-        echo "\" target=\"_blank\">";
-        echo $t["lab_id"];
-        echo "</a>";
-        if ($t["sortie"]=="1") echo "</strike>";
+        $text="";
+        if ($t["sortie"]=="1") $text.="<strike>";
+        $text.= "<a href=\"info.php?BASE=$database&i=".$t["base_index"]."\" title=\"#".$t["base_index"]."";
+        if (isset($t["designation"])) $text.= " ".$t["designation"]." ";
+        if (isset($t["reference"])) $text.="{".$t["reference"]."} ";
+        $text.= "\" target=\"_blank\">";
+        $text.= $t["lab_id"];
+        $text.= "</a>";
+        if ($t["sortie"]=="1") $text.= "</strike>";
+        return $text;
 }
 
 function quickdisplayincarac_b ($t) {
