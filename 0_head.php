@@ -110,6 +110,7 @@
 	  $j(document).ready(function () {
 		new DataTable('#listing', {
 		  pageLength: 50,
+		  stateSave: true,
 		  language: {
 				"emptyTable": "Aucune donnée disponible dans le tableau",
 				"loadingRecords": "Chargement...",
