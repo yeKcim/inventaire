@@ -48,7 +48,7 @@ $td.="</td>";
 
 // ********** Désignation **********
 $td.="<td>";
-$td.=spanquick("administratif",$t["base_index"]);
+$td.=spanquick("- infos minimales -",$t["base_index"]);
 if ($t["designation"]!="") $td.=$t["designation"];
 else $td.="-";
 $td.="</span>";
