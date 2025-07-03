@@ -241,12 +241,15 @@ echo "</fieldset>";
 
     echo "</fieldset>";
 
+   
 
-
-
-    if ($write) echo "</form><form method=\"post\" id=\"add_cat\" action=\"?BASE=$database&i=".$i."".$quick."\">";
-
-	if (basename($_SERVER['PHP_SELF'])=="add.php") {echo "</form><form id=\"add_cat\" method=\"post\" action=\"\">";}
+	if ($write) {
+		if (basename($_SERVER['PHP_SELF'])=="add.php") {
+			echo "<form id=\"add_cat\" method=\"post\" action=\"\">";
+		} else {
+			echo "<form method=\"post\" id=\"add_cat\" action=\"?BASE=$database&i=".$i."".$quick."\">";
+		}
+	}
 
 /*  ╔╗╔╔═╗╦ ╦╦  ╦╔═╗╦  ╦  ╔═╗  ╔═╗╔═╗╦═╗╔═╗╔═╗
     ║║║║ ║║ ║╚╗╔╝║╣ ║  ║  ║╣   ║  ╠═╣╠╦╝╠═╣║
@@ -294,15 +297,19 @@ echo "</fieldset>";
         ╚═╝╚═╝╚═╝╩ ╩╩ ╩     */
     if ($write) {
     	echo "<p style=\"text-align:center;\"><input name=\"new_carac_valid\" value=\"Ajouter\" type=\"submit\"  class=\"little_button\" form=\"add_cat\" formnovalidate /></p>"; // TODO Ajouter un bouton réinitialiser ?
-    	echo "</form><form method=\"post\" id=\"main_form\" action=\"?BASE={$database}&i={$i}{$quick}\">";
+    	echo "</form>";
+    	
+    	
+
+    	
+    	if (basename($_SERVER['PHP_SELF'])=="add.php") {
+    	    echo "<form method=\"post\" id=\"main_form\" action=\"?BASE={$database}&i={$i}{$quick}\">";
+		    echo "<p style=\"text-align:center;\"><input name=\"new_carac_valid\" value=\"Ajouter\" type=\"submit\"  class=\"little_button\" form=\"add_cat\" formnovalidate /></p>"; // TODO Ajouter un bouton réinitialiser ?
+			echo "</form>";
+		}
+
     }
 
-
-    if (basename($_SERVER['PHP_SELF'])=="add.php") {
-        echo "<p style=\"text-align:center;\"><input name=\"new_carac_valid\" value=\"Ajouter\" type=\"submit\"  class=\"little_button\" form=\"add_cat\" formnovalidate /></p>"; // TODO Ajouter un bouton réinitialiser ?
-    	echo "</form><form method=\"post\" id=\"main_form\" action=\"\">";
-    }
-    
     
         echo "<p style=\"text-align:right;\"><small>* champ obligatoire</small></p>"; 
 
