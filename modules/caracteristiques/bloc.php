@@ -262,7 +262,9 @@ echo "</fieldset>";
 
 	echo "<label for=\"nom_carac\">Nom* :</label>\n";
 	$deja_nomcarac=dejadanslabase("SELECT DISTINCT `nom_carac` FROM `caracteristiques`");
-	echo "<input value=\"$nom_carac\" name=\"nom_carac\" type=\"text\" required pattern=\"^(?!(".$deja_nomcarac.")$).*$\" oninvalid=\"
+	echo "<input value=\"$nom_carac\" name=\"nom_carac\" type=\"text\" ";
+	if (basename($_SERVER['PHP_SELF'])!="add.php") echo "required ";
+	echo " pattern=\"^(?!(".$deja_nomcarac.")$).*$\" oninvalid=\"
 	if (this.validity.valueMissing) {
 	  this.setCustomValidity('Ce champ est obligatoire');
 	}
@@ -281,7 +283,9 @@ echo "</fieldset>";
 	echo "<abbr title=\"Plus court possible (ex: λ, ω₀, Tvisible,…)\">Symbôle* </abbr>";
 	echo ":</label>\n";
 	$deja_symbole=dejadanslabase("SELECT DISTINCT `symbole_carac` FROM `caracteristiques`");
-	echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\" required pattern=\"^(?!(".$deja_symbole.")$).*$\" oninvalid=\"
+	echo "<input value=\"$symbole_carac\" name=\"symbole_carac\" type=\"text\" ";
+	if (basename($_SERVER['PHP_SELF'])!="add.php") echo "required ";
+	echo " pattern=\"^(?!(".$deja_symbole.")$).*$\" oninvalid=\"
 	if (this.validity.valueMissing) {
 	  this.setCustomValidity('Ce champ est obligatoire');
 	}
