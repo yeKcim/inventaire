@@ -47,16 +47,17 @@ $td.="<td>";
 		$keys = [];
 	}
 	// Intégration parent de
-		if (array_key_exists("0", $keys)) {
-			if (array_key_exists($keys[0], $tableau_parents)) {
-				foreach ($keys as $k) {
-		   			$td.="⬉&nbsp;";
-		   			$td.=quickdisplaymini($tableau_parents[$k]);
-		   			$td.="<br/>";
-			   	}
-			}
+	if (array_key_exists("0", $keys)) {
+		if (array_key_exists($keys[0], $tableau_parents)) {
+			foreach ($keys as $k) {
+	   			$td.="⬉&nbsp;";
+	   			$td.=quickdisplaymini($tableau_parents[$k]);
+	   			$td.="<br/>";
+		   	}
 		}
-	else { $td.="<a href=\"\" title=\"todo\">-</a>";}
+	}
+	$td .= spanquick("utilisation", $t["base_index"]);
+	$td .= "-</span>";
 $td.="</td>";
 
 
