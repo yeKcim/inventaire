@@ -67,24 +67,19 @@ if ( ( isset($_POST["utilisation_valid"]) ) || (isset($data["add_valid"])) ) {
 	╩╝╚╝ ╩ ╚═╝╚═╝╩╚═╚═╝ */
 	if (isset($_POST["parentde"])) $parentde_int = array_map('intval', $_POST["parentde"]);
 	else $parentde_int = array();
-
-    // Supposons que $lab_ids contient déjà le tableau décodé (par exemple via json_decode)
-	$filtered = array_filter($lab_ids, function($entry) { return $entry['integration'] == 5;});
-	// Extrait uniquement les base_index
-	$base_indexes = array_column($filtered, 'base_index');
-	$integre_avant = array_map('intval', $base_indexes); // $base_indexes est issu de ton filtrage initial
 	$integre_apres = array_map('intval', $parentde_int); // Conversion en entiers
-	$to_set_0 = array_values(array_diff($integre_avant, $integre_apres));
-    
+    $integre_avant = array_column($kids, 'base_index');
+
+  	$diff = array_diff($integre_avant, $integre_apres);
+    	
 	// 1. Mise à jour des entrées qui ne sont plus dans "après" (integration = 0)
-	if (!empty($to_set_0)) {
-		$placeholders_to_zero = implode(',', array_fill(0, count($to_set_0), '?'));
-		$sql = "UPDATE base SET integration = 0 WHERE base_index IN ($placeholders_to_zero)";
+	if (!empty($diff)) {
+		$sql = "UPDATE base SET integration = 0 WHERE base_index IN (".implode(',', $diff).")";
 		$sth = $dbh->prepare($sql);
-		$sth->execute($to_set_0);
+		$sth->execute();
 	}
 
-	// 2. Mise à jour des entrées de "après" (integration = 5)
+	// 2. Mise à jour des entrées de "après" (integration = $i)
 	if (!empty($integre_apres)) {
 		// Création des placeholders (?,?,?,...)
 		$placeholders_to_i = implode(',', array_fill(0, count($integre_apres), '?'));
