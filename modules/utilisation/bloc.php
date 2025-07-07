@@ -49,7 +49,7 @@ if (basename($_SERVER['PHP_SELF'])!="add.php") {
 	$sth->execute([':integration' => $i]);
 	$kids = $sth->fetchAll(PDO::FETCH_ASSOC);
 }
-else $kids = NULL;
+else $kids = [];
 
 /*
 ███╗   ███╗ ██████╗ ██████╗ ██╗███████╗    ███████╗ ██████╗ ██╗
